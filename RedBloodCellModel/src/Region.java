@@ -13,7 +13,7 @@ public class Region {
 	public Species Caf;
 	public Species Mgf;
 	public Species Cat;
-	public Species Mat;
+	public Species Mgt;
 	public Species XHbm;
 	public Species COs;
 	
@@ -36,7 +36,7 @@ public class Region {
 		Caf = new Species();
 		Mgf = new Species();
 		Cat = new Species();
-		Mat = new Species();
+		Mgt = new Species();
 		XHbm = new Species();
 		COs = new Species();
 		Hbpm = new Species();

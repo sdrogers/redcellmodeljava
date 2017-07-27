@@ -12,4 +12,7 @@ public class Species {
 	public Double getConcentration() {
 		return this.concentration;
 	}
+	public void setConcentration(Double concentration) {
+		this.concentration = concentration;
+	}
 }

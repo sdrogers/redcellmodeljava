@@ -147,6 +147,7 @@ public class RBC_model {
 	private Double ff;
 	private Double delta_Mg;
 	private Double delta_Ca;
+	private Double q0;
 
 	
 	public RBC_model() {
@@ -338,7 +339,18 @@ public class RBC_model {
 		this.cellanionprotonscreenRS(rsoptions, usedoptions);
 		this.chargeandpiscreenRS(rsoptions, usedoptions);
 		
+		this.cycles_per_print = 777;
+		this.Vw = this.I_79;
+		this.fraction = 0.000001;
+		this.medium.setpH(7.4);
+		this.A_12 = this.medium.getpH();
+		this.A_11 = 1.0-this.hb_content/136.0;
+		this.R = 1.0; // check type
+		this.sampling_time = 0.0;
 		
+		
+		this.setmgdefaults();
+		this.setcadefaults();
 		
 		System.out.println("Used RS options");
 		for(String option: usedoptions) {
@@ -425,5 +437,74 @@ public class RBC_model {
 			this.pit0 = Double.parseDouble(temp);
 			usedoptions.add("pi");
 		}
+	}
+	
+	public void setmgdefaults() {
+		this.cell.Mgt.setAmount(2.5);
+		this.medium.Mgt.setConcentration(0.2);
+		
+		this.q0 = 0.05;
+		this.atp = 1.2;
+		this.dpgp = 15.0;
+		this.VV = (1.0 - this.A_11) + this.Vw;
+		
+		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001);
+		System.out.println(conc);
+		this.cell.Mgf.setConcentration(conc);
+		
+		
+	}
+	
+	public void setcadefaults() {
+		this.cell.Cat.setAmount(0.000580);
+		this.cell.Cat.setConcentration(this.cell.Cat.getAmount()/this.Vw);
+		this.medium.Cat.setConcentration(1.0);
+		this.alpha = 0.30;
+		this.b1ca = 0.026;
+		this.b1cak = 0.014;
+		this.benz2 = 0.0;
+		this.benz2k = 5e-5;
+		this.cell.Caf.setConcentration(1.12e-4);
+		
+		this.edgto = 0.0;
+		this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration());
+		this.medium.Caf.setConcentration(this.medium.Cat.getConcentration());
+	}
+	
+	private class Eqmg implements NWRunner {
+		public Double run(Double local_mgf) {
+			mgb = mgb0 + ((atp/VV)*local_mgf/(0.08+local_mgf)) + ((dpgp/VV)*local_mgf/(3.6+local_mgf));
+			Double y = cell.Mgt.getAmount() - local_mgf*(Vw/(Vw+hb_content/136.0)) - mgb;
+			return y;
+		}
+	}
+	private Double newton_raphson(NWRunner r, Double initial, Double step, Double stop) {
+		int max_its = 100;
+//		Double step = 0.001;
+//		Double stop = 0.0001;
+		int initial_its = 0;
+		Double X_3 = initial;
+		int no_its = initial_its;
+		Boolean finished = false;
+		while(!finished) {
+			Double X_1 = X_3 - step;
+			Double Y_1 = r.run(X_1);
+			Double X_2 = X_3 + step;
+			Double Y_2 = r.run(X_2);
+			Double S = (Y_2 - Y_1) / (X_2 - X_1);
+			X_3 = X_1 - (Y_1/S);
+//			System.out.println(Math.abs(Y_2));
+			// Note the bit here that isn't copied...
+			Double Y_3 = Y_2;
+			no_its++;
+			if(no_its > max_its) {
+				finished = true;
+			}
+			if(Math.abs(Y_3) < stop) {
+				finished = true;
+			}
+		}
+		System.out.println(no_its);
+		return X_3;
 	}
 }

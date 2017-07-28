@@ -40,11 +40,16 @@ public class Region {
 		this.XHbm = new Species();
 		this.COs = new Species();
 		this.Hbpm = new Species();
-		this.pH = 0.0;
+		this.setpH(0.0);
 	}
 	
-	public Double getPh() {
-		return this.pH;
+
+	public Double getpH() {
+		return pH;
+	}
+
+	public void setpH(Double pH) {
+		this.pH = pH;
 	}
 	
 	

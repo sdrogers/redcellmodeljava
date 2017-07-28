@@ -84,7 +84,7 @@ public class NaPump {
 	}
 
 	private void compute_phnap() {
-		this.phnap = Math.exp(-Math.pow(((this.cell.getPh() - this.I_77)/this.I_78),2.0));
+		this.phnap = Math.exp(-Math.pow(((this.cell.getpH() - this.I_77)/this.I_78),2.0));
 	}
 	
 	public void compute_flux(Double temperature) {

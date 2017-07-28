@@ -4,6 +4,7 @@ public class RBC_model {
 	private Region medium;
 	private JacobsStewart JS;
 	private Cotransport cotransport;
+	private NaPump napump;
 	private Boolean debug = true;
 	
 	private Double A_1;
@@ -44,7 +45,7 @@ public class RBC_model {
 		// Define the pumps
 		JS = new JacobsStewart(cell,medium);
 		cotransport = new Cotransport(cell,medium);
-		
+		napump = new NaPump(cell,medium);
 		
 		A_1 = -10.0;
 		A_2 = 0.0645;

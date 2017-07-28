@@ -69,4 +69,7 @@ public class Goldman {
 	private Double fullgflux(Species cell_species,Species medium_species,Double permeability, Double I_18) {
 		return (permeability/I_18)*this.gflux(cell_species,medium_species);
 	}
+	public Double getGoldmanFactor() {
+		return this.Goldman_factor;
+	}
 }

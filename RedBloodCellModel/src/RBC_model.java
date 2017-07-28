@@ -8,6 +8,10 @@ public class RBC_model {
 	private Cotransport cotransport;
 	private NaPump napump;
 	private CarrierMediated carriermediated;
+	private Goldman goldman;
+	private A23187 a23187;
+	private WaterFlux waterflux;
+	private PassiveCa passiveca;
 	private Boolean debug = true;
 	
 	private Double A_1;
@@ -154,6 +158,10 @@ public class RBC_model {
 		cotransport = new Cotransport(cell,medium);
 		napump = new NaPump(cell,medium);
 		carriermediated = new CarrierMediated(cell,medium);
+		goldman = new Goldman(cell,medium);
+		a23187 = new A23187(cell,medium);
+		waterflux = new WaterFlux(cell,medium);
+		passiveca = new PassiveCa(cell,medium,goldman);
 		
 		A_1 = -10.0;
 		A_2 = 0.0645;

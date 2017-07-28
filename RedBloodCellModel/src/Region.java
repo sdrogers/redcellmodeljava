@@ -8,7 +8,7 @@ public class Region {
 	public Species X;
 	public Species Os;
 	public Species Gluconate;
-	public Species Glucomine;
+	public Species Glucamine;
 	public Species Sucrose;
 	public Species Caf;
 	public Species Mgf;
@@ -31,7 +31,7 @@ public class Region {
 		this.X = new Species();
 		this.Os = new Species();
 		this.Gluconate = new Species();
-		this.Glucomine = new Species();
+		this.Glucamine = new Species();
 		this.Sucrose = new Species();
 		this.Caf = new Species();
 		this.Mgf = new Species();

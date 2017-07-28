@@ -107,5 +107,7 @@ public class NaPump {
 	public void setFluxRev(Double f) {
 		this.flux_rev = f;
 	}
-
+	public Double getI_17() {
+		return this.I_17;
+	}
 }

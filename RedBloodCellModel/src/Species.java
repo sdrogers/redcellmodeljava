@@ -15,4 +15,10 @@ public class Species {
 	public void setConcentration(Double concentration) {
 		this.concentration = concentration;
 	}
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+	public Double getAmount() {
+		return this.amount;
+	}
 }

@@ -97,5 +97,15 @@ public class NaPump {
 		this.flux_K = -this.flux_net/this.Na_to_K;
 		this.total_flux = this.flux_net + this.flux_K;
 	}
+	
+	public void setFluxFwd(Double f) {
+		this.flux_fwd = f;
+	}
+	public Double getFluxFwd() {
+		return this.flux_fwd;
+	}
+	public void setFluxRev(Double f) {
+		this.flux_rev = f;
+	}
 
 }

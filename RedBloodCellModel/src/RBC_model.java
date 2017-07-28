@@ -1,3 +1,5 @@
+import java.util.HashMap;
+import java.util.ArrayList;
 
 public class RBC_model {
 	private Region cell;
@@ -36,7 +38,46 @@ public class RBC_model {
 	//# self.B_9 = 4.0
 	private Double B_10;
 	
+	private Double delta_H;
+	private	Double D_6;
+	private Double D_12;
 	
+	
+	private Double total_flux_Na;
+	private Double total_flux_K;
+	private Double total_flux_A;
+	private Double total_flux_H;
+	private Double napmaxf;
+//	private Double napump.flux_rev = 0.;
+	private Double napmaxr;
+	
+	
+	private Double I_3;
+	private Double I_6;
+	private Double I_9;
+	private Double I_11;
+	private Double I_12;
+	
+	
+	private Double I_18;
+	private Double I_73;
+	private Double I_77;
+	private Double I_78;
+	private Double I_79; 
+	
+	private Double buffer_conc;
+	private Double Q_4;
+	
+	
+	private Double Q_8;
+	private Double R;
+
+	private Double sampling_time;
+	private Double cycle_count;
+	private Integer cycles_per_print;
+	private Double duration_experiment;
+	private Integer n_its;
+	private Double T_6;
 	
 	public RBC_model() {
 		cell = new Region();
@@ -97,5 +138,81 @@ public class RBC_model {
 		//# self.cell.COs.concentration
 		//# self.C_10 = 0.0
 		//# self.cell.Hbpm.concentration
+		
+		this.delta_H = 0.0;
+		this.D_6 = 0.001;
+		this.D_12 =  0.0001;
+		
+		this.total_flux_Na = 0.0;
+		this.total_flux_K = 0.0;
+		this.total_flux_A = 0.0;
+		this.total_flux_H = 0.0;
+		this.napmaxf = 1.0;
+		this.napump.setFluxRev(0.0015);
+		this.napmaxr = 1.0;
+		
+		this.I_3 = 0.0;
+		this.I_6 = 0.0;
+		this.I_9 = 0.0;
+		this.I_11 = 0.0;
+		this.I_12 = 0.0;
+		
+		
+		this.I_18 = 0.0;
+		this.I_73 = 0.0;
+		this.I_77 = 7.216;
+		this.I_78 = 0.4;
+		this.I_79 = 0.75;
+		
+		this.medium.Na.setConcentration(145.0);
+		this.medium.K.setConcentration(5.0);
+		this.medium.A.setConcentration(145.0);
+		this.medium.H.setConcentration(0.0);
+		this.buffer_conc = 10.0;
+		this.medium.Hb.setConcentration(0.0);
+
+		this.cell.Na.setAmount(0.0);
+		this.cell.K.setAmount(0.0);
+		this.cell.A.setAmount(0.0);
+		this.Q_4 = 0.0;
+		this.cell.Hb.setAmount(0.0);
+		this.cell.X.setAmount(0.0);
+		this.cell.Mgt.setAmount(0.0);
+		
+		
+		
+		this.Q_8 = 0.0;
+		this.R = 0.0; // Check the type
+
+		this.sampling_time = 0.0;
+		this.cycle_count = 0.0;
+		this.cycles_per_print = 777;
+		this.duration_experiment = 0.0;
+		this.n_its = 0;
+		this.T_6 = 0.0;
+
+	}
+	
+	public void setup(HashMap<String,String> rsoptions) {
+		ArrayList<String> usedoptions = new ArrayList<String>();
+		this.naPumpScreenRS(rsoptions,usedoptions);
+		
+		for(String option: usedoptions) {
+			System.out.println(option);
+		}
+	}
+	
+	public void naPumpScreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
+		Double na_efflux_fwd = Double.parseDouble(rsoptions.get("na-efflux-fwd"));
+		if(na_efflux_fwd != null) {
+			this.napump.setFluxFwd(na_efflux_fwd);
+			usedoptions.add("na-efflux-fwd");
+		}
+		
+		if(this.napump.getFluxFwd() == -2.61) {
+			this.napmaxf = 1.0;
+		}else {
+			this.napmaxf = 0.0;
+		}
 	}
 }

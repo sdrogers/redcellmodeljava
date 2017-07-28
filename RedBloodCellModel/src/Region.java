@@ -22,25 +22,29 @@ public class Region {
 	private Double pH;
 
 	public Region() {
-		Na = new Species();
-		K = new Species();
-		A = new Species();
-		A.set_z(-1);
-		H = new Species();
-		Hb = new Species();
-		X = new Species();
-		Os = new Species();
-		Gluconate = new Species();
-		Glucomine = new Species();
-		Sucrose = new Species();
-		Caf = new Species();
-		Mgf = new Species();
-		Cat = new Species();
-		Mgt = new Species();
-		XHbm = new Species();
-		COs = new Species();
-		Hbpm = new Species();
-		pH = 0.0;
+		this.Na = new Species();
+		this.K = new Species();
+		this.A = new Species();
+		this.A.set_z(-1);
+		this.H = new Species();
+		this.Hb = new Species();
+		this.X = new Species();
+		this.Os = new Species();
+		this.Gluconate = new Species();
+		this.Glucomine = new Species();
+		this.Sucrose = new Species();
+		this.Caf = new Species();
+		this.Mgf = new Species();
+		this.Cat = new Species();
+		this.Mgt = new Species();
+		this.XHbm = new Species();
+		this.COs = new Species();
+		this.Hbpm = new Species();
+		this.pH = 0.0;
+	}
+	
+	public Double getPh() {
+		return this.pH;
 	}
 	
 	

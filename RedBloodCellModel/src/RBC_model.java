@@ -12,6 +12,7 @@ public class RBC_model {
 	private A23187 a23187;
 	private WaterFlux waterflux;
 	private PassiveCa passiveca;
+	private CaPumpMg2 capump;
 	private Boolean debug = true;
 	
 	private Double A_1;
@@ -163,6 +164,7 @@ public class RBC_model {
 		a23187 = new A23187(cell,medium);
 		waterflux = new WaterFlux(cell,medium);
 		passiveca = new PassiveCa(cell,medium,goldman);
+		capump = new CaPumpMg2(cell,medium,napump);
 		
 		A_1 = -10.0;
 		A_2 = 0.0645;
@@ -352,6 +354,8 @@ public class RBC_model {
 		this.setmgdefaults();
 		this.setcadefaults();
 		
+		this.mgbufferscreenRS(rsoptions, usedoptions);
+		
 		System.out.println("Used RS options");
 		for(String option: usedoptions) {
 			System.out.println(option);
@@ -470,6 +474,185 @@ public class RBC_model {
 		this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration());
 		this.medium.Caf.setConcentration(this.medium.Cat.getConcentration());
 	}
+	
+	
+	private void mgbufferscreenRS(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
+		String temp = rsoptions.get("mgot-medium");
+		if(temp != null) {
+			this.medium.Mgt.setConcentration(Double.parseDouble(temp));
+			usedoptions.add("mgot-medium");
+		} else {
+			this.medium.Mgt.setConcentration(0.2);
+		}
+		
+		
+		temp = rsoptions.get("mgit");
+		if(temp != null) {
+			this.cell.Mgt.setAmount(Double.parseDouble(temp));
+			usedoptions.add("mgit");
+		} else {
+			this.cell.Mgt.setAmount(2.5);
+		}
+		
+		
+		temp = rsoptions.get("hab");
+		if(temp != null) {
+			this.mgb0 = Double.parseDouble(temp);
+			usedoptions.add("hab");
+		} else {
+			this.mgb0 = 0.05;
+		}
+		
+		
+		temp = rsoptions.get("atpp");
+		if(temp != null) {
+			this.atp = Double.parseDouble(temp);
+			usedoptions.add("atpp");
+		} else {
+			this.atp = 1.2;
+		}
+		
+		temp = rsoptions.get("23dpg");
+		if(temp != null) {
+			this.dpgp = Double.parseDouble(temp);
+			usedoptions.add("23dpg");
+		} else {
+			this.dpgp = 15.0;
+		}
+		
+		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001);
+		System.out.println(conc);
+		this.cell.Mgf.setConcentration(conc);
+		
+	}
+	
+	private void cabufferscreenRS(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
+		String temp = rsoptions.get("caot-medium");
+		if(temp != null) {
+			this.medium.Cat.setConcentration(Double.parseDouble(temp));
+			usedoptions.add("caot-medium");
+		} else {
+			this.medium.Cat.setConcentration(1.0);
+		}
+		
+		temp = rsoptions.get("add-ca-buffer");
+		if(temp != null) {
+			this.b1ca = Double.parseDouble(temp);
+			usedoptions.add("add-ca-buffer");
+		} else {
+			this.b1ca = 0.026;
+		}
+		
+		temp = rsoptions.get("kd-of-ca-buffer");
+		if(temp != null) {
+			this.b1cak = Double.parseDouble(temp);
+			usedoptions.add("kd-of-ca-buffer");
+		} else {
+			this.b1cak = 0.014;
+		}
+
+		temp = rsoptions.get("alpha");
+		if(temp != null) {
+			this.alpha = Double.parseDouble(temp);
+			usedoptions.add("alpha");
+		} else {
+			this.alpha = 0.3;
+		}
+
+		temp = rsoptions.get("benz2loaded");
+		if(temp != null) {
+			this.benz2 = Double.parseDouble(temp);
+			usedoptions.add("benz2loaded");
+		} else {
+			this.benz2 = 0.3;
+		}
+		this.cbenz2 = this.benz2/this.Vw;
+
+		temp = rsoptions.get("vmax-cap");
+		if(temp != null) {
+			this.capump.setFcapm(Double.parseDouble(temp));
+			usedoptions.add("vmax-cap");
+		} else {
+			this.capump.setFcapm(12.0);
+		}
+
+		temp = rsoptions.get("k1/2");
+		if(temp != null) {
+			this.capump.setCapk(Double.parseDouble(temp));
+			usedoptions.add("k1/2");
+		} else {
+			this.capump.setCapk(2e-4);
+		}
+		
+		temp = rsoptions.get("hills");
+		if(temp != null) {
+			this.capump.setH1(Double.parseDouble(temp));
+			usedoptions.add("hills");
+		} else {
+			this.capump.setH1(4.0);
+		}
+		temp = rsoptions.get("pump-epectro");
+		
+		Integer capstoich;
+		if(temp != null) {
+			capstoich = Integer.parseInt(temp);
+			usedoptions.add("pump-electro");
+		} else {
+			capstoich = 0;
+		}
+		this.capump.setCah(2-capstoich);
+		
+		temp = rsoptions.get("h+ki");
+		if(temp != null) {
+			this.capump.setHik(Double.parseDouble(temp));
+			usedoptions.add("h+ki");
+		} else {
+			this.capump.setHik(4e-7);
+		}
+		
+		temp = rsoptions.get("Mg2+K1/2");
+		if(temp != null) {
+			this.capump.setCapmgk(Double.parseDouble(temp));
+			usedoptions.add("Mg2+K1/2");
+		} else {
+			this.capump.setCapmgk(0.1);
+		}
+		
+		temp = rsoptions.get("pmax-pcag");
+		if(temp != null) {
+			this.passiveca.setFcalm(Double.parseDouble(temp));
+			usedoptions.add("pmax-pcag");
+		} else {
+			this.passiveca.setFcalm(0.05);
+		}
+		
+		
+		temp = rsoptions.get("ca2+-pkmax");
+		if(temp != null) {
+			this.goldman.setPkm(Double.parseDouble(temp));
+			usedoptions.add("ca2+-pkmax");
+		} else {
+			this.goldman.setPkm(1e-2);
+		}
+		
+		
+		temp = rsoptions.get("ca2+-pkca");
+		if(temp != null) {
+			this.goldman.setPkcak(Double.parseDouble(temp));
+			usedoptions.add("ca2+-pkca");
+		} else {
+			this.goldman.setPkcak(1e-2);
+		}
+		
+		if(this.benz2 != 0) {
+			this.cell.Caf.setConcentration(1e-8);
+			this.canr();
+		}
+		
+		
+	}
+	
+	// Implement canr!!
 	
 	private class Eqmg implements NWRunner {
 		public Double run(Double local_mgf) {

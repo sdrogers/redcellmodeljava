@@ -34,8 +34,8 @@ public class Goldman {
 		this.flux_K = 0.0;
 		this.Goldman_factor = 0.0;
 		this.P_11 = 0.0;
-		this.pkm = 30.0;
-		this.pkcak = 1e-2;
+		this.setPkm(30.0);
+		this.setPkcak(1e-2);
 	}
 	
 	private void gfactors(Double Em, Double temperature) {
@@ -52,7 +52,7 @@ public class Goldman {
 	private Double total_G_permeability_K() {
 		Double I_62 = 1.0/(1.0+ Math.pow(this.cell.H.getConcentration(),4.0)/2.5e-30);
 		this.P_11 = this.pgkh*I_62;
-		Double P_6 = this.permeability_K + this.pkm*(Math.pow(this.cell.Caf.getConcentration(),4.0)/(Math.pow(this.pkcak,4.0) + Math.pow(this.cell.Caf.getConcentration(),4.0)));
+		Double P_6 = this.permeability_K + this.getPkm()*(Math.pow(this.cell.Caf.getConcentration(),4.0)/(Math.pow(this.getPkcak(),4.0) + Math.pow(this.cell.Caf.getConcentration(),4.0)));
 		return P_6 + this.P_11;
 	}
 	public void compute_flux(Double Em, Double temperature, Double I_18) {
@@ -71,5 +71,21 @@ public class Goldman {
 	}
 	public Double getGoldmanFactor() {
 		return this.Goldman_factor;
+	}
+
+	public Double getPkm() {
+		return pkm;
+	}
+
+	public void setPkm(Double pkm) {
+		this.pkm = pkm;
+	}
+
+	public Double getPkcak() {
+		return pkcak;
+	}
+
+	public void setPkcak(Double pkcak) {
+		this.pkcak = pkcak;
 	}
 }

@@ -334,16 +334,30 @@ public class RBC_model {
 	public void setup(HashMap<String,String> rsoptions) {
 		ArrayList<String> usedoptions = new ArrayList<String>();
 		this.naPumpScreenRS(rsoptions,usedoptions);
+		this.cellwaterscreenRS(rsoptions, usedoptions);
+		this.cellanionprotonscreenRS(rsoptions, usedoptions);
+		this.chargeandpiscreenRS(rsoptions, usedoptions);
 		
+		
+		
+		System.out.println("Used RS options");
 		for(String option: usedoptions) {
 			System.out.println(option);
+		}
+		
+		System.out.println();
+		System.out.println("Unused RS options");
+		for(String option: rsoptions.keySet()) {
+			if(!usedoptions.contains(option)) {
+				System.out.println(option);
+			}
 		}
 	}
 	
 	public void naPumpScreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
-		Double na_efflux_fwd = Double.parseDouble(rsoptions.get("na-efflux-fwd"));
+		String na_efflux_fwd = rsoptions.get("na-efflux-fwd");
 		if(na_efflux_fwd != null) {
-			this.napump.setFluxFwd(na_efflux_fwd);
+			this.napump.setFluxFwd(Double.parseDouble(na_efflux_fwd));
 			usedoptions.add("na-efflux-fwd");
 		}
 		
@@ -351,6 +365,65 @@ public class RBC_model {
 			this.napmaxf = 1.0;
 		}else {
 			this.napmaxf = 0.0;
+		}
+		
+		String na_efflux_rev = rsoptions.get("na-efflux-rev");
+		if(na_efflux_rev != null) {
+			this.napump.setFluxRev(Double.parseDouble(na_efflux_rev));
+			usedoptions.add("na-efflux-rev");
+		}
+		
+		if(this.napump.getFluxRev() == 0.0015) {
+			this.napmaxr = 1.0;
+		}else {
+			this.napmaxr = 0.0;
+		}
+		
+		// Other code to be added here...
+	}
+	public void cellwaterscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
+		String hb_content_str = rsoptions.get("hb-content");
+		if(hb_content_str != null) {
+			usedoptions.add("hb-content");
+			this.hb_content = Double.parseDouble(hb_content_str);
+			this.cell.Hb.setAmount(this.hb_content * 10.0/64.5);
+			this.I_79 = 1.0 - this.hb_content/136.0;
+			this.vlysis = 1.45;
+			if(this.hb_content == 34.0) {
+				String temp = rsoptions.get("cell-water");
+				if(temp != null) {
+					this.I_79 = Double.parseDouble(temp);
+					usedoptions.add("cell-water");
+				}
+				temp = rsoptions.get("lytic-cell-water");
+				if(temp != null) {
+					this.vlysis = Double.parseDouble(temp);
+					usedoptions.add("lytic-cell-water");
+				}
+				
+			}
+			
+		}
+	}
+	
+	public void cellanionprotonscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
+		String temp = rsoptions.get("cla-conc");
+		if(temp != null) {
+			this.cell.A.setConcentration(Double.parseDouble(temp));
+			usedoptions.add("cla=conc");
+		}
+	}
+	
+	public void chargeandpiscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
+		String temp = rsoptions.get("a");
+		if(temp != null) {
+			this.A_1 = Double.parseDouble(temp);
+			usedoptions.add("a");
+		}
+		temp = rsoptions.get("pi");
+		if(temp != null) {
+			this.pit0 = Double.parseDouble(temp);
+			usedoptions.add("pi");
 		}
 	}
 }

@@ -20,6 +20,7 @@ public class TestHandle {
 		options.put("pga", "50.0");
 		options.put("time","30.0");
 		
+		rbc_model.setup(rsoptions);
 		
 		
 		

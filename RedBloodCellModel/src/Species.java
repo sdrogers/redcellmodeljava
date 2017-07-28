@@ -21,4 +21,7 @@ public class Species {
 	public Double getAmount() {
 		return this.amount;
 	}
+	public Integer getZ() {
+		return this.z;
+	}
 }

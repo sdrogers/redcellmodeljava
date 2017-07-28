@@ -7,6 +7,7 @@ public class RBC_model {
 	private JacobsStewart JS;
 	private Cotransport cotransport;
 	private NaPump napump;
+	private CarrierMediated carriermediated;
 	private Boolean debug = true;
 	
 	private Double A_1;
@@ -79,6 +80,71 @@ public class RBC_model {
 	private Integer n_its;
 	private Double T_6;
 	
+	private Double Vw;
+	private Double VV;
+	private Double fraction;
+	private Double mchc;
+	private Double density;
+	private Double Em;
+	private Double rA;
+	private Double rH;
+	private Double fHb;
+	private Double nHb;
+	
+	
+	private Double X_6;
+	private Double total_flux;
+	private Double diff2;
+	private Double diff3;
+	private Double dedgh;
+	private Double ligchoice;
+	private Double edghk1;
+	private Double edghk2;
+	private Double edgcak;
+	private Double edgmgk;
+	private Double edg4;
+	private Double edg3;
+	private Double edg2;
+	private Double edgmg;
+	private Double edgca;
+	private Double edgto;
+	private Double edgneg;
+	private Double edghnew;
+	private Double edghold;
+	
+	
+	private Double mgb;
+	private Double mgb0;
+	private Double mgcao;
+	private Double mgcai;
+//	private Double cell.Mgt.amount;
+	private Double camgi;
+	private Double camgo;
+	private Double cab;
+	private Double cabb;
+//	private Double cell.Cat.concentration;
+	private Double total_flux_Ca;
+	
+	
+	private Double pka;
+	private Double pkhepes;
+	private Double benz2;
+	private Double benz2k;
+	private Double cbenz2;
+	private Double b1ca;
+	private Double b1cak;
+	private Double alpha;
+	private Double atp;
+	private Double dpgp;
+	private String BufferType;
+	private Double vlysis;
+	// is gca ever used?
+	private Double gca;
+	private Double ff;
+	private Double delta_Mg;
+	private Double delta_Ca;
+
+	
 	public RBC_model() {
 		cell = new Region();
 		medium = new Region();
@@ -87,6 +153,7 @@ public class RBC_model {
 		JS = new JacobsStewart(cell,medium);
 		cotransport = new Cotransport(cell,medium);
 		napump = new NaPump(cell,medium);
+		carriermediated = new CarrierMediated(cell,medium);
 		
 		A_1 = -10.0;
 		A_2 = 0.0645;
@@ -190,6 +257,69 @@ public class RBC_model {
 		this.duration_experiment = 0.0;
 		this.n_its = 0;
 		this.T_6 = 0.0;
+		
+		this.Vw = 0.0;
+		this.VV = 0.0;
+		this.fraction = 0.0;
+		this.mchc = 0.0;
+		this.density = 0.0;
+		this.Em = 0.0;
+		this.rA = 0.0;
+		this.rH = 0.0;
+		this.fHb = 0.0;
+		this.nHb = 0.0;
+		
+		this.X_6 = 0.0;
+		this.total_flux = 0.0;
+		this.diff2 = 0.00001;
+		this.diff3 = 0.00001;
+		this.dedgh = 0.0;
+		this.ligchoice = 0.0;
+		this.edghk1 = 0.0;
+		this.edghk2 = 0.0;
+		this.edgcak = 0.0;
+		this.edgmgk = 0.0;
+		this.edg4 = 0.0;
+		this.edg3 = 0.0;
+		this.edg2 = 0.0;
+		this.edgmg = 0.0;
+		this.edgca = 0.0;
+		this.edgto = 0.0;
+		this.edgneg = 0.0;
+		this.edghnew = 0.0;
+		this.edghold = 0.0;
+		
+		
+		this.mgb = 0.0;
+		this.mgb0 = 0.0;
+		this.mgcao = 0.0;
+		this.mgcai = 0.0;
+		this.cell.Mgt.setAmount(2.5);
+		this.camgi = 0.0;
+		this.camgo = 0.0;
+		this.cab = 0.0;
+		this.cabb = 0.0;
+		this.cell.Cat.setConcentration(0.0);
+		this.total_flux_Ca = 0.0;
+		
+		
+		this.pka = 0.0;
+		this.pkhepes = 0.0;
+		this.benz2 = 0.0;
+		this.benz2k = 0.0;
+		this.cbenz2 = 0.0;
+		this.b1ca = 0.0;
+		this.b1cak = 0.0;
+		this.alpha = 0.0;
+		this.atp = 1.2;
+		this.dpgp = 0.0;
+		this.BufferType = "HEPES";
+		this.vlysis = 1.45;
+		this.gca = 0.0;
+		this.ff = 0.0;
+		this.delta_Mg = 0.0;
+		this.delta_Ca = 0.0;
+
 
 	}
 	

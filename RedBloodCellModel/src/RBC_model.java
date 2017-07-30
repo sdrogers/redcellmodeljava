@@ -1,7 +1,16 @@
 import java.util.HashMap;
 import java.util.ArrayList;
-
+import java.io.FileWriter;
+import java.io.IOException;
 public class RBC_model {
+	
+	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
+	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CCa2+","CMg2+",
+	                                  "CHb","CX","COs","rA","rH","fHb","nHb","MNa","MK","MA","FNaP","FCaP","FKP",
+	                                  "FNa","FK","FA","FH","FW","FNaG","FKG","FAG","FHG"};
+	
+	private ArrayList<ResultHash> resultList = new ArrayList<ResultHash>();
+	
 	private Region cell;
 	private Region medium;
 	private JacobsStewart JS;
@@ -10,7 +19,7 @@ public class RBC_model {
 	private CarrierMediated carriermediated;
 	private Goldman goldman;
 	private A23187 a23;
-	private WaterFlux waterflux;
+	private WaterFlux water;
 	private PassiveCa passiveca;
 	private CaPumpMg2 capump;
 	private Boolean debug = true;
@@ -166,7 +175,7 @@ public class RBC_model {
 		carriermediated = new CarrierMediated(cell,medium);
 		goldman = new Goldman(cell,medium);
 		a23 = new A23187(cell,medium);
-		waterflux = new WaterFlux(cell,medium);
+		water = new WaterFlux(cell,medium);
 		passiveca = new PassiveCa(cell,medium,goldman);
 		capump = new CaPumpMg2(cell,medium,napump);
 		
@@ -375,6 +384,8 @@ public class RBC_model {
 				System.out.println(option);
 			}
 		}
+		
+		this.publish();
 	}
 	
 	public void computeRS() {
@@ -481,6 +492,7 @@ public class RBC_model {
 		Double sumq = this.cell.Na.getAmount() + this.cell.K.getAmount() + this.cell.A.getAmount() + (this.cell.Mgf.getConcentration()+this.cell.Caf.getConcentration())*this.Vw + this.fHb*this.cell.Hb.getAmount() + this.benz2;
 		this.cell.X.setAmount(this.Vw*summ - sumq);
 
+		
 	}
 	
 	private void nakamountsmgcaconcRS() {
@@ -500,7 +512,7 @@ public class RBC_model {
 		this.Em = -(8.615600000000004e-02)*(273 + this.temp_celsius)*Math.log(this.rA);
 
 		// Osmotic coeficient of Hb
-		this.fHb = 1 + Math.pow(this.A_2*this.cell.Hb.getAmount()/this.Vw + this.A_3*(this.cell.Hb.getAmount()/this.Vw),2.0);
+		this.fHb = 1 + this.A_2*this.cell.Hb.getAmount()/this.Vw + this.A_3*Math.pow(this.cell.Hb.getAmount()/this.Vw,2.0);
 		// physiological pI at 37oC;
 		this.I_74 = this.pit0 - (0.016*37);
 		// net charge on Hb (Eq/mole)
@@ -561,21 +573,20 @@ public class RBC_model {
 		if(hb_content_str != null) {
 			usedoptions.add("hb-content");
 			this.hb_content = Double.parseDouble(hb_content_str);
-			this.cell.Hb.setAmount(this.hb_content * 10.0/64.5);
-			this.I_79 = 1.0 - this.hb_content/136.0;
-			this.vlysis = 1.45;
-			if(this.hb_content == 34.0) {
-				String temp = rsoptions.get("cell-water");
-				if(temp != null) {
-					this.I_79 = Double.parseDouble(temp);
-					usedoptions.add("cell-water");
-				}
-				temp = rsoptions.get("lytic-cell-water");
-				if(temp != null) {
-					this.vlysis = Double.parseDouble(temp);
-					usedoptions.add("lytic-cell-water");
-				}
-				
+		}
+		this.cell.Hb.setAmount(this.hb_content * 10.0/64.5);
+		this.I_79 = 1.0 - this.hb_content/136.0;
+		this.vlysis = 1.45;
+		if(this.hb_content == 34.0) {
+			String temp = rsoptions.get("cell-water");
+			if(temp != null) {
+				this.I_79 = Double.parseDouble(temp);
+				usedoptions.add("cell-water");
+			}
+			temp = rsoptions.get("lytic-cell-water");
+			if(temp != null) {
+				this.vlysis = Double.parseDouble(temp);
+				usedoptions.add("lytic-cell-water");
 			}
 			
 		}
@@ -723,7 +734,7 @@ public class RBC_model {
 			this.benz2 = Double.parseDouble(temp);
 			usedoptions.add("benz2loaded");
 		} else {
-			this.benz2 = 0.3;
+			this.benz2 = 0.0;
 		}
 		this.cbenz2 = this.benz2/this.Vw;
 
@@ -802,7 +813,6 @@ public class RBC_model {
 		} else {
 			this.goldman.setPkcak(1e-2);
 		}
-		
 		if(this.benz2 != 0) {
 			this.cell.Caf.setConcentration(1e-8);
 			this.canr();
@@ -873,5 +883,85 @@ public class RBC_model {
 		}
 //		System.out.println(no_its);
 		return X_3;
+	}
+	
+	public void publish() {
+		System.out.println("Publishing at time: " + this.sampling_time);
+		ResultHash new_result = new ResultHash(this.sampling_time);
+		
+		new_result.setItem("Vw",this.Vw);
+		new_result.setItem("V/V",this.VV);
+		new_result.setItem("MCHC",this.mchc);
+		new_result.setItem("Density",this.density);
+		new_result.setItem("pHi",this.cell.getpH());
+		new_result.setItem("pHo",this.medium.getpH());
+		new_result.setItem("Hct",this.fraction*100.0);
+		new_result.setItem("Em",this.Em);
+		new_result.setItem("QNa",this.cell.Na.getAmount());
+		new_result.setItem("QK",this.cell.K.getAmount());
+		new_result.setItem("QA",this.cell.A.getAmount());
+		new_result.setItem("QCa",this.cell.Cat.getAmount());
+		new_result.setItem("QMg",this.cell.Mgt.getAmount());
+		new_result.setItem("CNa",this.cell.Na.getConcentration());
+		new_result.setItem("CK",this.cell.K.getConcentration());
+		new_result.setItem("CA",this.cell.A.getConcentration());
+		new_result.setItem("CCa2+",this.cell.Caf.getConcentration());
+		new_result.setItem("CMg2+",this.cell.Mgf.getConcentration());
+		new_result.setItem("CHb",this.cell.Hb.getConcentration());
+		new_result.setItem("CX",this.cell.X.getConcentration());
+		new_result.setItem("COs",this.cell.COs.getConcentration());
+		new_result.setItem("rA",this.rA);
+		new_result.setItem("rH",this.rH);
+		new_result.setItem("fHb",this.fHb);
+		new_result.setItem("nHb",this.nHb);
+		new_result.setItem("MNa",this.medium.Na.getConcentration());
+		new_result.setItem("MK",this.medium.K.getConcentration());
+		new_result.setItem("MA",this.medium.A.getConcentration());
+		new_result.setItem("FNaP",this.napump.getFlux_net());
+		new_result.setItem("FCaP",this.capump.getFlux_Ca());
+		new_result.setItem("FKP",this.napump.getFlux_K());
+		new_result.setItem("FNa",this.total_flux_Na);
+		new_result.setItem("FK",this.total_flux_K);
+		new_result.setItem("FA",this.total_flux_A);
+		new_result.setItem("FH",this.total_flux_H);
+		new_result.setItem("FW",this.water.getFlux());
+		new_result.setItem("FNaG",this.goldman.getFlux_Na());
+		new_result.setItem("FKG",this.goldman.getFlux_K());
+		new_result.setItem("FAG",this.goldman.getFlux_A());
+		new_result.setItem("FHG",this.goldman.getFlux_H());		
+		
+		this.resultList.add(new_result);
+	}
+	
+	public void writeCsv(String name) {
+		FileWriter filewriter = null;
+		try {
+			filewriter = new FileWriter(name);
+			String headString = "Time";
+			for(int i=0;i<this.publish_order.length;i++) {
+				headString += '\t' + this.publish_order[i];
+			}
+			headString += '\n';
+			filewriter.append(headString);
+			String resultString;
+			for(ResultHash r: this.resultList) {
+				resultString = Double.toString(r.getTime());
+				for(int i=0;i<this.publish_order.length;i++) {
+					resultString += '\t' + String.format("%.3f", r.getItem(this.publish_order[i]));
+				}
+				headString += '\n';
+				filewriter.append(resultString);
+				System.out.println(resultString);
+			}
+		}catch (Exception e) {
+			
+		}finally {
+			try {
+				filewriter.flush();
+				filewriter.close();
+			}catch(IOException e) {
+				
+			}
+		}
 	}
 }

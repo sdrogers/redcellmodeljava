@@ -25,7 +25,7 @@ public class CaPumpMg2 {
 		this.setFcapm(12.0);
 		this.setH1(4.0);
 		this.capk = 2e-4;
-		this.flux_Ca = -0.03;
+		this.setFlux_Ca(-0.03);
 		this.setFlux_H(0.0);
 		this.setCah(1);
 	}
@@ -33,15 +33,15 @@ public class CaPumpMg2 {
 		Double capmg = (this.cell.Mgf.getConcentration()/(this.getCapmgk()+this.cell.Mgf.getConcentration()))*(this.capmgki/(this.capmgki+this.cell.Mgf.getConcentration()));
 		Double caphik=(this.getHik()/(this.getHik()+this.cell.H.getConcentration()));
 		Double fcapglobal=-(this.getFcapm()/this.napump.getI_17())*capmg*caphik;
-		this.flux_Ca = fcapglobal*(Math.pow(this.cell.Caf.getConcentration(),this.getH1()))/(Math.pow(this.capk,this.getH1()) + Math.pow(this.cell.Caf.getConcentration(),this.getH1()));
+		this.setFlux_Ca(fcapglobal*(Math.pow(this.cell.Caf.getConcentration(),this.getH1()))/(Math.pow(this.capk,this.getH1()) + Math.pow(this.cell.Caf.getConcentration(),this.getH1())));
 		if(this.getCah() == 1) {
-			this.setFlux_H(-this.flux_Ca);
+			this.setFlux_H(-this.getFlux_Ca());
 		}
 		if(this.getCah() == 2) {
 			this.setFlux_H(0.0);
 		}
 		if(this.getCah() == 0) {
-			this.setFlux_H(-2.0*this.flux_Ca);
+			this.setFlux_H(-2.0*this.getFlux_Ca());
 		}
 	}
 	public Double getFcapm() {
@@ -82,5 +82,11 @@ public class CaPumpMg2 {
 	}
 	public void setFlux_H(Double flux_H) {
 		this.flux_H = flux_H;
+	}
+	public Double getFlux_Ca() {
+		return flux_Ca;
+	}
+	public void setFlux_Ca(Double flux_Ca) {
+		this.flux_Ca = flux_Ca;
 	}
 }

@@ -820,6 +820,7 @@ public class RBC_model {
 		this.benz2k = this.benz2k * 1000.0;
 		
 		Double conc = this.newton_raphson(new Eqca(),this.cell.Caf.getConcentration(),0.000001, 0.000001);
+		this.cell.Caf.setConcentration(conc);
 		
 		this.cell.Caf.setConcentration(this.cell.Caf.getConcentration()/1000.0);
 		this.cell.Cat.setAmount(this.cell.Cat.getAmount()/1000.0);

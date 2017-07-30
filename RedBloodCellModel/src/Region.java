@@ -18,7 +18,7 @@ public class Region {
 	public Species COs;
 	
 	// concentration of charge on Hb
-	private Species Hbpm;
+	public Species Hbpm;
 	private Double pH;
 
 	public Region() {

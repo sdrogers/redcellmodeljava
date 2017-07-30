@@ -9,7 +9,7 @@ public class RBC_model {
 	private NaPump napump;
 	private CarrierMediated carriermediated;
 	private Goldman goldman;
-	private A23187 a23187;
+	private A23187 a23;
 	private WaterFlux waterflux;
 	private PassiveCa passiveca;
 	private CaPumpMg2 capump;
@@ -150,6 +150,10 @@ public class RBC_model {
 	private Double delta_Ca;
 	private Double q0;
 
+	private Double I_74;
+	private Double Z;
+	private boolean RS_computed;
+	private Integer stage;
 	
 	public RBC_model() {
 		cell = new Region();
@@ -161,7 +165,7 @@ public class RBC_model {
 		napump = new NaPump(cell,medium);
 		carriermediated = new CarrierMediated(cell,medium);
 		goldman = new Goldman(cell,medium);
-		a23187 = new A23187(cell,medium);
+		a23 = new A23187(cell,medium);
 		waterflux = new WaterFlux(cell,medium);
 		passiveca = new PassiveCa(cell,medium,goldman);
 		capump = new CaPumpMg2(cell,medium,napump);
@@ -355,6 +359,9 @@ public class RBC_model {
 		this.setcadefaults();
 		
 		this.mgbufferscreenRS(rsoptions, usedoptions);
+		this.cabufferscreenRS(rsoptions, usedoptions);
+		
+		this.computeRS();
 		
 		System.out.println("Used RS options");
 		for(String option: usedoptions) {
@@ -368,6 +375,158 @@ public class RBC_model {
 				System.out.println(option);
 			}
 		}
+	}
+	
+	public void computeRS() {
+		this.medium.A.setConcentration(this.medium.A.getConcentration() + 2*(this.medium.Mgt.getConcentration() + this.medium.Cat.getConcentration()));
+		this.computehtRS();
+		this.A_7 = this.fraction;
+		this.A_8 = this.A_7/(1-this.A_7);
+		
+		this.mediumconcentrationsRS();
+		this.cellphetc();
+		
+		this.nakamountsmgcaconcRS();
+
+		// Computes Q_X
+		this.secureisonoticityRS();
+		
+		// Computes n_X
+		// Non-protonizable charge on X (nX)
+		this.A_10 = (this.cell.A.getAmount() + 2*this.benz2 - (this.cell.Na.getAmount() + this.cell.K.getAmount() + 2*this.cell.Mgt.getAmount() + 2*this.cell.Cat.getAmount()+this.nHb*this.cell.Hb.getAmount()))/this.cell.X.getAmount();
+
+		// Net charge on Hb
+		this.Q_4 = this.nHb*this.cell.Hb.getAmount();
+
+		this.fluxesRS();
+		
+		this.R = 0.0;
+		this.cycle_count = 0.0;
+		this.n_its = 0;
+		this.Z = 0.0;
+		this.duration_experiment = 0.0;
+
+		this.RS_computed = true;
+
+		// Set stage to zero everytime the RS is computed - stage = 1 means we're about to start DS 1
+		this.stage = 1;
+	}
+	
+	private void fluxesRS() {
+		// Flux-rates and RS fluxes
+		this.napump.compute_permeabilities(this.temp_celsius);
+
+		this.carriermediated.setFlux_Na(-(1-this.fG)*this.napump.getFlux_net());
+		this.carriermediated.setFlux_K(-this.carriermediated.getFlux_Na()/this.Na_to_K);
+		this.carriermediated.compute_permeabilities();
+
+		// A fluxes through Na:Cl and K:Cl
+		Double fal = this.carriermediated.getFlux_Na() + this.carriermediated.getFlux_K();
+		// G-flux of A required to balance fal
+		this.goldman.setFlux_A(-fal);
+		// G-rates and RS fluxes
+		this.goldman.setFlux_Na(-this.fG*this.napump.getFlux_net());
+		this.goldman.setFlux_K(-this.goldman.getFlux_Na()/this.Na_to_K);
+		this.I_18 = 1.0;
+		this.goldman.compute_permeabilities(this.Em,this.temp_celsius);
+
+		// Zero-factor for cotransport
+		this.cotransport.compute_zero_factor();
+		this.X_6 = this.Vw;
+		// this.cotransportmediatedfluxes()
+		this.cotransport.compute_flux(this.I_18);
+		this.totalionfluxes();
+
+		this.Q_8 = this.fHb*this.cell.Hb.getAmount();
+
+		this.chbetc();
+	}
+	
+	private void totalionfluxes() {
+		// Total ion fluxes
+		// Na flux
+		this.total_flux_Na = this.napump.getFlux_net() + this.carriermediated.getFlux_Na() + this.goldman.getFlux_Na() + this.cotransport.getFlux_Na();
+		// K flux
+		this.total_flux_K = this.napump.getFlux_K() + this.carriermediated.getFlux_K() + this.goldman.getFlux_K() + this.cotransport.getFlux_K();
+		// Anion flux
+		this.total_flux_A = this.goldman.getFlux_A() + this.cotransport.getFlux_A() + this.JS.getFlux_A() + this.carriermediated.getFlux_Na() + this.carriermediated.getFlux_K();
+		// Net proton flux, includes H-flux through Ca pump
+		this.total_flux_H = this.JS.getFlux_H() + this.goldman.getFlux_H() - 2*this.a23.getFlux_Mg()-2*this.a23.getFlux_Ca()+this.capump.getFlux_H();
+	}
+	
+	private void chbetc() {
+		this.cell.Hb.setConcentration(this.cell.Hb.getAmount()/this.Vw);
+		this.cell.Mgt.setConcentration(this.cell.Mgt.getAmount()/this.Vw);
+		this.cell.X.setConcentration(this.cell.X.getAmount()/this.Vw);
+		this.cell.XHbm.setAmount(this.Q_4 + this.A_10*this.cell.X.getAmount() - 2*this.benz2);
+		this.cell.XHbm.setConcentration(this.cell.XHbm.getAmount()/this.Vw);
+		this.cell.COs.setConcentration(this.fHb*this.cell.Hb.getAmount()/this.Vw);
+		// Concentration of charge on Hb
+		this.cell.Hbpm.setConcentration(this.nHb*this.cell.Hb.getAmount()/this.Vw);
+
+		// This line doesn't seem to ever be used?
+		// this.I_12 = this.cell.Na.getConcentration() + this.cell.K.getConcentration() + this.cell.A.getConcentration() + this.fHb*this.cell.Hb.getConcentration() + this.cell.X.getConcentration() + this.mgf + this.caf + this.cbenz2
+
+		// Sum M
+		this.medium.Os.setConcentration(this.medium.Na.getConcentration()+ this.medium.K.getConcentration() + this.medium.A.getConcentration() + this.buffer_conc + this.medium.Gluconate.getConcentration() + this.medium.Glucamine.getConcentration() + this.medium.Sucrose.getConcentration() + (this.medium.Mgf.getConcentration() + this.medium.Caf.getConcentration() + this.edgto));
+		this.cell.Os.setAmount(this.cell.Na.getAmount() + this.cell.K.getAmount() + this.cell.A.getAmount() + this.fHb*this.cell.Hb.getAmount() + this.cell.X.getAmount() + this.cell.Mgt.getAmount() + (this.cell.Mgf.getConcentration()+this.cell.Caf.getConcentration())*this.Vw + this.benz2);
+	}
+	
+	private void secureisonoticityRS() {
+		// ecures initial isotonicity and electroneutrality; it computes the
+		// QX and nX required for initial osmotic and charge balance.  Since the Mg and
+		// Ca buffers are within X, only the unbound forms of Mg and Ca participate in
+		// osmotic equilibria within the cell.
+		Double summ = this.medium.Na.getConcentration() + this.medium.K.getConcentration() + this.medium.A.getConcentration() + this.buffer_conc + this.medium.Gluconate.getConcentration() + this.medium.Glucamine.getConcentration() + this.medium.Sucrose.getConcentration() + this.medium.Mgt.getConcentration() + this.medium.Cat.getConcentration();
+		Double sumq = this.cell.Na.getAmount() + this.cell.K.getAmount() + this.cell.A.getAmount() + (this.cell.Mgf.getConcentration()+this.cell.Caf.getConcentration())*this.Vw + this.fHb*this.cell.Hb.getAmount() + this.benz2;
+		this.cell.X.setAmount(this.Vw*summ - sumq);
+
+	}
+	
+	private void nakamountsmgcaconcRS() {
+		// Cell amounts of Na,K,and A, and concentrations of Mg and Ca
+		this.cell.Na.setAmount(this.cell.Na.getConcentration()*this.Vw);
+		this.cell.K.setAmount(this.cell.K.getConcentration()*this.Vw);
+		this.cell.A.setAmount(this.cell.A.getConcentration()*this.Vw);
+		this.cell.Mgt.setConcentration(this.cell.Mgt.getAmount()/this.Vw);
+		this.cell.Cat.setConcentration(this.cell.Cat.getAmount()/this.Vw);
+	}
+	
+	private void cellphetc() {
+		this.rA = this.medium.A.getConcentration()/this.cell.A.getConcentration();
+		this.rH = this.rA;
+		this.cell.H.setConcentration(this.rH*this.medium.H.getConcentration());
+		this.cell.setpH(-Math.log10(this.cell.H.getConcentration()));
+		this.Em = -(8.615600000000004e-02)*(273 + this.temp_celsius)*Math.log(this.rA);
+
+		// Osmotic coeficient of Hb
+		this.fHb = 1 + Math.pow(this.A_2*this.cell.Hb.getAmount()/this.Vw + this.A_3*(this.cell.Hb.getAmount()/this.Vw),2.0);
+		// physiological pI at 37oC;
+		this.I_74 = this.pit0 - (0.016*37);
+		// net charge on Hb (Eq/mole)
+		this.nHb = this.A_1*(this.cell.getpH() - this.I_74);
+	}
+	
+	
+	private void mediumconcentrationsRS() {
+		this.BufferType = "HEPES";
+		this.medium.H.setConcentration(Math.pow(10.0,-this.medium.getpH()));
+		this.pkhepes = 7.83 - 0.014*this.temp_celsius;
+		this.A_5 = Math.pow(10.0,-this.pkhepes);
+		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5+this.medium.H.getConcentration())));
+		// Medium Na,K,or A concentration
+		if(this.medium.getpH() >= this.A_12) {
+			this.medium.Na.setConcentration(this.medium.A.getConcentration() + this.edgneg + this.medium.Gluconate.getConcentration() + (this.buffer_conc - this.medium.Hb.getConcentration()) - this.medium.Glucamine.getConcentration() - this.medium.K.getConcentration() - 2*this.medium.Mgf.getConcentration() - 2*this.medium.Caf.getConcentration());
+		}else {
+			this.medium.K.setConcentration(this.medium.A.getConcentration() + this.edgneg + this.medium.Gluconate.getConcentration() + (this.buffer_conc - this.medium.Hb.getConcentration()) - this.medium.Glucamine.getConcentration() - this.medium.Na.getConcentration() - 2*this.medium.Mgf.getConcentration() - 2*this.medium.Caf.getConcentration());
+		}
+
+	}
+	
+	public void computehtRS() {
+		this.VV = (1-this.A_11) + this.Vw;
+		this.mchc = this.hb_content/this.VV;
+		this.density = (this.hb_content/100.0 + this.Vw)/this.VV;
 	}
 	
 	public void naPumpScreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
@@ -453,7 +612,7 @@ public class RBC_model {
 		this.VV = (1.0 - this.A_11) + this.Vw;
 		
 		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001);
-		System.out.println(conc);
+//		System.out.println(conc);
 		this.cell.Mgf.setConcentration(conc);
 		
 		
@@ -521,7 +680,7 @@ public class RBC_model {
 		}
 		
 		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001);
-		System.out.println(conc);
+//		System.out.println(conc);
 		this.cell.Mgf.setConcentration(conc);
 		
 	}
@@ -591,8 +750,8 @@ public class RBC_model {
 		} else {
 			this.capump.setH1(4.0);
 		}
-		temp = rsoptions.get("pump-epectro");
 		
+		temp = rsoptions.get("pump-electro");
 		Integer capstoich;
 		if(temp != null) {
 			capstoich = Integer.parseInt(temp);
@@ -652,7 +811,31 @@ public class RBC_model {
 		
 	}
 	
-	// Implement canr!!
+	private void canr() {
+		this.cell.Caf.setConcentration(1000.0*this.cell.Caf.getConcentration());
+		this.cell.Cat.setAmount(1000.0*this.cell.Cat.getAmount());
+		this.b1ca = this.b1ca * 1000.0;
+		this.b1cak = this.b1cak * 1000.0;
+		this.benz2 = this.benz2 * 1000.0;
+		this.benz2k = this.benz2k * 1000.0;
+		
+		Double conc = this.newton_raphson(new Eqca(),this.cell.Caf.getConcentration(),0.000001, 0.000001);
+		
+		this.cell.Caf.setConcentration(this.cell.Caf.getConcentration()/1000.0);
+		this.cell.Cat.setAmount(this.cell.Cat.getAmount()/1000.0);
+		this.b1ca=this.b1ca/1000.0;
+		this.b1cak=this.b1cak/1000.0;
+		this.benz2=this.benz2/1000.0;
+		this.benz2k=this.benz2k/1000.0;
+	}
+	
+	private class Eqca implements NWRunner {
+		public Double run(Double local_x6) {
+			cabb = local_x6*(Math.pow(alpha,-1.0))+((b1ca/VV)*local_x6/(b1cak+local_x6))+((benz2/VV)*local_x6/(benz2k+local_x6));
+			Double y = cell.Cat.getAmount() - cabb;
+			return y;
+		}
+	}
 	
 	private class Eqmg implements NWRunner {
 		public Double run(Double local_mgf) {
@@ -687,7 +870,7 @@ public class RBC_model {
 				finished = true;
 			}
 		}
-		System.out.println(no_its);
+//		System.out.println(no_its);
 		return X_3;
 	}
 }

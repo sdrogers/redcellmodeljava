@@ -28,10 +28,10 @@ public class Goldman {
 		this.permeability_A = 1.2;
 		this.permeability_H = 2e-10;
 		this.permeability_K = 0.0;
-		this.flux_Na = 0.0;
-		this.flux_A = 0.0;
-		this.flux_H = 0.0;
-		this.flux_K = 0.0;
+		this.setFlux_Na(0.0);
+		this.setFlux_A(0.0);
+		this.setFlux_H(0.0);
+		this.setFlux_K(0.0);
 		this.Goldman_factor = 0.0;
 		this.P_11 = 0.0;
 		this.setPkm(30.0);
@@ -44,10 +44,10 @@ public class Goldman {
 		this.Goldman_factor = Em*foverrt;
 	}
 	
-	private void compute_permeabilities(Double Em, Double temperature) {
+	public void compute_permeabilities(Double Em, Double temperature) {
 		this.gfactors(Em,temperature);
-		this.permeability_Na = Math.abs(this.flux_Na/this.gflux(this.cell.Na,this.medium.Na));
-		this.permeability_K = Math.abs(this.flux_K/this.gflux(this.cell.K,this.medium.K));
+		this.permeability_Na = Math.abs(this.getFlux_Na()/this.gflux(this.cell.Na,this.medium.Na));
+		this.permeability_K = Math.abs(this.getFlux_K()/this.gflux(this.cell.K,this.medium.K));
 	}
 	private Double total_G_permeability_K() {
 		Double I_62 = 1.0/(1.0+ Math.pow(this.cell.H.getConcentration(),4.0)/2.5e-30);
@@ -57,10 +57,10 @@ public class Goldman {
 	}
 	public void compute_flux(Double Em, Double temperature, Double I_18) {
 		this.gfactors(Em,temperature);
-		this.flux_Na = this.fullgflux(this.cell.Na,this.medium.Na,this.permeability_Na,I_18);
-		this.flux_A = this.fullgflux(this.cell.A,this.medium.A,this.permeability_A,I_18);
-		this.flux_H = this.fullgflux(this.cell.H,this.medium.H,this.permeability_H,I_18);
-		this.flux_K = this.fullgflux(this.cell.K,this.medium.K,this.total_G_permeability_K(),I_18);
+		this.setFlux_Na(this.fullgflux(this.cell.Na,this.medium.Na,this.permeability_Na,I_18));
+		this.setFlux_A(this.fullgflux(this.cell.A,this.medium.A,this.permeability_A,I_18));
+		this.setFlux_H(this.fullgflux(this.cell.H,this.medium.H,this.permeability_H,I_18));
+		this.setFlux_K(this.fullgflux(this.cell.K,this.medium.K,this.total_G_permeability_K(),I_18));
 	}
 	private Double gflux(Species cell_species, Species medium_species) {
 		return -cell_species.getZ()*this.Goldman_factor*(medium_species.getConcentration() - cell_species.getConcentration()*Math.exp(cell_species.getZ()*this.Goldman_factor))/(1.0-Math.exp(cell_species.getZ()*this.Goldman_factor));
@@ -87,5 +87,37 @@ public class Goldman {
 
 	public void setPkcak(Double pkcak) {
 		this.pkcak = pkcak;
+	}
+
+	public Double getFlux_A() {
+		return flux_A;
+	}
+
+	public void setFlux_A(Double flux_A) {
+		this.flux_A = flux_A;
+	}
+
+	public Double getFlux_Na() {
+		return flux_Na;
+	}
+
+	public void setFlux_Na(Double flux_Na) {
+		this.flux_Na = flux_Na;
+	}
+
+	public Double getFlux_K() {
+		return flux_K;
+	}
+
+	public void setFlux_K(Double flux_K) {
+		this.flux_K = flux_K;
+	}
+
+	public Double getFlux_H() {
+		return flux_H;
+	}
+
+	public void setFlux_H(Double flux_H) {
+		this.flux_H = flux_H;
 	}
 }

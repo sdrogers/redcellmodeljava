@@ -4,6 +4,8 @@ import java.util.HashMap;
 public class TestHandle {
 	public static void main(String[] args) {
 		System.out.println("RedBlodModel Handler");
+		System.out.println();
+		System.out.println();
 		
 		RBC_model rbc_model = new RBC_model();
 		

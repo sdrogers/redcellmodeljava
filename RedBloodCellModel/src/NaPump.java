@@ -35,9 +35,9 @@ public class NaPump {
 		this.medium = medium;
 		this.flux_fwd = -2.61;
 		this.flux_rev = 0.0015;
-		this.flux_net = this.flux_fwd + this.flux_rev;
-		this.flux_K = -this.flux_net/this.Na_to_K;
-		this.total_flux = this.flux_net + this.flux_K;
+		this.setFlux_net(this.flux_fwd + this.flux_rev);
+		this.setFlux_K(-this.getFlux_net()/this.Na_to_K);
+		this.total_flux = this.getFlux_net() + this.getFlux_K();
 		this.I_17 = 0.0;
 		this.B_1 = 0.2;
 		this.B_2 = 18.0;
@@ -93,9 +93,9 @@ public class NaPump {
 		this.compute_phnap();
 		this.flux_fwd = -(this.P_1/this.I_17)*this.mgnap*this.phnap*this.I_3*this.I_6;
 		this.flux_rev = (this.P_2/this.I_17)*this.mgnap*this.phnap*this.I_9*this.I_11;
-		this.flux_net = this.flux_fwd + this.flux_rev;
-		this.flux_K = -this.flux_net/this.Na_to_K;
-		this.total_flux = this.flux_net + this.flux_K;
+		this.setFlux_net(this.flux_fwd + this.flux_rev);
+		this.setFlux_K(-this.getFlux_net()/this.Na_to_K);
+		this.total_flux = this.getFlux_net() + this.getFlux_K();
 	}
 	
 	public void setFluxFwd(Double f) {
@@ -112,5 +112,17 @@ public class NaPump {
 	}
 	public Double getFluxRev() {
 		return this.flux_rev;
+	}
+	public Double getFlux_net() {
+		return flux_net;
+	}
+	public void setFlux_net(Double flux_net) {
+		this.flux_net = flux_net;
+	}
+	public Double getFlux_K() {
+		return flux_K;
+	}
+	public void setFlux_K(Double flux_K) {
+		this.flux_K = flux_K;
 	}
 }

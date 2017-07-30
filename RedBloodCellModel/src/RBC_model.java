@@ -163,6 +163,20 @@ public class RBC_model {
 	private Double Z;
 	private boolean RS_computed;
 	private Integer stage;
+
+	private Double I_43;
+
+	private double I_72;
+
+	private double I_40;
+
+	private double I_33;
+
+	private double I_45;
+
+	private double I_46;
+
+	private double I_34;
 	
 	public RBC_model() {
 		cell = new Region();
@@ -387,6 +401,207 @@ public class RBC_model {
 		
 		this.publish();
 	}
+	
+	public void setupDS(HashMap<String,String> options) {
+		ArrayList<String> usedoptions = new ArrayList<String>();
+		
+		this.set_screen_time_factor_options(options, usedoptions);
+		this.set_cell_fraction_options(options, usedoptions);
+		System.out.println();
+		System.out.println("Used DS options");
+		for(String option: usedoptions) {
+			System.out.println(option);
+		}
+		
+		System.out.println();
+		System.out.println("Unused DS options");
+		for(String option: options.keySet()) {
+			if(!usedoptions.contains(option)) {
+				System.out.println(option);
+			}
+		}
+		this.publish();
+	}
+	
+	private void set_cell_fraction_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
+		String temp = options.get("fraction");
+		if(temp != null) {
+			this.fraction = Double.parseDouble(temp);
+			usedoptions.add("fraction");
+		}
+		
+		if(this.A_7 != this.fraction) {
+			this.A_7 = this.fraction;
+			this.A_8 = this.A_7/(1.0 - this.A_7);
+		}
+		
+		temp = options.get("buffer-name");
+		if(temp != null) {
+			int buffer_number = Integer.parseInt(temp);
+			switch(buffer_number) {
+				case 0: this.BufferType = "HEPES";
+				case 1: this.BufferType = "A";
+				case 2: this.BufferType = "C";
+			}
+			usedoptions.add("buffer-name");
+			temp = options.get("pka");
+			if(temp != null) {
+				this.pka = Double.parseDouble(temp);
+				usedoptions.add("pka");
+			}	
+		}
+		
+		temp = options.get("bufferconc");
+		if(temp != null) {
+			this.buffer_conc = Double.parseDouble(temp);
+			usedoptions.add("bufferconc");
+		}
+		
+		this.A_12 = this.medium.getpH();
+		temp = options.get("extph");
+		if(temp != null) {
+			this.medium.setpH(Double.parseDouble(temp));
+			usedoptions.add("extph");
+		}
+		this.phadjust();
+		
+		temp = options.get("nag");
+		if(temp != null) {
+			this.I_72 = Double.parseDouble(temp);
+			usedoptions.add("nag");
+			this.medium.Glucamine.setConcentration(this.medium.Glucamine.getConcentration() + this.I_72);
+			this.medium.Na.setConcentration(this.medium.Na.getConcentration() - this.I_72);
+		}
+		
+		temp = options.get("acl");
+		if(temp != null) {
+			this.I_73 = Double.parseDouble(temp);
+			usedoptions.add("acl");
+			this.medium.Gluconate.setConcentration(this.medium.Gluconate.getConcentration() + this.I_73);
+			this.medium.A.setConcentration(this.medium.A.getConcentration() - this.I_73);
+			if(this.I_73 != 0) {
+				String temp2 = options.get("clxdur");
+				if(temp2 != null) {
+					this.T_6 = Double.parseDouble(temp2);
+					usedoptions.add("clxdur");
+				}
+			}
+		}
+		
+		temp = options.get("na-for-kcl");
+		if(temp != null) {
+			this.I_40 = Double.parseDouble(options.get("na-for-kcl"));
+			this.medium.Na.setConcentration(this.medium.Na.getConcentration() - this.I_40);
+			this.medium.K.setConcentration(this.medium.K.getConcentration() + this.I_40);
+			usedoptions.add("na-for-kcl");
+		}
+		
+		temp = options.get("kcl-for-na");
+		if(temp != null) {
+			this.I_33 = Double.parseDouble(options.get("kcl-for-na"));
+			this.medium.Na.setConcentration(this.medium.Na.getConcentration() + this.I_33);
+			this.medium.K.setConcentration(this.medium.K.getConcentration() - this.I_33);
+			usedoptions.add("kcl-for-na");
+		}
+		
+		temp = options.get("change-nacl");
+		if(temp != null) {
+			this.I_45 = Double.parseDouble(options.get("change-nacl"));
+			this.medium.Na.setConcentration(this.medium.Na.getConcentration() + this.I_45);
+			this.medium.A.setConcentration(this.medium.A.getConcentration() + this.I_45);
+			usedoptions.add("change-nacl");
+		}
+		
+		temp = options.get("change-kcl");
+		if(temp != null) {
+			this.I_34 = Double.parseDouble(options.get("change-kcl"));
+			this.medium.K.setConcentration(this.medium.K.getConcentration() + this.I_34);
+			this.medium.A.setConcentration(this.medium.A.getConcentration() + this.I_34);
+			usedoptions.add("change-kcl");
+		}
+		
+		temp = options.get("add-sucrose");
+		if(temp != null) {
+			this.I_46 = Double.parseDouble(options.get("add-sucrose"));
+			this.medium.Sucrose.setConcentration(this.medium.Sucrose.getConcentration() + this.I_46);
+			usedoptions.add("add-sucrose");
+		}
+		
+		temp = options.get("mgot");
+		if(temp != null) {
+			Double mgtold = this.medium.Mgt.getConcentration();
+			this.medium.Mgt.setConcentration(Double.parseDouble(temp));
+			usedoptions.add("mgot");
+			if(this.medium.Mgt.getConcentration() != 0) {
+				this.medium.A.setConcentration(this.medium.A.getConcentration() + 2.0*(this.medium.Mgt.getConcentration() - mgtold));
+			}
+		}
+		
+		temp = options.get("caot");
+		if(temp != null) {
+			Double catold = this.medium.Cat.getConcentration();
+			this.medium.Cat.setConcentration(Double.parseDouble(temp));
+			usedoptions.add("caot");
+			if(this.medium.Cat.getConcentration() != 0) {
+				this.medium.A.setConcentration(this.medium.A.getConcentration() + 2.0*(this.medium.Cat.getConcentration() - catold));
+			}
+		}
+
+		
+	}
+	
+	
+	private void phadjust() {
+		// 	phadjust:
+		// called from screen 2 entries after 4350
+		this.medium.H.setConcentration(Math.pow(10.0,(-this.medium.getpH())));
+		// Protonized buffer concentration;
+		if (this.BufferType == "HEPES") {
+			this.pkhepes = 7.83 - 0.014*this.temp_celsius;
+			this.A_5 = Math.pow(10.0,(-this.pkhepes));
+			this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5+this.medium.H.getConcentration())));
+		} else {
+			this.A_5 = Math.pow(10.0,(-this.pka));
+			this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5+this.medium.H.getConcentration())));
+		}
+
+		if (this.BufferType == "C") {
+			if(this.medium.getpH() >= this.A_12) {
+				this.medium.Na.setConcentration(this.medium.A.getConcentration()+this.edgneg+this.medium.Gluconate.getConcentration()-this.medium.Hb.getConcentration()-this.medium.Glucamine.getConcentration()-this.medium.K.getConcentration()-2*this.medium.Mgf.getConcentration()-2*this.medium.Caf.getConcentration());
+			} else {
+				this.medium.A.setConcentration(this.medium.Na.getConcentration() + this.medium.K.getConcentration()+this.medium.Glucamine.getConcentration()+this.medium.Hb.getConcentration()-this.medium.Gluconate.getConcentration()-this.edgneg+2*this.medium.Mgf.getConcentration()+2*this.medium.Caf.getConcentration());
+			}
+		} else {
+			if(this.medium.getpH() >= this.A_12) {
+				this.medium.Na.setConcentration(this.medium.A.getConcentration()+this.edgneg+this.medium.Gluconate.getConcentration()+(this.buffer_conc-this.medium.Hb.getConcentration())-this.medium.Glucamine.getConcentration()-this.medium.K.getConcentration()-2*this.medium.Mgf.getConcentration()-2*this.medium.Caf.getConcentration());
+			} else {
+				this.medium.A.setConcentration(this.medium.Na.getConcentration() + this.medium.K.getConcentration()+this.medium.Glucamine.getConcentration()-(this.buffer_conc-this.medium.Hb.getConcentration())-this.medium.Gluconate.getConcentration()-this.edgneg+2*this.medium.Mgf.getConcentration()+2*this.medium.Caf.getConcentration());
+			}
+		}
+	}
+	
+	private void set_screen_time_factor_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
+		String temp = options.get("time");
+		if(temp != null) {
+			this.duration_experiment = Double.parseDouble(temp);
+			usedoptions.add("time");
+		}
+		
+		this.I_43 = this.integration_interval_factor;
+		temp = options.get("integrationfactor");
+		if(temp != null) {
+			this.integration_interval_factor = Double.parseDouble(temp);
+			usedoptions.add("integrationfactor");
+		}
+		
+		temp = options.get("cyclesperprint");
+		if(temp != null) {
+			this.cycles_per_print = Integer.parseInt(temp);
+			usedoptions.add("cyclesperprint");
+		}
+		
+	}
+	
 	
 	public void computeRS() {
 		this.medium.A.setConcentration(this.medium.A.getConcentration() + 2*(this.medium.Mgt.getConcentration() + this.medium.Cat.getConcentration()));

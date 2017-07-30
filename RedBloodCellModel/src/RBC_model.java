@@ -1164,7 +1164,7 @@ public class RBC_model {
 				for(int i=0;i<this.publish_order.length;i++) {
 					resultString += '\t' + String.format("%.3f", r.getItem(this.publish_order[i]));
 				}
-				headString += '\n';
+				resultString += '\n';
 				filewriter.append(resultString);
 				System.out.println(resultString);
 			}

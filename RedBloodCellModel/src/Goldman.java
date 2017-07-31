@@ -20,6 +20,7 @@ public class Goldman {
 	private Double pgkh ;
 	
 	private Double rtoverf;
+	private Double foverrt;
 	
 	public Goldman(Region cell, Region medium) {
 		this.cell = cell;
@@ -42,10 +43,15 @@ public class Goldman {
 	
 	private void gfactors(Double Em, Double temperature) {
 		this.rtoverf = ((8.6156e-2)*(273+temperature));
-		Double foverrt = 1.0/((8.6156e-2)*(273+temperature));
+		this.foverrt = 1.0/((8.6156e-2)*(273+temperature));
 		this.Goldman_factor = Em*foverrt;
 	}
-	
+	public Double getRtoverf() {
+		return this.rtoverf;
+	}
+	public Double getFoverrt() {
+		return this.foverrt;
+	}
 	public void compute_permeabilities(Double Em, Double temperature) {
 		this.gfactors(Em,temperature);
 		this.setPermeability_Na(Math.abs(this.getFlux_Na()/this.gflux(this.cell.Na,this.medium.Na)));

@@ -588,10 +588,9 @@ class rbc_model(object):
 			self.JS.compute_flux(self.I_18)
 			
 			# Compute the membrane potential (eq 20)
-			self.Em,L = self.newton_raphson(self.compute_all_fluxes,self.Em)
+			self.Em,L = self.newton_raphson(self.compute_all_fluxes,self.Em,verbose = False)
 			# self.compute_membrane_potential()
-
-
+			
 			# add up the fluxes
 			self.totalionfluxes()
 
@@ -601,6 +600,11 @@ class rbc_model(object):
 			self.compute_deltas()
 
 			self.updatecontents()
+
+
+			# HERE!!!
+			self.publish_all()
+			return
 
 			self.cell.Cat.concentration = self.cell.Cat.amount/self.Vw
 			self.cbenz2 = self.benz2/self.Vw
@@ -1526,7 +1530,6 @@ class rbc_model(object):
 			print "Caot set to default ({:f})".format(self.medium.Cat.concentration)
 
 
-		# HERE!
 
 		if 'chelator' in options:
 			used_options.append('chelator')

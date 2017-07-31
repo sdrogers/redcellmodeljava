@@ -187,6 +187,16 @@ public class RBC_model {
 	private boolean finished;
 
 	private boolean in_progress;
+
+	private double delta_time;
+
+	private double delta_Na;
+
+	private double delta_K;
+
+	private double delta_A;
+
+	private double delta_Water;
 	
 	public RBC_model() {
 		cell = new Region();
@@ -391,12 +401,106 @@ public class RBC_model {
 			this.cotransport.compute_flux(this.I_18);
 			this.JS.compute_flux(this.I_18);
 			
-			this.Em = this.newton_raphson(new compute_all_fluxes(), this.Em, 0.001, 0.0001, 100, 0);
+			this.Em = this.newton_raphson(new compute_all_fluxes(), this.Em, 0.001, 0.0001, 100, 0, false);
+			
+			this.totalionfluxes();
+			
+			this.water.compute_flux(this.fHb, this.cbenz2, this.buffer_conc, this.edgto, this.I_18);
+			this.integrationInterval();
+			this.computeDeltas();
+			
+			this.updateContents();
+			
+			this.publish();
 			
 			this.sampling_time = 10000000.0;
 		
 		}
 		
+	}
+	private void updateContents() {
+		Double Vw_old = this.Vw;
+		this.Vw = this.Vw + this.delta_Water;
+		this.cell.Hb.setConcentration(this.cell.Hb.getAmount()/this.Vw);
+		this.fHb = 1.0 + this.A_2*this.cell.Hb.getConcentration()+this.A_3*Math.pow(this.cell.Hb.getConcentration(),2);
+		Double I_28 = this.fHb*this.cell.Hb.getAmount();
+		this.cell.Na.setAmount(this.cell.Na.getAmount() + this.delta_Na);
+		this.cell.K.setAmount(this.cell.K.getAmount() + this.delta_K);
+		this.cell.A.setAmount(this.cell.A.getAmount() + this.delta_A);
+		this.Q_4 = this.Q_4 + this.delta_H;
+
+		this.nHb = this.Q_4/this.cell.Hb.getAmount();
+		this.cell.Mgt.setAmount(this.cell.Mgt.getAmount()+this.delta_Mg);
+		this.cell.Cat.setAmount(this.cell.Cat.getAmount() + this.delta_Ca);
+		this.gca = this.cell.Cat.getAmount();
+
+		// Cell pH and cell proton concentration
+		this.cell.setpH(this.I_74 + this.nHb/this.A_1);
+		this.cell.H.setConcentration(Math.pow(10,(-this.cell.getpH())));
+		this.nHb = this.A_1*(this.cell.getpH()-this.I_74);
+		this.Q_8 = I_28;
+		this.VV = (1-this.A_11) + this.Vw;
+		this.mchc = this.hb_content/this.VV;
+		this.density = (this.hb_content/100 + this.Vw)/this.VV;
+		this.fraction = this.A_7*this.VV;
+
+		// External concentrations
+		Double I_30 = 1 + (this.Vw-Vw_old)*this.A_8;
+		this.medium.Na.setConcentration(this.medium.Na.getConcentration()*I_30 - this.delta_Na*this.A_8);
+		this.medium.K.setConcentration(this.medium.K.getConcentration()*I_30 - this.delta_K*this.A_8);
+		this.medium.A.setConcentration(this.medium.A.getConcentration()*I_30 - this.delta_A*this.A_8);
+		this.medium.Gluconate.setConcentration(this.medium.Gluconate.getConcentration()*I_30);
+		this.medium.Glucamine.setConcentration(this.medium.Glucamine.getConcentration()*I_30);
+		this.medium.Sucrose.setConcentration(this.medium.Sucrose.getConcentration()*I_30);
+		this.buffer_conc = this.buffer_conc*I_30;
+		this.medium.Hb.setConcentration(this.medium.Hb.getConcentration()*I_30);
+
+		// Medium proton, Ca2+, Mg2+, free and bound buffer and ligand concentrations
+		this.medium.Mgt.setConcentration(this.medium.Mgt.getConcentration()*I_30 - this.delta_Mg*this.A_8);
+		this.medium.Cat.setConcentration(this.medium.Cat.getConcentration()*I_30 - this.delta_Ca*this.A_8);
+		this.edgto = this.edgto*I_30;
+		if(this.edgto == 0) {
+			this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration());
+			this.medium.Caf.setConcentration(this.medium.Cat.getConcentration());
+		}
+		if(this.ligchoice != 0) {
+			this.edgta();
+		}
+		else {
+			this.medium.Hb.setConcentration(this.medium.Hb.getConcentration()*I_30 - this.delta_H*this.A_8);
+			this.medium.H.setConcentration(this.A_5*(this.medium.Hb.getConcentration()/(this.buffer_conc-this.medium.Hb.getConcentration())));
+			this.medium.setpH(-Math.log(this.medium.H.getConcentration())/Math.log(10.0));
+		}
+
+		// Cell concentrations and external concentrations
+		this.cell.Na.setConcentration(this.cell.Na.getAmount()/this.Vw);
+		this.cell.K.setConcentration(this.cell.K.getAmount()/this.Vw);
+		this.cell.A.setConcentration(this.cell.A.getAmount()/this.Vw);
+
+		// compute mgf
+		this.cell.Mgf.setConcentration(this.newton_raphson(new Eqmg(),0.02,0.0001,0.00001,100,0, false));
+		// compute caf
+		this.canr();
+	}
+	
+	private void computeDeltas() {
+		this.delta_Na = this.total_flux_Na*this.delta_time;
+		this.delta_K = this.total_flux_K*this.delta_time;
+		this.delta_A = this.total_flux_A*this.delta_time;
+		this.delta_H = this.total_flux_H*this.delta_time;
+		this.delta_Water = this.water.getFlux()*this.delta_time;
+		this.delta_Mg = this.a23.getFlux_Mg()*this.delta_time;
+		this.delta_Ca = this.total_flux_Ca*this.delta_time;
+	}
+	
+	
+	private void integrationInterval() {
+		// 8010 Integration interval
+		Double I_23 = 10.0 + 10.0*Math.abs(this.a23.getFlux_Mg()+this.total_flux_Ca) + Math.abs(this.goldman.getFlux_H()) + Math.abs(this.dedgh) + Math.abs(this.total_flux_Na) + Math.abs(this.total_flux_K) + Math.abs(this.total_flux_A) + Math.abs(this.total_flux_H) + Math.abs(this.water.getFlux()*100.0);
+		this.delta_time = this.integration_interval_factor/I_23;
+		this.sampling_time = this.sampling_time + this.delta_time;
+		this.cycle_count = this.cycle_count + 1;
+		this.n_its = this.n_its + 1;
 	}
 	
 	private class compute_all_fluxes implements NWRunner {
@@ -892,7 +996,7 @@ public class RBC_model {
 			Double hhold = buff;
 			this.it_counter = 0;
 			Double diff1 = 0.0001*this.medium.H.getConcentration();
-			Double X_3 = this.newton_raphson(new ligeq1(), buff, diff1, this.diff2, 100, bbb);
+			Double X_3 = this.newton_raphson(new ligeq1(), buff, diff1, this.diff2, 100, bbb, false);
 			bbb += this.it_counter;
 			if(X_3 < 0) {
 				X_3 = hhold;
@@ -904,7 +1008,7 @@ public class RBC_model {
 			Double cafold = buff;
 			diff1 = 0.0001 * cafold;
 			this.it_counter = 0;
-			X_3 = this.newton_raphson(new ligeq2(), buff, diff1, this.diff2, 100, bbb);
+			X_3 = this.newton_raphson(new ligeq2(), buff, diff1, this.diff2, 100, bbb, false);
 			bbb += this.it_counter;
 			if(X_3 < 0) {
 				X_3 = cafold / 2.0;
@@ -916,7 +1020,7 @@ public class RBC_model {
 			Double mgfold = buff;
 			diff1 = 0.0001 * mgfold;
 			this.it_counter = 0;
-			X_3 = this.newton_raphson(new ligeq3(), buff, diff1, this.diff2, 100, bbb);
+			X_3 = this.newton_raphson(new ligeq3(), buff, diff1, this.diff2, 100, bbb, false);
 			bbb += this.it_counter;
 			if(X_3 < 0) {
 				X_3 = mgfold / 2.0;
@@ -1277,7 +1381,7 @@ public class RBC_model {
 		this.dpgp = 15.0;
 		this.VV = (1.0 - this.A_11) + this.Vw;
 		
-		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001,100,0);
+		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001,100,0, false);
 //		System.out.println(conc);
 		this.cell.Mgf.setConcentration(conc);
 		
@@ -1345,7 +1449,7 @@ public class RBC_model {
 			this.dpgp = 15.0;
 		}
 		
-		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001,100,0);
+		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001,100,0, false);
 //		System.out.println(conc);
 		this.cell.Mgf.setConcentration(conc);
 		
@@ -1484,7 +1588,7 @@ public class RBC_model {
 		this.benz2 = this.benz2 * 1000.0;
 		this.benz2k = this.benz2k * 1000.0;
 		
-		Double conc = this.newton_raphson(new Eqca(),this.cell.Caf.getConcentration(),0.000001, 0.000001,100,0);
+		Double conc = this.newton_raphson(new Eqca(),this.cell.Caf.getConcentration(),0.000001, 0.000001,100,0, false);
 		this.cell.Caf.setConcentration(conc);
 		
 		this.cell.Caf.setConcentration(this.cell.Caf.getConcentration()/1000.0);
@@ -1510,7 +1614,7 @@ public class RBC_model {
 			return y;
 		}
 	}
-	private Double newton_raphson(NWRunner r, Double initial, Double step, Double stop,Integer max_its, Integer initial_its) {
+	private Double newton_raphson(NWRunner r, Double initial, Double step, Double stop,Integer max_its, Integer initial_its, boolean verbose) {
 //		int max_its = 100;
 //		Double step = 0.001;
 //		Double stop = 0.0001;
@@ -1521,13 +1625,28 @@ public class RBC_model {
 		while(!finished) {
 			Double X_1 = X_3 - step;
 			Double Y_1 = r.run(X_1);
+			if(verbose) {
+				System.out.println("X_1: " + X_1 + ", Y_1: " + Y_1);
+			}
 			Double X_2 = X_3 + step;
 			Double Y_2 = r.run(X_2);
 			Double S = (Y_2 - Y_1) / (X_2 - X_1);
 			X_3 = X_1 - (Y_1/S);
+			if(verbose) {
+				System.out.println("X_3: " + X_3 + ", S: " + S + ", Y/S: " + Y_1/S);
+			}
 //			System.out.println(Math.abs(Y_2));
 			// Note the bit here that isn't copied...
-			Double Y_3 = Y_2;
+			Double Y_3;
+			if(r instanceof ligeq3 || r instanceof ligeq1) {
+				Y_3 = Y_2;
+			} else {
+				Y_3 = r.run(X_3);
+			}
+			if(verbose) {
+				System.out.println("Y_3: " + Y_3);
+				System.out.println();
+			}
 			no_its++;
 			if(no_its > max_its) {
 				finished = true;
@@ -1601,7 +1720,7 @@ public class RBC_model {
 			filewriter.append(headString);
 			String resultString;
 			for(ResultHash r: this.resultList) {
-				resultString = Double.toString(r.getTime());
+				resultString = String.format("%.3f",r.getTime());
 				for(int i=0;i<this.publish_order.length;i++) {
 					resultString += '\t' + String.format("%.3f", r.getItem(this.publish_order[i]));
 				}

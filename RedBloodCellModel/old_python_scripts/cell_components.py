@@ -183,8 +183,8 @@ class Goldman(object):
 		# The sign of the G-components is thus inverted:
 		# 8.6156e-2 is R/F times 1e-3 (perhaps concentrations in mmol?)
 		self.rtoverf = ((8.6156e-2)*(273+temperature))
-		foverrt = 1.0/((8.6156e-2)*(273+temperature))
-		self.Goldman_factor = Em*foverrt
+		self.foverrt = 1.0/((8.6156e-2)*(273+temperature))
+		self.Goldman_factor = Em*self.foverrt
 
 	def compute_permeabilities(self,Em,temperature):
 		self.gfactors(Em,temperature)

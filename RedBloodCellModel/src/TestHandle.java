@@ -26,6 +26,8 @@ public class TestHandle {
 		
 		rbc_model.setupDS(options);
 		
+		rbc_model.runall();
+		
 		rbc_model.writeCsv("test.csv");
 		
 	}

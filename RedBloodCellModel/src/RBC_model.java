@@ -88,7 +88,7 @@ public class RBC_model {
 	private Double R;
 
 	private Double sampling_time;
-	private Double cycle_count;
+	private int cycle_count;
 	private Integer cycles_per_print;
 	private Double duration_experiment;
 	private Integer n_its;
@@ -160,7 +160,7 @@ public class RBC_model {
 	private Double q0;
 
 	private Double I_74;
-	private Double Z;
+	private int Z;
 	private boolean RS_computed;
 	private Integer stage;
 
@@ -183,6 +183,10 @@ public class RBC_model {
 	private int it_counter;
 
 	private Double I_67;
+
+	private boolean finished;
+
+	private boolean in_progress;
 	
 	public RBC_model() {
 		cell = new Region();
@@ -296,7 +300,7 @@ public class RBC_model {
 		this.R = 0.0; // Check the type
 
 		this.sampling_time = 0.0;
-		this.cycle_count = 0.0;
+		this.cycle_count = 0;
 		this.cycles_per_print = 777;
 		this.duration_experiment = 0.0;
 		this.n_its = 0;
@@ -365,6 +369,54 @@ public class RBC_model {
 		this.delta_Ca = 0.0;
 
 
+	}
+	
+	public void runall() {
+		System.out.println("RUNNING MODEL");
+		System.out.println("Sampling time: " + this.sampling_time);
+		System.out.println("Running until: " + this.duration_experiment);
+		
+		this.finished = false;
+		this.in_progress = true;
+		
+		this.cycle_count = 0;
+		this.n_its = 0;
+		this.Z = 0;
+		
+		this.publish();
+		while(this.sampling_time*60 <= this.duration_experiment) {
+			this.napump.compute_flux(this.temp_celsius);
+			this.I_18 = Math.exp(((37.0-this.temp_celsius)/10.0)*Math.log(this.B_10));
+			this.carriermediated.compute_flux(this.I_18);
+			this.cotransport.compute_flux(this.I_18);
+			this.JS.compute_flux(this.I_18);
+			
+			this.Em = this.newton_raphson(new compute_all_fluxes(), this.Em, 0.001, 0.0001, 100, 0);
+			
+			this.sampling_time = 10000000.0;
+		
+		}
+		
+	}
+	
+	private class compute_all_fluxes implements NWRunner {
+		public Double run(Double local_em) {
+			goldman.compute_flux(local_em, temp_celsius,I_18);
+			a23.compute_flux(I_18);
+			passiveca.compute_flux(I_18);
+			capump.compute_flux();
+			totalCaFlux();
+			totalFlux();
+			return total_flux;
+			
+		}
+	}
+	
+	public void totalCaFlux() {
+		this.total_flux_Ca = this.a23.getFlux_Ca() + this.passiveca.getFlux() + this.capump.getFlux_Ca();
+	}
+	public void totalFlux() {
+		this.total_flux = this.napump.getTotal_flux() + this.goldman.getFlux_H() + this.goldman.getFlux_Na() + this.goldman.getFlux_K() - this.goldman.getFlux_A() + this.capump.getCah()*this.capump.getFlux_Ca() + 2.0*this.passiveca.getFlux();
 	}
 	
 	public void setup(HashMap<String,String> rsoptions) {
@@ -1015,9 +1067,9 @@ public class RBC_model {
 		this.fluxesRS();
 		
 		this.R = 0.0;
-		this.cycle_count = 0.0;
+		this.cycle_count = 0;
 		this.n_its = 0;
-		this.Z = 0.0;
+		this.Z = 0;
 		this.duration_experiment = 0.0;
 
 		this.RS_computed = true;

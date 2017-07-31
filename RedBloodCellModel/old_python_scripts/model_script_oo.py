@@ -2502,12 +2502,15 @@ if __name__ == "__main__":
 	r.setup(rsoptions)
 
 	r.setupds(options)
-	r.write_csv(sl,outfile = "python_test.csv")
 
-	sys.exit(0)
+	# sys.exit(0)
 
 
 	r.runall()
+
+	r.write_csv(sl,outfile = "python_test.csv")
+
+	sys.exit(0)
 	if 'outfile' in options:
 		outfile = options.get('outfile')
 	else:

@@ -6,6 +6,7 @@ if __name__ == '__main__':
 	dict1 = {}
 	dict2 = {}
 	line_pos = 0
+
 	with open(f1,'r') as f:
 		heads1 = f.readline().split()
 		for line in f:
@@ -14,7 +15,6 @@ if __name__ == '__main__':
 				for i,h in enumerate(heads1):
 					dict1[h] = float(sline[i])
 			line_pos += 1
-
 
 	line_pos = 0
 	with open(f2,'r') as f:
@@ -30,3 +30,6 @@ if __name__ == '__main__':
 		err = abs(dict1[key] - dict2[key])
 		if err > 1e-6:
 			print key,dict1[key],dict2[key],abs(dict1[key] - dict2[key])
+		else:
+			# print key, "OK"
+			pass 

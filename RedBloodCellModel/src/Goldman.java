@@ -36,6 +36,8 @@ public class Goldman {
 		this.P_11 = 0.0;
 		this.setPkm(30.0);
 		this.setPkcak(1e-2);
+		
+		this.pgkh = 0.0;
 	}
 	
 	private void gfactors(Double Em, Double temperature) {

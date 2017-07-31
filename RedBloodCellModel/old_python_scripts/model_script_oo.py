@@ -498,7 +498,7 @@ class rbc_model(object):
 		self.set_temp_permeability_options(options,used_options)
 		
 		self.check_options(options,used_options)
-
+		self.publish_all()
 
 	def check_options(self,options,used_options):
 		# Checks to see which options in options aren't in used options
@@ -2500,11 +2500,13 @@ if __name__ == "__main__":
 	# r.debug = True
 	r.register(sl)
 	r.setup(rsoptions)
-	r.write_csv(sl,outfile = "python_test.csv")
-	print r.napump.flux_net
-	sys.exit(0)
 
 	r.setupds(options)
+	r.write_csv(sl,outfile = "python_test.csv")
+
+	sys.exit(0)
+
+
 	r.runall()
 	if 'outfile' in options:
 		outfile = options.get('outfile')

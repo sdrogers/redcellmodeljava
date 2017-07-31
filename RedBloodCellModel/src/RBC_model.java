@@ -177,6 +177,12 @@ public class RBC_model {
 	private double I_46;
 
 	private double I_34;
+
+	private double lig_hb;
+
+	private int it_counter;
+
+	private Double I_67;
 	
 	public RBC_model() {
 		cell = new Region();
@@ -407,6 +413,9 @@ public class RBC_model {
 		
 		this.set_screen_time_factor_options(options, usedoptions);
 		this.set_cell_fraction_options(options, usedoptions);
+		this.set_transport_changes_options(options, usedoptions);
+		this.set_temp_permeability_options(options, usedoptions);
+		
 		System.out.println();
 		System.out.println("Used DS options");
 		for(String option: usedoptions) {
@@ -421,6 +430,185 @@ public class RBC_model {
 			}
 		}
 		this.publish();
+	}
+	
+	private void set_temp_permeability_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
+		Double defaultTemp = this.temp_celsius;
+		String temp = options.get("temperature");
+		if(temp != null) {
+			this.temp_celsius = Double.parseDouble(temp);
+			usedoptions.add("temperature");
+			Double piold = this.pit0 - (0.016*defaultTemp);
+			Double pinew = this.pit0 - (0.016*this.temp_celsius);
+			this.I_74 = pinew;
+			Double newphc = pinew - piold + this.cell.getpH();
+			this.cell.setpH(newphc);
+			this.cell.H.setConcentration(Math.pow(10, -this.cell.getpH()));
+			if(this.BufferType == "HEPES") {
+				this.pkhepes = 7.83 - 0.014*this.temp_celsius;
+				Double a5old = this.A_5;
+				Double m4old = this.medium.H.getConcentration();
+				this.A_5 = Math.pow(10.0, -this.pkhepes);
+				this.medium.H.setConcentration(this.A_5*m4old/a5old);
+				this.medium.setpH(-Math.log(this.medium.H.getConcentration())/Math.log(10.0));
+				this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
+				
+			}else {
+				this.A_5 = Math.pow(10.0, -this.pka);
+				//Something funny happens here - these variables are used witout being set..
+				Double m4old = 0.0;
+				Double a5old = 0.0;
+				this.medium.H.setConcentration(this.A_5*m4old/a5old);
+				this.medium.setpH(-Math.log(this.medium.H.getConcentration())/Math.log(10.0));
+				this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
+			}
+		}
+		
+		temp = options.get("water-perm");
+		if(temp != null) {
+			this.water.setPermeability(Double.parseDouble(temp));
+			usedoptions.add("water-perm");
+		}
+		
+		temp = options.get("pgk");
+		if(temp != null) {
+			this.goldman.setPermeability_K(Double.parseDouble(temp));
+			usedoptions.add("pgk");
+		}
+		
+		temp = options.get("pgkh");
+		if(temp != null) {
+			this.goldman.setPgkh(Double.parseDouble(temp));
+			usedoptions.add("pgkh");
+		}
+		
+		temp = options.get("pgna");
+		if(temp != null) {
+			this.goldman.setPermeability_Na(Double.parseDouble(temp));
+			usedoptions.add("pgna");
+		}
+		
+		temp = options.get("pga");
+		if(temp != null) {
+			this.goldman.setPermeability_A(Double.parseDouble(temp));
+			usedoptions.add("pga");
+		}
+		
+		temp = options.get("pgh");
+		if(temp != null) {
+			this.goldman.setPermeability_H(Double.parseDouble(temp));
+			usedoptions.add("pgh");
+		}
+		
+		temp = options.get("pmg");
+		if(temp != null) {
+			this.a23.setPermeability_Mg(Double.parseDouble(temp));
+			usedoptions.add("pmg");
+			temp = options.get("a23cam");
+			if(temp != null) {
+				this.a23.setCamk(Double.parseDouble(temp));
+				usedoptions.add("a23cam");
+			} else {
+				this.a23.setCamk(10.0);
+			}
+			temp = options.get("a23mgm");
+			if(temp != null) {
+				this.a23.setMgmk(Double.parseDouble(temp));
+				usedoptions.add("a23mgm");
+			} else {
+				this.a23.setMgmk(10.0);
+			}
+			temp = options.get("a23cai");
+			if(temp != null) {
+				this.a23.setCaik(Double.parseDouble(temp));
+				usedoptions.add("a23cai");
+			} else {
+				this.a23.setCaik(10.0);
+			}
+			temp = options.get("a23mgi");
+			if(temp != null) {
+				this.a23.setMgik(Double.parseDouble(temp));
+				usedoptions.add("a23mgi");
+			} else {
+				this.a23.setMgik(10.0);
+			}
+		}
+		
+		this.a23.setPermeability_Ca(this.a23.getPermeability_Mg());
+		
+		temp = options.get("pit0");
+		if(temp != null) {
+			this.pit0 = Double.parseDouble(temp);
+			usedoptions.add("pit0");
+			//Problem here - I_67 is never set...what is it!
+			this.cell.setpH(this.pit0 - this.I_67 + this.cell.getpH());
+			this.cell.H.setConcentration(Math.pow(10.0, -this.cell.getpH()));
+			this.I_74 = this.pit0 - (0.016*this.temp_celsius);
+			temp = options.get("deoxy");
+			if(temp == "Y") {
+				this.atp = this.atp / 2.0;
+				this.dpgp = this.dpgp / 1.7;
+			}
+			
+					
+		}
+		
+	}
+	
+	private void set_transport_changes_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
+		String temp = options.get("na-pump-flux-change");
+		if(temp != null) {
+			this.napump.setP_1(Double.parseDouble(temp));
+			usedoptions.add("na-pump-flux-change");
+		}
+		
+		temp = options.get("na-pump-reverse-flux-change");
+		if(temp != null) {
+			this.napump.setP_2(Double.parseDouble(temp));
+			usedoptions.add("na-pump-reverse-flux-change");
+		}
+		temp = options.get("naa-change");
+		if(temp != null) {
+			this.carriermediated.setPermeability_Na(
+					Double.parseDouble(temp)*this.carriermediated.getPermeability_Na());
+			usedoptions.add("naa-change");
+		}
+		temp = options.get("ka-change");
+		if(temp != null) {
+			this.carriermediated.setPermeability_K(Double.parseDouble(temp) *
+					this.carriermediated.getPermeability_K());
+			usedoptions.add("ka-change");
+		}
+		temp = options.get("cotransport-activation");
+		if(temp != null) {
+			Double co_f = Double.parseDouble(temp);
+			this.cotransport.setPermeability(0.0002 * co_f / 100.0);
+			usedoptions.add("cotransport-activation");
+		}
+		temp = options.get("js-stimulation-inhibition");
+		if(temp != null) {
+			Double jsfactor = Double.parseDouble(temp);
+			this.JS.setPermeability(this.JS.getPermeability() * jsfactor);
+			usedoptions.add("js-stimulation-inhibition");
+		}
+		temp = options.get("vmax-pump-change");
+		if(temp != null) {
+			this.capump.setFcapm(this.capump.getFcapm() * Double.parseDouble(temp));
+			usedoptions.add("vmax-pump-change");
+		}
+		
+		temp = options.get("vmax-leak-change");
+		if(temp != null) {
+			this.passiveca.setFcalm(this.passiveca.getFcalm()*Double.parseDouble(temp));
+			usedoptions.add("vmax-leak-change");
+		}
+		
+		temp = options.get("percentage-inhibition");
+		if(temp != null) {
+			this.goldman.setPkm(this.goldman.getPkm() * 
+					(100.0 - Double.parseDouble(temp))/100.0);
+			usedoptions.add("percentage-inhibition");
+		}
 	}
 	
 	private void set_cell_fraction_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
@@ -546,10 +734,210 @@ public class RBC_model {
 				this.medium.A.setConcentration(this.medium.A.getConcentration() + 2.0*(this.medium.Cat.getConcentration() - catold));
 			}
 		}
+		
+		temp = options.get("chelator");
+		if(temp!=null) {
+			usedoptions.add("chelator");
+			this.ligchoice = Double.parseDouble(temp);
+		}
+		
+		temp = options.get("edgto");
+		if(temp != null) {
+			usedoptions.add("edgto");
+			this.edgto = Double.parseDouble(temp);
+		}
+		
+		if(this.ligchoice == 1) {
+			this.edghk1 = Math.pow(10,(-9.22));
+			this.edghk2 = Math.pow(10,(-8.65));
+			this.edgcak = Math.pow(10,(-10.34));
+			this.edgmgk = Math.pow(10,(-5.10));
+			if (this.medium.Cat.getConcentration()<this.edgto) {
+				this.medium.Caf.setConcentration(this.medium.Caf.getConcentration()/100000.0);
+			} else if (this.medium.Cat.getConcentration() == this.edgto) {
+				this.medium.Caf.setConcentration(this.medium.Cat.getConcentration()/100.0);
+			} else if (this.medium.Cat.getConcentration()>this.edgto) {
+				this.medium.Caf.setConcentration(Math.abs(this.medium.Cat.getConcentration()-this.edgto));
+			}
+			if (this.medium.Mgt.getConcentration() < (this.edgto - this.medium.Cat.getConcentration())) {
+				this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration()/5.0);
+			} else {
+				this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration());
+			}
 
+		} else if(this.ligchoice == 2) {
+			this.edghk1 = Math.pow(10,(-9.84));
+			this.edghk2 = Math.pow(10,(-5.92));
+			this.edgcak = Math.pow(10,(-9.95));
+			this.edgmgk = Math.pow(10,(-8.46));
+			
+		} else if(this.ligchoice == 0) {
+			this.edgto = 0.0;
+			this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration());
+			this.medium.Caf.setConcentration(this.medium.Cat.getConcentration());
+			return;
+		}
+		
+		// Initial cafo/mgfo values for iterative solution
+		Double camgratio=this.medium.Cat.getConcentration()/(this.medium.Cat.getConcentration()+this.medium.Mgt.getConcentration());
+		if (this.edgto < (this.medium.Cat.getConcentration() + this.medium.Mgt.getConcentration())){
+			this.medium.Caf.setConcentration(this.medium.Cat.getConcentration() - this.edgto*camgratio);
+			this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration() - this.edgto*(1.0-camgratio));
+		} else if (this.edgto > (this.medium.Cat.getConcentration() + this.medium.Mgt.getConcentration())) {
+			this.medium.Caf.setConcentration(this.medium.Cat.getConcentration()/100000.0);
+			this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration()/1000.0);
+		} else {
+			this.medium.Caf.setConcentration(this.medium.Cat.getConcentration()/1000.0);
+			this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration()/10.0);
+		}
+		
+		this.chelator();
+		this.oldedgta();
+	}
+	
+	private void oldedgta() {
+		// The following computes initial "dedgh"=proton release to medium on chelation
+		Double fh = 1 + this.medium.H.getConcentration()/this.edghk1 + Math.pow(this.medium.H.getConcentration(),2)/(this.edghk1*this.edghk2);
+		Double edg4old = this.edgto/(1000*fh);
+		Double edg3old = edg4old*this.medium.H.getConcentration()/this.edghk1;
+		Double edg2old = edg4old*Math.pow(this.medium.H.getConcentration(),2)/(this.edghk1*this.edghk2);
+		this.edghold = edg3old+2*edg2old;
+		this.edghold = 1000*this.edghold;
+		this.edgtainitial();
+		this.edgta();
+
+		this.edgneg=2*this.edg2+3*this.edg3+4*this.edg4+2*(this.edgca+this.edgmg);
+
+		if(this.BufferType == "c" || this.BufferType=="C") {
+			this.medium.A.setConcentration(this.medium.Na.getConcentration()+ this.medium.Hb.getConcentration() + this.medium.Glucamine.getConcentration() + 2*this.medium.Mgf.getConcentration() + 2*this.medium.Caf.getConcentration() - this.edgneg - this.medium.Gluconate.getConcentration());
+		} else {
+			this.medium.Na.setConcentration(this.medium.A.getConcentration() + this.edgneg + this.medium.Gluconate.getConcentration() + (this.buffer_conc - this.medium.Hb.getConcentration()) - this.medium.Glucamine.getConcentration() - this.medium.K.getConcentration() - 2*this.medium.Mgf.getConcentration() - 2*this.medium.Caf.getConcentration());
+		}
+	}
+	
+	private void edgtainitial() {
+		// Convert ligand, Ca and Mg concentrations to Molar units for ligroots sub
+		this.edgto=this.edgto/1000.0;
+		this.medium.Caf.setConcentration(this.medium.Caf.getConcentration()/1000.0);
+		this.medium.Mgf.setConcentration(this.medium.Mgf.getConcentration()/1000.0);
+		this.medium.Cat.setConcentration(this.medium.Cat.getConcentration()/1000.0);
+		this.medium.Mgt.setConcentration(this.medium.Mgt.getConcentration()/1000.0);
+		this.buffer_conc=this.buffer_conc/1000.0;
+		this.delta_H=this.delta_H/1000.0;
+		this.dedgh=this.dedgh/1000.0;
+		
+		Double fff=1+this.medium.H.getConcentration()/this.edghk1+Math.pow(this.medium.H.getConcentration(),2)/(this.edghk1*this.edghk2)+this.medium.Caf.getConcentration()/this.edgcak+this.medium.Mgf.getConcentration()/this.edgmgk;
+		// This parameter was made a class parameter to avoid 
+		// extra variables being passed to newton_raphson. 
+		// It's only used by ligeq1
+		this.lig_hb=this.medium.H.getConcentration()*(this.buffer_conc/(this.medium.H.getConcentration()+this.A_5)+this.edgto/(fff*this.edghk1)+this.medium.H.getConcentration()*this.edgto/(fff*this.edghk1*this.edghk2));
+		int nn = 0;
+		boolean finished = false;
+		while(!finished) {
+			int bbb = 0;
+			int rr = 1;
+			Double buff = this.medium.H.getConcentration();
+			Double hhold = buff;
+			this.it_counter = 0;
+			Double diff1 = 0.0001*this.medium.H.getConcentration();
+			Double X_3 = this.newton_raphson(new ligeq1(), buff, diff1, this.diff2, 100, bbb);
+			bbb += this.it_counter;
+			if(X_3 < 0) {
+				X_3 = hhold;
+			}
+			this.medium.H.setConcentration(X_3);
+			
+			rr = 2;
+			buff = this.medium.Caf.getConcentration();
+			Double cafold = buff;
+			diff1 = 0.0001 * cafold;
+			this.it_counter = 0;
+			X_3 = this.newton_raphson(new ligeq2(), buff, diff1, this.diff2, 100, bbb);
+			bbb += this.it_counter;
+			if(X_3 < 0) {
+				X_3 = cafold / 2.0;
+			}
+			this.medium.Caf.setConcentration(X_3);
+			
+			rr = 3;
+			buff = this.medium.Mgf.getConcentration();
+			Double mgfold = buff;
+			diff1 = 0.0001 * mgfold;
+			this.it_counter = 0;
+			X_3 = this.newton_raphson(new ligeq3(), buff, diff1, this.diff2, 100, bbb);
+			bbb += this.it_counter;
+			if(X_3 < 0) {
+				X_3 = mgfold / 2.0;
+			}
+			this.medium.Mgf.setConcentration(X_3);
+			nn += 1;
+			if(nn > 100) {
+				finished = true;
+			}
+			if ((Math.abs(this.medium.H.getConcentration() - hhold)<=this.diff3*hhold) && (Math.abs(cafold-this.medium.Caf.getConcentration())<=this.diff3*cafold) && (Math.abs(mgfold-this.medium.Mgf.getConcentration())<=this.diff3*mgfold)) {
+				finished = true;
+			}
+		}
+		
+		this.medium.setpH(-Math.log(this.medium.H.getConcentration())/Math.log(10.0));
+		this.buffer_conc = this.buffer_conc*1000.0;
+		this.delta_H = this.delta_H*1000.0;
+		this.medium.Hb.setConcentration(this.medium.H.getConcentration()*this.buffer_conc/(this.medium.H.getConcentration() + this.A_5));
+		this.edg4 = this.edgto/this.ff;
+		this.edg3 = this.edg4*this.medium.H.getConcentration()/this.edghk1;
+		this.edg2 = this.edg4*Math.pow(this.medium.H.getConcentration(),2)/(this.edghk1*this.edghk2);
+		this.edgca = this.edg4*this.medium.Caf.getConcentration()/this.edgcak;
+		this.edgmg = this.edg4*this.medium.Mgf.getConcentration()/this.edgmgk;
+		this.edgneg=2*this.edg2+3*this.edg3+4*this.edg4+2*(this.edgca+this.edgmg);
+		this.edghnew=this.edg3+2*this.edg2;
+
+		// Convert ligand, Ca and Mg concentrations back to mM units
+		this.edgto=this.edgto*1000;
+		this.medium.Caf.setConcentration(this.medium.Caf.getConcentration()*1000);
+		this.medium.Mgf.setConcentration(this.medium.Mgf.getConcentration()*1000);
+		this.medium.Cat.setConcentration(this.medium.Cat.getConcentration()*1000);
+		this.medium.Mgt.setConcentration(this.medium.Mgt.getConcentration()*1000);
+		this.edg4=this.edg4*1000;
+		this.edg3=this.edg3*1000;
+		this.edg2=this.edg2*1000;
+		this.edgca=this.edgca*1000;
+		this.edgmg=this.edgmg*1000;
+		this.edgneg=this.edgneg*1000;
+		this.edghnew=this.edghnew*1000;
+		// computes d[H]o due to chelation.
+		this.dedgh=this.edghnew-this.edghold;
 		
 	}
 	
+	private class ligeq1 implements NWRunner {
+		public Double run(Double X_3) {
+			ff = 1 + X_3/edghk1 + Math.pow(X_3,2)/(edghk1*edghk2) + medium.Caf.getConcentration()/edgcak + medium.Mgf.getConcentration()/edgmgk;
+			return X_3*(buffer_conc/(X_3 + A_5) + edgto/(ff*edghk1) + X_3*edgto/(ff*edghk1*edghk2))-(lig_hb-A_8*delta_H-dedgh);
+		}
+	}
+	private class ligeq2 implements NWRunner {
+		public Double run(Double X_3) {
+			ff = 1 + medium.H.getConcentration()/edghk1 + Math.pow(medium.H.getConcentration(),2)/(edghk1*edghk2) + X_3/edgcak + medium.Mgf.getConcentration()/edgmgk;
+			return medium.Cat.getConcentration() - X_3*(1+edgto/(ff*edgcak));
+		}	
+	}	
+
+	private class ligeq3 implements NWRunner {
+		public Double run(Double X_3) {
+			ff = 1 + medium.H.getConcentration()/edghk1 + Math.pow(medium.H.getConcentration(),2)/(edghk1*edghk2) + medium.Caf.getConcentration()/edgcak + X_3/edgmgk;
+			return medium.Mgt.getConcentration() - X_3*(1+edgto/(ff*edgmgk));
+		}
+	}
+
+	
+	private void edgta() {
+		this.edghold = this.edg3 + 2*this.edg2;
+		this.edgtainitial();
+	}
+	
+	private void chelator() {
+		this.medium.Na.setConcentration(this.medium.Na.getConcentration() + 2*this.edgto);
+	}
 	
 	private void phadjust() {
 		// 	phadjust:
@@ -837,7 +1225,7 @@ public class RBC_model {
 		this.dpgp = 15.0;
 		this.VV = (1.0 - this.A_11) + this.Vw;
 		
-		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001);
+		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001,100,0);
 //		System.out.println(conc);
 		this.cell.Mgf.setConcentration(conc);
 		
@@ -905,7 +1293,7 @@ public class RBC_model {
 			this.dpgp = 15.0;
 		}
 		
-		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001);
+		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001,100,0);
 //		System.out.println(conc);
 		this.cell.Mgf.setConcentration(conc);
 		
@@ -1044,7 +1432,7 @@ public class RBC_model {
 		this.benz2 = this.benz2 * 1000.0;
 		this.benz2k = this.benz2k * 1000.0;
 		
-		Double conc = this.newton_raphson(new Eqca(),this.cell.Caf.getConcentration(),0.000001, 0.000001);
+		Double conc = this.newton_raphson(new Eqca(),this.cell.Caf.getConcentration(),0.000001, 0.000001,100,0);
 		this.cell.Caf.setConcentration(conc);
 		
 		this.cell.Caf.setConcentration(this.cell.Caf.getConcentration()/1000.0);
@@ -1070,11 +1458,11 @@ public class RBC_model {
 			return y;
 		}
 	}
-	private Double newton_raphson(NWRunner r, Double initial, Double step, Double stop) {
-		int max_its = 100;
+	private Double newton_raphson(NWRunner r, Double initial, Double step, Double stop,Integer max_its, Integer initial_its) {
+//		int max_its = 100;
 //		Double step = 0.001;
 //		Double stop = 0.0001;
-		int initial_its = 0;
+//		int initial_its = 0;
 		Double X_3 = initial;
 		int no_its = initial_its;
 		Boolean finished = false;
@@ -1095,6 +1483,7 @@ public class RBC_model {
 			if(Math.abs(Y_3) < stop) {
 				finished = true;
 			}
+			it_counter += 1;
 		}
 //		System.out.println(no_its);
 		return X_3;

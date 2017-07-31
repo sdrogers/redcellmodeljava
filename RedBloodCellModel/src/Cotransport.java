@@ -18,7 +18,7 @@ public class Cotransport {
 				(this.medium.Na.getConcentration()*this.medium.K.getConcentration()*Math.pow(this.medium.A.getConcentration(), 2.0));
 	}
 	public void compute_flux(Double I_18) {
-		Double I_12 = -(this.permeability/I_18)*
+		Double I_12 = -(this.getPermeability()/I_18)*
 				(Math.pow(this.cell.A.getConcentration(),2.0)*this.cell.Na.getConcentration()*this.cell.K.getConcentration() - 
 						this.zero_factor*(Math.pow(this.medium.A.getConcentration(), 2.0)*this.medium.Na.getConcentration()*this.medium.K.getConcentration()));
 		this.flux_A = 2*I_12;
@@ -33,5 +33,13 @@ public class Cotransport {
 	}
 	public Double getFlux_K() {
 		return this.flux_K;
+	}
+
+	public Double getPermeability() {
+		return permeability;
+	}
+
+	public void setPermeability(Double permeability) {
+		this.permeability = permeability;
 	}
 }

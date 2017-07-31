@@ -28,8 +28,8 @@ public class NaPump {
 	private Double I_78;
 	
 	public NaPump(Region cell, Region medium) {
-		this.P_1 = 0.0;
-		this.P_2 = 0.0;
+		this.setP_1(0.0);
+		this.setP_2(0.0);
 		this.Na_to_K = 1.5;
 		this.cell = cell;
 		this.medium = medium;
@@ -76,8 +76,8 @@ public class NaPump {
 		this.compute_I(temperature);
 		this.compute_mgnap();
 		this.compute_phnap();
-		this.P_1 = Math.abs(this.flux_fwd/(this.mgnap*this.phnap*this.I_3*this.I_6));
-		this.P_2 = Math.abs(this.flux_rev/((this.mgnap*this.phnap)*(this.I_9*this.I_11)));
+		this.setP_1(Math.abs(this.flux_fwd/(this.mgnap*this.phnap*this.I_3*this.I_6)));
+		this.setP_2(Math.abs(this.flux_rev/((this.mgnap*this.phnap)*(this.I_9*this.I_11))));
 	}
 	private void compute_mgnap() {
 		this.mgnap = (this.cell.Mgf.getConcentration()/(this.mgnapk + this.cell.Mgf.getConcentration()))*(this.mgnapik/(this.mgnapik + this.cell.Mgf.getConcentration()));
@@ -91,8 +91,8 @@ public class NaPump {
 		this.compute_I(temperature);
 		this.compute_mgnap();
 		this.compute_phnap();
-		this.flux_fwd = -(this.P_1/this.I_17)*this.mgnap*this.phnap*this.I_3*this.I_6;
-		this.flux_rev = (this.P_2/this.I_17)*this.mgnap*this.phnap*this.I_9*this.I_11;
+		this.flux_fwd = -(this.getP_1()/this.I_17)*this.mgnap*this.phnap*this.I_3*this.I_6;
+		this.flux_rev = (this.getP_2()/this.I_17)*this.mgnap*this.phnap*this.I_9*this.I_11;
 		this.setFlux_net(this.flux_fwd + this.flux_rev);
 		this.setFlux_K(-this.getFlux_net()/this.Na_to_K);
 		this.total_flux = this.getFlux_net() + this.getFlux_K();
@@ -124,5 +124,17 @@ public class NaPump {
 	}
 	public void setFlux_K(Double flux_K) {
 		this.flux_K = flux_K;
+	}
+	public Double getP_1() {
+		return P_1;
+	}
+	public void setP_1(Double p_1) {
+		P_1 = p_1;
+	}
+	public Double getP_2() {
+		return P_2;
+	}
+	public void setP_2(Double p_2) {
+		P_2 = p_2;
 	}
 }

@@ -24,10 +24,10 @@ public class Goldman {
 	public Goldman(Region cell, Region medium) {
 		this.cell = cell;
 		this.medium = medium;
-		this.permeability_Na = 0.0;
-		this.permeability_A = 1.2;
-		this.permeability_H = 2e-10;
-		this.permeability_K = 0.0;
+		this.setPermeability_Na(0.0);
+		this.setPermeability_A(1.2);
+		this.setPermeability_H(2e-10);
+		this.setPermeability_K(0.0);
 		this.setFlux_Na(0.0);
 		this.setFlux_A(0.0);
 		this.setFlux_H(0.0);
@@ -46,20 +46,20 @@ public class Goldman {
 	
 	public void compute_permeabilities(Double Em, Double temperature) {
 		this.gfactors(Em,temperature);
-		this.permeability_Na = Math.abs(this.getFlux_Na()/this.gflux(this.cell.Na,this.medium.Na));
-		this.permeability_K = Math.abs(this.getFlux_K()/this.gflux(this.cell.K,this.medium.K));
+		this.setPermeability_Na(Math.abs(this.getFlux_Na()/this.gflux(this.cell.Na,this.medium.Na)));
+		this.setPermeability_K(Math.abs(this.getFlux_K()/this.gflux(this.cell.K,this.medium.K)));
 	}
 	private Double total_G_permeability_K() {
 		Double I_62 = 1.0/(1.0+ Math.pow(this.cell.H.getConcentration(),4.0)/2.5e-30);
-		this.P_11 = this.pgkh*I_62;
-		Double P_6 = this.permeability_K + this.getPkm()*(Math.pow(this.cell.Caf.getConcentration(),4.0)/(Math.pow(this.getPkcak(),4.0) + Math.pow(this.cell.Caf.getConcentration(),4.0)));
+		this.P_11 = this.getPgkh()*I_62;
+		Double P_6 = this.getPermeability_K() + this.getPkm()*(Math.pow(this.cell.Caf.getConcentration(),4.0)/(Math.pow(this.getPkcak(),4.0) + Math.pow(this.cell.Caf.getConcentration(),4.0)));
 		return P_6 + this.P_11;
 	}
 	public void compute_flux(Double Em, Double temperature, Double I_18) {
 		this.gfactors(Em,temperature);
-		this.setFlux_Na(this.fullgflux(this.cell.Na,this.medium.Na,this.permeability_Na,I_18));
-		this.setFlux_A(this.fullgflux(this.cell.A,this.medium.A,this.permeability_A,I_18));
-		this.setFlux_H(this.fullgflux(this.cell.H,this.medium.H,this.permeability_H,I_18));
+		this.setFlux_Na(this.fullgflux(this.cell.Na,this.medium.Na,this.getPermeability_Na(),I_18));
+		this.setFlux_A(this.fullgflux(this.cell.A,this.medium.A,this.getPermeability_A(),I_18));
+		this.setFlux_H(this.fullgflux(this.cell.H,this.medium.H,this.getPermeability_H(),I_18));
 		this.setFlux_K(this.fullgflux(this.cell.K,this.medium.K,this.total_G_permeability_K(),I_18));
 	}
 	private Double gflux(Species cell_species, Species medium_species) {
@@ -119,5 +119,45 @@ public class Goldman {
 
 	public void setFlux_H(Double flux_H) {
 		this.flux_H = flux_H;
+	}
+
+	public Double getPermeability_K() {
+		return permeability_K;
+	}
+
+	public void setPermeability_K(Double permeability_K) {
+		this.permeability_K = permeability_K;
+	}
+
+	public Double getPgkh() {
+		return pgkh;
+	}
+
+	public void setPgkh(Double pgkh) {
+		this.pgkh = pgkh;
+	}
+
+	public Double getPermeability_Na() {
+		return permeability_Na;
+	}
+
+	public void setPermeability_Na(Double permeability_Na) {
+		this.permeability_Na = permeability_Na;
+	}
+
+	public Double getPermeability_A() {
+		return permeability_A;
+	}
+
+	public void setPermeability_A(Double permeability_A) {
+		this.permeability_A = permeability_A;
+	}
+
+	public Double getPermeability_H() {
+		return permeability_H;
+	}
+
+	public void setPermeability_H(Double permeability_H) {
+		this.permeability_H = permeability_H;
 	}
 }

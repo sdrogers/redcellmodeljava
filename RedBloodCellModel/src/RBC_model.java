@@ -404,18 +404,47 @@ public class RBC_model {
 			this.Em = this.newton_raphson(new compute_all_fluxes(), this.Em, 0.001, 0.0001, 100, 0, false);
 			
 			this.totalionfluxes();
-			
 			this.water.compute_flux(this.fHb, this.cbenz2, this.buffer_conc, this.edgto, this.I_18);
 			this.integrationInterval();
 			this.computeDeltas();
 			
 			this.updateContents();
 			
-			this.publish();
+			this.cell.Cat.setConcentration(this.cell.Cat.getAmount()/this.Vw);
+			this.cbenz2 = this.benz2/this.Vw;
 			
-			this.sampling_time = 10000000.0;
+			this.chbetc();
+			
+			this.rA = this.medium.A.getConcentration() / this.cell.A.getConcentration();
+			this.rH = this.cell.H.getConcentration() / this.medium.H.getConcentration();
+			if(this.Vw > this.vlysis) {
+				// Cells have been lysed
+				break;
+			}
+			
+			if(this.I_73 > 0 && this.T_6 > 0) {
+				if(this.sampling_time*60 > this.T_6) {
+					this.medium.Gluconate.setConcentration(this.medium.Gluconate.getConcentration() - this.I_73);
+					this.medium.A.setConcentration(this.medium.A.getConcentration() + this.I_73);
+					this.I_73 = 0.0;
+				}
+			}
+			
+			if(this.n_its == 2) {
+				this.Z += 1;
+				this.publish();
+			}
+			
+			if(this.cycle_count == this.cycles_per_print) {
+				this.Z += 1;
+				System.out.println("Publishing at t=" + 60.0*this.sampling_time);
+				this.publish();
+				this.cycle_count = 0;
+			}
+			
 		
 		}
+		this.publish();
 		
 	}
 	private void updateContents() {
@@ -523,8 +552,7 @@ public class RBC_model {
 		this.total_flux = this.napump.getTotal_flux() + this.goldman.getFlux_H() + this.goldman.getFlux_Na() + this.goldman.getFlux_K() - this.goldman.getFlux_A() + this.capump.getCah()*this.capump.getFlux_Ca() + 2.0*this.passiveca.getFlux();
 	}
 	
-	public void setup(HashMap<String,String> rsoptions) {
-		ArrayList<String> usedoptions = new ArrayList<String>();
+	public void setup(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
 		this.naPumpScreenRS(rsoptions,usedoptions);
 		this.cellwaterscreenRS(rsoptions, usedoptions);
 		this.cellanionprotonscreenRS(rsoptions, usedoptions);
@@ -561,11 +589,10 @@ public class RBC_model {
 			}
 		}
 		
-		this.publish();
+		// this.publish();
 	}
 	
-	public void setupDS(HashMap<String,String> options) {
-		ArrayList<String> usedoptions = new ArrayList<String>();
+	public void setupDS(HashMap<String,String> options,ArrayList<String> usedoptions) {
 		
 		this.set_screen_time_factor_options(options, usedoptions);
 		this.set_cell_fraction_options(options, usedoptions);
@@ -585,7 +612,7 @@ public class RBC_model {
 				System.out.println(option);
 			}
 		}
-		this.publish();
+		//this.publish();
 	}
 	
 	private void set_temp_permeability_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
@@ -1269,7 +1296,7 @@ public class RBC_model {
 		this.cell.H.setConcentration(this.rH*this.medium.H.getConcentration());
 		this.cell.setpH(-Math.log10(this.cell.H.getConcentration()));
 		this.Em = -(8.615600000000004e-02)*(273 + this.temp_celsius)*Math.log(this.rA);
-
+		
 		// Osmotic coeficient of Hb
 		this.fHb = 1 + this.A_2*this.cell.Hb.getAmount()/this.Vw + this.A_3*Math.pow(this.cell.Hb.getAmount()/this.Vw,2.0);
 		// physiological pI at 37oC;
@@ -1561,7 +1588,7 @@ public class RBC_model {
 			this.goldman.setPkm(Double.parseDouble(temp));
 			usedoptions.add("ca2+-pkmax");
 		} else {
-			this.goldman.setPkm(1e-2);
+			this.goldman.setPkm(30.0);
 		}
 		
 		
@@ -1661,7 +1688,7 @@ public class RBC_model {
 	}
 	
 	public void publish() {
-		System.out.println("Publishing at time: " + this.sampling_time);
+//		System.out.println("Publishing at time: " + this.sampling_time);
 		ResultHash new_result = new ResultHash(this.sampling_time);
 		
 		new_result.setItem("Vw",this.Vw);
@@ -1720,11 +1747,11 @@ public class RBC_model {
 			filewriter.append(headString);
 			String resultString;
 			for(ResultHash r: this.resultList) {
-				resultString = String.format("%.3f",r.getTime());
+				resultString = String.format("%7.3f",60.0*r.getTime());
 				for(int i=0;i<this.publish_order.length;i++) {
-					resultString += '\t' + String.format("%.3f", r.getItem(this.publish_order[i]));
+					resultString += '\t' + String.format("%7.3f", r.getItem(this.publish_order[i]));
 				}
-				System.out.println(resultString);
+//				System.out.println(resultString);
 				resultString += '\n';
 				filewriter.append(resultString);
 			}

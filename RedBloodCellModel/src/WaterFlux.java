@@ -9,7 +9,7 @@ public class WaterFlux {
 		this.cell = cell;
 		this.medium = medium;
 		this.setFlux(0.0);
-		this.setPermeability(0.0);
+		this.setPermeability(2.0);
 	}
 	
 	public void compute_flux(Double fHb, Double cbenz2, Double buffer_conc,Double edgto, Double I_18) {

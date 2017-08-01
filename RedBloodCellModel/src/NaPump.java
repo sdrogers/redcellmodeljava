@@ -58,7 +58,7 @@ public class NaPump {
 	private void compute_I(Double temperature) {
 		Double I_1 = this.B_1*(1 + (this.cell.K.getConcentration()/this.B_4));
 		Double I_2 = this.cell.Na.getConcentration()/(this.cell.Na.getConcentration() + I_1);
-		this.I_3 = Math.pow(I_1, 3.0);
+		this.I_3 = Math.pow(I_2, 3.0);
 		Double I_4 = this.B_3 * (1 + this.medium.Na.getConcentration()/this.B_2);
 		Double I_5 = this.medium.K.getConcentration()/(this.medium.K.getConcentration() + I_4);
 		this.I_6 = Math.pow(I_5, 2.0);

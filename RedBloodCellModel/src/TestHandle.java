@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -9,22 +10,31 @@ public class TestHandle {
 		
 		RBC_model rbc_model = new RBC_model();
 		
-		HashMap<String,String> rsoptions = new HashMap<String,String>();
+//		HashMap<String,String> rsoptions = new HashMap<String,String>();
 		
-		
-		rsoptions.put("pump-electro","1");
-		rsoptions.put("hab", "0");
+		HashMap<String,String> options = new HashMap<String,String>();
+
+		options.put("pump-electro","1");
+		options.put("hab", "0");
 		
 		// use get(key) to get the value back
 		
-		HashMap<String,String> options = new HashMap<String,String>();
-		options.put("pgk", "30.0");
-		options.put("pga", "50.0");
-		options.put("time","30.0");
+		//		options.put("pgk", "30.0");
+//		options.put("pga", "50.0");
+//		options.put("time","30.0");
+		options.put("cyclesperprint", "777");
+//		options.put("time", "30");
 		
-		rbc_model.setup(rsoptions);
+		options.put("time","120");
+		options.put("fraction", "0.1");
+		options.put("caot", "0.2");
+		options.put("pmg", "2e18");
 		
-		rbc_model.setupDS(options);
+		ArrayList usedoptions = new ArrayList<String>();
+		
+		rbc_model.setup(options,usedoptions);
+		
+		rbc_model.setupDS(options,usedoptions);
 		
 		rbc_model.runall();
 		

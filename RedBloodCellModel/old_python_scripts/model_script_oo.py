@@ -420,7 +420,7 @@ class rbc_model(object):
 		for i in self.observers:
 			i.publish(name,value,time,stage=stage)
 
-	def setup(self,rsoptions):
+	def setup(self,rsoptions,used_options = []):
 		# This method is called by the web app to set the ref state
 		print 
 		print
@@ -432,7 +432,6 @@ class rbc_model(object):
 		print "        COMPUTING REFERENCE STATE  "
 		print "******************************************************************"
 
-		used_options = []
 
 		self.napumpscreenRS(rsoptions,used_options)
 		self.cellwaterscreenRS(rsoptions,used_options)
@@ -475,7 +474,7 @@ class rbc_model(object):
 		# Set stage to zero everytime the RS is computed - stage = 1 means we're about to start DS 1
 		self.stage = 1
 
-		self.publish_all()
+		# self.publish_all()
 
 	def get_stage(self):
 		return self.stage
@@ -483,8 +482,8 @@ class rbc_model(object):
 	def is_RS_computed(self):
 		return self.RS_computed
 		
-	def setupds(self,options):
-		used_options = []
+	def setupds(self,options,used_options = []):
+
 		print
 		print
 		print
@@ -498,7 +497,7 @@ class rbc_model(object):
 		self.set_temp_permeability_options(options,used_options)
 		
 		self.check_options(options,used_options)
-		self.publish_all()
+		# self.publish_all()
 
 	def check_options(self,options,used_options):
 		# Checks to see which options in options aren't in used options
@@ -602,9 +601,7 @@ class rbc_model(object):
 			self.updatecontents()
 
 
-			# HERE!!!
-			self.publish_all()
-			return
+			
 
 			self.cell.Cat.concentration = self.cell.Cat.amount/self.Vw
 			self.cbenz2 = self.benz2/self.Vw
@@ -613,15 +610,18 @@ class rbc_model(object):
 			self.chbetc()
 
 
+
 			# Anion and proton ratios
 			self.rA = self.medium.A.concentration/self.cell.A.concentration
 			self.rH = self.cell.H.concentration/self.medium.H.concentration
+
 
 
 			if self.Vw > self.vlysis:
 				print "The cells have been lysed and the program has been terminated"
 				exit()
 
+			
 			# Reversal of Cl x gluconate
 			
 			if self.I_73 > 0 and self.T_6 > 0:
@@ -629,6 +629,9 @@ class rbc_model(object):
 					self.medium.Gluconate.concentration = self.medium.Gluconate.concentration - self.I_73
 					self.medium.A.concentration = self.medium.A.concentration + self.I_73
 					self.I_73 = 0.0
+			
+
+
 
 
 			if self.n_its == 2:
@@ -2488,6 +2491,7 @@ if __name__ == "__main__":
 
 	else:
 		options = {'pgk':30,'pga':50,'time':30,'outfile':'pgk30pga50'}
+		options = {'time':120,'fraction':0.1,'caot':0.2,'pmg':2e18}
 	
 	print options
 	
@@ -2495,16 +2499,18 @@ if __name__ == "__main__":
 	rsoptions = {}
 	rsoptions['pump-electro'] = 1
 	rsoptions['hab'] = 0
-
+	options['pump-electro'] = 1
 	options['hab'] = 0
-
+	options['cyclesperprint'] = 777
+	# options['time'] = 0.02
 	r = rbc_model()
 	sl = Listener()
 	# r.debug = True
 	r.register(sl)
-	r.setup(rsoptions)
+	usedoptions = []
+	r.setup(options,usedoptions)
 
-	r.setupds(options)
+	r.setupds(options,usedoptions)
 
 	# sys.exit(0)
 

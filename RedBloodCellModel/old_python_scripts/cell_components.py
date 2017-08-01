@@ -69,7 +69,6 @@ class napump(object):
 		I_4 = self.B_3 * (1 + self.medium.Na.concentration/self.B_2)
 		I_5 = self.medium.K.concentration/(self.medium.K.concentration + I_4)
 		self.I_6 = I_5**2
-
 		I_7 = self.B_4*(1 + self.cell.Na.concentration/self.B_1)
 		I_8 = self.cell.K.concentration/(self.cell.K.concentration + I_7)
 		self.I_9 = I_8**2

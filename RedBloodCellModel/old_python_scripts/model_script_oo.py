@@ -1680,6 +1680,7 @@ class rbc_model(object):
 			self.medium.A.concentration = self.medium.Na.concentration+ self.medium.Hb.concentration + self.medium.Glucamine.concentration + 2*self.medium.Mgf.concentration + 2*self.medium.Caf.concentration - self.edgneg - self.medium.Gluconate.concentration
 		else:
 			self.medium.Na.concentration= self.medium.A.concentration + self.edgneg + self.medium.Gluconate.concentration + (self.buffer_conc - self.medium.Hb.concentration) - self.medium.Glucamine.concentration - self.medium.K.concentration - 2*self.medium.Mgf.concentration - 2*self.medium.Caf.concentration
+			print "Na bit ", self.medium.A.concentration,self.edgneg,self.medium.Gluconate.concentration,self.buffer_conc,self.medium.Hb.concentration
 
 	def edgta(self):
 		self.edghold=self.edg3+2*self.edg2
@@ -2191,6 +2192,7 @@ class rbc_model(object):
 		self.edgto = 0.0
 		self.medium.Mgf.concentration = self.medium.Mgt.concentration
 		self.medium.Caf.concentration = self.medium.Cat.concentration
+		print "CAF: ",self.medium.Caf.concentration
 
 	def mgbufferscreenRS(self,rsoptions,used_options = []):
 		print
@@ -2320,6 +2322,7 @@ class rbc_model(object):
 
 	def mediumconcentrationsRS(self):
 		self.BufferType = "HEPES"
+		print "Ph: ",self.medium.pH
 		self.medium.H.concentration = 10**(-self.medium.pH)
 		self.pkhepes = 7.83 - 0.014*self.temp_celsius
 		self.A_5 = 10**(-self.pkhepes)
@@ -2449,7 +2452,7 @@ class rbc_model(object):
 				for j,p in enumerate(self.publish_order):
 					if j>0:
 						f.write("\t")
-					f.write("{:7.3f}".format(sl.vals.get(p)[i]))
+					f.write("{:12.7f}".format(sl.vals.get(p)[i]))
 				f.write("\n")
 		f.close()
 
@@ -2480,10 +2483,10 @@ if __name__ == "__main__":
 	from simon_listener import Listener
 	if len(sys.argv)>1:
 		options = {}
-		options['outfile'] = sys.argv[1].split('.')[0]
+		# options['outfile'] = sys.argv[1].split('.')[0]
 		with open(sys.argv[1],'r') as f:
 			for line in f:
-				a = line.rstrip().split(':')
+				a = line.rstrip().split(' ')
 				if a[0] != 'outfile':
 					options[a[0]] = float(a[1])
 				else:
@@ -2496,12 +2499,12 @@ if __name__ == "__main__":
 	print options
 	
 	# Following RS options fix issues in original code with bad defaults
-	rsoptions = {}
-	rsoptions['pump-electro'] = 1
-	rsoptions['hab'] = 0
-	options['pump-electro'] = 1
-	options['hab'] = 0
-	options['cyclesperprint'] = 777
+	# rsoptions = {}
+	# rsoptions['pump-electro'] = 1
+	# rsoptions['hab'] = 0
+	# options['pump-electro'] = 1
+	# options['hab'] = 0
+	# options['cyclesperprint'] = 777
 	# options['time'] = 0.02
 	r = rbc_model()
 	sl = Listener()

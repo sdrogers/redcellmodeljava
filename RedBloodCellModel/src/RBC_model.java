@@ -494,10 +494,10 @@ public class RBC_model {
 		}
 		if(this.ligchoice != 0) {
 			this.edgta();
-		}
-		else {
+		}else {
 			this.medium.Hb.setConcentration(this.medium.Hb.getConcentration()*I_30 - this.delta_H*this.A_8);
 			this.medium.H.setConcentration(this.A_5*(this.medium.Hb.getConcentration()/(this.buffer_conc-this.medium.Hb.getConcentration())));
+
 			this.medium.setpH(-Math.log(this.medium.H.getConcentration())/Math.log(10.0));
 		}
 
@@ -633,6 +633,7 @@ public class RBC_model {
 				Double m4old = this.medium.H.getConcentration();
 				this.A_5 = Math.pow(10.0, -this.pkhepes);
 				this.medium.H.setConcentration(this.A_5*m4old/a5old);
+
 				this.medium.setpH(-Math.log(this.medium.H.getConcentration())/Math.log(10.0));
 				this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
 				
@@ -642,6 +643,7 @@ public class RBC_model {
 				Double m4old = 0.0;
 				Double a5old = 0.0;
 				this.medium.H.setConcentration(this.A_5*m4old/a5old);
+
 				this.medium.setpH(-Math.log(this.medium.H.getConcentration())/Math.log(10.0));
 				this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
 			}
@@ -937,10 +939,13 @@ public class RBC_model {
 			this.edgmgk = Math.pow(10,(-5.10));
 			if (this.medium.Cat.getConcentration()<this.edgto) {
 				this.medium.Caf.setConcentration(this.medium.Caf.getConcentration()/100000.0);
+				
 			} else if (this.medium.Cat.getConcentration() == this.edgto) {
 				this.medium.Caf.setConcentration(this.medium.Cat.getConcentration()/100.0);
+				
 			} else if (this.medium.Cat.getConcentration()>this.edgto) {
 				this.medium.Caf.setConcentration(Math.abs(this.medium.Cat.getConcentration()-this.edgto));
+
 			}
 			if (this.medium.Mgt.getConcentration() < (this.edgto - this.medium.Cat.getConcentration())) {
 				this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration()/5.0);
@@ -953,6 +958,19 @@ public class RBC_model {
 			this.edghk2 = Math.pow(10,(-5.92));
 			this.edgcak = Math.pow(10,(-9.95));
 			this.edgmgk = Math.pow(10,(-8.46));
+			// Initial cafo/mgfo values for iterative solution
+			Double camgratio=this.medium.Cat.getConcentration()/(this.medium.Cat.getConcentration()+this.medium.Mgt.getConcentration());
+			if (this.edgto < (this.medium.Cat.getConcentration() + this.medium.Mgt.getConcentration())){
+				this.medium.Caf.setConcentration(this.medium.Cat.getConcentration() - this.edgto*camgratio);
+				this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration() - this.edgto*(1.0-camgratio));
+			} else if (this.edgto > (this.medium.Cat.getConcentration() + this.medium.Mgt.getConcentration())) {
+				this.medium.Caf.setConcentration(this.medium.Cat.getConcentration()/100000.0);
+				this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration()/1000.0);
+			} else {
+				this.medium.Caf.setConcentration(this.medium.Cat.getConcentration()/1000.0);
+				this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration()/10.0);
+			}
+			
 			
 		} else if(this.ligchoice == 0) {
 			this.edgto = 0.0;
@@ -961,18 +979,8 @@ public class RBC_model {
 			return;
 		}
 		
-		// Initial cafo/mgfo values for iterative solution
-		Double camgratio=this.medium.Cat.getConcentration()/(this.medium.Cat.getConcentration()+this.medium.Mgt.getConcentration());
-		if (this.edgto < (this.medium.Cat.getConcentration() + this.medium.Mgt.getConcentration())){
-			this.medium.Caf.setConcentration(this.medium.Cat.getConcentration() - this.edgto*camgratio);
-			this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration() - this.edgto*(1.0-camgratio));
-		} else if (this.edgto > (this.medium.Cat.getConcentration() + this.medium.Mgt.getConcentration())) {
-			this.medium.Caf.setConcentration(this.medium.Cat.getConcentration()/100000.0);
-			this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration()/1000.0);
-		} else {
-			this.medium.Caf.setConcentration(this.medium.Cat.getConcentration()/1000.0);
-			this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration()/10.0);
-		}
+		
+
 		
 		this.chelator();
 		this.oldedgta();
@@ -1029,6 +1037,7 @@ public class RBC_model {
 				X_3 = hhold;
 			}
 			this.medium.H.setConcentration(X_3);
+
 			
 			rr = 2;
 			buff = this.medium.Caf.getConcentration();
@@ -1429,6 +1438,8 @@ public class RBC_model {
 		this.edgto = 0.0;
 		this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration());
 		this.medium.Caf.setConcentration(this.medium.Cat.getConcentration());
+		
+		
 	}
 	
 	
@@ -1749,7 +1760,7 @@ public class RBC_model {
 			for(ResultHash r: this.resultList) {
 				resultString = String.format("%7.3f",60.0*r.getTime());
 				for(int i=0;i<this.publish_order.length;i++) {
-					resultString += '\t' + String.format("%7.3f", r.getItem(this.publish_order[i]));
+					resultString += '\t' + String.format("%12.7f", r.getItem(this.publish_order[i]));
 				}
 //				System.out.println(resultString);
 				resultString += '\n';

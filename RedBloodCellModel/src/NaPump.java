@@ -62,7 +62,6 @@ public class NaPump {
 		Double I_4 = this.B_3 * (1 + this.medium.Na.getConcentration()/this.B_2);
 		Double I_5 = this.medium.K.getConcentration()/(this.medium.K.getConcentration() + I_4);
 		this.I_6 = Math.pow(I_5, 2.0);
-
 		Double I_7 = this.B_4*(1 + this.cell.Na.getConcentration()/this.B_1);
 		Double I_8 = this.cell.K.getConcentration()/(this.cell.K.getConcentration() + I_7);
 		this.I_9 = Math.pow(I_8, 2.0);

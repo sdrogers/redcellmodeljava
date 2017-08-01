@@ -1,0 +1,7 @@
+time 120
+fraction 0.1
+caot 0.2
+pmg 2e18
+pump-electro 1
+hab 0
+cyclesperprint 777

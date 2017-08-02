@@ -392,7 +392,7 @@ public class RBC_model {
 		this.cycle_count = 0;
 		this.n_its = 0;
 		this.Z = 0;
-		
+		System.out.println("Publishing at t=" + 60.0*this.sampling_time);
 		this.publish();
 		while(this.sampling_time*60 <= this.duration_experiment) {
 			this.napump.compute_flux(this.temp_celsius);
@@ -432,6 +432,7 @@ public class RBC_model {
 			
 			if(this.n_its == 2) {
 				this.Z += 1;
+				System.out.println("Publishing at t=" + 60.0*this.sampling_time);
 				this.publish();
 			}
 			
@@ -527,7 +528,9 @@ public class RBC_model {
 		// 8010 Integration interval
 		Double I_23 = 10.0 + 10.0*Math.abs(this.a23.getFlux_Mg()+this.total_flux_Ca) + Math.abs(this.goldman.getFlux_H()) + Math.abs(this.dedgh) + Math.abs(this.total_flux_Na) + Math.abs(this.total_flux_K) + Math.abs(this.total_flux_A) + Math.abs(this.total_flux_H) + Math.abs(this.water.getFlux()*100.0);
 		this.delta_time = this.integration_interval_factor/I_23;
+//		System.out.println("DT: " + this.delta_time);
 		this.sampling_time = this.sampling_time + this.delta_time;
+//		System.out.println("ST: " + this.sampling_time);
 		this.cycle_count = this.cycle_count + 1;
 		this.n_its = this.n_its + 1;
 	}
@@ -1255,9 +1258,12 @@ public class RBC_model {
 		// K flux
 		this.total_flux_K = this.napump.getFlux_K() + this.carriermediated.getFlux_K() + this.goldman.getFlux_K() + this.cotransport.getFlux_K();
 		// Anion flux
+//		System.out.println(this.goldman.getFlux_A() + "," + this.cotransport.getFlux_A() + "," + this.JS.getFlux_A() + "," + this.carriermediated.getFlux_Na() + this.carriermediated.getFlux_K());
 		this.total_flux_A = this.goldman.getFlux_A() + this.cotransport.getFlux_A() + this.JS.getFlux_A() + this.carriermediated.getFlux_Na() + this.carriermediated.getFlux_K();
 		// Net proton flux, includes H-flux through Ca pump
+//		System.out.println(this.goldman.getFlux_H() + "," + this.JS.getFlux_H() + "," + this.a23.getFlux_Mg() + "," + this.a23.getFlux_Ca() + "," + this.capump.getFlux_H());
 		this.total_flux_H = this.JS.getFlux_H() + this.goldman.getFlux_H() - 2*this.a23.getFlux_Mg()-2*this.a23.getFlux_Ca()+this.capump.getFlux_H();
+//		System.out.println(this.a23.getPermeability_Ca() + "," + this.a23.getPermeability_Mg());
 	}
 	
 	private void chbetc() {
@@ -1758,9 +1764,9 @@ public class RBC_model {
 			filewriter.append(headString);
 			String resultString;
 			for(ResultHash r: this.resultList) {
-				resultString = String.format("%7.3f",60.0*r.getTime());
+				resultString = String.format("%20.10f",60.0*r.getTime());
 				for(int i=0;i<this.publish_order.length;i++) {
-					resultString += '\t' + String.format("%12.7f", r.getItem(this.publish_order[i]));
+					resultString += '\t' + String.format("%20.10f", r.getItem(this.publish_order[i]));
 				}
 //				System.out.println(resultString);
 				resultString += '\n';

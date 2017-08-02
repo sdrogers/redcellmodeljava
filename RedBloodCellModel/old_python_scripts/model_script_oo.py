@@ -569,6 +569,7 @@ class rbc_model(object):
 		self.Z = 0
 
 		self.publish_all()
+		print "Publishing at T = {:f} minutes".format(self.sampling_time*60)
 
 		# self.debug = True
 		while self.sampling_time * 60 <= self.duration_experiment:
@@ -637,6 +638,7 @@ class rbc_model(object):
 			if self.n_its == 2:
 				self.Z = self.Z + 1
 				print "Data Sampling number = ",self.Z
+				print "Publishing at T = {:f} minutes".format(self.sampling_time*60)
 				self.publish_all()
 				if self.debug:
 					self.debugoutput()
@@ -826,16 +828,21 @@ class rbc_model(object):
 		# K flux
 		self.total_flux_K = self.napump.flux_K + self.carriermediated.flux_K + self.goldman.flux_K + self.cotransport.flux_K
 		# Anion flux
+		# print self.goldman.flux_A,self.cotransport.flux_A,self.JS.flux_A,self.carriermediated.flux_Na,self.carriermediated.flux_K
 		self.total_flux_A = self.goldman.flux_A + self.cotransport.flux_A + self.JS.flux_A + self.carriermediated.flux_Na + self.carriermediated.flux_K
 		# Net proton flux, includes H-flux through Ca pump
+		# print self.goldman.flux_H,self.JS.flux_H,self.a23.flux_Mg,self.a23.flux_Ca,self.capump.flux_H
 		self.total_flux_H = self.JS.flux_H + self.goldman.flux_H - 2*self.a23.flux_Mg-2*self.a23.flux_Ca+self.capump.flux_H
+		# print self.a23.permeability_Ca,self.a23.permeability_Mg
 
 
 	def integrationInterval(self):
 		# 8010 Integration interval
 		I_23 = 10.0 + 10.0*math.fabs(self.a23.flux_Mg+self.total_flux_Ca) + math.fabs(self.goldman.flux_H) + math.fabs(self.dedgh) + math.fabs(self.total_flux_Na) + math.fabs(self.total_flux_K) + math.fabs(self.total_flux_A) + math.fabs(self.total_flux_H) + math.fabs(self.water.flux*100.0)
 		self.delta_time = self.integration_interval_factor/I_23
+		# print "DT: ",self.delta_time
 		self.sampling_time = self.sampling_time + self.delta_time
+		# print "ST: ",self.sampling_time
 		self.cycle_count = self.cycle_count + 1.0
 		self.n_its = self.n_its + 1.0
 
@@ -2452,7 +2459,7 @@ class rbc_model(object):
 				for j,p in enumerate(self.publish_order):
 					if j>0:
 						f.write("\t")
-					f.write("{:12.7f}".format(sl.vals.get(p)[i]))
+					f.write("{:20.10f}".format(sl.vals.get(p)[i]))
 				f.write("\n")
 		f.close()
 

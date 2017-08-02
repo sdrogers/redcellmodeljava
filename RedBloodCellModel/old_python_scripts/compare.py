@@ -25,7 +25,10 @@ if __name__ == '__main__':
 				for i,h in enumerate(heads2):
 					dict2[h] = float(sline[i])
 			line_pos += 1
-	
+	if len(dict1) == 0:
+		print "couldn't find line"
+		sys.exit(0)
+		
 	for key in dict1:
 		err = abs(dict1[key] - dict2[key])
 		if err > 1e-6:

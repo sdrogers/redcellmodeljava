@@ -1,0 +1,7 @@
+time 30
+fraction 0.1
+cato 1.0
+chelator 1
+edgto 0.85
+pmg 2e18
+pga 50.0

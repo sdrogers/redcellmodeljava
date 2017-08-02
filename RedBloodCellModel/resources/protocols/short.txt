@@ -1,0 +1,4 @@
+time 10
+fraction 0.1
+cato 0.1
+pmg 2e18

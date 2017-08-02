@@ -12,8 +12,8 @@ public class TestHandle {
 			
 		HashMap<String,String> options = new HashMap<String,String>();
 		
-		String options_file = "./resources/protocols/A3.txt";
-		String results_file = "./resources/traces/A3.txt";
+		String options_file = "./resources/protocols/short.txt";
+		String results_file = "./resources/traces/short.txt";
 		
 		options = LoadProtocol.loadOptions(options_file);
 		LoadProtocol.printOptions(options);

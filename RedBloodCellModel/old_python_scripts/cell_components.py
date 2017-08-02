@@ -235,8 +235,10 @@ class A23187(object):
 		camgo=(self.medium.Caf.concentration/(self.camk+(self.camk*self.medium.Mgf.concentration/self.mgik)+self.medium.Caf.concentration))
 		mgcai=(self.cell.Mgf.concentration/(self.mgmk+(self.mgmk*self.cell.Caf.concentration/self.caik)+self.cell.Mgf.concentration))
 		camgi=(self.cell.Caf.concentration/(self.camk+(self.camk*self.cell.Mgf.concentration/self.mgik)+self.cell.Caf.concentration))
+		# print "Stuff: ",self.cell.H.concentration,self.medium.H.concentration,I_18
 		self.flux_Mg = self.permeability_Mg/I_18*(mgcao*self.cell.H.concentration**2 - mgcai*self.medium.H.concentration**2)
 		self.flux_Ca = self.permeability_Ca/I_18*(camgo*self.cell.H.concentration**2 - camgi*self.medium.H.concentration**2)
+		# print "Fluxes: ",self.flux_Mg,self.flux_Ca
 
 class WaterFlux(object):
 	def __init__(self,cell,medium):

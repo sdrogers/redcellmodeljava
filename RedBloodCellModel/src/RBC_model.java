@@ -205,13 +205,13 @@ public class RBC_model {
 		// Define the pumps
 		JS = new JacobsStewart(cell,medium);
 		cotransport = new Cotransport(cell,medium);
-		napump = new NaPump(cell,medium);
+		setNapump(new NaPump(cell,medium));
 		carriermediated = new CarrierMediated(cell,medium);
 		goldman = new Goldman(cell,medium);
 		a23 = new A23187(cell,medium);
 		water = new WaterFlux(cell,medium);
 		passiveca = new PassiveCa(cell,medium,goldman);
-		capump = new CaPumpMg2(cell,medium,napump);
+		capump = new CaPumpMg2(cell,medium,getNapump());
 		
 		A_1 = -10.0;
 		A_2 = 0.0645;
@@ -273,7 +273,7 @@ public class RBC_model {
 		this.total_flux_A = 0.0;
 		this.total_flux_H = 0.0;
 		this.napmaxf = 1.0;
-		this.napump.setFluxRev(0.0015);
+		this.getNapump().setFluxRev(0.0015);
 		this.napmaxr = 1.0;
 		
 		this.I_3 = 0.0;
@@ -395,7 +395,7 @@ public class RBC_model {
 		System.out.println("Publishing at t=" + 60.0*this.sampling_time);
 		this.publish();
 		while(this.sampling_time*60 <= this.duration_experiment) {
-			this.napump.compute_flux(this.temp_celsius);
+			this.getNapump().compute_flux(this.temp_celsius);
 			this.I_18 = Math.exp(((37.0-this.temp_celsius)/10.0)*Math.log(this.B_10));
 			this.carriermediated.compute_flux(this.I_18);
 			this.cotransport.compute_flux(this.I_18);
@@ -552,7 +552,7 @@ public class RBC_model {
 		this.total_flux_Ca = this.a23.getFlux_Ca() + this.passiveca.getFlux() + this.capump.getFlux_Ca();
 	}
 	public void totalFlux() {
-		this.total_flux = this.napump.getTotal_flux() + this.goldman.getFlux_H() + this.goldman.getFlux_Na() + this.goldman.getFlux_K() - this.goldman.getFlux_A() + this.capump.getCah()*this.capump.getFlux_Ca() + 2.0*this.passiveca.getFlux();
+		this.total_flux = this.getNapump().getTotal_flux() + this.goldman.getFlux_H() + this.goldman.getFlux_Na() + this.goldman.getFlux_K() - this.goldman.getFlux_A() + this.capump.getCah()*this.capump.getFlux_Ca() + 2.0*this.passiveca.getFlux();
 	}
 	
 	public void setup(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
@@ -746,13 +746,13 @@ public class RBC_model {
 	private void set_transport_changes_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
 		String temp = options.get("na-pump-flux-change");
 		if(temp != null) {
-			this.napump.setP_1(Double.parseDouble(temp));
+			this.getNapump().setP_1(Double.parseDouble(temp));
 			usedoptions.add("na-pump-flux-change");
 		}
 		
 		temp = options.get("na-pump-reverse-flux-change");
 		if(temp != null) {
-			this.napump.setP_2(Double.parseDouble(temp));
+			this.getNapump().setP_2(Double.parseDouble(temp));
 			usedoptions.add("na-pump-reverse-flux-change");
 		}
 		temp = options.get("naa-change");
@@ -1223,9 +1223,9 @@ public class RBC_model {
 	
 	private void fluxesRS() {
 		// Flux-rates and RS fluxes
-		this.napump.compute_permeabilities(this.temp_celsius);
+		this.getNapump().compute_permeabilities(this.temp_celsius);
 
-		this.carriermediated.setFlux_Na(-(1-this.fG)*this.napump.getFlux_net());
+		this.carriermediated.setFlux_Na(-(1-this.fG)*this.getNapump().getFlux_net());
 		this.carriermediated.setFlux_K(-this.carriermediated.getFlux_Na()/this.Na_to_K);
 		this.carriermediated.compute_permeabilities();
 
@@ -1234,7 +1234,7 @@ public class RBC_model {
 		// G-flux of A required to balance fal
 		this.goldman.setFlux_A(-fal);
 		// G-rates and RS fluxes
-		this.goldman.setFlux_Na(-this.fG*this.napump.getFlux_net());
+		this.goldman.setFlux_Na(-this.fG*this.getNapump().getFlux_net());
 		this.goldman.setFlux_K(-this.goldman.getFlux_Na()/this.Na_to_K);
 		this.I_18 = 1.0;
 		this.goldman.compute_permeabilities(this.Em,this.temp_celsius);
@@ -1254,9 +1254,9 @@ public class RBC_model {
 	private void totalionfluxes() {
 		// Total ion fluxes
 		// Na flux
-		this.total_flux_Na = this.napump.getFlux_net() + this.carriermediated.getFlux_Na() + this.goldman.getFlux_Na() + this.cotransport.getFlux_Na();
+		this.total_flux_Na = this.getNapump().getFlux_net() + this.carriermediated.getFlux_Na() + this.goldman.getFlux_Na() + this.cotransport.getFlux_Na();
 		// K flux
-		this.total_flux_K = this.napump.getFlux_K() + this.carriermediated.getFlux_K() + this.goldman.getFlux_K() + this.cotransport.getFlux_K();
+		this.total_flux_K = this.getNapump().getFlux_K() + this.carriermediated.getFlux_K() + this.goldman.getFlux_K() + this.cotransport.getFlux_K();
 		// Anion flux
 //		System.out.println(this.goldman.getFlux_A() + "," + this.cotransport.getFlux_A() + "," + this.JS.getFlux_A() + "," + this.carriermediated.getFlux_Na() + this.carriermediated.getFlux_K());
 		this.total_flux_A = this.goldman.getFlux_A() + this.cotransport.getFlux_A() + this.JS.getFlux_A() + this.carriermediated.getFlux_Na() + this.carriermediated.getFlux_K();
@@ -1345,11 +1345,11 @@ public class RBC_model {
 	public void naPumpScreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
 		String na_efflux_fwd = rsoptions.get("na-efflux-fwd");
 		if(na_efflux_fwd != null) {
-			this.napump.setFluxFwd(Double.parseDouble(na_efflux_fwd));
+			this.getNapump().setFluxFwd(Double.parseDouble(na_efflux_fwd));
 			usedoptions.add("na-efflux-fwd");
 		}
 		
-		if(this.napump.getFluxFwd() == -2.61) {
+		if(this.getNapump().getFluxFwd() == -2.61) {
 			this.napmaxf = 1.0;
 		}else {
 			this.napmaxf = 0.0;
@@ -1357,11 +1357,11 @@ public class RBC_model {
 		
 		String na_efflux_rev = rsoptions.get("na-efflux-rev");
 		if(na_efflux_rev != null) {
-			this.napump.setFluxRev(Double.parseDouble(na_efflux_rev));
+			this.getNapump().setFluxRev(Double.parseDouble(na_efflux_rev));
 			usedoptions.add("na-efflux-rev");
 		}
 		
-		if(this.napump.getFluxRev() == 0.0015) {
+		if(this.getNapump().getFluxRev() == 0.0015) {
 			this.napmaxr = 1.0;
 		}else {
 			this.napmaxr = 0.0;
@@ -1736,9 +1736,9 @@ public class RBC_model {
 		new_result.setItem("MNa",this.medium.Na.getConcentration());
 		new_result.setItem("MK",this.medium.K.getConcentration());
 		new_result.setItem("MA",this.medium.A.getConcentration());
-		new_result.setItem("FNaP",this.napump.getFlux_net());
+		new_result.setItem("FNaP",this.getNapump().getFlux_net());
 		new_result.setItem("FCaP",this.capump.getFlux_Ca());
-		new_result.setItem("FKP",this.napump.getFlux_K());
+		new_result.setItem("FKP",this.getNapump().getFlux_K());
 		new_result.setItem("FNa",this.total_flux_Na);
 		new_result.setItem("FK",this.total_flux_K);
 		new_result.setItem("FA",this.total_flux_A);
@@ -1782,5 +1782,13 @@ public class RBC_model {
 				
 			}
 		}
+	}
+
+	public NaPump getNapump() {
+		return napump;
+	}
+
+	public void setNapump(NaPump napump) {
+		this.napump = napump;
 	}
 }

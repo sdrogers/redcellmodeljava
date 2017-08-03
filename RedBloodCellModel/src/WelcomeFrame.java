@@ -1,33 +1,26 @@
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class WelcomeFrame extends JFrame implements ActionListener{
+public class WelcomeFrame extends MenuFrame {
 	private RBCGui parent;
-	public WelcomeFrame(String title,RBCGui parent) {
-		super(title);
-		this.parent = parent;
-		JPanel panel = new JPanel();
-		panel.setLayout(new FlowLayout());
+	public WelcomeFrame(RBCGui rbcgui, HashMap<String,String> options, RBC_model rbc) {
+		super(rbc,rbcgui,options,"Welcome");
 		
-		JButton startButton = new JButton("Start");
+		JButton startButton = new JButton("Next");
 		startButton.addActionListener(this);
 		panel.add(startButton);
-		this.add(panel);
-		this.setSize(300, 300);
-		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setVisible(true);
+		
 	}
-	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand() == "Start") {
-			this.setVisible(false);
-			this.parent.doneWelcome();
-		}
+	@Override
+	public void grabOptions() {
+		// TODO Auto-generated method stub
+		// Does nothing
 	}
 	
 }

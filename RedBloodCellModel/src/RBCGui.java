@@ -16,7 +16,6 @@ public class RBCGui {
 	public RBCGui() {
 		
 		options = new HashMap<String,String>();
-		welcomeframe = new WelcomeFrame("Red Blood Cell Model",this);
 		
 		String options_file = "./resources/protocols/short.txt";
 		String results_file = "./resources/traces/short.txt";
@@ -25,18 +24,27 @@ public class RBCGui {
 		LoadProtocol.printOptions(options);
 		
 		rbc = new RBC_model();
-		
-		timeoptions = new TimeOptions(this,options);
+		welcomeframe = new WelcomeFrame(this,options,rbc);
+		timeoptions = new TimeOptions(this,options,rbc);
 		napumpscreenrs = new NaPumpScreenRS(this,options,rbc);
 		
+		welcomeframe.makeVisible();
 		
 	}
-	public void doneWelcome() {
-		this.napumpscreenrs.makeVisible();
+	public void doneMenu(MenuFrame mf) {
+		if(mf instanceof WelcomeFrame) {
+			this.napumpscreenrs.makeVisible();
+		}
+		if(mf instanceof NaPumpScreenRS) {
+			System.out.println("Finished NaPumpScreen");
+			this.timeoptions.makeVisible();
+		}
+		if(mf instanceof TimeOptions) {
+			System.out.println("Finished time");
+			this.doneTime();
+		}
 	}
-	public void doneNaRS() {
-		this.timeoptions.makeVisible();
-	}
+	
 	public static void main(String[] args) {
 		new RBCGui();
 	}

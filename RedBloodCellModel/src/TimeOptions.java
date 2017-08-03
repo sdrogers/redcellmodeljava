@@ -10,44 +10,27 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class TimeOptions extends JFrame implements ActionListener {
-	JTextField timeField;
-	private HashMap<String,String> options;
-	private RBCGui rbcgui;
-	public TimeOptions(RBCGui parent,HashMap<String,String> options) {
-		super("Time Options");
+public class TimeOptions extends MenuFrame {
+	private JTextField timeField;
+	public TimeOptions(RBCGui rbcgui,HashMap<String,String> options,RBC_model rbc) {
+		super(rbc,rbcgui,options,"Time Options");
 		
-		this.rbcgui = parent;
-		this.options = options;
-		
-		JPanel panel = new JPanel();
-		panel.setLayout(new FlowLayout());
-		
-		JLabel timeLabel = new JLabel("Experiment time:");
+		panel.add(new JLabel("Experiment time:"));
 		timeField = new JTextField("30",10);
-		panel.add(timeLabel);
 		panel.add(timeField);
+
+		panel.add(new JLabel());
 		JButton nextButton = new JButton("Next");
 		nextButton.addActionListener(this);
 		panel.add(nextButton);
-		this.add(panel);
-		this.setSize(300, 300);
-		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setVisible(false);
 	}
 	public void makeVisible() {
 		this.setVisible(true);
 	}
-	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand() == "Next") {
-			// store the values in options
-			this.options.put("time", this.timeField.getText());
-			this.setVisible(false);
-			this.rbcgui.doneTime();
-		}
-
+	public void grabOptions() {
+		// TODO Auto-generated method stub
 		
 	}
+
 
 }

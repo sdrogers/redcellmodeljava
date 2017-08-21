@@ -1764,9 +1764,9 @@ public class RBC_model {
 			filewriter.append(headString);
 			String resultString;
 			for(ResultHash r: this.resultList) {
-				resultString = String.format("%20.10f",60.0*r.getTime());
+				resultString = String.format("%7.4f",60.0*r.getTime());
 				for(int i=0;i<this.publish_order.length;i++) {
-					resultString += '\t' + String.format("%20.10f", r.getItem(this.publish_order[i]));
+					resultString += '\t' + String.format("%7.4f", r.getItem(this.publish_order[i]));
 				}
 //				System.out.println(resultString);
 				resultString += '\n';

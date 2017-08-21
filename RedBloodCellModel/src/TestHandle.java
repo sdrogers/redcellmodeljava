@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.JFileChooser;
+
 
 public class TestHandle {
 	public static void main(String[] args) {
@@ -15,7 +17,12 @@ public class TestHandle {
 		String options_file = "./resources/protocols/short.txt";
 		String results_file = "./resources/traces/short.txt";
 		
-		options = LoadProtocol.loadOptions(options_file);
+		JFileChooser options_file_chooser = new JFileChooser();
+		int returnVal = options_file_chooser.showOpenDialog(null);
+		System.out.println(returnVal);
+		
+//		options = LoadProtocol.loadOptions(options_file);
+		options = LoadProtocol.loadOptions(options_file_chooser.getSelectedFile().getPath());
 		LoadProtocol.printOptions(options);
 		
 		ArrayList<String> usedoptions = new ArrayList<String>();
@@ -25,7 +32,10 @@ public class TestHandle {
 		
 		rbc_model.runall();
 		
-		rbc_model.writeCsv(results_file);
+//		rbc_model.writeCsv(results_file);
+		JFileChooser save_file_chooser = new JFileChooser();
+		returnVal = save_file_chooser.showSaveDialog(null);
+		rbc_model.writeCsv(save_file_chooser.getSelectedFile().getPath());
 		
 	}
 }

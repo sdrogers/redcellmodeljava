@@ -27,7 +27,7 @@ public class CaPumpMg2 {
 		this.capk = 2e-4;
 		this.setFlux_Ca(-0.03);
 		this.setFlux_H(0.0);
-		this.setCah(1);
+		this.setCah(2);
 	}
 	public void compute_flux() {
 		Double capmg = (this.cell.Mgf.getConcentration()/(this.getCapmgk()+this.cell.Mgf.getConcentration()))*(this.capmgki/(this.capmgki+this.cell.Mgf.getConcentration()));

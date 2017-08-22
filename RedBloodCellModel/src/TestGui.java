@@ -52,6 +52,7 @@ public class TestGui extends JFrame implements ActionListener {
 			options = new HashMap<String,String>();
 			options = LoadProtocol.loadOptions(jfc.getSelectedFile().getPath());
 			runButton.setEnabled(true);
+			saveButton.setEnabled(false);
 		}else if(e.getActionCommand() == "Run") {
 			ArrayList<String> usedoptions = new ArrayList<String>();
 			rbc = new RBC_model();

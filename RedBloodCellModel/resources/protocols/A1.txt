@@ -1,6 +1,4 @@
 time 30
 pgk 30
 pga 30
-pump-electro 1
-hab 0
 cyclesperprint 777

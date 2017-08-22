@@ -6,8 +6,8 @@ public class RBC_model {
 	
 	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
 	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CCa2+","CMg2+",
-	                                  "CHb","CX","COs","rA","rH","fHb","nHb","MNa","MK","MA","FNaP","FCaP","FKP",
-	                                  "FNa","FK","FA","FH","FW","FNaG","FKG","FAG","FHG"};
+	                                  "CHb","CX","COs","rA","rH","fHb","nHb","MNa","MK","MA","MCat","MCaf",
+	                                  "FNaP","FCaP","FKP","FNa","FK","FA","FH","FW","FNaG","FKG","FAG","FHG"};
 	
 	private ArrayList<ResultHash> resultList = new ArrayList<ResultHash>();
 	
@@ -213,20 +213,20 @@ public class RBC_model {
 		passiveca = new PassiveCa(cell,medium,goldman);
 		capump = new CaPumpMg2(cell,medium,getNapump());
 		
-		A_1 = -10.0;
-		A_2 = 0.0645;
-		A_3 = 0.0258;
+		A_1 = -10.0; // Net charge on haemoglobin
+		A_2 = 0.0645; // verial coefficients of osmotic coefficient of haemo (fhb)
+		A_3 = 0.0258; // verial coefficients of osmotic coefficient of haemo (fhb)
 		// private Double A_4 = 7.2;
-		pit0 = 7.2;
-		A_5 = 2.813822508658947e-08;
+		pit0 = 7.2; // iso-electric point of haemoglobin - constant
+		A_5 = 2.813822508658947e-08; // dissociation constant of protein buffer in medium (KB)
 		integration_interval_factor = 0.01; // Integration factor
-		A_7 = 0.0;
-		A_8 = 0.0;
+		A_7 = 0.0; // Initial haematocrit
+		A_8 = 0.0; // Haematocrit over 1-haematocrit
 		// private Double A_9 = 0.0;
 		hb_content = 34.0;
-		A_10 = 0.0;
-		A_11 = 0.0;
-		A_12 = 0.0;
+		A_10 = 0.0; // nX net charge on non-diffusible anion
+		A_11 = 0.0; // Vwo initial water content of cell
+		A_12 = 0.0; // pH in the medium at time 0
 
 		//# self.B_1 = 0.2
 		//# self.B_2 = 18.0
@@ -240,7 +240,8 @@ public class RBC_model {
 		//# self.B_8 = 37.0
 		temp_celsius = 37.0;
 		//# self.B_9 = 4.0
-		B_10 = 2.0;
+		B_10 = 2.0; // Q10L. Q10 - defines the number of times by which a dynamic process changes with temperature change of 10deg.
+		// Q10L (B_10) the factor for leaks. Q10P is the factor for pumps 
 		
 		
 		
@@ -265,8 +266,8 @@ public class RBC_model {
 		//# self.cell.Hbpm.concentration
 		
 		this.delta_H = 0.0;
-		this.D_6 = 0.001;
-		this.D_12 =  0.0001;
+		this.D_6 = 0.001; // Cord - for the NR
+		this.D_12 =  0.0001; // NR delta
 		
 		this.total_flux_Na = 0.0;
 		this.total_flux_K = 0.0;
@@ -276,18 +277,20 @@ public class RBC_model {
 		this.getNapump().setFluxRev(0.0015);
 		this.napmaxr = 1.0;
 		
+		// These are napump things
 		this.I_3 = 0.0;
 		this.I_6 = 0.0;
 		this.I_9 = 0.0;
 		this.I_11 = 0.0;
+		// This is a co-transport thing
 		this.I_12 = 0.0;
 		
 		
 		this.I_18 = 0.0;
-		this.I_73 = 0.0;
-		this.I_77 = 7.216;
-		this.I_78 = 0.4;
-		this.I_79 = 0.75;
+		this.I_73 = 0.0; // Exchange chloride for gluconate (in the medium)
+		this.I_77 = 7.216; // Just in NaPump - remove
+		this.I_78 = 0.4; // Just in NaPump - remove
+		this.I_79 = 0.75; // Water volume (as proportion of total)
 		
 		this.medium.Na.setConcentration(145.0);
 		this.medium.K.setConcentration(5.0);
@@ -299,14 +302,14 @@ public class RBC_model {
 		this.cell.Na.setAmount(0.0);
 		this.cell.K.setAmount(0.0);
 		this.cell.A.setAmount(0.0);
-		this.Q_4 = 0.0;
+		this.Q_4 = 0.0; // Q(Hb-): Qs are 'per litre of cells' - how much -ve charge does Hb provide per litre cells
 		this.cell.Hb.setAmount(0.0);
 		this.cell.X.setAmount(0.0);
 		this.cell.Mgt.setAmount(0.0);
 		
 		
 		
-		this.Q_8 = 0.0;
+		this.Q_8 = 0.0; // Osmotic coefficient of haemoglobin - only used in the reference state
 		this.R = 0.0; // Check the type
 
 		this.sampling_time = 0.0;
@@ -333,7 +336,7 @@ public class RBC_model {
 		this.diff3 = 0.00001;
 		this.dedgh = 0.0;
 		this.ligchoice = 0.0;
-		this.edghk1 = 0.0;
+		this.edghk1 = 0.0; // chelators either edga or edta. edta bounds calcium & mg, edga bounds ca pref to mg
 		this.edghk2 = 0.0;
 		this.edgcak = 0.0;
 		this.edgmgk = 0.0;
@@ -348,14 +351,14 @@ public class RBC_model {
 		this.edghold = 0.0;
 		
 		
-		this.mgb = 0.0;
+		this.mgb = 0.0; // mg buffering
 		this.mgb0 = 0.0;
 		this.mgcao = 0.0;
 		this.mgcai = 0.0;
 		this.cell.Mgt.setAmount(2.5);
 		this.camgi = 0.0;
 		this.camgo = 0.0;
-		this.cab = 0.0;
+		this.cab = 0.0; // ca buffering
 		this.cabb = 0.0;
 		this.cell.Cat.setConcentration(0.0);
 		this.total_flux_Ca = 0.0;
@@ -396,6 +399,7 @@ public class RBC_model {
 		this.publish();
 		while(this.sampling_time*60 <= this.duration_experiment) {
 			this.getNapump().compute_flux(this.temp_celsius);
+			// Temperature dependence of the passive fluxes, uses Q10L
 			this.I_18 = Math.exp(((37.0-this.temp_celsius)/10.0)*Math.log(this.B_10));
 			this.carriermediated.compute_flux(this.I_18);
 			this.cotransport.compute_flux(this.I_18);
@@ -567,7 +571,7 @@ public class RBC_model {
 		this.medium.setpH(7.4);
 		this.A_12 = this.medium.getpH();
 		this.A_11 = 1.0-this.hb_content/136.0;
-		this.R = 1.0; // check type
+		this.R = 1.0; // check type - flag to determine that we're computing reference state
 		this.sampling_time = 0.0;
 		
 		
@@ -913,11 +917,11 @@ public class RBC_model {
 			}
 		}
 		
-		temp = options.get("caot");
+		temp = options.get("cato");
 		if(temp != null) {
 			Double catold = this.medium.Cat.getConcentration();
 			this.medium.Cat.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("caot");
+			usedoptions.add("cato");
 			if(this.medium.Cat.getConcentration() != 0) {
 				this.medium.A.setConcentration(this.medium.A.getConcentration() + 2.0*(this.medium.Cat.getConcentration() - catold));
 			}
@@ -1246,7 +1250,8 @@ public class RBC_model {
 		this.cotransport.compute_flux(this.I_18);
 		this.totalionfluxes();
 
-		this.Q_8 = this.fHb*this.cell.Hb.getAmount();
+		this.Q_8 = this.fHb*this.cell.Hb.getAmount(); // How many solute equivalents (cell.Hb.getAmount() = QHb)
+		// fHb is osmotic coefficient of haemoglobin
 
 		this.chbetc();
 	}
@@ -1500,10 +1505,10 @@ public class RBC_model {
 	}
 	
 	private void cabufferscreenRS(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
-		String temp = rsoptions.get("caot-medium");
+		String temp = rsoptions.get("cato-medium");
 		if(temp != null) {
 			this.medium.Cat.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("caot-medium");
+			usedoptions.add("cato-medium");
 		} else {
 			this.medium.Cat.setConcentration(1.0);
 		}
@@ -1736,6 +1741,8 @@ public class RBC_model {
 		new_result.setItem("MNa",this.medium.Na.getConcentration());
 		new_result.setItem("MK",this.medium.K.getConcentration());
 		new_result.setItem("MA",this.medium.A.getConcentration());
+		new_result.setItem("MCat", this.medium.Cat.getConcentration());
+		new_result.setItem("MCaf", this.medium.Caf.getConcentration());
 		new_result.setItem("FNaP",this.getNapump().getFlux_net());
 		new_result.setItem("FCaP",this.capump.getFlux_Ca());
 		new_result.setItem("FKP",this.getNapump().getFlux_K());
@@ -1758,7 +1765,7 @@ public class RBC_model {
 			filewriter = new FileWriter(name);
 			String headString = "Time";
 			for(int i=0;i<this.publish_order.length;i++) {
-				headString += '\t' + this.publish_order[i];
+				headString += ',' + this.publish_order[i];
 			}
 			headString += '\n';
 			filewriter.append(headString);
@@ -1766,7 +1773,7 @@ public class RBC_model {
 			for(ResultHash r: this.resultList) {
 				resultString = String.format("%7.4f",60.0*r.getTime());
 				for(int i=0;i<this.publish_order.length;i++) {
-					resultString += '\t' + String.format("%7.4f", r.getItem(this.publish_order[i]));
+					resultString += ',' + String.format("%7.4f", r.getItem(this.publish_order[i]));
 				}
 //				System.out.println(resultString);
 				resultString += '\n';

@@ -1,0 +1,2806 @@
+'"M1":'Red Cell Model
+'Last update: Cambridge, November 2010
+'Incorporates:
+'11/10: Extension to more than 125 sampled points in the *.asc files.
+'       (Integrated by Jakob Mauritz as outcome of ageing simulations,
+'       new variables are: ZMOD(ULO), ZSPLIT, ZREM(AINDER), ZCOUNTER 
+'09/08: Reversibility of Clxgluconate exchange
+'02/00: Clinton Joiner's suggestions, comments and bug-findings:
+'	-Gardos inhibition
+'	-Ca pump stoichiometry: Ca:2H electroneutral option
+'	-Redundancy in definition of fcaph
+'	-Big bug associated with fcal; debugged 05/02/00 as follows:
+'	Changed "+fcal" to "+2*fcal" in
+'		7730 Y(6)=I(22)+E(3)+F(11)+F(12)-F(13)+cah*fcap+2*fcal
+'	(in Newton-Raphson routine for computation of the membrane potential)
+'	Turns out that the misshandling of fcal was the major source of
+'	cumulative errors. We now have much higher precision in EN-tests.
+'	-New Na-pump screens in RS and transients, to model steady-states
+'	with modified Na-pump parameters and constant leaks.  This follows
+'	requests by Joe Hoffman and Clint Joiner, and suggestions by Clint.
+'19/1/00: A Na-pump RS-properties screen was added on Joe Hoffman's request
+'7/4/98: Tom Weiss expression of Goldman flux equations: 'G-fluxes.
+'	Note that since net fluxes into the cell were defined positive
+'	the sign of all ion and tracer G-fluxes was reversed.
+'	The results are identical to those obtained with previous
+'	model version.
+'8/4/98 Added suggestion on how to simulate hrbc ghosts in RS state
+'Corrected Ca pump and KCa channel parameters
+'Choice of single anionic or cationic H-buffers (enter pKa) for post RS
+'	following Thomas Fischer request.
+'pKa of HEPES endowed with temperature-dependence: "pkhepes".
+'Debugged M1BUGGED: cat was too high for new cabuffs; caused havoc in canr.
+'Must remember to match initial caf-cat-fcal values whenever changed
+'	following Thomas Fischer finding of bug.
+'Variable Hb content option (MCHC prompt)
+'	following Carlo Brugnara's request
+'Temporary (1/95) correction of non-balanced RS fluxes of A and H: "fal".
+'pI change secondary to temperature changes from RS condition.
+'Improved reporting of tracer efflux
+'H+ displacements when EDTA/EGTA bind Ca or Mg.
+'Chelator binding constants from the Schoenmakers Chelator Programme.
+'Option to add additional external buffers and M2+ chelators (EDTA/EGTA);
+' this required solution of proton, Ca2+ and Mg2+ concentrations in system
+' with multiple proton buffers and M2+ chelators in the external medium, with
+' consideration of the water and proton shifts between cells and medium.  It
+' was crucial to work out a rapid solution method because otherwise
+' computation of the H+, Ca2+ and Mg2+ concentrations within each iteration
+' could considerably slow down the running of the model.
+'Mg-dependence of Na and Ca pumps
+'Inhibition of the Ca pump by internal pH.
+'Q(4), the titratable internal impermeant ion is redefined to Q(4)=fHb*QHb
+'Ca:2H(A23187), PCaL, Ca pump, Ca-activated PK, cytoplsmic Ca buffering and
+'Ca/Mg competition on A23187.
+'Mg:2H(A23187) and cytoplasmic Mg buffering (with Julia Raftos, July, 1993).
+'Cytoplasmic Mg and Ca buffers are assumed to be within X (the impermeant
+'cell ion) and are therefore not computed with separate contributions to
+'osmolality and charge.  Therefore only the M2+ forms contribute tonicity.
+'Input of RS cell water option.
+'pH-dependence of Na pump: exp((-pHc-i(77))/i(78))^2.
+'Temperature-dependence of pI. RS options for [A]c, `a' and pI(T=0oC).
+'Tracer efflux option on second experimental period.
+'Carriers are redefined as electroneutral Na:Cl and K:Cl cotransports.
+'This generates a minor departure of E from ECl. Lines: 1530-70,6690,7830.
+'Format with .RES, .INT and .ASC results-files.
+'BASED on RED CELL MODEL. LEW & BOOKCHIN, J.Membrane Biol.,1986,92:57-74.
+'ORIGINAL BASIC VERSION (for EPSON PX8): BUENOS AIRES, MAY 1986, BY
+'VIRGILIO L. LEW, PHYSIOLOGICAL LABORATORY, CAMBRIDGE UNIVERSITY, UK.
+'The numerical solution of the equation for membrane potential, E,
+'is computed by the Newton-Raphson method using cord-approximations
+'instead of tangents. This avoids the need to operate with analytical
+'expressions for the first derivative of the implicit E-function.
+'Extensions and updates were done using compiled Turbo and Power BASIC versions.
+'Sections not updated were generally left unmodified.
+
+250 DEFDBL A-F,I,M,P,Q,S,T,V,X,Y
+270 DEFINT K,L,N,R,W,Z,J,G
+290 DIM A(12),B(10),C(13),D(12),F(70),I(92),M(13),P(11),Q(12),T(11),V(16),X(6),Y(6)
+310 DIM E(17)
+330 DIM H(125,125)
+
+350 'Computation of the Reference Steady-State(RS)**************************
+
+'RS values of parameters and variables
+370 A(1)=-10#:A(2)=6.450000000000004D-02:A(3)=.0258#:A(4)=7.2#
+'390 A(5)=2.813822508658947D-08
+A(6)=0.01#:A(9)=34#
+'410 B(1)=0.2#:B(2)=18#:B(3)=0.1#:B(4)=8.3#
+430 B(7)=1.5#:B(8)=37#:B(9)=4#:B(10)=2#
+450 C(1)=10#:C(2)=140#:c(3)=95#:D(6)=0.001#:d(12)=0.0001#:E(8)=2d-10
+'470 F(5)=-2.61#:F(6)=.0015#
+490 M(1)=145#:M(2)=5#:M(3)=145#:M(5)=10#:M(7)=0#:M(9)=0#:M(10)=0#
+i(77)=7.216#:i(78)=0.4#:mgb0=0.05
+
+diff2=0.00001:'Measures difference between y(3) and zero in ligroots sub.
+'diff2 not smaller than 1e-5!
+diff3=0.00001:'Determines acceptable difference of consecutive edgta estimates
+
+cls
+print "*******************************************************************"
+print
+PRINT "The model first computes a reference state (RS) which is meant to"
+PRINT "represent the physiological condition of an average normal human red cell."
+print "The prompts in the following screens allow you to modify this"
+print "initial RS.  Press ENTER to accept the default values offered."
+print "If you wish to interrupt this programme and return to the DOS prompt,"
+print "press CTRL+BREAK at any time."
+print
+print "After the RS is computed, you are first asked to select the format"
+print "for the output of the results of your simulations.  You are then"
+print "presented with screens full of options which allow you to change  "
+print "any parameter or variable in the system, as required to simulate an "
+print "experiment."
+print
+print
+input "Press ENTER to continue.         ",cont
+if cont=0 then goto napump
+
+napump:
+cls:print
+print "******************************************************************"
+print
+print                       "Na-pump screen"
+print
+print "In this screen you can change a number of constitutive parameters"
+print "of the Na pump, the forward and reverse Na fluxes in the RS,"
+print "and the Km and KI values for Na and K on each membrane side."
+print "ENTER to skip the Na-pump screen or enter any number to see or"
+input "change the data.           ",napumpscreen
+if napumpscreen=0 then goto skipnapumpscreen
+print
+print
+print "To accept the dafault values press ENTER at the prompts."
+print "To change, ENTER the new values you wish to explore."
+print "Remember the sign convention for fluxes: efflux (-), influx (+)."
+print
+input "Na efflux (forward) in RS (in mmol/loch, default=-2.61):",F(5)
+if f(5)=0 then f(5)=-2.61
+if f(5)=-2.61 then napmaxf=1
+print
+input "Na influx (reverse) in RS (in mmol/loch, default=0.0015):",F(6)
+if f(6)=0 then f(6)=0.0015
+if f(6)=0.0015 then napmaxr=1
+print
+input "Km for Na inside (in mM, default=0.2):                   ",b(1)
+if b(1)=0 then b(1)=0.2
+print
+input "KI for K inside (in mM, default=8.3):                    ",b(4)
+if b(4)=0 then b(4)=8.3
+print
+input "Km for K outside (in mM, default=0.1):                   ",b(3)
+if b(3)=0 then b(3)=0.1
+print
+input "KI for Na outside (in mM, default=18):                   ",b(2)
+if b(2)=0 then b(2)=18
+I(31)=F(5):I(32)=F(6)
+flagnapscreen3=1
+goto hbchange
+print
+cls
+
+skipnapumpscreen:
+'Default Na-pump parameters
+f(5)=-2.61
+f(6)=0.0015
+b(1)=0.2
+b(4)=8.3
+b(3)=0.1
+b(2)=18
+
+hbchange:
+cls:print
+print "*******************************************************************"
+print
+
+input "Change the initial [Na]i; Enter for default=10 mM.            ",c(1)
+if c(1)=0 then c(1)=10
+
+print
+
+input "Change the initial [K]i; Enter for default=140 mM.            ",c(2)
+if c(2)=0 then c(2)=140
+
+print
+
+
+print "Change Q10 of passive and active transport pathways:"
+print
+
+input "Q10 of passive permeability pathways (ENTER for default=2)?   ",b(10)
+if b(10)=0 then b(10)=2
+
+print
+
+input "Q10 of pumps (ENTER for default=4)?   ",b(9)
+if b(9)=0 then b(9)=4
+
+print
+
+print "fG, the fraction of Goldman-defined passive Na and K flux;"
+input "ENTER for default=0.1.                                          ",b(6)
+
+if b(6)=0 then b(6)=0.1
+
+print
+print "Change cell water, MCHC and critical heamolytic water content:"
+print
+
+print "The RS is defined with 0.75 l/loc of cell water and 0.25 l/loc of"
+print "haemoglobin (Hb).  This corresponds to standardized conditions that "
+print "represent cells with an MCHC of 34 g/dl and a density of 1090 g/loc."
+print "`LOC' is normally equivalent to 340gHb (0.75 l/loc=0.75 l/340gHb). "
+print "You may explore cells with different MCHC values in the RS.  To do"
+print "so, change either the Hb content or the volume of cell water per loc"
+print "at the prompts below."
+print
+print "The options in this and the next screen may also be used to define"
+print "a RS of ghost-like cells, by selecting a low HCMC and a high"
+print "cell Cl(A) concentration."
+print:print
+input "Change Hb content (ENTER for default=34 g/dl)?   ",a(9)
+if a(9)=0 then a(9)=34#
+q(5)=a(9)*10/64.5:q(9)=q(5)
+i(79)=1-a(9)/136
+vlysis=1.45
+if a(9)<>34 then cls:goto 498
+print
+input "Enter new RS cell water or press ENTER for default (0.75 l/340gHb):",i(79)
+if i(79)=0 then i(79)=0.75#
+print
+input "Enter new lytic cell water or press ENTER for default (1.45 l/340gHb):",vlysis
+if vlysis=0 then vlysis=1.45
+cls
+
+$segment
+
+498 cls
+print "******************************************************************"
+print
+print "The default intracellular Cl(A) concentration in mmole/lcw is 95."
+print "This determines the Reference State values for the anion and proton"
+print "concentration ratios. With rA=rH=Clo/Cli=145/95=1.53, for instance,"
+print "pHo-pHi=7.400-7.216=0.184; with rA=145/85=1.72, pHo-pHi=7.400-7.165=0.235."
+print
+input "Press ENTER for default, or enter new value:  ",c(3)
+if c(3)=0 then c(3)=95#
+
+cls
+print "******************************************************************"
+print
+print "The isoelectric point of Hb (pI) changes with temperature (t)"
+print "as follows: pI(t)=pI(0)-0.016*t; t=temperature in oC."
+print
+print "Before computing the Reference State you may wish to change the values"
+print "of the isoelectric point (pI(0)) and net charge (in Eq/mole.pH unit)"
+print "of Hb (a). For normal Hb A, pI(0)=7.2 and a=-10. For Hb S, pI(0)=7.4"
+print "and a=-8. If you are modelling normal red cells (Hb A, default) press ENTER"
+print "at the prompts. If not, enter the new values you wish to explore."
+print
+input "Enter new value of `a', or press ENTER for default (-10):  ",i(69)
+print
+input "Enter new value of `pI(T=0)' or ENTER for default (7.2):  ",i(70)
+cls
+if i(69)=0 then i(69)=a(1) else a(1)=i(69)
+if i(70)=0 then i(70)=a(4) else a(4)=i(70)
+
+500
+'INITIAL ISOTOPE DATA
+i(71)=1:'m(11)=>m(13) values for influx
+q(10)=0#:q(11)=0#:q(12)=0#
+c(11)=0#:c(12)=0#:c(13)=0#
+M(11)=1000#:m(12)=1000#:m(13)=1000#
+
+510 IF R=3 GOTO 770
+530 P(7)=1.2#:P(8)=.000000001#:P(9)=2.5e8#:P(10)=2#
+'550 Q(5)=5.27#:Q(9)=5.27#
+
+590 T(3)=777:V(1)=i(79):V(3)=.000001#:V(12)=7.4#
+610 I(29)=V(1):A(11)=1-a(9)/136:A(12)=V(12)
+630 R=1:'identifies RS
+T(1)=0
+
+'Default values if Mg screen is skipped
+a23camk=10
+a23mgmk=10
+a23caik=10
+a23mgik=10
+mgt=2.5:q(7)=mgt
+mgto=0.2
+q0=0.05
+atp=1.2
+dpgp=15
+V(2)=(1-A(11))+V(1)
+gosub mgnr:'computes mgf in RS
+pmg=0.01
+
+'Default values if Ca screen is skipped
+cat=0.000580:qca=cat:ccat=cat/v(1)
+cato=1
+alpha=0.30
+b1ca=0.026:'buffering capacity of B1
+b1cak=0.014:'app KD of B1
+benz2=0
+benz2k=5e-5
+caf=1.12e-4
+'gosub canr:'recomputes caf in RS
+fcalm=0.050
+fcal=0.03
+fcap=-0.03
+fcapm=12
+calk=0.8
+calik=0.0002
+pkm=30
+pkcak=1e-2
+capk=2e-4
+h1=4
+capmgk=0.100:'Mg-activation diss. ct. of the Ca-pump
+capmgki=7:'KI of Mgi on the Ca pump
+mgnapk=0.05:'KD for Mg activation of the Na-pump
+mgnapik=4:'KD for Mg inhibition of the Na pump
+pca=pmg
+hik=4e-7
+cah=2:'defines whether pump is fully (2) or partially (1) electrogenic (CaxH), or electroneutral (0, Cax2H)
+edgto=0
+
+mgfo=mgto
+cafo=cato
+
+print  "************  Cytoplasmic Mg buffering screen  *************"
+print
+print "The program incorporates cytoplasmic Mg buffers to simulate effects"
+print "of Mg redistribution induced with the ionophore A23187."
+print "Press ENTER to skip Mg screen and accept defaults or enter any
+input "number to see or change the data.         ",mg
+if mg=0 then goto cascreen
+print
+
+input "MgoT? Default=0.2 mM. ENTER for default or change to:     ",mgto
+if mgto=0 then mgto=0.2
+print
+
+print "MgiT? (in mmole/loc); default=2.5.  This gives Mg2+ of about 0.3 "
+print "mmole/lcw in oxygenated red cells with the default ATP+P and (2,3-DPG+P)
+input "concentrations of 1.2 and 7.5 mmole/lc offered below.        ",mgt
+if mgt=0 then mgt=2.5
+q(7)=mgt
+print
+
+input "High-affinity buffer? (in mmole/loc); ENTER for default=0.05:     ",mgb0
+if mgb0=0 then mgb0=0.05
+print
+
+input "ATP+P? (in mmole/loc); ENTER for default=1.2:     ",atp
+if atp=0 then atp=1.2
+print
+
+input "2,3-DPG and other organic phosphates? (in mEq P/loc); ENTER for default=15:     ",dpgp
+if dpgp=0 then dpgp=15
+
+cls
+gosub mgnr:'this computes mgf in RS
+
+cascreen:
+cls
+print  "************************  Ca screen  ************************"
+print
+print "The program incorporates cytoplasmic Ca buffering, active and passive"
+print "Ca transport, ionophore A23187-mediated Ca transport with Ca/Mg"
+print "competition, and activation of PKG by [Ca2+]i. Press ENTER to skip"
+print "the Ca screen and accept defaults, or enter any number to see"
+input "or change the data.         ",ca
+if ca=0 then goto 650
+print
+
+input "CaoT? Default=1 mM. ENTER for default or change to:     ",cato
+if cato=0 then cato=1
+
+input "Additional cell Ca buffer? ENTER for default=0.026 mmole/loc: ",b1ca
+if b1ca=0 then b1ca=0.026
+
+input "KD of additional cell Ca buffer? ENTER for default=0.014 mM:   ",b1cak
+if b1cak=0 then b1cak=0.014
+
+input "Alpha? ENTER for default=0.30:     ",alpha
+if alpha=0 then alpha=0.30
+
+input "Benz2 loaded? ENTER for default=0 or change to (mmole/loc):  ",benz2
+cbenz2=benz2/v(1)
+
+input "Vmax of Ca pump? ENTER for default=12 mmole/loc.     ",fcapm
+if fcapm=0 then fcapm=12
+input "K1/2 of pump? ENTER for default=2e-4 mM   ",capk
+if capk=0 then capk=2e-4
+input "Hills coefficient of pump (h)? ENTER for default=4.     ",h1
+if h1=0 then h1=4
+print
+print "Pump electrogenicity: n=0, fully electrogenic (default); n=1, CaxH;"
+input "n=2, Cax2H, electroneutral. Enter 0, 1 or 2:            ";capstoich
+if capstoich=0 then cah=2:'fully electrogenic
+if capstoich=1 then cah=1:'one H per Ca
+if capstoich=2 then cah=0:'two H per Ca, electroneutral
+print
+input "Inhibition by internal H+: for default KI=4e-7 M, press ENTER, or:  ",hik
+if hik=0 then hik=4e-7
+
+input "[Mg2+]i-activation of pump. ENTER for default K1/2=0.10 mM or:  ",capmgk
+if capmgk=0 then capmgk=0.10
+
+input "Pmax of PCaG? ENTER for 0.050 1/h or change to:  ",fcalm
+if fcalm=0 then fcalm=0.05
+
+input "Ca2+-sensitive PKmax? ENTER for default=30 1/h or change to:  ",pkm
+if pkm=0 then pkm=30
+
+input "Ca2+-sensitivity of PK(Ca)? ENTER for default=1e-2 mM or change to:  ",pkcak
+if pkcak=0 then pkcak=1e-2
+
+cls
+
+if benz2<>0 then caf=1e-8
+if benz2<>0 then gosub canr:'this recomputes caf in RS
+
+'*********************************************************
+650 'RS-derived values
+
+m(3)=m(3)+2*(mgto+cato)
+
+670 'Initial Ht and related values
+690 GOSUB 8690:'RS relative volume,MCHC and density
+710 A(7)=V(3)
+730 A(8)=A(7)/(1-A(7))
+750 IF R=0 OR R=2 OR R=3 THEN RETURN
+
+770 'Medium proton concentration
+buffer$="hepes":'RS defined with HEPES buffer
+790 m(4)=10#^(-v(12))
+810 'Protonized buffer concentration
+pkhepes=7.83-0.014*b(8)
+a(5)=10^(-pkhepes)
+830 M(6)=M(5)*(M(4)/(A(5)+M(4)))
+
+850 'Medium Na,K,or A concentration
+870 IF V(12)>=A(12) THEN 890 ELSE 930
+
+'Medium pH adjusted with NaOH
+edgneg=2*edg2+3*edg3+4*edg4+2*(edgca+edgmg)
+890 M(1)=M(3)+edgneg+M(7)+(M(5)-m(6))-M(9)-M(2)-2*mgfo-2*cafo:GOTO 950
+
+'Medium pH adjusted with KOH
+910 M(2)=M(3)+edgneg+M(7)+(M(5)-m(6))-M(9)-M(1)-2*mgfo-2*cafo:GOTO 950
+'Medium pH adjusted with HCl
+930 M(3)=M(1)+M(2)+M(9)-(M(5)-m(6))-M(7)-edgneg+2*mgfo+2*cafo
+950 IF R=0 OR R=2 THEN RETURN
+
+970 IF R=3 THEN 990 ELSE 1010
+
+990 R=0
+GOTO 4170
+1010 'Cell H,pH,ratios,and E
+1030 V(7)=M(3)/C(3):V(8)=V(7)
+1050 C(4)=V(8)*M(4)
+1070 V(11)=-(LOG(C(4))/LOG(10#))
+
+1090 V(6)=-(8.615600000000004D-02)*(273#+B(8))*LOG(V(7))
+
+1110 'Osmotic coeficient of Hb
+1130 V(9)=1+A(2)*Q(5)/V(1)+A(3)*(q(5)/v(1))^2
+
+'i(74)=a(4)-(0.016*b(8)):'dependence of pI on temperature
+
+i(74)=a(4)-(0.016*37):'physiological pI at 37oC;
+'from RS all temperature changes must alter pI
+
+1150 V(10)=A(1)*(V(11)-i(74)):'net charge on Hb (Eq/mole)
+
+1170 'Cell amounts of Na,K,and A, and concentrations of Mg and Ca
+1190 Q(1)=C(1)*V(1)
+Q(2)=C(2)*V(1)
+Q(3)=C(3)*V(1)
+cmgt=mgt/v(1):c(7)=cmgt
+ccat=cat/v(1)
+
+'1210-1310 secures initial isotonicity and electroneutrality; it computes the
+'QX and nX required for initial osmotic and charge balance.  Since the Mg and
+'Ca buffers are within X, only the unbound forms of Mg and Ca participate in
+'osmotic equilibria within the cell.
+1210 'Cell amount of X for initial isotonicity
+
+summ=(M(1)+M(2)+M(3)+M(5)+M(7)+M(9)+M(10)+mgto+cato)
+sumq=(Q(1)+Q(2)+Q(3)+(mgf+caf)*v(1)+V(9)*Q(5)+benz2)
+1230 Q(6)=V(1)*summ-sumq
+
+1250 'Non-protonizable charge on X (nX)
+1270 A(10)=(Q(3)+2*benz2-(Q(1)+Q(2)+2*Q(7)+2*cat+V(10)*Q(9)))/Q(6)
+1290 'Net charge on Hb
+
+1310 Q(4)=V(10)*Q(9)
+
+1330 'Flux-rates and RS fluxes
+1350 'Maximal Na-pump rates
+1370 GOSUB 6270
+1390 P(1)=ABS(F(5)/((mgnap*phnap)*(I(3)*I(6))))
+1410 GOSUB 6450
+1430 P(2)=ABS(F(6)/((mgnap*phnap)*(I(9)*I(11))))
+1450 F(7)=F(5)+F(6):'Net Na flux through Na pump in RS
+1470 F(8)=-F(7)/B(7)
+1490 'Na:Cl, K:Cl, and RS fluxes
+1510 F(9)=-(1#-B(6))*F(7):'Na
+
+1530 P(3)=ABS(F(9)/(C(1)*C(3)-M(1)*m(3))):'Na
+
+1550 F(10)=-F(9)/B(7):'K
+
+1570 P(5)=ABS(F(10)/(C(2)*c(3)-M(2)*m(3))):'K
+
+'A fluxes through Na:Cl and K:Cl
+fal=f(9)+f(10)
+'G-flux of A required to balance fal
+f(13)=-fal:'used after line numbered 7690
+
+1590 'G-rates and RS fluxes
+1610 F(11)=-B(6)*F(7)
+1630 X(6)=V(6):I(18)=1#
+1650 GOSUB 7410
+1670 GOSUB 7490
+1690 GOSUB 7570
+1710 P(4)=ABS(F(11)/I(20)):'Na
+1730 F(12)=-F(11)/B(7):'K
+
+p6=(ABS(F(12)/I(19)))
+
+1770 'Zero-factor for cotransport
+1790 B(5)=(C(1)*C(2)*C(3)*C(3))/(M(1)*M(2)*M(3)*M(3))
+1810 X(6)=V(1)
+1830 GOSUB 6750:'cotransport flux parameters
+1850 GOSUB 7770:'total ion fluxes
+1870 Q(8)=V(9)*Q(5)
+1890 GOSUB 9130:'CHb, cmgt, ccat, C-, CHbos, CHb+/-, Sum-Co
+1910 CLS:PRINT
+
+'******************************   RS COMPUTED   ***************************
+
+'INPUT OF SIMULATED PERTURBATIONS BEGINS HERE
+
+
+1930 print
+2010 PRINT
+2030 PRINT "THE REFERENCE STEADY-STATE (RS) IS NOW COMPUTED."
+2050 PRINT
+2070 PRINT "DIRECT THE OUTPUT OF RESULTS to:-
+2090 PRINT
+2110 PRINT "1. detailed ASCII Tables-file, M1.RES - choose this option for"
+2130 PRINT "interpreting results, or when first running a simulation."
+2150 PRINT
+2170 PRINT "2. column files, M1.ASC, M2.ASC, etc., suitable for data"
+print "transfers to graphics programmes - choose this option for analysis or"
+print "output of selected variables."
+2210 PRINT
+2230 PRINT "or 3. both .RES and .ASC files.":PRINT:
+2250 INPUT "Type 1, 2 or 3 then 'Enter' ",W
+
+IF W=1 OR W=2 OR W=3 then 2260 else 1910
+2260 if w=1 or w=3 then OPEN "O",#1,"M1.RES"
+if w=2 or w=3 then OPEN "O",#2,"M1.INT"
+2270 IF W=1 OR W=3 THEN GOSUB 12250
+2290 IF W=1 OR W=3 THEN GOSUB 9990
+2310 IF W=2 OR W=3 THEN GOSUB 16510
+
+2350 R=0:T(2)=0:T(5)=0:Z=0:T(4)=0:
+2360 cls
+
+'Set isotope option ON without asking
+i(65)=1
+i(66)=123
+goto 2390
+
+print:PRINT:PRINT
+PRINT "IF YOU WISH TO STUDY THE DISTRIBUTION OF RADIOACTIVE TRACERS OF"
+PRINT
+INPUT "Na, K OR A (Cl) ENTER 1; IF NOT, PRESS ENTER,   ",i(65)
+if i(65)=1 then i(66)=123 else i(66)=65
+
+2370 cls
+2390 PRINT "TO SET UP AND RUN AN EXPERIMENT CHANGE THE VALUES"
+2410 PRINT "IN ONE OR MORE OF THE FOLLOWING SCREENS:-":PRINT
+2430 PRINT "--------------------";TAB(26);"------------------";TAB(50);"----------";TAB(66);"--------------"
+2450 PRINT "SCREEN 1";TAB(26);"SCREEN 2";TAB(50);"SCREEN 3";TAB(66);"SCREEN 4"
+2470 PRINT "Time-factors";TAB(26);"Cell fraction";TAB(50);"Transport";TAB(66);"Temperature",
+2490 PRINT TAB(26);"Medium composition";TAB(50);"inhibition";TAB(66);"Permeabilities",
+2510 PRINT "--------------------";TAB(26);"------------------";TAB(50);"----------";TAB(66);"--------------"
+2530 PRINT "Length of experiment";TAB(26);"Cell fraction";TAB(50);"Na-pump";TAB(66);"Temperature"
+2550 PRINT "Integration Interval";TAB(26);"Na/K/A(Cl)";TAB(50);"Na:K:2Cl";TAB(66);"PWater"
+2570 PRINT "Cycles per printout";TAB(26);"Na x glucamine";TAB(50);"Jacob-Stewart";TAB(66);"PGK"
+
+2590 PRINT TAB(26);"Cl x gluconate";tab(50);"PL(Na:A)";TAB(66);"PGNa"
+2610 PRINT TAB(26);"sucrose";tab(50);"PL(K:A)";TAB(66);"PGA(Cl)"
+
+2630 PRINT TAB(26);"medium pH";tab(50);"Ca-pump";TAB(66);"PGH"
+
+2650 PRINT TAB(26);"Buffer";tab(50);"Ca-leak";tab(66);"PMg/Ca(A23187)"
+print tab(26);"MgoT";tab(50);"Gardos";tab(66);"pI of Hb"
+print tab(26);"CaoT"
+print tab(26);"EGTA
+print tab(26);"EDTA"
+
+2670 PRINT
+2690 PRINT
+2710 print "Choose a screen (1 to 4), enter 5 to run the experiment"
+input "or enter 6 for new (Na)pump-leak steady-state:     ",I(58)
+2730 IF I(58)=1 THEN GOTO 2850
+2750 IF I(58)=3 THEN GOTO 3430
+2770 IF I(58)=2 THEN GOTO 3910
+2790 IF I(58)=4 THEN GOTO 4950
+2810 IF I(58)=5 THEN GOTO 5750
+
+if i(58)=6 then goto napparameters else 2830
+napparameters:
+if napmaxf=1 then p(1)=11.4
+if napmaxr=1 then p(2)=11.8
+p(3)=1.15e-4
+p(5)=1.25e-4
+i(58)=0
+goto 2850
+
+2830 GOTO 2370
+
+2850 '.................Experimental changes begin here......................
+2870 CLS
+2890 PRINT "1. TIME FACTORS.":PRINT
+2910 IF (T(1)*60)=0 THEN GOTO 2930 ELSE GOTO 2990
+2930 PRINT "Type a new value then 'Enter' (or 'Enter' alone for default values)."
+2950 PRINT
+2970 INPUT "LENGTH OF EXPERIMENT in minutes:      ",T(4):PRINT
+2990 IF (T(1)*60)=0 THEN GOTO 3030 ELSE GOTO 3010
+3010 PRINT "LENGTH OF EXPERIMENT is ";T(4);" mins.":PRINT
+3030 PRINT "THE INTEGRATION INTERVAL FACTOR AND THE No. OF INTEGRATION CYCLES"
+3050 PRINT "PER PRINTOUT control the frequency of data sampling.":PRINT
+3070 PRINT "If you get too few points (Z), but the model runs well, reduce the"
+3090 PRINT "no. of Integration Cyles per printout."
+3110 PRINT "If the computer hangs when the model is running, reboot and try again,"
+3130 PRINT "this time reducing the Integration Interval Factor."
+3150 PRINT
+3170 I(43)=A(6)
+3190 PRINT "Integration Interval Factor: Default = ";
+3210 PRINT USING "#.##";A(6);
+3230 PRINT ".                    ";:INPUT A(6)
+3250 IF A(6)=0 THEN A(6)=I(43):PRINT:
+3270 I(53)=T(3)
+3290 PRINT "No. of Integration Cycles per printout. Default = ";
+3310 PRINT USING "###";T(3);
+3330 INPUT ".          "; T(3)
+3350 IF T(3)=0 THEN T(3)=I(53)
+
+print
+'Hemicord size and NR delta:
+'i(75)=d(6):i(76)=d(12)
+'print "You may change the cord and zero-approximation parameters in the numerical"
+'print "solution of the membrane potential by a modified Newton-Raphson method:"
+'input "Cord (ENTER for default=0.001):   ";d(6)
+'input "Zero-approximation (ENTER for default=0.0001): ";d(12)
+'if d(6)=0 then d(6)=i(75)
+'if d(12)=0 then d(12)=i(76):print
+
+3370 PRINT "You may return to this screen to correct errors."
+3390 INPUT "Press 'ENTER' to continue - ",Z$
+3410 GOTO 2370
+3430 CLS:'.....................................Screen 3....................
+
+If flagnapscreen3<>1 then goto 3450:'return to the screen of screens
+
+print
+print "DO NOT RETURN TO THIS SCREEN; IN ERROR, PRESS ^BREAK AND START AGAIN"
+PRINT "_____________________________________________________________________"
+print "3. TRANSPORT CHANGES
+PRINT
+print "The original forward Vmax of the Na-pump was 11.4 mmol/loch. The"
+print "current value is";
+print using "##.##^^^^ ";p(1);:print "."
+input "ENTER to restore the original value or change to:     ",napvmax
+if napvmax=0 then p(1)=11.4
+
+print:print
+print "The original reverse Vmax of the Na-pump was 11.8 mmol/loch. The"
+print "current value is";
+print using "##.##^^^^ ";p(2);:print "."
+input "ENTER to restore the original value or change to:     ",rnapvmax
+if rnapvmax=0 then p(2)=11.8
+
+print
+print "The original Na leak (Na:A) rate was 1.15e-4 (1/h). The current value"
+print "is";
+print using "##.##^^^^ ";p(3);
+input ". ENTER to restore the original value or change to:     ",naleak
+if naleak=0 then p(3)=1.15e-4
+
+print
+print "The original K leak (K:A) rate was 1.25e-4 (1/h). The current value"
+print "is";
+print using "##.##^^^^ ";p(5);
+input ". ENTER to restore the original value or change to:     ",potleak
+if potleak=0 then p(5)=1.25e-4
+
+print
+PRINT "Na:K:2Cl-cotransport, off (ENTER) or type % activation"
+INPUT "of maximally allowed activity (about 1mM/loch):   ";I(59)
+P(8)=.0002*(I(59)/100)
+PRINT
+
+print "J-S cycle normal (ENTER) or enter stimulation/inhibition"
+input "factor:       ";I(47)
+if i(47)=0 then goto 3730
+P(9)=P(9)*I(47)
+
+print
+print "Vmax of Ca pump: default (ENTER) or enter stimulation/inhibition"
+input "factor:      ";I(84)
+if i(84)<>0 then fcapm=fcapm*i(84)
+
+PRINT
+print "Vmax of Ca leak: default (ENTER) or enter stimulation/inhibition"
+input "PCaG-factor:      ";I(85)
+'if i(85)=0 then goto 3850
+if i(85)<>0 then fcalm=fcalm*i(85)
+
+print
+input "Enter % inhibition of Gardos channel (ENTER for default=0):  "; gardosinhibition
+pkm=pkm*(100-gardosinhibition)/100
+
+goto 2370
+
+3450 PRINT
+3470 PRINT "3. TRANSPORT CHANGES"
+3490 PRINT
+3510 PRINT "If you make a mistake here you must press Ctrl-Break and start again."
+3530 PRINT "You cannot return to this screen to correct errors.":PRINT
+
+3550 INPUT "Na-pump normal (ENTER) or type % inhibition (0-100):";I(51)
+3570 P(1)=P(1)*(1-(I(51)/100)):P(2)=P(2)*(1-(I(51)/100))
+3590 PRINT
+
+3610 PRINT "Na:K:2Cl-cotransport, off (ENTER) or type % activation"
+3630 INPUT "of maximally allowed activity (about 1mM/loch):   ";I(59)
+3650 P(8)=.0002*(I(59)/100)
+3670 PRINT
+
+
+print "J-S cycle normal (ENTER) or enter stimulation/inhibition"
+input "factor:       ";I(47)
+if i(47)=0 then goto 3730
+P(9)=P(9)*I(47)
+
+3730 PRINT
+
+print "PL(Na:A) normal (ENTER) or enter stimulation/inhibition"
+input "factor:  ";I(60)
+if i(60)=0 then goto 3750
+P(3)=P(3)*I(60)
+3750 PRINT
+
+print "PL(K:A) normal (ENTER) or enter stimulation/inhibition"
+input "factor:  ";I(61)
+if i(61)=0 then goto 3752
+P(5)=P(5)*I(61)
+
+3752 print
+print "Vmax of Ca pump: default (ENTER) or enter stimulation/inhibition"
+input "factor:      ";I(84)
+if i(84)<>0 then fcapm=fcapm*i(84)
+
+PRINT
+print "Vmax of Ca leak: default (ENTER) or enter stimulation/inhibition"
+input "PCaG-factor:      ";I(85)
+'if i(85)=0 then goto 3850
+if i(85)<>0 then fcalm=fcalm*i(85)
+
+print
+input "Enter % inhibition of Gardos channel (ENTER for default=0):  "; gardosinhibition
+pkm=pkm*(100-gardosinhibition)/100
+
+goto 2370
+
+'3850 PRINT:PRINT
+'3870 INPUT "Press 'ENTER' to continue - ",Z$
+'3890 GOTO 2370
+3910 CLS:'........Cell fraction and medium changes T(1)>0......Screen 2......
+3930 IF (T(1)*60)>0 THEN 3950 ELSE 4170
+3950 GOSUB 16270
+
+goto 4170
+
+4170 PRINT:PRINT "2. CELL FRACTION AND MEDIUM COMPOSITION.":PRINT
+4190 PRINT "Type a new value then 'Enter' (or 'Enter' alone for default values).":PRINT
+4210 PRINT "VARIABLE";TAB(25);"DEFAULT VALUE";TAB(50);"NEW VALUE or
+'Enter'"
+4230 PRINT
+4250 PRINT "Cell fraction:  ";
+4270 PRINT TAB(30);USING "#.###### ";V(3);TAB(55)
+4290 INPUT I(41)
+4310 IF I(41)<>0 THEN V(3)=I(41)
+4330 IF A(7)<>V(3) THEN GOSUB 710
+
+'+++++++++++++++++++++++++++++++++
+print "Buffer? HEPES (ENTER), anionic (a) or cationic (c)?";tab(55)
+input buffer$
+IF buffer$="" then buffer$="hepes":goto 4340
+
+print "Enter pKa of buffer at temperature of experiment:";tab(55)
+input pka
+
+4340 PRINT "Buffer concentration (mM):";
+PRINT TAB(30); USING "###.# "; M(5);TAB(55)
+I(44)=M(5):INPUT M(5): IF M(5)=0 THEN M(5)=I(44)
+
+a(12)=v(12)
+4350 PRINT "Initial external pH:";
+4370 PRINT TAB(30); USING "##.### "; V(12);TAB(55)
+4390 INPUT V(12)
+4410 IF V(12)=0 THEN V(12)=a(12)
+
+gosub phadjust
+'++++++++++++++++++++++++++++++
+
+4530 PRINT
+4550 GOSUB 16270
+4570 PRINT "Changes in mM or 'ENTER' for no change.":PRINT
+4590 INPUT "Exchange Na for glucamine:",i(72)
+M(9)=m(9)+i(72)
+4610 M(1)=M(1)-i(72)
+
+4630 INPUT "Exchange A(Cl) for gluconate:",i(73)
+m(7)=m(7)+i(73)
+4650 M(3)=M(3)-i(73)
+if i(73)=0 then goto 4670
+INPUT "If Clxgluconate reversible enter duration in min, otherwise ENTER?",T(6)
+
+4670 INPUT "Replace NaCl with KCl:  ",I(40)
+4690 M(1)=M(1)-I(40):M(2)=M(2)+I(40)
+4710 INPUT "Replace KCl with NaCl:  ",I(33)
+4730 M(1)=M(1)+I(33):M(2)=M(2)-I(33)
+4750 INPUT "Add or Remove(-) NaCl:  ",I(45)
+4770 M(1)=M(1)+I(45): M(3)=M(3)+I(45):
+4790 INPUT "Add or Remove(-) KCl:  ",I(34)
+4810 M(2)=M(2)+I(34): M(3)=M(3)+I(34):
+4830 INPUT "Add sucrose:  ",I(46)
+4850 M(10)=M(10)+I(46)
+
+print "MgoT=";using "##.###";mgto;
+print " mM. ENTER or change to:";tab(50);
+mgtold=mgto
+input mgto
+if mgto=0 then mgto=mgtold
+if mgto<>0 then m(3)=m(3)+2*(mgto-mgtold)
+
+print "CaoT=";using "##.###";cato;
+print " mM. ENTER or change to:";tab(50);
+catold=cato
+input cato
+if cato=0 then cato=catold
+if cato<>0 then m(3)=m(3)+2*(cato-catold)
+
+if ligchoice<>0 then input "Change chelator input? (Y/N=ENTER)";oldchel$:_
+if oldchel$="y" or oldchel$="Y" then goto newedgta else goto oldedgta
+
+newedgta:
+input "Na2H2-EGTA (ENTER 1) or Na2H2-EDTA (ENTER 2) or no chelators (ENTER):";ligchoice
+if ligchoice=1 then goto EGTA
+if ligchoice=2 then goto EDTA
+if ligchoice=0 then edgto=0
+if edgto=0 then mgfo=mgto
+if edgto=0 then cafo=cato
+if ligchoice=0 then goto 4870
+
+'All EGTA and EDTA constants below from Shoemaker chelator programme
+'for i=0.160 and 37oC. K2 values for Ca and Mg are ignored.
+EGTA:
+input "EGTA concentration (in mM)?     ";edgto
+edghk1=10^(-9.22)
+edghk2=10^(-8.65)
+edgcak=10^(-10.34)
+edgmgk=10^(-5.10)
+if cato<edgto then cafo=cato/100000
+if cato=edgto then cafo=cato/100
+if cato>edgto then cafo=abs(cato-edgto)
+if mgto<(edgto-cato) then mgfo=mgto/5 else mgfo=mgto
+print "****************************************************************"
+print "THE PROGRAMME MAY FAIL DUE TO EXCESIVE MEDIUM ACIDIFICATION "
+PRINT "FOLLOWING CHELATION. IF SO RUN AGAIN INCREASING pHo IN SCREEN 2."
+PRINT "****************************************************************"
+'cafo1=cafo
+'mgfo1=mgfo
+'print:print "The initial estimate for [Ca2+]o is ";
+'print using " ##.##^^^^  ";cafo;:print "  mM."
+'print "If the programme fails to find a solution you need to try "
+'print "alternative initial estimates. ";
+'input "ENTER for default or change to (in mM):  ",cafo
+'if cafo=0 then cafo=cafo1
+'print:print "The initial estimate for [Mg2+]o is ";
+'print using " ##.##^^^^  ";mgfo;:print "  mM."
+'print "If the programme fails to find a solution you need to try "
+'print "alternative initial estimates. ";
+'input "ENTER for default or change to (in mM):  ",mgfo
+'if mgfo=0 then mgfo=mgfo1
+
+goto chelator
+
+EDTA:
+input "EDTA concentration (in mM)?     ";edgto
+edghk1=10^(-9.84)
+edghk2=10^(-5.92)
+edgcak=10^(-9.95)
+edgmgk=10^(-8.46)
+
+'Initial cafo/mgfo values for iterative solution
+camgratio=cato/(cato+mgto)
+if edgto<(cato+mgto) then cafo=cato-edgto*camgratio:_
+     mgfo=mgto-edgto*(1-camgratio)
+if edgto>(cato+mgto) then cafo=cato/100000: mgfo=mgto/1000
+if edgto=(cato+mgto) then cafo=cato/1000: mgfo=mgto/10
+print "****************************************************************"
+print "THE PROGRAMME MAY FAIL DUE TO EXCESIVE MEDIUM ACIDIFICATION "
+PRINT "FOLLOWING CHELATION. IF SO RUN AGAIN INCREASING pHo IN SCREEN 2."
+PRINT "****************************************************************"
+'cafo1=cafo
+'mgfo1=mgfo
+'print:print "The initial estimate for [Ca2+]o is ";
+'print using " ##.##^^^^  ";cafo;:print "  mM."
+'print "If the programme fails to find a solution you need to try "
+'print "alternative initial estimates. ";
+'input "ENTER for default or change to (in mM):  ",cafo
+'if cafo=0 then cafo=cafo1
+'print:print "The initial estimate for [Mg2+]o is ";
+'print using " ##.##^^^^  ";mgfo;:print "  mM."
+'print "If the programme fails to find a solution you need to try "
+'print "alternative initial estimates. ";
+'input "ENTER for default or change to (in mM):  ",mgfo
+'if mgfo=0 then mgfo=mgfo1
+
+chelator:
+m(1)=m(1)+2*edgto:'Nao correction since
+'EGTA/EDTA is added as di-Na (and di-H) salt (Na2-H2-EDGTA).
+
+oldedgta:'call to retain early edgta configuration
+
+'The following computes initial "dedgh"=proton release to medium on chelation
+fh=1+m(4)/edghk1+(m(4)^2)/(edghk1*edghk2)
+edg4old=edgto/(1000*fh)
+edg3old=edg4old*m(4)/edghk1
+edg2old=edg4old*m(4)^2/(edghk1*edghk2)
+edghold=edg3old+2*edg2old
+edghold=1000*edghold
+gosub edgtainitial:'first time to compute initial dedgh
+gosub edgta:'second time to get correct pHo with initial dedgh
+
+edgneg=2*edg2+3*edg3+4*edg4+2*(edgca+edgmg):'defines total anion on EDGTA
+
+if buffer$="c" or buffer$="C" then goto enc1
+M(1)=M(3)+edgneg+M(7)+(M(5)-m(6))-M(9)-M(2)-2*mgfo-2*cafo:goto 4870
+'adjusts Nao for initial external electroneutrality with anionic buffer
+enc1:
+M(3)=m(1)+m(6)+M(9)+M(2)+2*mgfo+2*cafo-edgneg-M(7)
+'adjusts Clo for initial external electroneutrality with cationic buffer
+
+goto 4870
+
+edgta:
+edghold=edg3+2*edg2:'To compute the medium proton shifts caused by chelation
+'as divalent cations redistribute between cells and medium.
+
+edgtainitial:
+
+'Convert ligand, Ca and Mg concentrations to Molar units for ligroots sub
+edgto=edgto/1000
+cafo=cafo/1000
+mgfo=mgfo/1000
+cato=cato/1000
+mgto=mgto/1000
+m(5)=m(5)/1000
+d(4)=d(4)/1000
+dedgh=dedgh/1000
+
+fff=1+m(4)/edghk1+(m(4)^2)/(edghk1*edghk2)+cafo/edgcak+mgfo/edgmgk
+hb=m(4)*(m(5)/(m(4)+a(5))+edgto/(fff*edghk1)+m(4)*edgto/(fff*edghk1*edghk2))
+
+nn=0:'counts ligroots cycles
+
+ligroots:
+
+bbb=0:'counts nrlig cycles
+
+rr=1
+buff=m(4)
+hhold=buff
+diff1=0.0001*m(4)
+GOSUB nrlig
+if x(3)<0 then x(3)=hhold
+m(4)=X(3)
+
+rr=2
+buff=cafo
+cafold=buff
+diff1=0.0001*cafo
+GOSUB nrlig
+if x(3)<0 then x(3)=cafold/2
+cafo=X(3)
+
+rr=3
+buff=mgfo
+mgfold=buff
+diff1=0.0001*mgfo
+GOSUB nrlig
+if x(3)<0 then x(3)=mgfold/2
+mgfo=X(3)
+
+nn=nn+1
+if nn>100 then goto repres
+'print "nn=";nn
+
+if abs(m(4)-hhold)>diff3*hhold then goto ligroots
+if abs(cafold-cafo)>diff3*cafold then goto ligroots
+if abs(mgfold-mgfo)>diff3*mgfold then goto ligroots
+
+GOTO repres
+
+nrlig:
+
+X(1)=buff-diff1
+X(3)=X(1)
+
+IF rr=1 THEN GOSUB ligeq1
+IF rr=2 THEN GOSUB ligeq2
+IF rr=3 THEN GOSUB ligeq3
+
+Y(1)=Y(3)
+X(2)=buff+diff1
+X(3)=X(2)
+
+IF rr=1 THEN GOSUB ligeq1
+IF rr=2 THEN GOSUB ligeq2
+IF rr=3 THEN GOSUB ligeq3
+
+Y(2)=Y(3)
+S=(Y(2)-Y(1))/(X(2)-X(1))
+X(3)=X(1)-(Y(1)/S)
+buff=X(3)
+bbb=bbb+1
+'print "bbb=";bbb;
+
+IF bbb>100 THEN return
+
+IF ABS(Y(3))<diff2 THEN RETURN ELSE GOTO nrlig
+
+'Ligand equations
+
+ligeq1:
+ff=1+x(3)/edghk1+(x(3)^2)/(edghk1*edghk2)+cafo/edgcak+mgfo/edgmgk
+y(3)=x(3)*(m(5)/(x(3)+a(5))+edgto/(ff*edghk1)_
+     +x(3)*edgto/(ff*edghk1*edghk2))-(hb-a(8)*d(4)-dedgh):'m(4)
+return
+
+ligeq2:
+ff=1+m(4)/edghk1+(m(4)^2)/(edghk1*edghk2)+x(3)/edgcak+mgfo/edgmgk
+y(3)=cato-x(3)*(1+edgto/(ff*edgcak)):'cafo
+return
+
+ligeq3:
+ff=1+m(4)/edghk1+(m(4)^2)/(edghk1*edghk2)+cafo/edgcak+x(3)/edgmgk
+y(3)=mgto-x(3)*(1+edgto/(ff*edgmgk)):'mgfo
+return
+
+repres:
+
+v(12)=-(log(m(4))/log(10))
+m(5)=m(5)*1000
+d(4)=d(4)*1000
+m(6)=m(4)*m(5)/(m(4)+a(5))
+edg4=edgto/ff
+edg3=edg4*m(4)/edghk1
+edg2=edg4*m(4)^2/(edghk1*edghk2)
+edgca=edg4*cafo/edgcak
+edgmg=edg4*mgfo/edgmgk
+edgneg=2*edg2+3*edg3+4*edg4+2*(edgca+edgmg)
+edghnew=edg3+2*edg2
+
+'Convert ligand, Ca and Mg concentrations back to mM units
+edgto=edgto*1000
+cafo=cafo*1000
+mgfo=mgfo*1000
+cato=cato*1000
+mgto=mgto*1000
+edg4=edg4*1000
+edg3=edg3*1000
+edg2=edg2*1000
+edgca=edgca*1000
+edgmg=edgmg*1000
+edgneg=edgneg*1000
+edghnew=edghnew*1000
+dedgh=edghnew-edghold:'computes d[H]o due to chelation.
+
+return:'to edgtainitial
+return:'to edgta calls
+
+4870 PRINT
+GOSUB 16290
+4890 PRINT:PRINT "You may return to this screen to correct errors.":PRINT
+4910 INPUT "Press 'ENTER' to continue";X$
+4930 GOTO 2370
+
+4950 CLS:'......................................Screen 4.................
+4970 PRINT "4. TEMPERATURE (oC) AND PERMEABILITIES (1/h).": PRINT
+4990 PRINT
+5010 PRINT "VARIABLE";TAB(32);"DEFAULT VALUE";TAB(52);"NEW VALUE or
+'Enter'"
+5030 PRINT: PRINT "Temperature:  ";
+5050 PRINT TAB(36); USING "##.# ";B(8);TAB(55);
+5070 I(42)=B(8)
+5090 INPUT "(not 0) ", B(8)
+5110 IF B(8)=0 THEN B(8)=I(42)
+
+if b(8)=i(42) then goto 5130
+
+'Temperature-dependence of the pI of haemoglobin
+piold=a(4)-(0.016*i(42))
+pinew=a(4)-(0.016*b(8))
+i(74)=pinew
+newphc=pinew-piold+v(11)
+v(11)=newphc
+c(4)=10#^(-v(11))
+
+'++++++++++++++++++++++++++++++++++++++++
+'Temperature-dependence of the pKa of HEPES
+if buffer$<>"hepes" then goto ac
+pkhepes=7.83-0.014*b(8)
+a5old=a(5)
+m4old=m(4)
+a(5)=10^(-pkhepes)
+m(4)=a(5)*m4old/a5old
+v(12)=-(LOG(m(4))/LOG(10#))
+m(6)=m(5)*(m(4)/(a(5)+m(4)))
+goto 5130
+
+ac:
+a(5)=10^(-pka)
+m(4)=a(5)*m4old/a5old
+v(12)=-(LOG(m(4))/LOG(10#))
+m(6)=m(5)*(m(4)/(a(5)+m(4)))
+'+++++++++++++++++++++++++++++++++++++
+
+5130 PRINT "Water permeability:  ";
+5150 PRINT TAB(36); USING "##.##^^^^ ";P(10);TAB(55);
+5170 I(38)=P(10)
+5190 INPUT P(10)
+5210 IF P(10)=0 THEN P(10)=I(38)
+5230 PRINT
+
+5250 PRINT "Electrodiffusional permeabilities:  "
+5270 PRINT "PGK";
+5290 PRINT TAB(36); USING "##.###### ";P6;TAB(55)
+5310 I(35)=P6
+5330 INPUT P6
+5350 IF P6=0 THEN P6=I(35)
+
+5355 PRINT "PGKH";
+5360 PRINT TAB(36); USING "##.###### ";I(63);TAB(55)
+5364 INPUT I(63)
+
+5370 PRINT "PGNa";
+5390 PRINT TAB(36); USING "##.###### ";P(4);TAB(55)
+5410 I(39)=P(4)
+5430 INPUT P(4)
+5450 IF P(4)=0 THEN P(4)=I(39)
+
+5470 PRINT "PGA";
+5490 PRINT TAB(36); USING "##.###### ";P(7);TAB(55)
+5510 I(36)=P(7)
+5530 INPUT P(7)
+5550 IF P(7)=0 THEN P(7)=I(36)
+
+PRINT "PGH";
+PRINT TAB(36); USING "##.##^^^^ ";e(8);TAB(55)
+pghdefault=e(8)
+INPUT e(8)
+IF e(8)=0 THEN e(8)=pghdefault
+
+PRINT "PMg/Ca(A23187) (high=2e18)";
+PRINT TAB(36); USING "##.##^^^^ ";pmg;TAB(55)
+I(56)=pmg
+INPUT pmg
+IF pmg=0 THEN pmg=I(56)
+pca=pmg
+
+print
+if pmg<>i(56) then input "Change A23187 Km/KI for Ca/Mg (defaults: all 10 mM)? (Y/N)";q$
+if q$="y" or q$="Y" then input "Ca-A23187 Km? ENTER for 10 mM. ";a23cam
+if a23cam=0 then a23camk=10 else a23camk=a23cam
+if q$="y" or q$="Y" then input "Mg-A23187 Km? ENTER for 10 mM. ";a23mgm
+if a23mgm=0 then a23mgmk=10 else a23mgmk=a23mgm
+if q$="y" or q$="Y" then input "Ca-A23187 KI? ENTER for 10 mM. ";a23cai
+if a23cai=0 then a23caik=10 else a23caik=a23cai
+if q$="y" or q$="Y" then input "Mg-A23187 KI? ENTER for 10 mM. ";a23mgi
+if a23mgi=0 then a23mgik=10 else a23mgik=a23mgi
+
+print
+PRINT "pI(T=0)? (deoxy=7.5)";
+PRINT TAB(36); USING "##.##";a(4);TAB(55)
+I(67)=a(4):'old value
+INPUT a(4):'new value
+IF a(4)=0 THEN a(4)=I(67):goto 5670
+i(68)=a(4)-i(67)+v(11)
+v(11)=i(68)
+c(4)=10#^(-v(11))
+
+i(74)=a(4)-(0.016*b(8)):'temperature dependence of pI
+
+print
+input "Deoxy-induced Mg2+i increase? (Y/N; ENTER=N)";o$
+if o$="y" then atp=atp/2
+if o$="y" then dpgp=dpgp/1.7
+
+5670 PRINT
+5690 PRINT:PRINT:PRINT "You may return to this screen to correct errors."
+5710 PRINT:INPUT "Press 'ENTER' to continue - ",Z$
+5730 GOTO 2370
+5750 CLS
+5770 IF R=2 THEN GOTO 16230
+5790 IF T(4)=0 THEN 5810 ELSE 5850
+5810 PRINT "YOU MUST ENTER THE LENGTH OF THE EXPERIMENT!"
+5830 GOTO 2970
+5850 PRINT "After"; T(4); "minutes will you wish to make further changes, Y/N";
+5870 INPUT A$: PRINT:
+
+5890 PRINT "Satisfied with entries (ENTER) or start again (1)?:  "
+5910 INPUT "NB. Entering 1 will rerun the reference state!  ",I(49)
+5930 IF I(49)=1 THEN GOTO 250
+5950 PRINT:'******************************************
+5970 ON KEY (10) GOSUB 15990
+5990 ON KEY (1) GOSUB 16210
+6010 KEY 10, "STOP"
+6030 KEY 1, "CHANGE"
+6050 PRINT "The program will now run. To stop press F10."
+6070 PRINT "To input further changes while running press F1."
+'6090 PRINT "WARNING: Note the time at which you press this key."
+print
+6110 INPUT "Press ENTER TO CONTINUE. Any other key to END",I(50)
+6130 IF I(50)=0 THEN GOTO 6150 ELSE GOTO 15990
+6150 KEY (10) ON
+6170 KEY (1) ON
+6190 KEY ON
+
+6210 'Computation of Transients*********************************************
+6230 $EVENT OFF
+6250 'Fluxes and zero sum of currents
+
+'Na-pump fluxes.
+'Temperature dependence factor for active transport
+6270 I(17)=EXP(((37#-B(8))/10#)*LOG(B(9)))
+'Forward Na flux
+6290 I(1)=B(1)*(1+(C(2)/B(4)))
+6310 I(2)=C(1)/(C(1)+I(1))
+6330 I(3)=I(2)*I(2)*I(2)
+6350 I(4)=B(3)*(1+(M(1)/B(2)))
+6370 I(5)=M(2)/(M(2)+I(4))
+6390 I(6)=I(5)*I(5)
+'6410 IF R=1 THEN RETURN
+
+'Mg-dependence of the Na-pump
+mgnap=(mgf/(mgnapk+mgf))*(mgnapik/(mgnapik+mgf))
+'pH-dependence of the Na pump
+phnap=exp(-((v(11)-i(77))/i(78))^2)
+if r=1 then return
+
+6430 F(5)=-(P(1)/I(17))*mgnap*phnap*I(3)*I(6)
+6450 I(7)=B(4)*(1+(C(1)/B(1))):'Reverse Na flux
+6470 I(8)=C(2)/(C(2)+I(7))
+6490 I(9)=I(8)*I(8)
+6510 I(10)=M(1)/(M(1)+(B(2)*(1+(M(2)/B(3)))))
+6530 I(11)=I(10)^3
+6550 IF R=1 THEN RETURN
+6570 F(6)=(P(2)/I(17))*mgnap*phnap*I(9)*I(11)
+6590 F(7)=F(5)+F(6):'Net Na flux through Na-pump
+6610 F(8)=-F(7)/B(7):'Net K flux through Na-pump
+
+'Temperature-dependence of passive fluxes
+6630 I(18)=EXP(((37#-B(8))/10#)*LOG(B(10)))
+
+6670 'Carrier-mediated fluxes
+6690 F(9)=-(P(3)/I(18))*(C(1)*c(3)-M(1)*m(3)):'Na
+6710 F(10)=-(P(5)/I(18))*(C(2)*c(3)-M(2)*m(3)):'K
+
+6730 'Cotransport-mediated fluxes
+6750 I(12)=-(P(8)/I(18))*(C(3)*C(3)*C(1)*C(2)-B(5)*(M(3)*M(3)*M(1)*M(2)))
+6770 F(14)=2#*I(12):'A
+6790 F(15)=I(12):'Na
+6810 F(16)=I(12):'K
+6830 IF R=1 THEN RETURN ELSE 6850
+6850 'Fluxes through Jacobs-Stewart mechanism
+6870 I(13)=-(P(9)/I(18))*(C(3)*C(4)-(M(3)*M(4)))
+6890 F(17)=I(13):'A
+6910 F(18)=I(13):'H
+
+6930 'Net charge flux through the Na pump
+6950 I(22)=(F(7)+F(8))
+
+6970 'G-fluxes and numerical solution for membrane potential
+6990 X(3)=V(6)
+7010 N=0:L=0
+7030 X(1)=X(3)-D(6):X(6)=X(1)
+7050 IF N=0 THEN GOSUB 7410
+7070 Y(1)=Y(6)
+7090 X(2)=X(3)+D(6):X(6)=X(2)
+7110 IF N=0 THEN GOSUB 7410
+7130 Y(2)=Y(6)
+7150 'Numerical solution
+7170 S=(Y(2)-Y(1))/(X(2)-X(1))
+7190 X(3)=X(1)-(Y(1)/S)
+7210 X(6)=X(3)
+7230 IF N=0 THEN GOSUB 7410
+7250 Y(3)=Y(6)
+7270 L=L+1
+'PRINT "L=";L;
+7290 IF ABS(Y(3))<d(12) THEN 7310 ELSE 7030
+7310 IF N=0 THEN 7330
+7330 V(6)=X(3)
+'7350 PRINT "E=";
+'7370 PRINT USING "+###.## ";V(6);
+7390 GOTO 7770
+
+7410 'G-factors
+'fluxes are defined positive when into the cells;
+'The sign of the G-components is thus inverted:
+'	e(8), f11, f12, f13 and fcal, and tracer fluxes
+rtoverf=((8.6156D-02)*(273#+B(8)))
+foverrt=1/((8.6156D-02)*(273#+B(8)))
+7430 I(14)=X(6)*foverrt
+'x(6)=E, line 7430 enters E=x(6) in the G-eqs via i(14)
+7470 IF R=1 THEN RETURN
+
+'G-fluxes
+7490 'G-flux of K
+7510 I(19)=-i(14)*(M(2)-C(2)*exp(i(14)))/(1-exp(i(14)))
+7530 IF R=1 THEN RETURN
+7535 I(62)=1/(1+((C(4)^4)/2.5D-30))
+7540 P(11)=I(63)*I(62)
+'PK with Ca-independent and Ca-dependent components, both electrodiffusional.
+p(6)=p6+pkm*(caf^4/(pkcak^4+caf^4))
+7550 F(12)=((P(6)+P(11))/I(18))*I(19)
+
+7570 'G-flux of Na
+7590 I(20)=-i(14)*(M(1)-C(1)*exp(i(14)))/(1-exp(i(14)))
+7610 IF R=1 THEN RETURN
+7630 F(11)=(P(4)/I(18))*I(20)
+
+7650 'G-flux of anion
+7670 I(21)=i(14)*(M(3)-C(3)*exp(-I(14)))/(1-exp(-i(14)))
+7690 F(13)=(P(7)/I(18))*I(21)
+'&&G-A flux balancing A fluxes through Na:Cl and K:Cl
+if r=1 then f(13)=-fal
+
+7695 'G-flux of proton
+7700 I(64)=-i(14)*(M(4)-C(4)*exp(i(14)))/(1-exp(i(14)))
+7705 E(3)=(E(8)/I(18))*I(64)
+
+'Mg and Ca fluxes
+
+'A23187 Mg/Ca fluxes with reciprocal inhibition.
+'This works but is difficult to justify kinetically because it assumes
+'Km is different from KI and does not formulate internal competition
+'The corrected version
+'below is theoretically more correct, but deviates from r^2 at equilibrium.
+'fmg23=pmg/i(18)*(0.1/(0.1+cafo))*(mgfo*c(4)^2-mgf*m(4)^2):'Mg/H fluxes through A23187
+'fca23=pca/i(18)*(0.1/(0.1+mgfo))*(cafo*c(4)^2-caf*m(4)^2):'Ca/H fluxes through A23187
+'Inactivate the paragraph above if routines below work.
+
+'Corrected A23187 Mg/Ca fluxes. All default A23...k=10 mM.
+mgcao=(mgfo/(a23mgmk+(a23mgmk*cafo/a23caik)+mgfo))
+camgo=(cafo/(a23camk+(a23camk*mgfo/a23mgik)+cafo))
+mgcai=(mgf/(a23mgmk+(a23mgmk*caf/a23caik)+mgf))
+camgi=(caf/(a23camk+(a23camk*mgf/a23mgik)+caf))
+
+'Mg/H fluxes through A23187
+fmg23=pmg/i(18)*(mgcao*c(4)^2-mgcai*m(4)^2)
+'Ca/H fluxes through A23187
+fca23=pca/i(18)*(camgo*c(4)^2-camgi*m(4)^2)
+
+'Passive Ca G-flux with self inhibition by caf
+'and low affinity saturation by cafo
+'i(80)=2*i(14)
+'i(81)=EXP(-I(80))
+'i(82)=(1-I(81))/I(80)
+
+calreg=(calik/(calik+caf))*(cafo/(calk+cafo))
+fcal=-(fcalm/i(18))*calreg*2*i(14)*((cafo-caf*exp(2*i(14)))/(1-exp(2*i(14))))
+
+'Ca pump flux with activation by [Mg2+]i (87% saturated at RS [Mg2+]i),
+'and inhibition by Hi (hik/(hik+c(4)).
+capmg=(mgf/(capmgk+mgf))*(capmgki/(capmgki+mgf))
+caphik=(hik/(hik+c(4)))
+fcapglobal=-(fcapm/i(17))*capmg*caphik
+fcap=fcapglobal*((caf^h1)/(capk^h1+caf^h1))
+
+'H-flux through the cap
+if cah=1 then fcaph=-(fcap)
+if cah=2 then fcaph=0
+if cah=0 then fcaph=-2*(fcap)
+
+'Total Ca flux
+fca=fca23+fcal+fcap
+
+7710 'Sum of current carrying fluxes for zero current
+7730 Y(6)=I(22)+E(3)+F(11)+F(12)-F(13)+cah*fcap+2*fcal
+
+7750 RETURN
+
+7770 'Total ion fluxes
+7790 F(1)=F(7)+F(9)+F(11)+F(15):'Na flux
+7810 F(2)=F(8)+F(10)+F(12)+F(16):'K flux
+
+7830 F(3)=F(13)+F(14)+F(17)+f(9)+f(10):'Anion flux
+
+'Net proton flux, includes H-flux through Ca pump
+F(4)=F(18)+E(3)-2*fmg23-2*fca23+fcaph
+
+'If cah=0 then F(4)=F(18)+E(3)-2*fmg23-2*fca23+fcaph:'two-proton flux with fcaph
+'If cah=1 then F(4)=F(18)+E(3)-2*fmg23-2*fca23+fcaph:'Proton flux with fcaph
+'if cah=2 then F(4)=F(18)+E(3)-2*fmg23-2*fca23:'No proton flux with fcap
+
+7870 IF R=1 THEN RETURN
+
+7890 'Flux of water
+7910 I(29)=V(1)
+7930 I(25)=C(1)+C(2)+C(3)+V(9)*C(5)+C(6)+mgf+caf+cbenz2
+7950 I(26)=M(1)+M(2)+M(3)+M(5)+M(7)+M(9)+M(10)+(mgfo+cafo+edgto)
+7970 D(7)=I(25)-I(26)
+7990 E(17)=(P(10)/i(18))*D(7):'Water flux
+
+8010 'Integration interval
+8030 I(23)=10#+10*abs(fmg23+fca)+abs(e(3))+abs(dedgh)+_
+     ABS(F(1))+ABS(F(2))+ABS(F(3))+ABS(F(4))+ABS(E(17)*100)
+8050 D(5)=A(6)/I(23)
+8070 T(1)=T(1)+D(5)
+8090 T(2)=T(2)+1#
+8110 T(5)=T(5)+1#
+'8130 PRINT "T(1)=";
+'8150 PRINT USING "#####.## ";T(1)*60#;
+'8170 PRINT "T(2)=";T(2);"T(5)=";T(5);
+8190 'REM - PRINT "G=";G;
+
+8210 'Change in cell contents
+8230 D(1)=F(1)*D(5)
+8250 D(2)=F(2)*D(5)
+8270 D(3)=F(3)*D(5)
+8290 D(4)=F(4)*D(5)
+8310 D(8)=E(17)*D(5)
+
+dmg=fmg23*d(5)
+
+dca=fca*d(5)
+
+8330 'New contents
+8350 V(1)=V(1)+D(8)
+'8370 PRINT "VW=";
+'8390 PRINT USING "#.## ";V(1)
+8410 I(27)=Q(5)/V(1)
+8430 V(9)=1#+A(2)*I(27)+A(3)*(i(27))^2:'EXP(2*LOG(ABS(I(27))))
+8450 IF R=1 THEN RETURN
+8470 I(28)=V(9)*Q(5)
+8490 Q(1)=Q(1)+D(1)
+8510 Q(2)=Q(2)+D(2)
+8530 Q(3)=Q(3)+D(3)
+8550 Q(4)=Q(4)+D(4)
+
+v(10)=q(4)/q(9)
+
+q(7)=q(7)+dmg
+mgt=q(7)
+
+cat=cat+dca
+qca=cat
+
+8570 'Cell pH and cell proton concentration
+
+v(11)=i(74)+v(10)/a(1)
+
+8630 C(4)=10#^(-v(11))
+8650 V(10)=A(1)*(V(11)-i(74))
+8670 Q(8)=I(28):'Milliosmoles of Hb per loc
+
+8690 V(2)=(1-A(11))+V(1):'Relative cell volume
+8710 V(4)=A(9)/V(2):'MCHC
+8730 V(5)=(a(9)/100+V(1))/V(2):'Cell density
+8750 IF R=1 THEN RETURN:'to 690
+
+8770 V(3)=A(7)*V(2):'Haematocrit
+
+8790 'External concentrations
+8810 I(30)=1+(V(1)-I(29))*A(8)
+8830 M(1)=M(1)*I(30)-D(1)*A(8)
+8850 M(2)=M(2)*I(30)-D(2)*A(8)
+8870 M(3)=M(3)*I(30)-D(3)*A(8)
+8890 M(7)=M(7)*I(30)
+8910 M(9)=M(9)*I(30)
+8930 M(10)=M(10)*I(30)
+
+m(5)=m(5)*i(30)
+m(6)=m(6)*i(30)
+
+'Medium proton, Ca2+, Mg2+, free and bound buffer and ligand concentrations
+mgto=mgto*I(30)-dmg*A(8)
+cato=cato*I(30)-dca*a(8)
+edgto=edgto*i(30)
+if edgto=0 then mgfo=mgto
+if edgto=0 then cafo=cato
+
+if ligchoice=0 then goto 8990
+if ligchoice<>0 then gosub edgta
+if ligchoice<>0 then goto 9050
+
+8990 M(6)=M(6)*I(30)-D(4)*A(8)
+9010 M(4)=A(5)*(M(6)/(M(5)-M(6)))
+9030 V(12)=-(LOG(M(4)))/(LOG(10#))
+
+9050 'Cell concentrations and external concentrations
+9070 C(1)=Q(1)/V(1)
+9090 C(2)=Q(2)/V(1)
+9110 C(3)=Q(3)/V(1)
+
+gosub mgnr:'compute mgf
+gosub canr:'compute caf
+ccat=cat/v(1)
+cbenz2=benz2/v(1)
+
+9130 C(5)=Q(5)/V(1)
+9150 C(7)=Q(7)/V(1)
+9170 C(6)=Q(6)/V(1)
+9190 C(8)=(Q(4)+a(10)*q(6)-2*benz2)/V(1)
+9210 C(9)=V(9)*Q(5)/V(1)
+9230 C(10)=V(10)*Q(9)/V(1):'Concentration of charge on Hb
+9250 I(25)=C(1)+C(2)+C(3)+V(9)*C(5)+C(6)+mgf+caf+cbenz2
+9270 M(8)=M(1)+M(2)+M(3)+M(5)+M(7)+M(9)+M(10)+(mgfo+cafo+edgto):'Sum M
+9290 I(52)=Q(1)+Q(2)+Q(3)+V(9)*Q(5)+Q(6)+Q(7)+(mgf+caf)*v(1)+benz2
+9310 IF R=1 THEN RETURN
+
+if i(65)=1 then gosub 18000:'isotope option ON
+
+9330 'Anion and proton ratios
+9350 V(7)=M(3)/C(3):V(8)=C(4)/M(4)
+9370 IF V(1)>vlysis THEN GOTO 17230
+
+9550 'Conditional statements for filing partial results or ending experiment
+9570 'Second cycle only
+
+'Reversal of Cl x gluconate
+if i(73)=0 then goto 9590
+if t(6)=0 goto 9590
+If (t(1)*60)>T(6) then m(7)=m(7)-i(73)
+if (t(1)*60)>t(6) then M(3)=M(3)+i(73)
+if (t(1)*60)>t(6) then i(73)=0
+
+9590 IF T(5)=2 THEN Z=Z+1:PRINT "DATA SAMPLING No=";Z;
+IF T(5)=2 THEN PRINT "SAMPLING TIME (min)=";using "#####.##";t(1)*60
+9610 IF T(5)=2 THEN IF W=1 OR W=3 THEN GOSUB 9990
+9630 IF T(5)=2 THEN IF W=2 OR W=3 THEN GOSUB 14090
+
+9650 'Last cycle only
+9670 IF (T(1)*60)>T(4) THEN IF W=1 OR W=3 THEN GOSUB 9990
+9690 IF (T(1)*60)>T(4) THEN IF W=1 OR W=3 THEN GOSUB 12250
+9710 IF (T(1)*60)>T(4) THEN Z=Z+1:PRINT "DATA SAMPLING No=";Z;
+IF (T(1)*60)>T(4) THEN PRINT "SAMPLING TIME (min)=";using "####.##";t(1)*60
+9730 IF (T(1)*60)>T(4) THEN IF W=2 OR W=3 THEN GOSUB 14090
+9750 IF (T(1)*60)>T(4) THEN IF A$="Y" OR A$="y"  GOTO 15750
+9770 IF (T(1)*60)>T(4) THEN CLOSE #1
+9790 IF (T(1)*60)>T(4) THEN CLOSE #2
+9810 IF (T(1)*60)>T(4) THEN IF W=2 OR W=3 THEN GOSUB 15430
+9830 IF (T(1)*60)>T(4) THEN GOTO 16010
+
+9850 'Data points
+9870 IF T(2)=T(3) THEN Z=Z+1:PRINT "DATA SAMPLING No=";Z;
+IF T(2)=T(3) THEN PRINT "SAMPLING TIME (min)=";using "#####.##";t(1)*60
+9890 IF T(2)=T(3) THEN IF W=2 OR W=3 THEN GOSUB 14090
+9910 IF T(2)=T(3) THEN IF W=1 OR W=3 THEN GOSUB 9990
+9930 IF T(2)=T(3) THEN T(2)=0
+9950 $EVENT ON
+9970 GOTO 6170
+
+9990 'Print Results to .RES file
+10010 PRINT #1, "TIME (minutes):   ";
+10030 PRINT #1, USING "#####.####  ";T(1)*60
+10050 PRINT #1, "_____________________________"
+10070 PRINT #1, TAB(1);"FLUXES (mmole/loch)";
+10090 PRINT #1, TAB(24);"Na";TAB(36);"K";TAB(48);"A";TAB(60);"H"
+10110 PRINT #1, TAB(1);"Na-PUMP:  FORWARDS";
+10130 PRINT #1, TAB(24) USING "+#.##^^^^";F(5)
+10150 PRINT #1, TAB(11);"REVERSE";
+10170 PRINT #1, TAB(24) USING "+#.##^^^^";F(6)
+10190 PRINT #1, TAB(11);"NET";
+10210 PRINT #1, TAB(24) USING "+#.##^^^^";F(7);
+10230 PRINT #1, TAB(36) USING "+#.##^^^^";F(8)
+10250 PRINT #1, TAB(1);"Na:Cl;K:Cl";
+10270 PRINT #1, TAB(24) USING "+#.##^^^^";F(9);
+10290 PRINT #1, TAB(36) USING "+#.##^^^^";F(10);
+
+10295 PRINT #1, TAB(48) USING "+#.##^^^^";f(9)+F(10)
+
+10310 PRINT #1, TAB(1);"ELECTRODIFFUSIONAL";
+10330 PRINT #1, TAB(24) USING "+#.##^^^^";F(11);
+10350 PRINT #1, TAB(36) USING "+#.##^^^^";F(12);
+10370 PRINT #1, TAB(48) USING "+#.##^^^^";F(13);
+10380 PRINT #1, TAB(60) USING "+#.##^^^^";E(3)
+10390 PRINT #1, TAB(1);"JACOBS-STEWART";
+10410 PRINT #1, TAB(48) USING "+#.##^^^^";F(17);
+10430 PRINT #1, TAB(60) USING "+#.##^^^^";F(18)
+10450 PRINT #1, TAB(1);"Na:K:2Cl";
+10470 PRINT #1, TAB(24) USING "+#.##^^^^";F(15);
+10490 PRINT #1, TAB(36) USING "+#.##^^^^";F(16);
+10510 PRINT #1, TAB(48) USING "+#.##^^^^";F(14)
+
+PRINT #1, TAB(1);"Mg:2H(A23187)";
+PRINT #1, TAB(60) USING "+#.##^^^^";-2*fmg23
+
+PRINT #1, TAB(1);"Ca:2H(A23187)";
+PRINT #1, TAB(60) USING "+#.##^^^^";-2*fca23
+
+PRINT #1, TAB(1);"H-flux through CaP";
+PRINT #1, TAB(60) USING "+#.##^^^^";fcaph
+
+'if cah=1 and r=0 then gosub fhcap
+
+10530 PRINT #1, TAB(1);"TOTAL NET FLUX";
+10550 PRINT #1, TAB(24) USING "+#.##^^^^";F(1);
+10570 PRINT #1, TAB(36) USING "+#.##^^^^";F(2);
+10590 PRINT #1, TAB(48) USING "+#.##^^^^";F(3);
+10610 PRINT #1, TAB(60) USING "+#.##^^^^";F(4)
+
+print #1,"-----------------------------------------------------"
+print #1, tab(24);"Mg";
+print #1, tab(40);"Ca"
+
+PRINT #1, TAB(1);"A23187";
+PRINT #1, TAB(24) USING "+#.###^^^^";fmg23;
+PRINT #1, TAB(40) USING "+#.###^^^^";fca23
+
+PRINT #1, TAB(1);"PASSIVE Ca FLUX";
+PRINT #1, TAB(40) USING "+#.###^^^^";fcal
+
+PRINT #1, TAB(1);"Ca PUMP";
+PRINT #1, TAB(40) USING "+#.###^^^^";fcap
+
+PRINT #1, TAB(1);"TOTAL NET FLUX";
+PRINT #1, TAB(24) USING "+#.###^^^^";fmg23;
+PRINT #1, TAB(40) USING "+#.###^^^^";fca
+print #1,"-----------------------------------------------------"
+
+PRINT #1, TAB(1);"NET WATER FLUX (l/loch)";
+PRINT #1, TAB(30) USING "+#.###^^^^";E(17)
+PRINT #1,
+print #1,"-----------------------------------------------------"
+PRINT #1, TAB(1);"EN error test (mmol/loch):";
+PRINT #1, TAB(30);"FNa+FK+FH+2*(FCa+FMg)-FA=";
+PRINT #1, TAB(56) USING "+#.##^^^^";F(1)+f(2)-f(3)+f(4)+2*(fca+fmg23)
+enfluxtest=F(1)+f(2)-f(3)+f(4)+2*(fca+fmg23)
+print #1,"-----------------------------------------------------"
+
+if i(65)=1 then goto 10700
+if i(65)=0 then goto 10725
+
+'fhcap:
+'PRINT #1, TAB(1);"Ca pump (CaxH)";
+'PRINT #1, TAB(60) USING "+#.##^^^^";fcaph
+'return
+
+10700 print #1, TAB(1);"=============================================================="
+print #1, tab(1);"ISOTOPE CONCENTRATION RATIOS AND UNIDIRECTIONAL FLUXES"
+print #1, TAB(1);"--------------------------------------------------------------"
+PRINT #1, tab(1);"Ratio or flux";TAB(40);"Na'";TAB(52);"K'";TAB(64);"A'"
+print #1, tab(1);"..............................................................."
+
+if i(71)=0 then goto 10710
+
+print #1, tab(1);"(cpm/loc), arbitrary units";
+PRINT #1, TAB(40) USING "##.##^^^^";q(10);
+PRINT #1, TAB(52) USING "##.##^^^^";q(11);
+PRINT #1, TAB(64) USING "##.##^^^^";q(12)
+
+print #1, tab(1);"cell specific activity (cpm/mmole)";
+PRINT #1, TAB(40) USING "##.##^^^^";q(10)/q(1);
+PRINT #1, TAB(52) USING "##.##^^^^";q(11)/q(2);
+PRINT #1, TAB(64) USING "##.##^^^^";q(12)/q(3)
+
+print #1, tab(1);"(cpm/l medium), arbitrary units";
+PRINT #1, TAB(40) USING "##.##^^^^";m(11);
+PRINT #1, TAB(52) USING "##.##^^^^";m(12);
+PRINT #1, TAB(64) USING "##.##^^^^";m(13)
+
+print #1, tab(1);"(cpm/loc)/(cpm/l medium)";
+PRINT #1, TAB(40) USING "##.##^^^^";q(10)/m(11);
+PRINT #1, TAB(52) USING "##.##^^^^";q(11)/m(12);
+PRINT #1, TAB(64) USING "##.##^^^^";q(12)/m(13)
+
+print #1, tab(1);"(cpm/lcw)/(cpm/l medium)";
+PRINT #1, TAB(40) USING "##.##^^^^";c(11)/m(11);
+PRINT #1, TAB(52) USING "##.##^^^^";c(12)/m(12);
+PRINT #1, TAB(64) USING "##.##^^^^";c(13)/m(13)
+
+print #1, tab(1);"Specific activity ratio (in/out)";
+PRINT #1, TAB(40) USING "##.##^^^^";(c(11)*m(1))/(m(11)*c(1));
+PRINT #1, TAB(52) USING "##.##^^^^";(c(12)*m(2))/(m(12)*c(2));
+PRINT #1, TAB(64) USING "##.##^^^^";(c(13)*m(3))/(m(13)*c(3))
+
+'***************************************************
+'print #1, tab(1);"(cpm/loc)/(medium SA at t), mmole/loc";
+'Wrong use of SAt
+'PRINT #1, TAB(40) USING "##.##^^^^";(q(10)*m(1))/m(11);
+'PRINT #1, TAB(52) USING "##.##^^^^";(q(11)*m(2))/m(12);
+'PRINT #1, TAB(64) USING "##.##^^^^";(q(12)*m(3))/m(13)
+'****************************************************
+
+print #1, tab(1);"Cord influx (SA at t=0), mmole/loch";
+PRINT #1, TAB(40) USING "##.##^^^^";(q(10)*m(1))/(m(11)*t(1));
+PRINT #1, TAB(52) USING "##.##^^^^";(q(11)*m(2))/(m(12)*t(1));
+PRINT #1, TAB(64) USING "##.##^^^^";(q(12)*m(3))/(m(13)*t(1))
+
+10710
+if i(71)=1 goto furtherinflux
+
+print #1, tab(1);"Percent tracer remaining in cells";
+PRINT #1, TAB(40) USING "##.##^^^^";q(10)*100/i(90);
+PRINT #1, TAB(52) USING "##.##^^^^";q(11)*100/i(91);
+PRINT #1, TAB(64) USING "##.##^^^^";q(12)*100/i(92)
+
+print #1, tab(1);"Log percent tracer remaining in cells";
+PRINT #1, TAB(40) USING "##.##^^^^";log(q(10)*100/i(90))/log(10);
+PRINT #1, TAB(52) USING "##.##^^^^";log(q(11)*100/i(91))/log(10);
+PRINT #1, TAB(64) USING "##.##^^^^";log(q(12)*100/i(92))/log(10)
+
+print #1, tab(1);"Percent tracer lost to medium";
+PRINT #1, TAB(40) USING "##.##^^^^";100*(1-(q(10)/i(90)));
+PRINT #1, TAB(52) USING "##.##^^^^";100*(1-(q(11)/i(91)));
+PRINT #1, TAB(64) USING "##.##^^^^";100*(1-(q(12)/i(92)))
+
+'print #1,
+'print #1, tab(1);"Unidirectional fluxes at time=t (mmole/loch):"
+
+print #1, tab(1);"Cord tracer efflux (SAc at t=0)";
+PRINT #1, TAB(40) USING "+#.##^^^^";(q(10)-i(90))*60/(i(86)*(t(1)*60-t(11)));
+PRINT #1, TAB(52) USING "+#.##^^^^";(q(11)-i(91))*60/(i(87)*(t(1)*60-t(11)));
+PRINT #1, TAB(64) USING "+#.##^^^^";(q(12)-i(92))*60/(i(88)*(t(1)*60-t(11)))
+print #1,
+
+if i(71)=0 then goto 10725
+
+furtherinflux:
+print #1,
+print #1, tab(1);"Unidirectional fluxes at time=t (mmole/loch):"
+
+print #1, tab(1);"Electrodiffusional influx";
+PRINT #1, TAB(39) USING "+#.##^^^^";f(54);
+PRINT #1, TAB(51) USING "+#.##^^^^";f(50);
+PRINT #1, TAB(63) USING "+#.##^^^^";f(58)
+print #1, tab(1);"Total influx";
+PRINT #1, TAB(39) USING "+#.##^^^^";f(61)*m(1)/m(11);
+PRINT #1, TAB(51) USING "+#.##^^^^";f(64)*m(2)/m(12);
+PRINT #1, TAB(63) USING "+#.##^^^^";f(67)*m(3)/m(13)
+print #1, tab(1);"Total efflux";
+PRINT #1, TAB(39) USING "+#.##^^^^";f(62)*c(1)/c(11);
+PRINT #1, TAB(51) USING "+#.##^^^^";f(65)*c(2)/c(12);
+PRINT #1, TAB(63) USING "+#.##^^^^";f(68)*c(3)/c(13)
+print #1,
+
+10725 PRINT #1, "**********************************************************"
+10730 PRINT #1, TAB(6);"CELL";TAB(20);"CONCENTRATIONS";TAB(42);"OTHER"
+10750 PRINT #1, TAB(6);"AMOUNTS";TAB(18);"CELL";TAB(30);"MEDIUM";
+10770 PRINT #1, TAB(42);"VARIABLES"
+10790 PRINT #1, TAB(6);"(mmole/loc)";TAB(18);"(mmole/lcw)";
+10810 PRINT #1, TAB(30);"(mM)"
+10830 PRINT #1, TAB(1);"Na";
+10850 PRINT #1, TAB(6) USING "###.##";Q(1);
+10870 PRINT #1, TAB(18) USING "###.##";C(1);
+10890 PRINT #1, TAB(30) USING "###.##";M(1);
+10910 PRINT #1, TAB(42);"VW";
+10930 PRINT #1, TAB(50) USING "#.##";V(1)
+10950 PRINT #1, TAB(1);"K";
+10970 PRINT #1, TAB(6) USING "###.##";Q(2);
+10990 PRINT #1, TAB(18) USING "###.##";C(2);
+11010 PRINT #1, TAB(30) USING "###.##";M(2);
+11030 PRINT #1, TAB(42);"V/V";
+11050 PRINT #1, TAB(50) USING "#.##";V(2)
+11070 PRINT #1, TAB(1);"A";
+11090 PRINT #1, TAB(6) USING "###.##";Q(3);
+11110 PRINT #1, TAB(18) USING "###.##";C(3);
+11130 PRINT #1, TAB(30) USING "###.##";M(3);
+11150 PRINT #1, TAB(42);"Ht";
+11170 PRINT #1, TAB(50) USING "##.###";V(3)*100
+11190 PRINT #1, TAB(1);"H";
+11210 PRINT #1, TAB(18) USING "##.##^^^^";C(4);
+11230 PRINT #1, TAB(30) USING "##.##^^^^";M(4);
+11250 PRINT #1, TAB(42);"MCHC";
+11270 PRINT #1, TAB(50) USING "##.#";V(4)
+11290 PRINT #1, TAB(1);"X&Hb-";
+11310 PRINT #1, TAB(6) USING "+###.##";Q(4)+a(10)*Q(6)-2*benz2;
+11330 PRINT #1, TAB(18) USING "+###.##";c(8);
+11350 PRINT #1, TAB(42);"DENS.";
+11370 PRINT #1, TAB(50) USING "#.#####";V(5)
+11390 PRINT #1, TAB(1);"Hb";
+11410 PRINT #1, TAB(6) USING "###.##";Q(5);
+11430 PRINT #1, TAB(18) USING "###.##";C(5);
+
+'&&Remove when properly corrected
+if r=1 then v(6)=-11.89
+PRINT #1, TAB(42);"E(mV)";
+PRINT #1, TAB(50) USING "+####.##";V(6):goto 11490
+'&&
+
+11450 PRINT #1, TAB(42);"E(mV)";
+11470 PRINT #1, TAB(50) USING "+####.##";V(6)
+11490 PRINT #1, TAB(1);"X";
+11510 PRINT #1, TAB(6) USING "###.##";Q(6);
+11530 PRINT #1, TAB(18) USING "###.##";C(6);
+11550 PRINT #1, TAB(42);"rA";
+11570 PRINT #1, TAB(50) USING "##.##";V(7)
+11590 PRINT #1, TAB(1);"MgT";
+11610 PRINT #1, TAB(6) USING "###.##";Q(7);
+11630 PRINT #1, TAB(18) USING "###.##";C(7);
+
+PRINT #1, TAB(30) USING "##.##";mgto;
+
+11650 PRINT #1, TAB(42);"rH";
+11670 PRINT #1, TAB(50) USING "####.##";V(8)
+11690 PRINT #1, TAB(1);"Os";
+11710 PRINT #1, TAB(6) USING "###.##";I(52);
+11730 PRINT #1, TAB(18) USING "###.##";I(25);
+11750 PRINT #1, TAB(30) USING "###.##";M(8);
+11770 PRINT #1, TAB(42);"fHb";
+11790 PRINT #1, TAB(50) USING "##.##";V(9)
+11810 PRINT #1, TAB(1);"BT";
+11830 PRINT #1, TAB(30) USING "###.##";M(5);
+11850 PRINT #1, TAB(42);"nHb";
+11870 PRINT #1, TAB(50) USING "+##.##";V(10)
+11890 PRINT #1, TAB(1);"HB";
+11910 PRINT #1, TAB(30) USING "###.##";M(6);
+11930 PRINT #1, TAB(42);"pHC";
+11950 PRINT #1, TAB(50) USING "#.###";V(11)
+11970 PRINT #1, TAB(1);"Y(-)";
+11990 PRINT #1, TAB(30) USING "###.##";M(7);
+12010 PRINT #1, TAB(42);"pHM";
+12030 PRINT #1, TAB(50) USING "##.###";V(12)
+12050 PRINT #1, TAB(1);"Y(+)";
+12070 PRINT #1, TAB(30) USING "###.##";M(9);
+
+V(14)=-rtoverf*LOG(m(3)/c(3)):'EA
+PRINT #1, TAB(42);"EA(mV)";
+PRINT #1, TAB(50) USING "+###.##";V(14)
+
+12090 PRINT #1, TAB(1);"Sucrose";
+12110 PRINT #1, TAB(30) USING "###.##";M(10);
+
+V(13)=rtoverf*LOG(m(4)/c(4)):'EH
+PRINT #1, TAB(42);"EH(mV)";
+PRINT #1, TAB(50) USING "+###.##";V(13)
+
+12130 PRINT #1, TAB(1);"Hb+/-";
+12150 PRINT #1, TAB(18) USING "+###.##";C(10);
+
+V(15)=rtoverf*LOG(m(2)/c(2)):'EK
+PRINT #1, TAB(42);"EK(mV)";
+PRINT #1, TAB(50) USING "+###.##";V(15)
+
+PRINT #1, TAB(1);"CaT";
+PRINT #1, TAB(18) USING "##.###";ccat;
+
+V(16)=rtoverf*LOG(m(1)/c(1)):'ENa
+PRINT #1, TAB(42);"ENa(mV)";
+PRINT #1, TAB(50) USING "+###.##";V(16)
+
+enin=c(1)+c(2)+1000*c(4)+2*(c(7)+ccat)+c(8)-c(3)
+
+if buffer$="c" or buffer$="C" then goto enc2
+sumpos=m(1)+m(2)+1000*m(4)+m(9)+2*(mgfo+cafo)
+sumneg=m(3)+(m(5)-m(6))+m(7)+edgneg:goto enoutall
+enc2:
+sumpos=m(1)+m(2)+1000*m(4)+m(6)+m(9)+2*(mgfo+cafo)
+sumneg=m(3)+m(7)+edgneg
+
+enoutall:
+enout=sumpos-sumneg
+print #1, "----------------------------------------------------------------------------"
+PRINT #1, TAB(1);"EN error test:";
+PRINT #1, TAB(18) USING "+#.##^^^^";enin;
+PRINT #1, TAB(30) USING "+#.##^^^^";enout;
+print #1, tab(40);"(mM)"
+
+print #1, "----------------------------------------------------------------------------"
+print #1, "Cell Mg values (concentrations in mmole/...):"
+PRINT #1, TAB(1);"Mg2+(/lcw)";
+PRINT #1, TAB(20);"MgBT(/lc)";
+PRINT #1, TAB(40);"MgATP+P(/lc)";
+PRINT #1, TAB(60);"MgDPG+P(/lc)"
+
+PRINT #1, TAB(1) USING "##.###";mgf;
+PRINT #1, TAB(20) USING "##.###";mgb;
+PRINT #1, TAB(40) USING "##.###";(atp/v(2))*mgf/(0.08+mgf);
+PRINT #1, TAB(60) USING "##.###";(dpgp/v(2))*mgf/(3.6+mgf)
+
+print #1, "----------------------------------------------------------------------------"
+print #1,"Cell Calcium values (concentrations in mmole/...):"
+PRINT #1, TAB(1);"CaT(/lc)";
+PRINT #1, TAB(12);"Ca2+(/lcw)";
+PRINT #1, TAB(24);"CaB(/lc)";
+PRINT #1, TAB(36);"CaB1(/lc)";
+print #1, tab(48);"Alpha(/lc)";
+PRINT #1, TAB(60);"CaB2(/lc)"
+
+PRINT #1, TAB(1) USING "+#.##^^^^";cat;
+PRINT #1, TAB(12) USING "+#.##^^^^";caf;
+PRINT #1, TAB(24) USING "+#.##^^^^";cab;
+PRINT #1, TAB(36) USING "+#.##^^^^";(b1ca/v(2))*(caf/(b1cak+caf));
+PRINT #1, TAB(48) USING "+#.##^^^^";caf*(alpha^-1-(v(1)/(v(1)+a(9)/136)));
+PRINT #1, TAB(60) USING "+#.##^^^^";(benz2/v(2))*(caf/(benz2k+caf))
+
+print #1, "----------------------------------------------------------------------------"
+print #1,"Medium Mg values (concentrations in mM):"
+PRINT #1, TAB(1);"MgoT";
+PRINT #1, TAB(12);"Mg2+o";
+if ligchoice=1 then PRINT #1, TAB(24);"EGTA-Mg"
+if ligchoice=2 then PRINT #1, TAB(24);"EDTA-Mg"
+
+PRINT #1, TAB(1) USING "+#.##^^^^";Mgto;
+PRINT #1, TAB(12) USING "+#.##^^^^";mgfo;
+PRINT #1, TAB(24) USING "+#.##^^^^";edgmg
+
+print #1, "----------------------------------------------------------------------------"
+
+print #1,"Medium Calcium values (concentrations in mM):"
+PRINT #1, TAB(1);"CaoT";
+PRINT #1, TAB(12);"Ca2+o";
+if ligchoice=1 then PRINT #1, TAB(24);"EGTA-Ca"
+if ligchoice=2 then PRINT #1, TAB(24);"EDTA-Ca"
+
+PRINT #1, TAB(1) USING "+#.##^^^^";cato;
+PRINT #1, TAB(12) USING "+#.##^^^^";cafo;
+PRINT #1, TAB(24) USING "+#.##^^^^";edgca
+
+print #1, "----------------------------------------------------------------------------"
+print #1,"Medium H-ligand values (concentrations in mM):"
+
+if ligchoice=1 then goto egtaprint
+if ligchoice=2 then goto edtaprint
+
+egtaprint:
+PRINT #1, TAB(1);"EGTAoT";
+PRINT #1, TAB(12);"EG4-";
+PRINT #1, TAB(24);"H-EG3-";
+PRINT #1, TAB(36);"H2-EG2-";
+PRINT #1, TAB(48);"EGTA-Mg";
+PRINT #1, TAB(60);"EGTA-Ca"
+goto edtaskip
+
+edtaprint:
+PRINT #1, TAB(1);"EDTAoT";
+PRINT #1, TAB(12);"ED4-";
+PRINT #1, TAB(24);"H-ED3-";
+PRINT #1, TAB(36);"H2-ED2-";
+PRINT #1, TAB(48);"EDTA-Mg";
+PRINT #1, TAB(60);"EDTA-Ca"
+
+edtaskip:
+PRINT #1, TAB(1) USING "+#.##^^^^";edgto;
+PRINT #1, TAB(12) USING "+#.##^^^^";edg4;
+PRINT #1, TAB(24) USING "+#.##^^^^";edg3;
+PRINT #1, TAB(36) USING "+#.##^^^^";edg2;
+PRINT #1, TAB(48) USING "+#.##^^^^";edgmg;
+PRINT #1, TAB(60) USING "+#.##^^^^";edgca
+
+12170 PRINT #1, "**********************************************************************"
+12210 PRINT #1,
+12230 RETURN
+
+12250 'Print Parameters
+print #1, "*********************************************************************"
+print #1, "Date and time of this run.""  Date:  ";date$; "   Time: ";time$
+print #1, "*********************************************************************"
+
+12270 PRINT #1, "SYSTEM PARAMETERS"
+12290 PRINT #1, TAB(1);"PARAMETER";TAB(24);"VALUE";TAB(48);"UNITS"
+12310 PRINT #1, TAB(1);"a";
+12330 PRINT #1, TAB(24) USING"+#.##^^^^";A(1);
+12350 PRINT #1, TAB(48);"Eq/(mole.pH unit)"
+12370 PRINT #1, TAB(1);"b";
+12390 PRINT #1, TAB(24) USING"+#.##^^^^";A(2);
+12410 PRINT #1, TAB(48);"----"
+12430 PRINT #1, TAB(1);"c";
+12450 PRINT #1, TAB(24) USING"+#.##^^^^";A(3);
+12470 PRINT #1, TAB(48);"----"
+
+i(74)=a(4)-(0.016*b(8))
+
+12490 PRINT #1, TAB(1);"pI(T=";
+print #1,using "##";b(8);
+print #1,"oC)";
+12510 PRINT #1, TAB(24) USING"+#.##^^^^";i(74);
+12530 PRINT #1, TAB(48);"----"
+
+if buffer$<>"hepes" then goto 12595
+12550 PRINT #1, TAB(1);"pKa-HEPES(T=";
+print #1,using "##";b(8);
+print #1,"oC)";
+12570 PRINT #1, TAB(24) USING"+#.##^^^^";pkhepes;
+12590 PRINT #1, TAB(48);"M":goto 12610
+
+12595 PRINT #1, TAB(1);"pKa-buffer(T=";
+print #1,using "##";b(8);
+print #1,"oC)";
+PRINT #1, TAB(24) USING"+#.##^^^^";pka;
+PRINT #1, TAB(48);"M"
+
+12610 PRINT #1, TAB(1);"fDt";
+12630 PRINT #1, TAB(24) USING"+#.##^^^^";A(6);
+12650 PRINT #1, TAB(48);"----"
+12670 PRINT #1, TAB(1);"nX";
+12690 PRINT #1, TAB(24) USING"+#.##^^^^";A(10);
+12710 PRINT #1, TAB(48);"Eq/mole"
+12730 PRINT #1, TAB(1);"KmNa";
+12750 PRINT #1, TAB(24) USING"+#.##^^^^";B(1);
+12770 PRINT #1, TAB(48);"mM"
+12790 PRINT #1, TAB(1);"KINa";
+12810 PRINT #1, TAB(24) USING"+#.##^^^^";B(2);
+12830 PRINT #1, TAB(48);"mM"
+12850 PRINT #1, TAB(1);"KmK";
+12870 PRINT #1, TAB(24) USING"+#.##^^^^";B(3);
+12890 PRINT #1, TAB(48);"mM"
+12910 PRINT #1, TAB(1);"KIK";
+12930 PRINT #1, TAB(24) USING"+#.##^^^^";B(4);
+12950 PRINT #1, TAB(48);"mM"
+12970 PRINT #1, TAB(1);"d";
+12990 PRINT #1, TAB(24) USING"+#.##^^^^";B(5);
+13010 PRINT #1, TAB(48);"----"
+13030 PRINT #1, TAB(1);"fG";
+13050 PRINT #1, TAB(24) USING"+#.##^^^^";B(6);
+13070 PRINT #1, TAB(48);"----"
+13090 PRINT #1, TAB(1);"s(Na/K)";
+13110 PRINT #1, TAB(24) USING"+#.##^^^^";B(7);
+13130 PRINT #1, TAB(48);"----"
+13150 PRINT #1, TAB(1);"T(oC)";
+13170 PRINT #1, TAB(24) USING"+#.##^^^^";B(8);
+13190 PRINT #1, TAB(48);"oC"
+13210 PRINT #1, TAB(1);"Q10P";
+13230 PRINT #1, TAB(24) USING"+#.##^^^^";B(9);
+13250 PRINT #1, TAB(48);"----"
+
+PRINT #1, TAB(1);"Q10P(T)/(Vwo/Vw)";
+PRINT #1, TAB(24) USING"+#.##^^^^";I(17);
+PRINT #1, TAB(48);"----"
+
+13270 PRINT #1, TAB(1);"Q10L";
+13290 PRINT #1, TAB(24) USING"+#.##^^^^";B(10);
+13310 PRINT #1, TAB(48);"----"
+
+PRINT #1, TAB(1);"Q10L(T)/(Vwo/Vw)";
+PRINT #1, TAB(24) USING"+#.##^^^^";I(18);
+PRINT #1, TAB(48);"----"
+
+13330 PRINT #1, TAB(1);"Fmax(Na,Forwards)";
+13350 PRINT #1, TAB(24) USING"+#.##^^^^";P(1);
+13370 PRINT #1, TAB(48);"mmole/loch"
+13390 PRINT #1, TAB(1);"Fmax(Na,Reverse)";
+13410 PRINT #1, TAB(24) USING"+#.##^^^^";P(2);
+13430 PRINT #1, TAB(48);"mmole/loch"
+13450 PRINT #1, TAB(1);"FNa(forwards,RS)";
+13470 PRINT #1, TAB(24) USING"+#.##^^^^";I(31);
+13490 PRINT #1, TAB(48);"mmole/loch"
+13510 PRINT #1, TAB(1);"FNa(Reverse,RS)";
+13530 PRINT #1, TAB(24) USING"+#.##^^^^";I(32);
+13550 PRINT #1, TAB(48);"mmole/loch"
+13570 PRINT #1, TAB(1);"PLNa (Na:A)";
+13590 PRINT #1, TAB(24) USING"+#.##^^^^";P(3);
+13610 PRINT #1, TAB(48);"1/h"
+13630 PRINT #1, TAB(1);"PLK (K:A)";
+13650 PRINT #1, TAB(24) USING"+#.##^^^^";P(5);
+13670 PRINT #1, TAB(48);"1/h"
+
+PRINT #1, TAB(1);"PLA (Na:A+K:A)";
+PRINT #1, TAB(24) USING"+#.##^^^^";p(3)+P(5);
+PRINT #1, TAB(48);"1/h"
+
+13690 PRINT #1, TAB(1);"PGNa";
+13710 PRINT #1, TAB(24) USING"+#.##^^^^";P(4);
+13730 PRINT #1, TAB(48);"1/h"
+13750 PRINT #1, TAB(1);"PGK";
+13770 PRINT #1, TAB(24) USING"+#.##^^^^";P6+P(11);
+13790 PRINT #1, TAB(48);"1/h"
+13810 PRINT #1, TAB(1);"PGA";
+13830 PRINT #1, TAB(24) USING"+#.##^^^^";P(7);
+13850 PRINT #1, TAB(48);"1/h"
+
+PRINT #1, TAB(1);"PGH";
+PRINT #1, TAB(24) USING"+#.##^^^^";E(8);
+PRINT #1, TAB(48);"1/h"
+
+13870 PRINT #1, TAB(1);"P(Na:K:2Cl)";
+13890 PRINT #1, TAB(24) USING"+#.##^^^^";P(8);
+13910 PRINT #1, TAB(48);"1/h"
+13930 PRINT #1, TAB(1);"P(H:A,J-S-equivalent)";
+13950 PRINT #1, TAB(24) USING"+#.##^^^^";P(9);
+13970 PRINT #1, TAB(48);"1/h"
+13990 PRINT #1, TAB(1);"PW";
+14010 PRINT #1, TAB(24) USING"+#.##^^^^";P(10);
+14030 PRINT #1, TAB(48);"l/((mmole/l)loch)"
+
+'Ca and Mg parameters
+
+PRINT #1, TAB(1);"K0(Mg-buff)";
+PRINT #1, TAB(24) USING"+#.##^^^^";q0;
+PRINT #1, TAB(48);"mmole/loc"
+PRINT #1, TAB(1);"ATP+P(Mg)";
+PRINT #1, TAB(24) USING"+#.##^^^^";atp;
+PRINT #1, TAB(48);"mmole/loc"
+PRINT #1, TAB(1);"DPG+P(Mg)";
+PRINT #1, TAB(24) USING"+#.##^^^^";dpgp;
+PRINT #1, TAB(48);"mmole/loc)"
+PRINT #1, TAB(1);"Alpha(Ca)";
+PRINT #1, TAB(24) USING"+#.##^^^^";alpha
+PRINT #1, TAB(1);"Additional Ca buffer";
+PRINT #1, TAB(24) USING"+#.##^^^^";b1ca;
+PRINT #1, TAB(48);"mmole/loc"
+PRINT #1, TAB(1);"KD of add'l Ca buffer";
+PRINT #1, TAB(24) USING"+#.##^^^^";b1cak;
+PRINT #1, TAB(48);"mM"
+PRINT #1, TAB(1);"Benz2";
+PRINT #1, TAB(24) USING"+#.##^^^^";benz2;
+PRINT #1, TAB(48);"mmole/loc"
+PRINT #1, TAB(1);"Kd-Benz2";
+PRINT #1, TAB(24) USING"+#.##^^^^";benz2k;
+PRINT #1, TAB(48);"mM"
+PRINT #1, TAB(1);"FCaLmax";
+PRINT #1, TAB(24) USING"+#.##^^^^";fcalm;
+PRINT #1, TAB(48);"mmole/loch)"
+PRINT #1, TAB(1);"Km CaLo";
+PRINT #1, TAB(24) USING"+#.##^^^^";calk;
+PRINT #1, TAB(48);"mM"
+PRINT #1, TAB(1);"KI CaLi";
+PRINT #1, TAB(24) USING"+#.##^^^^";calik;
+PRINT #1, TAB(48);"mM"
+
+PRINT #1, TAB(1);"FCaPmax";
+PRINT #1, TAB(24) USING"+#.##^^^^";fcapm;
+PRINT #1, TAB(48);"mmole/loc"
+PRINT #1, TAB(1);"Km(Ca)-Cap";
+PRINT #1, TAB(24) USING"+#.##^^^^";capk;
+PRINT #1, TAB(48);"mM"
+PRINT #1, TAB(1);"Hill-coeff-CaP";
+PRINT #1, TAB(24) USING"+#.##^^^^";h1
+PRINT #1, TAB(1);"Ca:(2-n)H (n=0,1,2)";
+PRINT #1, TAB(24) USING"+#.##^^^^";cah
+PRINT #1, TAB(1);"Km(Mg)-CaP";
+PRINT #1, TAB(24) USING"+#.##^^^^";capmgk;
+PRINT #1, TAB(48);"mM"
+PRINT #1, TAB(1);"KI(Hi)-CaP";
+PRINT #1, TAB(24) USING"+#.##^^^^";hik;
+PRINT #1, TAB(48);"M"
+
+PRINT #1, TAB(1);"PK(Ca)max";
+PRINT #1, TAB(24) USING"+#.##^^^^";pkm;
+PRINT #1, TAB(48);"1/h"
+PRINT #1, TAB(1);"Km(Ca)-PK(Ca)";
+PRINT #1, TAB(24) USING"+#.##^^^^";pkcak;
+PRINT #1, TAB(48);"mM"
+
+14050 PRINT #1, "********************************************************************"
+14070 RETURN
+
+14090 'Print results to formated .INT file
+14110 PRINT #2, USING "###.";Z:'1
+14130 PRINT #2, USING "#######.";T(5):'2
+14150 PRINT #2, USING "######.";T(1)*3600:'3
+14170 PRINT #2, USING "#####.#####";T(1)*60:'4
+14190 PRINT #2, USING "####.#";T(1):'5
+14210 PRINT #2, USING "##.##";T(1)/24#:'6
+14230 PRINT #2, USING "+#.###^^^^";F(5):'7
+14250 PRINT #2, USING "+#.###^^^^";F(6):'8
+14270 PRINT #2, USING "+#.###^^^^";F(7):'9
+14290 PRINT #2, USING "+#.###^^^^";F(8):'10
+14310 PRINT #2, USING "+#.###^^^^";F(9):'11
+14330 PRINT #2, USING "+#.###^^^^";F(10):'12
+14350 PRINT #2, USING "+#.###^^^^";F(11):'13
+14370 PRINT #2, USING "+#.###^^^^";F(12):'14
+14390 PRINT #2, USING "+#.###^^^^";F(13):'15
+14410 PRINT #2, USING "+#.###^^^^";F(17):'16
+14430 PRINT #2, USING "+#.###^^^^";F(18):'17
+14450 PRINT #2, USING "+#.###^^^^";F(15):'18
+14470 PRINT #2, USING "+#.###^^^^";F(16):'19
+14490 PRINT #2, USING "+#.###^^^^";F(14):'20
+14510 PRINT #2, USING "+#.###^^^^";F(1):'21
+14530 PRINT #2, USING "+#.###^^^^";F(2):'22
+14550 PRINT #2, USING "+#.###^^^^";F(3):'23
+14570 PRINT #2, USING "+#.###^^^^";F(4):'24
+14590 PRINT #2, USING "###.##";Q(1):'25
+14610 PRINT #2, USING "###.##";Q(2):'26
+14630 PRINT #2, USING "###.##";Q(3):'27
+14650 PRINT #2, USING "###.##-";Q(4)+a(10)*q(6)+benz2:'28
+14670 PRINT #2, USING "###.##";Q(5):'29
+14690 PRINT #2, USING "###.##";Q(6):'30
+14710 PRINT #2, USING "###.##";Q(7):'31
+14730 PRINT #2, USING "###.##";Q(8):'32
+14750 PRINT #2, USING "###.##";C(1):'33
+14770 PRINT #2, USING "###.##";C(2):'34
+14790 PRINT #2, USING "###.##";C(3):'35
+14810 PRINT #2, USING "##.##^^^^";C(4):'36
+14830 PRINT #2, USING "+###.##";C(8):'37
+14850 PRINT #2, USING "###.##";C(5):'38
+14870 PRINT #2, USING "###.##";C(6):'39
+14890 PRINT #2, USING "###.##";C(7):'40
+14910 PRINT #2, USING "###.##";i(25):'41
+14930 PRINT #2, USING "###.##-";C(10):'42
+14950 PRINT #2, USING "###.##";M(1):'43
+14970 PRINT #2, USING "###.##";M(2):'44
+14990 PRINT #2, USING "###.##";M(3):'45
+15010 PRINT #2, USING "##.##^^^^";M(4):'46
+15030 PRINT #2, USING "###.##";M(8):'47
+15050 PRINT #2, USING "###.##";M(5):'48
+15070 PRINT #2, USING "###.##";M(6):'49
+15090 PRINT #2, USING "###.##";M(7):'50
+15110 PRINT #2, USING "#.###";V(1):'51
+15130 PRINT #2, USING "#.###";V(2):'52
+15150 PRINT #2, USING "##.###";V(3)*100:'53
+15170 PRINT #2, USING "##.#";V(4):'54
+15190 PRINT #2, USING "#.#####";V(5):'55
+15210 PRINT #2, USING "+####.##";V(6):'56
+15230 PRINT #2, USING "##.##";V(7):'57
+15250 PRINT #2, USING "##.##";V(8):'58
+15270 PRINT #2, USING "##.##";V(9):'59
+15290 PRINT #2, USING "+##.##";V(10):'60
+15310 PRINT #2, USING "#.###";V(11):'61
+15330 PRINT #2, USING "##.###";V(12):'62
+15350 PRINT #2, USING "###";Z:'63
+15370 PRINT #2, USING "###.##";M(9):'64
+15390 PRINT #2, USING "+#.###^^^^";E(17):'65
+
+if i(65)=0 then return
+
+PRINT #2, USING "#.###^^^^";c(11)/m(11):'66
+PRINT #2, USING "#.###^^^^";c(12)/m(12):'67
+PRINT #2, USING "#.###^^^^";c(13)/m(13):'68
+print #2, USING "#.###^^^^";q(10)/m(11):'69
+PRINT #2, USING "#.###^^^^";q(11)/m(12):'70
+PRINT #2, USING "#.###^^^^";q(12)/m(13):'71
+PRINT #2, USING "#.####^^^^";(c(11)*m(1))/(m(11)*c(1)):'72
+PRINT #2, USING "#.####^^^^";(c(12)*m(2))/(m(12)*c(2)):'73
+PRINT #2, USING "#.####^^^^";(c(13)*m(3))/(m(13)*c(3)):'74
+PRINT #2, USING "+#.###^^^^";f(54):'75
+PRINT #2, USING "+#.###^^^^";f(50):'76
+PRINT #2, USING "+#.###^^^^";f(58):'77
+PRINT #2, USING "+#.###^^^^";f(61)*m(1)/m(11):'78
+PRINT #2, USING "+#.###^^^^";f(64)*m(2)/m(12):'79
+PRINT #2, USING "+#.###^^^^";f(67)*m(3)/m(13):'80
+PRINT #2, USING "+#.###^^^^";f(62)*c(1)/c(11):'81
+PRINT #2, USING "+#.###^^^^";f(65)*c(2)/c(12):'82
+PRINT #2, USING "+#.###^^^^";f(68)*c(3)/c(13):'83
+PRINT #2, USING "##.##^^^^";q(10):'84
+PRINT #2, USING "##.##^^^^";q(11):'85
+PRINT #2, USING "##.##^^^^";q(12):'86
+PRINT #2, USING "##.##^^^^";(q(10)*m(1))/m(11):'87
+PRINT #2, USING "##.##^^^^";(q(11)*m(2))/m(12):'88
+PRINT #2, USING "##.##^^^^";(q(12)*m(3))/m(13):'89
+PRINT #2, USING "##.##^^^^";(q(10)*m(1))/(m(11)*t(1)):'90
+PRINT #2, USING "##.##^^^^";(q(11)*m(2))/(m(12)*t(1)):'91
+PRINT #2, USING "##.##^^^^";(q(12)*m(3))/(m(13)*t(1)):'92
+
+'ENa, EA, EK
+PRINT #2, USING "+###.##";v(14):'93
+PRINT #2, USING "+###.##";v(13):'94
+PRINT #2, USING "+###.##";v(15):'95
+
+'Specific activity ratio (in/out)
+PRINT #2, USING "##.##^^^^";(c(11)*m(1))/(m(11)*c(1)):'96
+PRINT #2, USING "##.##^^^^";(c(12)*m(2))/(m(12)*c(2)):'97
+PRINT #2, USING "##.##^^^^";(c(13)*m(3))/(m(13)*c(3)):'98
+
+'Cord tracer efflux (SAc at t=0)
+'PRINT #2, USING "+#.##^^^^";(q(10)-i(90))*60/(i(86)*(t(1)*60-t(11))):'99
+'PRINT #2, USING "+#.##^^^^";(q(11)-i(91))*60/(i(87)*(t(1)*60-t(11))):'100
+'PRINT #2, USING "+#.##^^^^";(q(12)-i(92))*60/(i(88)*(t(1)*60-t(11))):'101
+
+'cpm/mmole: 'cell specific activity
+'PRINT #2, USING "##.##^^^^";q(10)/q(1):'96
+'PRINT #2, USING "##.##^^^^";q(11)/q(2):'97
+'PRINT #2, USING "##.##^^^^";q(12)/q(3):'98
+
+'cpm/l medium: 'activity in medium at t
+PRINT #2, USING "##.##^^^^";m(11):'99
+PRINT #2, USING "##.##^^^^";m(12):'100
+PRINT #2, USING "##.##^^^^";m(13):'101
+
+'Cell Mg variables
+
+PRINT #2, USING "##.###";mgf:'102,Mg2+i
+PRINT #2, USING "##.###";mgb:'103,Mgb
+PRINT #2, USING "##.###";(atp/v(2))*mgf/(0.08+mgf):'104,Mg-ATP+P
+PRINT #2, USING "##.###";(dpgp/v(2))*mgf/(3.6+mgf):'105,Mg-DPG+P
+PRINT #2, USING "##.###";mgt:'106,MgT
+
+'Cell Ca variables and external Ca2+ and Mg2+
+
+PRINT #2, USING "##.##^^^^";cat:'107,CaT
+PRINT #2, USING "##.##^^^^";caf:'108,Ca2+i
+PRINT #2, USING "##.##^^^^";cab:'109,cab
+PRINT #2, USING "##.##^^^^";(b1ca/v(2))*caf/(b1cak+caf):'110,Ca-high-aff. buff.
+PRINT #2, USING "##.##^^^^";(caf*((1/alpha)-(v(1)+a(9)/136))):'111,Ca-alpha
+PRINT #2, USING "##.##^^^^";(benz2/v(2))*(caf/(benz2+caf)):'112,Ca-benz2
+PRINT #2, USING "##.##^^^^";cafo:'113,Ca2+o,in mM
+PRINT #2, USING "##.##^^^^";mgfo:'114,Mg2+o,in mM
+
+PRINT #2, USING "##.###";caf/cafo:'115,rCa
+PRINT #2, USING "##.###";mgf/mgfo:'116,rMg
+PRINT #2, USING "##.###";v(8)^2:'117,r^2
+
+PRINT #2, USING "##.##^^^^";edgto:'118,EGTA or EDTA
+PRINT #2, USING "##.##^^^^";fcap:'119,FCaP
+PRINT #2, USING "##.##^^^^";fca23:'120,FCa23
+PRINT #2, USING "##.##^^^^";fmg23:'121,FMg23
+PRINT #2, USING "##.##^^^^";cato:'122,CaToFCa23
+PRINT #2, USING "##.##^^^^";mgto:'123,MgTo
+
+'End of .INT file
+'****************************************************************
+15410 if i(65)=1 then RETURN
+
+15430 'Column files with headings, from data in .INT files
+15450 OPEN "I",#2,"M1.INT":OPEN "O",#3,"M1.ASC":OPEN "O",#4,"M2.ASC"
+15470 OPEN "O",#5,"M3.ASC":OPEN "O",#6,"M4.ASC":OPEN "O",#7,"M5.ASC"
+
+OPEN "O",#8,"M6.ASC":OPEN "O",#9,"M7.ASC":open "O",#10,"M8.ASC"
+open "O",#11,"M9.ASC"
+
+print #3,
+print #3, "M1.ASC","  Date:  ";date$; "  Time:  ";time$
+print #3,
+print #3, "Time(m)","  Vw","  Hct","MCHC","Density","OsM"
+print #3,
+
+print #4,
+print #4, "M2.ASC","  Date:  ";date$; "  Time:  ";time$
+print #4,
+print #4, "Time(m)","  E(mV)","  pHi","pHo","rA","rH"
+print #4,
+
+print #5,
+print #5, "M3.ASC","  Date:  ";date$; "  Time:  ";time$
+print #5,
+print #5, "Time(m)","Na flux","K flux","A flux","H flux","W-flux"
+print #5,
+
+print #6,
+print #6, "M4.ASC","  Date:  ";date$; "  Time:  ";time$
+print #6,
+print #6, "Time(m)","  Q(Na)","  Q(K)","Q(A)","pHi","RCV"
+print #6,
+
+if aa=0 then goto passaa
+print #7,
+print #7, "M5.ASC","  Date:  ";date$; "  Time:  ";time$
+print #7,
+print #7, "Time(m)","AA","BB","CC","DD","EE"
+print #7,
+
+passaa:
+print #8,
+print #8, "M6.ASC","  Date:  ";date$; "  Time:  ";time$
+print #8,
+print #8, "Time(m)","  rCa","  rMg","rH^2","[CaT]c","[MgT]c"
+print #8,
+
+print #9,
+print #9, "M7.ASC","  Date:  ";date$; "  Time:  ";time$
+print #9,
+print #9, "Time(m)","[Ca2+]i","[Ca2+]o","[Mg2+]i","[Mg2+]o","rH^2"
+print #9,
+
+print #10,
+print #10, "M8.ASC","  Date:  ";date$; "  Time:  ";time$
+print #10,
+print #10, "Time(m)","CaTo","MgTo",
+
+if ligchoice=1 then print #10, "EGTA",
+if ligchoice=2 then print #10, "EDTA",
+if ligchoice=0 then print #10, "EDGTA",
+print #10, "Nao","Ko"
+print #10,
+
+print #11,
+print #11, "M9.ASC","  Date:  ";date$; "  Time:  ";time$
+print #11,
+print #11, "Time(m)","RCV","FNaP","FCaP","FCa23","FMg23"
+print #11,
+
+
+'============================================
+'NEW FEATURE STARTS HERE
+'INSERTED BY JAKOB MAURITZ, CAN INDEPENDENTLY BE INTEGRATED INTO 
+'OTHER VERSIONS OF RBC MODELS WITH PowerBasic
+'SAMPLING EXTENDS NOW BEYOND 125 DATA POINTS BY CYCLING WITH MODULO 125 IN A NEW FOR LOOP
+'NEW VARIABLES: ZMOD(ULO), ZSPLIT, ZREM(AINDER), ZCOUNTER
+
+if Z>125 THEN 
+	ZMOD=ceil(Z/125)
+	ZREM=125-ZMOD*125+Z
+	ZSPLIT=125 
+ELSE 
+	ZSPLIT=Z
+	ZMOD=1
+	ZREM=Z
+END IF
+
+	FOR ZCOUNTER=1 TO ZMOD
+		IF ZCOUNTER=ZMOD THEN ZSPLIT=ZREM
+15490 		FOR K=1 TO ZSPLIT
+15500 			FOR L=1 TO i(66):'listings in *.INT
+15530 				INPUT #2, H(K,L)
+15550 			NEXT L
+15570 			PRINT #3, USING " #####.###   ";H(K,4),H(K,51),H(K,53),H(K,54),H(K,55),H(K,41)
+15590 			PRINT #4, USING " #####.###   ";H(K,4),H(K,56),H(K,61),H(K,62),H(K,57),H(K,58)
+15610 			PRINT #5, USING "+#.###^^^^   ";H(K,4),H(K,21),H(K,22),H(K,23),H(K,24),H(K,65)
+15630 			PRINT #6, USING " #####.###   ";H(K,4),H(K,25),H(K,26),H(K,27),H(K,61),H(K,52)
+
+			if aa=0 then goto pastaa
+15650 			PRINT #7, USING "+#.###^^^^   ";H(K,4),H(K,AA),H(K,BB),H(K,CC),H(K,DD),H(K,EE)
+
+			pastaa:
+			PRINT #8, USING " #####.###   ";H(K,4),H(K,115),H(K,116),H(K,117),H(K,107),H(K,106)
+			PRINT #9, USING " ##.###^^^^  ";H(K,4),H(K,108),H(K,113),H(K,102),H(K,114),H(K,117)
+
+			PRINT #10, USING " ##.##^^^^   ";H(K,4),H(K,122),H(K,123),H(K,118),H(K,43),H(K,44)
+			PRINT #11, USING "+#.###^^^^   ";H(K,4),H(K,52),H(K,9),H(K,119),H(K,120),H(K,121)
+15670 		NEXT K
+	NEXT ZCOUNTER
+
+
+'NEW FEATURE ENDS HERE
+'==============================================
+
+
+15690 CLOSE
+
+'15710 IF V(1)>vlysis then GOTO 16010
+15710 if v(1)>vlysis then end
+15730 RETURN
+
+15750 PRINT:'RESET TIMES FOR PART II
+15770 PRINT "First part of experiment is over. ";
+15790 PRINT "Further changes should be entered now.":PRINT
+
+'To investigate isotope efflux:
+'input "Measure tracer efflux (ENTER) or not (1)?   ",i(71)
+'if i(71)=0 then gosub eff
+i(71)=0:gosub eff
+
+print
+
+15810 T(8)=0:T(2)=0
+15830 INPUT "Enter duration of new set of changes (mins.): ", T(7):PRINT
+15850 LET T(8) = T(4)+T(7)
+15870 PRINT "The experiment will now run for a further ";T(7);" mins."
+15890 PRINT
+15910 INPUT "Press 'ENTER' if this is correct or 'Y' to change";T$
+15930 IF T$="Y" OR T$="y" THEN 15810
+15950 T(4)=T(8)
+15970 GOTO 2370
+
+15990 PRINT:PRINT "Program terminated by user."
+16010 print
+
+16030 IF W=1 THEN cls:print:print:print "******************************":print:print
+if w=1 then print "The results are in a file named M1.RES."
+16050 if w=1 then PRINT:print
+IF W=1 THEN PRINT "To view this file use a DOS or ASCII editor or a wordprocessor.":print:print
+if w=1 then print "******************************"
+16090 IF W=1 then GOTO 16190
+
+close
+if w=2 or w=3 then gosub 15430
+
+16110 IF W=2 THEN cls:print:print:print
+if w=2 then PRINT "The results are in files named M*.ASC"
+16130 IF W=3 THEN cls:print:print:print
+if w=3 then PRINT "The results are in files named M1.RES and M*.ASC"
+if w=2 or w=3 then print "where * = 1, 2, ..., 9."
+16150 PRINT: PRINT "To view these files use a DOS or ASCII editor or a wordprocessor.":print:print
+16190 CLOSE:END
+'16190 end
+
+16210 R=2:GOTO 2370
+16230 R=0:CLS
+16250 RETURN
+
+16270 PRINT "Medium concentrations (mM) are now:-":PRINT
+16290 PRINT "Na";TAB(10);"K";TAB(16);"A(Cl)";TAB(24);"BUFFER";TAB(34);"Glucamine";TAB(46);
+16310 PRINT "Gluconate";TAB(58);"Sucrose"
+16330 PRINT USING "###.#";M(1);
+16350 PRINT TAB(8);USING "###.#";M(2);
+16370 PRINT TAB(16);USING "###.#";M(3);
+16390 PRINT TAB(24);USING "###.#";M(5);
+16410 PRINT TAB(34);USING "+###.#";M(9);
+16430 PRINT TAB(46);USING "+###.#";M(7);
+16450 PRINT TAB(59);USING "+###.#";M(10)
+16470 PRINT "-------------------------------------------------------------------"
+
+PRINT "CaoT";TAB(10);"MgoT";TAB(20);"EGTA";TAB(30);"EDTA"
+PRINT USING "##.###";cato;
+PRINT TAB(10);USING "##.###";mgto;
+if ligchoice=1 then PRINT TAB(20);USING "##.###";edgto
+if ligchoice=2 then PRINT TAB(30);USING "##.###";edgto
+print "---------------------------------------------------------------------"
+16490 RETURN
+
+'Info for .INT file
+16510 PRINT
+16530 INPUT "Do you want more information on .ASC files, Y/N";B$
+16550 IF B$="Y" OR B$="y" OR B$="yes" OR B$="YES" THEN 16570 ELSE 2350
+16570 CLS
+16590 PRINT "The M*.ASC files (*=1,2,3,4 or 5) contain tables of data suitable for import"
+16610 PRINT "into graphing programs (eg. SIGMAPLOT). The variables reported in each of the "
+16630 PRINT "files are as follows,"
+16650 PRINT
+16670 PRINT "M1.ASC:  Time (mins), Vw, Hct, MCHC, cell density, cell osmolality."
+16690 PRINT "M2.ASC:  Time (mins), membrane potential, cell pH, RCV, r(a),r(h)."
+16710 PRINT "M3.ASC:  Time (mins), Na flux, K flux, A flux, H flux, Water flux."
+16730 PRINT "M4.ASC:  Time (mins), Q(Na), Q(K), Q(A), cell pH, RCV."
+
+PRINT "M6.ASC:  Time (mins), rCa, rMg, rH^2, CaT, MgT."
+PRINT "M7.ASC:  Time (mins), Cafi, Cafo, Mgfi, Mgfo, rH^2."
+
+PRINT "M8.ASC:  Time (mins), CaTo, MgTo, EGTA or EDTA, Nao, Ko."
+PRINT "M9.ASC:  Time (mins), pHo, FNaP, FCaP, FCa23, FMg23."
+
+16750 PRINT "M5.ASC:  Time (mins), AA, BB, CC, DD, EE"
+
+16770 PRINT
+16790 PRINT "RCV = relative cell volume, Q = cell amount (mmole/loc),"
+16810 PRINT "r(a),r(h) = inward anion, outward proton concentration ratios."
+16830 PRINT
+16850 PRINT "Files 1 to 4 with preselected variables are produced automatically every time"
+16870 PRINT "you run a simulation. Note - files 3 and 5 store data in exponential format."
+16890 PRINT
+16910 INPUT "In addition, do you wish to select 5 variables to store in M5.ASC, Y/N";D$
+16930 IF D$="Y" OR d$="y" OR d$="yes" OR d$="YES" THEN 16950 ELSE 2350
+
+16950 cls
+PRINT
+16970 PRINT "You will need to consult the table:-"
+16990 PRINT "'CODE NUMBERS OF VARIABLES OF THE RCM PROGRAMME.'"
+17010 PRINT
+17030 PRINT "Enter the numbers of the 5 values you wish to store in M5.ASC"
+17050 INPUT "AA";AA
+17070 INPUT "BB";BB
+17090 INPUT "CC";CC
+17110 INPUT "DD";DD
+17130 INPUT "EE";EE
+17150 PRINT
+17170 INPUT "Press 'ENTER' to return to the model or 'Y'and 'ENTER' to correct mistakes.",E$
+IF E$="Y" OR E$="y" OR E$="yes" OR E$="YES" THEN 16510
+17210 RETURN
+
+17230 PRINT: PRINT: PRINT
+17250 PRINT "THE CELLS HAVE JUST BEEN LYSED!!!!!!!":PRINT
+17270 PRINT "AND THE PROGRAM HAS BEEN TERMINATED" :PRINT:PRINT
+17290 PRINT "The cells have exceeded their critical hemolytic volume."
+PRINT:PRINT
+'17330 CLOSE #1:CLOSE #2
+close
+17350 GOTO 15430
+
+$segment
+
+18000 'ISOTOPES
+
+'Fluxes
+
+'Na-pump
+
+f(22)=f(5)*(c(11)/c(1)):'Na efflux
+f(23)=f(6)*(m(11)/m(1)):'Na influx
+f(24)=-(f(5)/1.5)*(m(12)/m(2)):'K influx
+f(25)=-(f(6)/1.5)*(c(12)/c(2)):'K efflux
+
+'Na:Cl
+f(26)=-(p(3)/I(18))*c(1)*c(3)
+f(27)=(p(3)/i(18))*m(1)*m(3)
+f(28)=f(26)*c(11)/c(1):'Na efflux
+f(29)=f(26)*c(13)/c(3):'A efflux
+f(30)=f(27)*m(11)/m(1):'Na influx
+f(31)=f(27)*m(13)/m(3):'A influx
+
+'K:Cl
+f(32)=-(p(5)/i(18))*c(2)*c(3)
+f(33)=(p(5)/i(18))*m(2)*m(3)
+f(34)=f(32)*c(12)/c(2):'K efflux
+f(35)=f(32)*c(13)/c(3):'A efflux
+f(36)=f(33)*m(12)/m(2):'K influx
+f(37)=f(33)*m(13)/m(3):'A influx
+
+'Na:K:2Cl
+f(38)=-(p(8)/i(18))*c(1)*c(2)*c(3)^2
+f(39)=(p(8)/i(18))*b(5)*m(1)*m(2)*m(3)^2
+f(40)=f(38)*c(11)/c(1):'Na efflux
+f(41)=f(38)*c(12)/c(2):'K efflux
+f(42)=2*f(38)*c(13)/c(3):'A efflux
+f(43)=f(39)*m(11)/m(1):'Na influx
+f(44)=f(39)*m(12)/m(2):'K influx
+f(45)=2*f(39)*m(13)/m(3):'A influx
+
+'J-S
+f(70)=-(p(9)/i(18))*c(3)*c(4)
+f(46)=(p(9)/i(18))*m(3)*m(4)
+f(47)=f(70)*c(13)/c(3):'A efflux
+f(48)=f(46)*m(13)/m(3):'A influx
+
+'G-K
+f(49)=((p(6)+p(11))/(I(18)))*i(14)*c(2)*exp(i(14))/(1-exp(i(14)))
+f(50)=-((p(6)+p(11))/(i(18)))*i(14)*m(2)/(1-exp(i(14)))
+f(51)=f(49)*c(12)/c(2):'K efflux
+f(52)=f(50)*m(12)/m(2):'K influx
+
+'G-Na
+f(53)=(p(4)/i(18))*i(14)*c(1)*exp(i(14))/(1-exp(i(14)))
+f(54)=-(p(4)/i(18))*i(14)*m(1)/(1-exp(i(14)))
+f(55)=f(53)*c(11)/c(1):'Na efflux
+f(56)=f(54)*m(11)/m(1):'Na influx
+
+'G-A
+f(57)=(p(7)/i(18))*(-i(14))*c(3)*exp(-i(14))/(1-exp(-i(14)))
+f(58)=-(p(7)/i(18))*(-i(14))*m(3)/(1-exp(-i(14)))
+f(59)=f(57)*c(13)/c(3):'A efflux
+f(60)=f(58)*m(13)/m(3):'A influx
+
+'Total isotope fluxes
+
+'Na
+f(61)=f(23)+f(30)+f(43)+f(56):'Na influx
+f(62)=f(22)+f(28)+f(40)+f(55):'Na efflux
+f(63)=f(61)+f(62):'net
+
+'K
+f(64)=f(24)+f(36)+f(44)+f(52):'K influx
+f(65)=f(25)+f(34)+f(41)+f(51):'K efflux
+f(66)=f(64)+f(65):'net
+
+'A
+f(67)=f(31)+f(37)+f(45)+f(48)+f(60):'A influx
+f(68)=f(29)+f(35)+f(42)+f(47)+f(59):'A efflux
+f(69)=f(67)+f(68):'net
+
+'Change in cell contents
+
+D(9)=F(63)*D(5)
+D(10)=F(66)*D(5)
+D(11)=F(69)*D(5)
+
+'New cell contents
+
+Q(10)=Q(10)+D(9)
+Q(11)=Q(11)+D(10)
+Q(12)=Q(12)+D(11)
+
+'New external concentrations
+
+M(11)=M(11)*I(30)-D(9)*A(8)
+M(12)=M(12)*I(30)-D(10)*A(8)
+M(13)=M(13)*I(30)-D(11)*A(8)
+
+'New cell concentrations
+
+C(11)=Q(10)/V(1)
+C(12)=Q(11)/V(1)
+C(13)=Q(12)/V(1)
+
+Return
+
+'Mg subroutines
+
+mgnr:
+x3=0.02
+d=0.0001
+
+nrmg:
+x1=x3-d:x6=x1
+mgf=x6
+GOSUB eqmg
+y1=y
+x2=x3+d:x6=x2
+mgf=x6
+GOSUB eqmg
+y2=y
+s=(y2-y1)/(x2-x1)
+x3=x1-(y1/s)
+x6=x3
+mgf=x6
+GOSUB eqmg
+if abs(y)<0.00001 then return else goto nrmg
+
+eqmg:
+mgb=mgb0+((atp/v(2))*mgf/(0.08+mgf))+((dpgp/v(2))*mgf/(3.6+mgf))
+y=q(7)-mgf*(v(1)/(v(1)+a(9)/136))-mgb
+return
+
+'Ca subroutines
+
+canr:
+caf=caf*1000
+cat=cat*1000
+qca=cat
+b1ca=b1ca*1000
+b1cak=b1cak*1000
+benz2=benz2*1000
+benz2k=benz2k*1000
+
+x3=caf
+d=0.000001
+
+nrca:
+x1=x3-d:x6=x1
+GOSUB eqca
+y1=y
+x2=x3+d:x6=x2
+GOSUB eqca
+y2=y
+s=(y2-y1)/(x2-x1)
+x3=x1-(y1/s)
+x6=x3
+GOSUB eqca
+if abs(y)<0.000001 then goto micromilli else goto nrca
+
+micromilli:
+caf=x3
+caf=caf/1000
+cat=cat/1000
+qca=cat
+b1ca=b1ca/1000
+b1cak=b1cak/1000
+benz2=benz2/1000
+benz2k=benz2k/1000
+cab=caf*(alpha^(-1)-v(1)/(v(1)+a(9)/136))+((b1ca/v(2))*caf/(b1cak+caf))+(benz2/v(2))*(caf/(benz2k+caf))
+return
+
+eqca:
+cabb=x6*(alpha^(-1))+((b1ca/v(2))*x6/(b1cak+x6))+((benz2/v(2))*x6/(benz2k+x6))
+y=cat-cabb
+return
+
+eff:
+'set external tracer to zero
+'Memorize tracer values at the start of the efflux period to compute efflux.
+m(11)=0.00001#
+m(12)=0.00001#
+m(13)=0.00001#
+i(86)=q(10)/q(1)
+i(87)=q(11)/q(2)
+i(88)=q(12)/q(3)
+i(90)=q(10)
+i(91)=q(11)
+i(92)=q(12)
+t(11)=t(4)
+return
+
+phadjust:
+'called from screen 2 entries after 4350
+m(4)=10#^(-v(12))
+'Protonized buffer concentration
+if buffer$="hepes" then goto hep else goto otherbuffer
+
+hep:
+pkhepes=7.83-0.014*b(8)
+a(5)=10^(-pkhepes)
+M(6)=M(5)*(M(4)/(A(5)+M(4))):goto mediadjust
+
+otherbuffer:
+a(5)=10^(-pka)
+M(6)=M(5)*(M(4)/(A(5)+M(4)))
+if buffer$="a" or buffer$="A" then goto mediadjust
+if buffer$="c" or buffer$="C" then goto mediadjustcationic
+
+'Medium Na,K,or A concentration
+mediadjust:
+IF V(12)>=A(12) THEN naoh ELSE hcl
+
+'Medium pH adjusted with NaOH
+edgneg=2*edg2+3*edg3+4*edg4+2*(edgca+edgmg)
+naoh:
+M(1)=M(3)+edgneg+M(7)+(M(5)-m(6))-M(9)-M(2)-2*mgfo-2*cafo:return
+'Medium pH adjusted with KOH
+koh:
+M(2)=M(3)+edgneg+M(7)+(M(5)-m(6))-M(9)-M(1)-2*mgfo-2*cafo:return
+'Medium pH adjusted with HCl
+hcl:
+M(3)=M(1)+M(2)+M(9)-(M(5)-m(6))-M(7)-edgneg+2*mgfo+2*cafo
+return
+
+mediadjustcationic:
+IF V(12)>=A(12) THEN naohc ELSE hclc
+
+'Medium pH adjusted with NaOH
+edgneg=2*edg2+3*edg3+4*edg4+2*(edgca+edgmg)
+naohc:
+M(1)=M(3)+edgneg+M(7)-m(6)-M(9)-M(2)-2*mgfo-2*cafo:return
+'Medium pH adjusted with KOH
+kohc:
+M(2)=M(3)+edgneg+M(7)-m(6)-M(9)-M(1)-2*mgfo-2*cafo:return
+'Medium pH adjusted with HCl
+hclc:
+M(3)=M(1)+M(2)+M(9)+m(6)-M(7)-edgneg+2*mgfo+2*cafo
+return

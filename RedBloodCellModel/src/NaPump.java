@@ -1,7 +1,7 @@
 
 public class NaPump {
-	private Double P_1;
-	private Double P_2;
+	private Double P_1; //V_max for sodium pump
+	private Double P_2; //V_max reverse 
 	private Double Na_to_K;
 	private Region cell;
 	private Region medium;
@@ -21,7 +21,7 @@ public class NaPump {
 	private Double I_6;
 	private Double I_9;
 	private Double I_11;
-	private Double B_9;
+	private Double B_9; //Q10P
 	private Double mgnapk;
 	private Double mgnapik;
 	private Double I_77;
@@ -52,13 +52,13 @@ public class NaPump {
 		this.B_9 = 4.0;
 		this.mgnapk = 0.05;
 		this.mgnapik = 4.0;
-		this.I_77 = 7.216;
+		this.I_77 = 7.216; //pH dependence of sodium pump, with I78
 		this.I_78 = 0.4;
 	}
 	private void compute_I(Double temperature) {
 		Double I_1 = this.B_1*(1 + (this.cell.K.getConcentration()/this.B_4));
 		Double I_2 = this.cell.Na.getConcentration()/(this.cell.Na.getConcentration() + I_1);
-		this.I_3 = Math.pow(I_2, 3.0);
+		this.I_3 = Math.pow(I_2, 3.0); // Concentration
 		Double I_4 = this.B_3 * (1 + this.medium.Na.getConcentration()/this.B_2);
 		Double I_5 = this.medium.K.getConcentration()/(this.medium.K.getConcentration() + I_4);
 		this.I_6 = Math.pow(I_5, 2.0);
@@ -67,7 +67,7 @@ public class NaPump {
 		this.I_9 = Math.pow(I_8, 2.0);
 		Double I_10 = this.medium.Na.getConcentration()/(this.medium.Na.getConcentration() + this.B_2*(1 + this.medium.K.getConcentration()/this.B_3));
 		this.I_11 = Math.pow(I_10, 3.0);
-		
+		// I_17 is temperature dependent factor for na and ca pumps - possibly re-factor out of a particular pump
 		this.I_17 = Math.exp(((37.0-temperature)/10.0)*Math.log(this.B_9));
 	}
 	

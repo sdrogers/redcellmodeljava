@@ -1,6 +1,7 @@
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,6 +24,9 @@ public class TestGui extends JFrame implements ActionListener {
 	private JScrollPane scrollPane;
 	public TestGui() {
 		super("RBC Simple GUI");
+		
+		File workingDirectory = new File(System.getProperty("user.dir"));
+		jfc.setCurrentDirectory(workingDirectory);
 		panel = new JPanel(new GridLayout(0,1));
 		loadButton = new JButton("Load");
 		loadButton.addActionListener(this);
@@ -66,7 +70,7 @@ public class TestGui extends JFrame implements ActionListener {
 				textArea.append("\nWARNING: UNUSED OPTIONS...");
 				for(String a: options.keySet()) {
 					if(!usedoptions.contains(a)) {
-						textArea.append("\n"+"a");
+						textArea.append("\n"+a);
 					}
 				}
 			}

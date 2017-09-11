@@ -1,0 +1,6 @@
+time 15
+pump-electro 2
+vmax-cap 60
+fraction 0.1
+pmg 2e18
+cyclesperprint 333

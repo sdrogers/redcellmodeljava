@@ -13,21 +13,23 @@ public class RBCGui {
 	private HashMap<String,String> options;
 	private RBC_model rbc;
 	private NaPumpScreenRS napumpscreenrs;
+	
+	private DSScreen dsScreen;
 	public RBCGui() {
 		
 		options = new HashMap<String,String>();
 		
-		String options_file = "./resources/protocols/short.txt";
-		String results_file = "./resources/traces/short.txt";
+//		String options_file = "./resources/protocols/short.txt";
+//		String results_file = "./resources/traces/short.txt";
 		
-		options = LoadProtocol.loadOptions(options_file);
-		LoadProtocol.printOptions(options);
+//		options = LoadProtocol.loadOptions(options_file);
+//		LoadProtocol.printOptions(options);
 		
 		rbc = new RBC_model();
 		welcomeframe = new WelcomeFrame(this,options,rbc);
 		timeoptions = new TimeOptions(this,options,rbc);
 		napumpscreenrs = new NaPumpScreenRS(this,options,rbc);
-		
+		dsScreen = new DSScreen(this,options,rbc);
 		welcomeframe.makeVisible();
 		
 	}
@@ -37,11 +39,15 @@ public class RBCGui {
 		}
 		if(mf instanceof NaPumpScreenRS) {
 			System.out.println("Finished NaPumpScreen");
-			this.timeoptions.makeVisible();
+			this.dsScreen.makeVisible();
 		}
-		if(mf instanceof TimeOptions) {
-			System.out.println("Finished time");
-			this.doneTime();
+//		if(mf instanceof TimeOptions) {
+//			System.out.println("Finished time");
+//			this.doneTime();
+//		}
+		if(mf instanceof DSScreen) {
+			System.out.println("Finished DS");
+			this.doneDS();
 		}
 	}
 	
@@ -50,16 +56,20 @@ public class RBCGui {
 	}
 	public void doneTime() {
 		LoadProtocol.printOptions(options);
+		dsScreen.makeVisible();
+		
+		
+	}
+	public void doneDS() {
 		ArrayList<String> usedoptions = new ArrayList<String>();
 		rbc.setup(options, usedoptions);
 		rbc.setupDS(options, usedoptions);
 		
-		JFileChooser jfc = new JFileChooser();
-		int returnVal = jfc.showSaveDialog(null);
-		System.out.println(jfc.getSelectedFile().getPath());
+		LoadProtocol.printOptions(options);
+
 		
 		rbc.runall();
 		
-		rbc.writeCsv(jfc.getSelectedFile().getPath());
+		// save the file
 	}
 }

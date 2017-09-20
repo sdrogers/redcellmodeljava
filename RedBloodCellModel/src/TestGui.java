@@ -13,7 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class TestGui extends JFrame implements ActionListener {
-	private JButton loadButton,saveButton,runButton;
+	private JButton loadButton,saveButton,runButton,resetButton;
 	private JPanel panel;
 	private RBC_model rbc;
 	private String options_file;
@@ -24,7 +24,8 @@ public class TestGui extends JFrame implements ActionListener {
 	private JScrollPane scrollPane;
 	public TestGui() {
 		super("RBC Simple GUI");
-		
+		options = new HashMap<String,String>();
+		rbc = new RBC_model();
 		File workingDirectory = new File(System.getProperty("user.dir"));
 		jfc.setCurrentDirectory(workingDirectory);
 		panel = new JPanel(new GridLayout(0,1));
@@ -36,9 +37,13 @@ public class TestGui extends JFrame implements ActionListener {
 		runButton = new JButton("Run");
 		runButton.addActionListener(this);
 		runButton.setEnabled(false);
+		resetButton = new JButton("Reset");
+		resetButton.addActionListener(this);
+		resetButton.setEnabled(false);
 		panel.add(loadButton);
 		panel.add(runButton);
 		panel.add(saveButton);
+		panel.add(resetButton);
 		textArea = new JTextArea();
 		scrollPane = new JScrollPane(textArea);
 		panel.add(scrollPane);
@@ -51,21 +56,25 @@ public class TestGui extends JFrame implements ActionListener {
 	}
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand() == "Load") {
-			System.out.println("Load!");
 			int returnVal = jfc.showOpenDialog(this);
-			options = new HashMap<String,String>();
-			options = LoadProtocol.loadOptions(jfc.getSelectedFile().getPath());
+//			options = new HashMap<String,String>();
+			options = LoadProtocol.loadOptions(jfc.getSelectedFile().getPath(),options);
 			runButton.setEnabled(true);
 			saveButton.setEnabled(false);
 		}else if(e.getActionCommand() == "Run") {
 			ArrayList<String> usedoptions = new ArrayList<String>();
-			rbc = new RBC_model();
-			rbc.setup(options, usedoptions);
+//			rbc = new RBC_model();
 			textArea.append("\n\nOptions:");
 			for(String o : options.keySet()) {
 				textArea.append("\n" + o + ": " + options.get(o));
 			}
+
+			if(rbc.getStage() == 0) {
+				textArea.append("\n\nSetting up RS");
+				rbc.setup(options, usedoptions);
+			}
 			rbc.setupDS(options, usedoptions);
+			textArea.append("\n\nSetting up DS for stage " + rbc.getStage());
 			if(usedoptions.size() < options.size()) {
 				textArea.append("\nWARNING: UNUSED OPTIONS...");
 				for(String a: options.keySet()) {
@@ -77,10 +86,17 @@ public class TestGui extends JFrame implements ActionListener {
 			rbc.runall();
 			saveButton.setEnabled(true);
 			textArea.append("\n\nRunning...");
+			resetButton.setEnabled(true);
 		}else if(e.getActionCommand()== "Save") {
 			System.out.println("Save");
 			int returnVal = jfc.showSaveDialog(this);
 			rbc.writeCsv(jfc.getSelectedFile().getPath());
+		}else if(e.getActionCommand() == "Reset") {
+			rbc = new RBC_model();
+			options = new HashMap<String,String>();
+			resetButton.setEnabled(false);
+			runButton.setEnabled(false);
+			saveButton.setEnabled(false);
 		}
 	}
 	public static void main(String[] args) {

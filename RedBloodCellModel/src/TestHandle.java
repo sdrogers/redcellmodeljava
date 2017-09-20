@@ -22,7 +22,8 @@ public class TestHandle {
 		System.out.println(returnVal);
 		
 //		options = LoadProtocol.loadOptions(options_file);
-		options = LoadProtocol.loadOptions(options_file_chooser.getSelectedFile().getPath());
+		options = new HashMap<String,String>();
+		options = LoadProtocol.loadOptions(options_file_chooser.getSelectedFile().getPath(),options);
 		LoadProtocol.printOptions(options);
 		
 		ArrayList<String> usedoptions = new ArrayList<String>();

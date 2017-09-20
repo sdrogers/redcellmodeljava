@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class LoadProtocol {
-	public static HashMap<String,String> loadOptions(String filename) {
-		HashMap<String,String> options = new HashMap<String,String>();
+	public static HashMap<String,String> loadOptions(String filename,HashMap<String,String> options) {
 		BufferedReader reader = null;
 		File file = new File(filename);
 		try {

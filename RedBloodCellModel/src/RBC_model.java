@@ -381,7 +381,7 @@ public class RBC_model {
 		this.delta_Mg = 0.0;
 		this.delta_Ca = 0.0;
 
-
+		this.stage = 0;
 	}
 	
 	public void runall() {
@@ -560,42 +560,44 @@ public class RBC_model {
 	}
 	
 	public void setup(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
-		this.naPumpScreenRS(rsoptions,usedoptions);
-		this.cellwaterscreenRS(rsoptions, usedoptions);
-		this.cellanionprotonscreenRS(rsoptions, usedoptions);
-		this.chargeandpiscreenRS(rsoptions, usedoptions);
-		
-		this.cycles_per_print = 777;
-		this.Vw = this.I_79;
-		this.fraction = 0.000001;
-		this.medium.setpH(7.4);
-		this.A_12 = this.medium.getpH();
-		this.A_11 = 1.0-this.hb_content/136.0;
-		this.R = 1.0; // check type - flag to determine that we're computing reference state
-		this.sampling_time = 0.0;
-		
-		
-		this.setmgdefaults();
-		this.setcadefaults();
-		
-		this.mgbufferscreenRS(rsoptions, usedoptions);
-		this.cabufferscreenRS(rsoptions, usedoptions);
-		
-		this.computeRS();
-		
-		System.out.println("Used RS options");
-		for(String option: usedoptions) {
-			System.out.println(option);
-		}
-		
-		System.out.println();
-		System.out.println("Unused RS options");
-		for(String option: rsoptions.keySet()) {
-			if(!usedoptions.contains(option)) {
+		if(this.stage == 0) {
+			System.out.println("Setting up the RS");
+			this.naPumpScreenRS(rsoptions,usedoptions);
+			this.cellwaterscreenRS(rsoptions, usedoptions);
+			this.cellanionprotonscreenRS(rsoptions, usedoptions);
+			this.chargeandpiscreenRS(rsoptions, usedoptions);
+			
+			this.cycles_per_print = 777;
+			this.Vw = this.I_79;
+			this.fraction = 0.000001;
+			this.medium.setpH(7.4);
+			this.A_12 = this.medium.getpH();
+			this.A_11 = 1.0-this.hb_content/136.0;
+			this.R = 1.0; // check type - flag to determine that we're computing reference state
+			this.sampling_time = 0.0;
+			
+			
+			this.setmgdefaults();
+			this.setcadefaults();
+			
+			this.mgbufferscreenRS(rsoptions, usedoptions);
+			this.cabufferscreenRS(rsoptions, usedoptions);
+			
+			this.computeRS();
+			
+			System.out.println("Used RS options");
+			for(String option: usedoptions) {
 				System.out.println(option);
 			}
-		}
-		
+			
+			System.out.println();
+			System.out.println("Unused RS options");
+			for(String option: rsoptions.keySet()) {
+				if(!usedoptions.contains(option)) {
+					System.out.println(option);
+				}
+			}
+		}		
 		// this.publish();
 	}
 	
@@ -619,6 +621,8 @@ public class RBC_model {
 				System.out.println(option);
 			}
 		}
+		this.stage += 1;
+		System.out.println("Setup DS, stage = " + this.stage);
 		//this.publish();
 	}
 	
@@ -1222,7 +1226,7 @@ public class RBC_model {
 		this.RS_computed = true;
 
 		// Set stage to zero everytime the RS is computed - stage = 1 means we're about to start DS 1
-		this.stage = 1;
+		this.stage = 0;
 	}
 	
 	private void fluxesRS() {
@@ -1797,5 +1801,9 @@ public class RBC_model {
 
 	public void setNapump(NaPump napump) {
 		this.napump = napump;
+	}
+
+	public int getStage() {
+		return this.stage;
 	}
 }

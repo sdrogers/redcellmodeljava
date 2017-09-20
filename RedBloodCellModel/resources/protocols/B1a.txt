@@ -1,0 +1,9 @@
+pump-electro 0
+time 5
+fraction 0.1
+cato 0.2
+pmg 2e18
+cyclesperprint 111
+vmax-cap 5
+bufferconc 10
+js-stimulation-inhibition 1

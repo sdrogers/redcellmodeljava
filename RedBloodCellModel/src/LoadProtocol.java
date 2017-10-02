@@ -13,8 +13,13 @@ public class LoadProtocol {
 			reader = new BufferedReader(new FileReader(file));
 			String text = null;
 			while ((text = reader.readLine()) != null ) {
+//				System.err.println(text);
 				String[] parts = text.split(" ");
-				options.put(parts[0],parts[1]);
+				if(parts.length == 2) {
+					options.put(parts[0],parts[1]);
+				}else {
+					System.err.println("ERROR: " + text);
+				}
 			}
 		} catch (FileNotFoundException e) {
 		    e.printStackTrace();

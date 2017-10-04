@@ -1,9 +1,8 @@
 time 5
 pump-electro 2
-vmax-cap 30
+vmax-cap 20
 fraction 0.1
 cato 0.2
-kcl-for-na 95
+KxNa 95
 pmg 2e18
 cyclesperprint 111
-

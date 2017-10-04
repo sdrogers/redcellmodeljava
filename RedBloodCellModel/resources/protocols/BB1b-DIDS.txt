@@ -1,0 +1,6 @@
+time 20
+cyclesperprint 111
+fraction 0.2
+bufferconc 1
+pmg 0.01
+js-stimulation-inhibition 0.01

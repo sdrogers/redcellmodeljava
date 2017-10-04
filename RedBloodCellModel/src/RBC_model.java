@@ -6,7 +6,7 @@ public class RBC_model {
 	
 	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
 	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CCa2+","CMg2+",
-	                                  "CHb","CX","COs","rA","rH","fHb","nHb","MNa","MK","MA","MCat","MCaf",
+	                                  "CHb","CX","COs","rA","rH","fHb","nHb","MNa","MK","MA","MB","MCat","MCaf",
 	                                  "FNaP","FCaP","FKP","FNa","FK","FA","FH","FW","FNaG","FKG","FAG","FHG"};
 	
 	private ArrayList<ResultHash> resultList = new ArrayList<ResultHash>();
@@ -856,7 +856,7 @@ public class RBC_model {
 			this.medium.Glucamine.setConcentration(this.medium.Glucamine.getConcentration() + this.I_72);
 			this.medium.Na.setConcentration(this.medium.Na.getConcentration() - this.I_72);
 		}
-		
+		// Should this one be removed once done?
 		temp = options.get("acl");
 		if(temp != null) {
 			this.I_73 = Double.parseDouble(temp);
@@ -878,6 +878,7 @@ public class RBC_model {
 			this.medium.Na.setConcentration(this.medium.Na.getConcentration() + this.I_40);
 			this.medium.K.setConcentration(this.medium.K.getConcentration() - this.I_40);
 			usedoptions.add("NaxK");
+			options.remove("NaxK");
 		}
 		
 		temp = options.get("KxNa");
@@ -886,6 +887,7 @@ public class RBC_model {
 			this.medium.Na.setConcentration(this.medium.Na.getConcentration() - this.I_33);
 			this.medium.K.setConcentration(this.medium.K.getConcentration() + this.I_33);
 			usedoptions.add("KxNa");
+			options.remove("KxNa");
 		}
 		
 		temp = options.get("change-nacl");
@@ -1745,6 +1747,7 @@ public class RBC_model {
 		new_result.setItem("MNa",this.medium.Na.getConcentration());
 		new_result.setItem("MK",this.medium.K.getConcentration());
 		new_result.setItem("MA",this.medium.A.getConcentration());
+		new_result.setItem("MB", this.buffer_conc);
 		new_result.setItem("MCat", this.medium.Cat.getConcentration());
 		new_result.setItem("MCaf", this.medium.Caf.getConcentration());
 		new_result.setItem("FNaP",this.getNapump().getFlux_net());

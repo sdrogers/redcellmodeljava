@@ -872,20 +872,20 @@ public class RBC_model {
 			}
 		}
 		
-		temp = options.get("na-for-kcl");
+		temp = options.get("NaxK");
 		if(temp != null) {
-			this.I_40 = Double.parseDouble(options.get("na-for-kcl"));
-			this.medium.Na.setConcentration(this.medium.Na.getConcentration() - this.I_40);
-			this.medium.K.setConcentration(this.medium.K.getConcentration() + this.I_40);
-			usedoptions.add("na-for-kcl");
+			this.I_40 = Double.parseDouble(options.get("NaxK"));
+			this.medium.Na.setConcentration(this.medium.Na.getConcentration() + this.I_40);
+			this.medium.K.setConcentration(this.medium.K.getConcentration() - this.I_40);
+			usedoptions.add("NaxK");
 		}
 		
-		temp = options.get("kcl-for-na");
+		temp = options.get("KxNa");
 		if(temp != null) {
-			this.I_33 = Double.parseDouble(options.get("kcl-for-na"));
-			this.medium.Na.setConcentration(this.medium.Na.getConcentration() + this.I_33);
-			this.medium.K.setConcentration(this.medium.K.getConcentration() - this.I_33);
-			usedoptions.add("kcl-for-na");
+			this.I_33 = Double.parseDouble(options.get("KxNa"));
+			this.medium.Na.setConcentration(this.medium.Na.getConcentration() - this.I_33);
+			this.medium.K.setConcentration(this.medium.K.getConcentration() + this.I_33);
+			usedoptions.add("KxNa");
 		}
 		
 		temp = options.get("change-nacl");

@@ -30,6 +30,7 @@ public class RBC_model {
 	// private Double A_4 = 7.2;
 	private Double pit0;
 	private Double A_5;
+	private boolean compute_delta_time = true; // Whether to compute this, or use a constant
 	private Double integration_interval_factor; // Integration factor
 	private Double A_7;
 	private Double A_8;
@@ -188,7 +189,7 @@ public class RBC_model {
 
 	private boolean in_progress;
 
-	private double delta_time;
+	private double delta_time = 0.1; // Initial value in case it is not computed
 
 	private double delta_Na;
 
@@ -409,7 +410,7 @@ public class RBC_model {
 			
 			this.totalionfluxes();
 			this.water.compute_flux(this.fHb, this.cbenz2, this.buffer_conc, this.edgto, this.I_18);
-			this.integrationInterval();
+			this.integrationInterval(); // cycle_count is increased here
 			this.computeDeltas();
 			
 			this.updateContents();
@@ -434,11 +435,11 @@ public class RBC_model {
 				}
 			}
 			
-			if(this.n_its == 2) {
-				this.Z += 1;
-				System.out.println("Publishing at t=" + 60.0*this.sampling_time);
-				this.publish();
-			}
+//			if(this.n_its == 2) {
+//				this.Z += 1;
+//				System.out.println("Publishing at t=" + 60.0*this.sampling_time);
+//				this.publish();
+//			}
 			
 			if(this.cycle_count == this.cycles_per_print) {
 				this.Z += 1;
@@ -450,6 +451,7 @@ public class RBC_model {
 		
 		}
 		this.publish();
+		System.out.println("Finished!");
 		
 	}
 	private void updateContents() {
@@ -531,7 +533,16 @@ public class RBC_model {
 	private void integrationInterval() {
 		// 8010 Integration interval
 		Double I_23 = 10.0 + 10.0*Math.abs(this.a23.getFlux_Mg()+this.total_flux_Ca) + Math.abs(this.goldman.getFlux_H()) + Math.abs(this.dedgh) + Math.abs(this.total_flux_Na) + Math.abs(this.total_flux_K) + Math.abs(this.total_flux_A) + Math.abs(this.total_flux_H) + Math.abs(this.water.getFlux()*100.0);
-		this.delta_time = this.integration_interval_factor/I_23;
+		if(this.compute_delta_time) {
+			this.delta_time = this.integration_interval_factor/I_23;
+		}else {
+			// delta_time is a constant, but check if it's much bigger than calculated value
+			// and issue a warning if it is
+			double temp = this.integration_interval_factor/I_23;
+			if(temp < this.delta_time) {
+				System.out.println("WARNING: fixed delta_time is greater than computed value");
+			}
+		}
 //		System.out.println("DT: " + this.delta_time);
 		this.sampling_time = this.sampling_time + this.delta_time;
 //		System.out.println("ST: " + this.sampling_time);
@@ -1187,6 +1198,23 @@ public class RBC_model {
 			usedoptions.add("integrationfactor");
 		}
 		
+		temp = options.get("compute_delta_time");
+		if(temp != null) {
+			if(temp.equals("no")) {
+				this.compute_delta_time = false;
+				usedoptions.add("compute_delta_time");
+			}else if(temp.equals("yes")) {
+				this.compute_delta_time = true;
+				usedoptions.add("compute_delta_time");
+			}else {
+				System.out.println("Invalud value for field compute_delta_time");
+			}
+		}
+		temp = options.get("delta_time");
+		if(temp != null) {
+			this.delta_time = Double.parseDouble(temp);
+			usedoptions.add("delta_time");
+		}
 		temp = options.get("cyclesperprint");
 		if(temp != null) {
 			this.cycles_per_print = Integer.parseInt(temp);

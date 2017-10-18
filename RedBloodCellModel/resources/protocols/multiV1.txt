@@ -1,0 +1,10 @@
+time 5
+pump-electro 2
+fraction 0.1
+KxNa 95
+pmg 2e18
+cato 0.25
+vmax-cap 5
+cyclesperprint 100
+compute_delta_time no
+delta_time 0.00001

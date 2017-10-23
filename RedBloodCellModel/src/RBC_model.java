@@ -745,9 +745,9 @@ public class RBC_model {
 		
 		temp = options.get("pit0");
 		if(temp != null) {
+			this.I_67 = this.pit0; // Store old value
 			this.pit0 = Double.parseDouble(temp);
-			usedoptions.add("pit0");
-			//Problem here - I_67 is never set...what is it!
+			usedoptions.add("pit0");	
 			this.cell.setpH(this.pit0 - this.I_67 + this.cell.getpH());
 			this.cell.H.setConcentration(Math.pow(10.0, -this.cell.getpH()));
 			this.I_74 = this.pit0 - (0.016*this.temp_celsius);

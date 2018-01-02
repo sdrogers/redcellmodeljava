@@ -7,9 +7,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class RBCGui {
+public class RBCGui extends JFrame {
 	private WelcomeFrame welcomeframe;
-	private TimeOptions timeoptions;
+	private OptionsFrame timeoptions;
 	private HashMap<String,String> options;
 	private RBC_model rbc;
 	private NaPumpScreenRS napumpscreenrs;
@@ -27,13 +27,15 @@ public class RBCGui {
 		
 		rbc = new RBC_model();
 		welcomeframe = new WelcomeFrame(this,options,rbc);
-		timeoptions = new TimeOptions(this,options,rbc);
+		
+//		timeoptions = new TimeOptions(this,options,rbc);
+		timeoptions = new OptionsFrame("Time Options","resources/settingfiles/timeOptions.csv",this,options, this);
 		napumpscreenrs = new NaPumpScreenRS(this,options,rbc);
 		dsScreen = new DSScreen(this,options,rbc);
 		welcomeframe.makeVisible();
 		
 	}
-	public void doneMenu(MenuFrame mf) {
+	public void doneMenu(JFrame mf) {
 		if(mf instanceof WelcomeFrame) {
 			this.napumpscreenrs.makeVisible();
 		}
@@ -41,10 +43,10 @@ public class RBCGui {
 			System.out.println("Finished NaPumpScreen");
 			this.dsScreen.makeVisible();
 		}
-//		if(mf instanceof TimeOptions) {
-//			System.out.println("Finished time");
-//			this.doneTime();
-//		}
+		if(mf.getTitle().equals("Time Options")) {
+			System.out.println("Finished time");
+			this.doneTime();
+		}
 		if(mf instanceof DSScreen) {
 			System.out.println("Finished DS");
 			this.doneDS();

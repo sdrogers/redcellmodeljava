@@ -1436,7 +1436,7 @@ public class RBC_model {
 		String temp = rsoptions.get("cla-conc");
 		if(temp != null) {
 			this.cell.A.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("cla=conc");
+			usedoptions.add("cla-conc");
 		}
 	}
 	

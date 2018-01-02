@@ -1,6 +1,15 @@
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Insets;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -8,58 +17,96 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import com.opencsv.CSVReader;
 
 public class ParameterSelector extends JPanel implements ListSelectionListener,ActionListener {
 	private JLabel title;
-	private JList<Parameter> potentialParams;
+	private JList<Parameter> potentialParamList;
+	private DefaultListModel<Parameter> potentialParams;
 	private JList<Parameter> currentParamList;
 	private DefaultListModel<Parameter> currentParams;
-	private JButton removeButton;
-	public ParameterSelector() {
-//		this.setLayout(new BorderLayout());
+	private JButton removeButton,addButton;
+	private final String fileName;
+	private JTextField descriptionField;
+	HashMap<String,String> options;
+	public ParameterSelector(String fileName,HashMap<String,String> options) {
+		this.options = options;
+		this.fileName = fileName;
+		this.setLayout(new BorderLayout());
 		title = new JLabel("a title");
 		this.add(title);
 		
-		// Load the parameters and default values
-		loadParams();
+		JPanel centerPanel = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		JPanel bottomPanel = new JPanel();
+		JPanel topPanel = new JPanel();
 		
+		this.add(topPanel, BorderLayout.NORTH);
+		potentialParams = new DefaultListModel<Parameter>();
+		potentialParamList = new JList<Parameter>();
+		potentialParamList.setModel(potentialParams);
+		potentialParamList.addListSelectionListener(this);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.insets = new Insets(5,5,5,5);
+		centerPanel.add(new JLabel("Available parameters"),c);
+		
+		c.gridx = 1;
+		c.gridy = 0;
+		centerPanel.add(new JLabel("Selected parameters"),c);
+		
+		c.gridx = 0;
+		c.gridy = 1;
+		centerPanel.add(potentialParamList,c);
+		addButton = new JButton("Add new option value");
+		addButton.addActionListener(this);
+		bottomPanel.add(addButton);
+		this.add(bottomPanel,BorderLayout.SOUTH);
+		//Load the parameters and default values
+		loadSettingsFile(); // populates potentialParams
 		currentParams = new DefaultListModel<Parameter>();
 		currentParamList = new JList<Parameter>();
 		currentParamList.setModel(currentParams);
-		currentParamList.setVisibleRowCount(10);
-		currentParamList.setPrototypeCellValue(new Parameter("a longish parameter name","a large number",null));
-		this.add(currentParamList);
+//		currentParamList.setVisibleRowCount(10);
+//		currentParamList.setPrototypeCellValue(
+//				new Parameter(
+//						"a longish parameter name",
+//						"a large number",
+//						"some units",
+//						"a description",
+//						null));
+		c.gridx = 1;
+		c.gridy = 1;
+		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		
+		centerPanel.add(currentParamList,c);
+		this.add(centerPanel, BorderLayout.CENTER);
 		removeButton = new JButton("Remove");
 		removeButton.addActionListener(this);
-		this.add(removeButton);
+		bottomPanel.add(removeButton);
 		
+		descriptionField = new JTextField(30);
+		descriptionField.setEditable(false);
+		topPanel.add(descriptionField);
 		
 	}
-	private void loadParams() {
-		Parameter[] possPars = new Parameter[5];
-		String[] names = {"Fred","Ella","Matthew","Sarah","Simon"};
-		for(int i=0;i<5;i++) {
-			possPars[i] = new Parameter(names[i],""+(i*10.0), null);
-		}
-		potentialParams = new JList<Parameter>(possPars);
-		potentialParams.addListSelectionListener(this);
-		this.add(potentialParams);
-	}
+
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if(e.getValueIsAdjusting()) {
-			Parameter selected = potentialParams.getSelectedValue();
+			Parameter selected = potentialParamList.getSelectedValue();
 			if(selected != null) {
-				System.out.println(selected);
-				updateCurrentParams(selected);
+				// Set the description text
+				descriptionField.setText(selected.getDescription());
 			}
 		}
-		potentialParams.clearSelection();
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -68,6 +115,13 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			Parameter pr = currentParamList.getSelectedValue();
 			if(pr != null) {
 				currentParams.removeElement(pr);
+			}
+		}else if(e.getSource() == addButton) {
+			Parameter selected = potentialParamList.getSelectedValue();
+			if(selected != null) {
+				updateCurrentParams(selected);
+				potentialParamList.clearSelection();
+				descriptionField.setText("");
 			}
 		}
 	}
@@ -91,7 +145,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			if(exists) {
 				currentParams.removeElement(foundParameter);			
 			}
-			Parameter newpar = new Parameter(selected.getName(),inputValue,null);
+			Parameter newpar = new Parameter(selected.getName(),inputValue,selected.getUnits(),selected.getDescription(),null);
 			currentParams.addElement(newpar);
 		}else {
 			// Input error
@@ -112,6 +166,42 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 				return true;
 			}else
 				return false;
+		}
+	}
+	private void loadSettingsFile() {
+		CSVReader reader = null;
+		try {
+			reader = new CSVReader(new FileReader(this.fileName));
+			String[] line;
+			while ((line = reader.readNext()) != null ) {
+				String parameter_name = line[0].trim();
+				String parameter_value = line[1].trim();
+				String parameter_units = line[2].trim();
+				String parameter_description = line[3].trim();
+				HashSet<String> allowedValues = null;
+				if(line[4].length()>0) {
+					String[] tokens = line[4].split(",");
+					allowedValues = new HashSet<String>();
+					for(String t: tokens) {
+						allowedValues.add(t);
+					}
+				}
+				Parameter pr = new Parameter(parameter_name,parameter_value,parameter_units,parameter_description,allowedValues);
+				System.out.println(pr);
+				potentialParams.addElement(pr);
+			}
+		}catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public void grabOptions() {
+		for(Object p: currentParams.toArray()) {
+			Parameter pr = (Parameter) p;
+			String parameterName = pr.getName();
+			String parameterValue = pr.getValue();
+			options.put(parameterName,parameterValue);
 		}
 	}
 }

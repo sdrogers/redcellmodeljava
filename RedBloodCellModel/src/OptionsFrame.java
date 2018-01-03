@@ -11,12 +11,10 @@ import javax.swing.JPanel;
 public class OptionsFrame extends JFrame implements ActionListener {
 	private ParameterSelector ps;
 	private JButton doneButton;
-	private RBCGui rbcgui;
 	HashMap<String,String> options;
 	private JFrame parent;
-	public OptionsFrame(String title,String optionsFileName,RBCGui rbcgui,HashMap<String,String> options,JFrame parent) {
+	public OptionsFrame(String title,String optionsFileName,HashMap<String,String> options,JFrame parent) {
 		this.parent = parent;
-		this.rbcgui = rbcgui;
 		this.options = options;
 		this.setTitle(title);
 		this.setSize(400, 600);

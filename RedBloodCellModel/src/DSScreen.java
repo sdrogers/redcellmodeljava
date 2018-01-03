@@ -15,17 +15,21 @@ public class DSScreen extends JFrame implements ActionListener{
 	private JButton runButton;
 	private OptionsFrame timeScreen,transportScreen,tempPermScreen;
 	private JPanel layoutPanel;
-	private RBCGui rbcgui;
 	private boolean doneTime;
-	public DSScreen(RBCGui rbcgui,HashMap<String,String> options,RBC_model rbc) {
+	private RBC_model rbc;
+	private HashMap<String,String> options;
+	public DSScreen(HashMap<String,String> options,RBC_model rbc) {
 		this.setTitle("Dynamic state options");
-		this.rbcgui = rbcgui;
 		this.setSize(800, 300);
+		
+		this.rbc = rbc;
+		this.options = options;
+		
 		layoutPanel = new JPanel(new GridBagLayout());
 		
-		timeScreen = new OptionsFrame("Time Options","resources/settingfiles/timeOptions.csv",rbcgui,options, this);
-		transportScreen = new OptionsFrame("Transport Options","resources/settingfiles/transportDSOptions.csv",rbcgui,options,this);
-		tempPermScreen = new OptionsFrame("Temperature & permeability Options","resources/settingfiles/temppermeabilityDSOptions.csv",rbcgui,options,this);
+		timeScreen = new OptionsFrame("Time Options","resources/settingfiles/timeOptions.csv",options, this);
+		transportScreen = new OptionsFrame("Transport Options","resources/settingfiles/transportDSOptions.csv",options,this);
+		tempPermScreen = new OptionsFrame("Temperature & permeability Options","resources/settingfiles/temppermeabilityDSOptions.csv",options,this);
 		runButton = new JButton("Run");
 		runButton.addActionListener(this);
 		runButton.setEnabled(false);
@@ -68,12 +72,18 @@ public class DSScreen extends JFrame implements ActionListener{
 			this.setVisible(false);
 		}else if(e.getActionCommand() == "Run") {
 			this.setVisible(false);
-			rbcgui.doneDS();
+			this.runModel();
 			
 		}
 	}
 	public void makeVisible() {
 		this.setVisible(true);
+	}
+	private void runModel() {
+		RunFrame rf = new RunFrame(rbc,options,this);
+		this.setVisible(false);
+		rf.setVisible(true);
+		rf.runModel();
 	}
 
 }

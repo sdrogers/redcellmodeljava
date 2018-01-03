@@ -170,6 +170,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 	}
 	private void loadSettingsFile() {
 		CSVReader reader = null;
+		HashMap<String,Parameter> keys = new HashMap<String,Parameter>();
 		try {
 			reader = new CSVReader(new FileReader(this.fileName));
 			String[] line;
@@ -189,11 +190,19 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 				Parameter pr = new Parameter(parameter_name,parameter_value,parameter_units,parameter_description,allowedValues);
 				System.out.println(pr);
 				potentialParams.addElement(pr);
+				keys.put(pr.getName(),pr);
 			}
 		}catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}catch(IOException e) {
 			e.printStackTrace();
+		}
+		for(String s: this.options.keySet()) {
+			if(keys.containsKey(s)) {
+				Parameter pr = keys.get(s);
+				Parameter newPr = new Parameter(pr.getName(),this.options.get(s),pr.getUnits(),pr.getDescription(),pr.getAllowedValues());
+				currentParams.addElement(newPr);
+			}
 		}
 	}
 	public void grabOptions() {

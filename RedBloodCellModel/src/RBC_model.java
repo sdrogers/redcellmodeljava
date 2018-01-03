@@ -1,4 +1,7 @@
 import java.util.HashMap;
+
+import javax.swing.JTextArea;
+
 import java.util.ArrayList;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -384,11 +387,17 @@ public class RBC_model {
 
 		this.stage = 0;
 	}
-	
-	public void runall() {
-		System.out.println("RUNNING MODEL");
-		System.out.println("Sampling time: " + this.sampling_time);
-		System.out.println("Running until: " + this.duration_experiment);
+	public void output(String ad,JTextArea ta) {
+		if(ta == null) {
+			System.out.println(ad);
+		}else {
+			ta.append(ad + '\n');
+		}
+	}
+	public void runall(JTextArea ta) {
+		this.output("RUNNING MODEL", ta);
+		this.output("Sampling time: " + this.sampling_time,ta);
+		this.output("Running until: " + this.duration_experiment,ta);
 		
 		this.finished = false;
 		this.in_progress = true;
@@ -396,7 +405,8 @@ public class RBC_model {
 		this.cycle_count = 0;
 		this.n_its = 0;
 		this.Z = 0;
-		System.out.println("Publishing at t=" + 60.0*this.sampling_time);
+		this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
+		
 		this.publish();
 		while(this.sampling_time*60 <= this.duration_experiment) {
 			this.getNapump().compute_flux(this.temp_celsius);
@@ -443,7 +453,7 @@ public class RBC_model {
 			
 			if(this.cycle_count == this.cycles_per_print) {
 				this.Z += 1;
-				System.out.println("Publishing at t=" + 60.0*this.sampling_time);
+				this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
 				this.publish();
 				this.cycle_count = 0;
 			}
@@ -451,7 +461,7 @@ public class RBC_model {
 		
 		}
 		this.publish();
-		System.out.println("Finished!");
+		this.output("Finished!",ta);
 		
 	}
 	private void updateContents() {

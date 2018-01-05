@@ -13,10 +13,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -51,20 +53,12 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		potentialParamList = new JList<Parameter>();
 		potentialParamList.setModel(potentialParams);
 		potentialParamList.addListSelectionListener(this);
-		
+		potentialParamList.setBorder(BorderFactory.createTitledBorder("Available parameters"));
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.insets = new Insets(5,5,5,5);
-		centerPanel.add(new JLabel("Available parameters"),c);
-		
-		c.gridx = 1;
-		c.gridy = 0;
-		centerPanel.add(new JLabel("Selected parameters"),c);
-		
-		c.gridx = 0;
-		c.gridy = 1;
-		centerPanel.add(potentialParamList,c);
+		c.insets = new Insets(5,5,5,5);		
+		centerPanel.add(new JScrollPane(potentialParamList),c);
 		addButton = new JButton("Add new option value");
 		addButton.addActionListener(this);
 		bottomPanel.add(addButton);
@@ -74,19 +68,19 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		currentParams = new DefaultListModel<Parameter>();
 		currentParamList = new JList<Parameter>();
 		currentParamList.setModel(currentParams);
-//		currentParamList.setVisibleRowCount(10);
-//		currentParamList.setPrototypeCellValue(
-//				new Parameter(
-//						"a longish parameter name",
-//						"a large number",
-//						"some units",
-//						"a description",
-//						null));
+		currentParamList.setVisibleRowCount(10);
+		currentParamList.setPrototypeCellValue(
+				new Parameter(
+						"a longish longer name",
+						"10.0",
+						"some",
+						"a description",
+						null));
 		c.gridx = 1;
-		c.gridy = 1;
+		c.gridy = 0;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
-		
-		centerPanel.add(currentParamList,c);
+		currentParamList.setBorder(BorderFactory.createTitledBorder("Changed parameters"));
+		centerPanel.add(new JScrollPane(currentParamList),c);
 		this.add(centerPanel, BorderLayout.CENTER);
 		removeButton = new JButton("Remove");
 		removeButton.addActionListener(this);

@@ -17,7 +17,7 @@ public class OptionsFrame extends JFrame implements ActionListener {
 		this.parent = parent;
 		this.options = options;
 		this.setTitle(title);
-		this.setSize(400, 600);
+		this.setSize(600, 600);
 		ps = new ParameterSelector(optionsFileName,this.options);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

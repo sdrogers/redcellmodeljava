@@ -21,12 +21,12 @@ public class MultiVMaxRun {
 			rbc.setup(options,usedoptions);
 			rbc.setupDS(options, usedoptions);
 			
-			rbc.runall();
+			rbc.runall(null);
 			
 			options = LoadProtocol.loadOptions("resources/protocols/multiV2.txt", options);
 			rbc.setupDS(options, usedoptions);
 			
-			rbc.runall();
+			rbc.runall(null);
 			
 			String outname = "resources/traces/multiV/multiV_"+ vmc_vals[i] +".csv";
 			rbc.writeCsv(outname);

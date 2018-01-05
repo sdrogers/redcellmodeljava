@@ -70,7 +70,7 @@ public class RBCGui extends JFrame {
 		LoadProtocol.printOptions(options);
 
 		
-		rbc.runall();
+		rbc.runall(null);
 		
 		// save the file
 	}

@@ -1,0 +1,5 @@
+time,0,minutes,Experiment time (minutes),
+integrationfactor,0.01,,Integration factor,
+compute_delta_time,no,,Whether or not to use a fixed time step,"yes,no"
+delta_time,0.1,minutes,Length of fixed time step,
+cyclesperprint,777,epochs,Number of cycles between output prints,

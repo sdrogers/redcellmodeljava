@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -163,10 +165,16 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		}
 	}
 	private void loadSettingsFile() {
+		System.out.println(this.fileName);
 		CSVReader reader = null;
 		HashMap<String,Parameter> keys = new HashMap<String,Parameter>();
 		try {
-			reader = new CSVReader(new FileReader(this.fileName));
+			InputStream is = ClassLoader.getSystemResourceAsStream(this.fileName);
+//			System.out.println(ClassLoader.getSystemResourceAsStream(this.fileName));
+//			System.out.println(is);
+			InputStreamReader isr = new InputStreamReader(is);
+			reader = new CSVReader(isr);
+//			reader = new CSVReader(new FileReader(this.fileName));
 			String[] line;
 			while ((line = reader.readNext()) != null ) {
 				String parameter_name = line[0].trim();

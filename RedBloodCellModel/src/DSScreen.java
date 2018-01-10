@@ -27,9 +27,10 @@ public class DSScreen extends JFrame implements ActionListener{
 		
 		layoutPanel = new JPanel(new GridBagLayout());
 		
-		timeScreen = new OptionsFrame("Time Options","resources/settingfiles/timeOptions.csv",options, this);
-		transportScreen = new OptionsFrame("Transport Options","resources/settingfiles/transportDSOptions.csv",options,this);
-		tempPermScreen = new OptionsFrame("Temperature & permeability Options","resources/settingfiles/temppermeabilityDSOptions.csv",options,this);
+//		timeScreen = new OptionsFrame("Time Options","resources/settingfiles/timeOptions.csv",options, this);
+		timeScreen = new OptionsFrame("Time Options","SettingFiles/timeOptions.csv",options, this);
+		transportScreen = new OptionsFrame("Transport Options","SettingFiles/transportDSOptions.csv",options,this);
+		tempPermScreen = new OptionsFrame("Temperature & permeability Options","SettingFiles/temppermeabilityDSOptions.csv",options,this);
 		runButton = new JButton("Run");
 		runButton.addActionListener(this);
 		runButton.setEnabled(false);

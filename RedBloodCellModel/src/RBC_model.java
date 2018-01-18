@@ -717,6 +717,14 @@ public class RBC_model {
 			usedoptions.add("pgh");
 		}
 		
+		// New option Jan 2018
+		temp = options.get("pgca");
+		if(temp != null) {
+			this.passiveca.setFcalm(Double.parseDouble(temp));
+			usedoptions.add("pgca");
+		}
+		
+		
 		temp = options.get("pmg");
 		if(temp != null) {
 			this.a23.setPermeability_Mg(Double.parseDouble(temp));
@@ -814,11 +822,11 @@ public class RBC_model {
 			usedoptions.add("vmax-pump-change");
 		}
 		
-		temp = options.get("vmax-leak-change");
-		if(temp != null) {
-			this.passiveca.setFcalm(this.passiveca.getFcalm()*Double.parseDouble(temp));
-			usedoptions.add("vmax-leak-change");
-		}
+//		temp = options.get("vmax-leak-change");
+//		if(temp != null) {
+//			this.passiveca.setFcalm(this.passiveca.getFcalm()*Double.parseDouble(temp));
+//			usedoptions.add("vmax-leak-change");
+//		}
 		
 		temp = options.get("percentage-inhibition");
 		if(temp != null) {

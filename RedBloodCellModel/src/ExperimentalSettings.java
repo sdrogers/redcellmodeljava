@@ -84,6 +84,13 @@ public class ExperimentalSettings {
 			e.printStackTrace();
 		}
 	}
+	public String getRSString() {
+		String rString = "";
+		for(String key: this.rSOptions.keySet()) {
+			rString += key + " " + this.rSOptions.get(key) + "\n"; 
+		}
+		return rString;
+	}
 	public String toString() {
 		String rString = this.overallComments + "\n";
 		rString += "RS\n";
@@ -99,10 +106,15 @@ public class ExperimentalSettings {
 		}
 		return rString;
 	}
-	public void writeFile() {
+	public String getOverallComments() {
+		return this.overallComments;
+	}
+	public String getRSComments() {
+		return this.rSComments;
+	}
+	public void writeFile(JFrame parent) {
 		JFileChooser saveJfc = new JFileChooser();
-		JFrame dummyFrame = new JFrame();
-		int returnVal = saveJfc.showSaveDialog(dummyFrame); // Note that null doesn't work as parent!
+		int returnVal = saveJfc.showSaveDialog(parent); // Note that null doesn't work as parent!
 		String outputFileName = saveJfc.getSelectedFile().getPath();
 		File file = new File(outputFileName);
 		BufferedWriter writer = null;
@@ -120,14 +132,24 @@ public class ExperimentalSettings {
 				}
 			}
 		}
-		dummyFrame.dispose();
+	}
+	public LinkedList<DSSettings> getDSStages() {
+		return this.dSStages;
+	}
+	public void addStage(DSSettings newStage) {
+		this.dSStages.add(newStage);
+	}
+	public void remove(DSSettings stage) {
+		this.dSStages.remove(stage);
 	}
 	public static void main(String [] args) {
 		// main for testing
 		JFileChooser jfc = new JFileChooser();
 		jfc.showOpenDialog(null);
 		ExperimentalSettings es = new ExperimentalSettings(jfc.getSelectedFile().getPath());
-		System.out.println(es);
-		es.writeFile();
+		
+//		System.out.println(es);
+//		es.writeFile();
+		ExperimentScreen eScreen = new ExperimentScreen(es);
 	}
 }

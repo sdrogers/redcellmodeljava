@@ -395,8 +395,8 @@ public class RBC_model {
 		}
 	}
 	public void runall(JTextArea ta) {
-		this.output("RUNNING MODEL", ta);
-		this.output("Sampling time: " + this.sampling_time,ta);
+		this.output("RUNNING DS STAGE " + this.stage, ta);
+		this.output("Current Sampling time: " + 60.0*this.sampling_time,ta);
 		this.output("Running until: " + this.duration_experiment,ta);
 		
 		this.finished = false;
@@ -1205,7 +1205,7 @@ public class RBC_model {
 	private void set_screen_time_factor_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
 		String temp = options.get("time");
 		if(temp != null) {
-			this.duration_experiment = Double.parseDouble(temp);
+			this.duration_experiment += Double.parseDouble(temp);
 			usedoptions.add("time");
 		}
 		

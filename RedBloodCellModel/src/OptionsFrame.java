@@ -12,14 +12,15 @@ public class OptionsFrame extends JFrame implements ActionListener {
 	private ParameterSelector ps;
 	private JButton doneButton;
 	HashMap<String,String> options;
-	private JFrame parent;
-	public OptionsFrame(String title,String optionsFileName,HashMap<String,String> options,JFrame parent) {
+	private StagePanel parent;
+	
+	public OptionsFrame(String title,String optionsFileName,HashMap<String,String> options,StagePanel parent) {
 		this.parent = parent;
 		this.options = options;
 		this.setTitle(title);
 		this.setSize(600, 600);
-		ps = new ParameterSelector(optionsFileName,this.options);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		ps = new ParameterSelector(optionsFileName,this.options,this.parent);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JPanel mainPanel = new JPanel(new GridBagLayout());
 		this.add(mainPanel);
@@ -42,17 +43,18 @@ public class OptionsFrame extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == doneButton) {
-			System.out.println("Pressed done");
+//			System.out.println("Pressed done");
 			this.setVisible(false);
-			this.grabOptions();
-			parent.setVisible(true);
+//			this.grabOptions();
+//			this.parent.updateStagePanel();
+//			parent.setVisible(true);
 //			this.rbcgui.doneMenu(this);
 		}
 	}
-	private void grabOptions() {
-		// gets the options from the parameter selector
-		ps.grabOptions();
-	}
+//	private void grabOptions() {
+//		// gets the options from the parameter selector
+//		ps.grabOptions();
+//	}
 	public void makeVisible() {
 		this.setVisible(true);
 	}

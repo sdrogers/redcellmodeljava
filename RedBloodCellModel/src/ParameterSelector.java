@@ -38,9 +38,11 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 	private final String fileName;
 	private JTextField descriptionField;
 	HashMap<String,String> options;
-	public ParameterSelector(String fileName,HashMap<String,String> options) {
+	private StagePanel parent;
+	public ParameterSelector(String fileName,HashMap<String,String> options,StagePanel parent) {
 		this.options = options;
 		this.fileName = fileName;
+		this.parent = parent;
 		this.setLayout(new BorderLayout());
 		title = new JLabel("a title");
 		this.add(title);
@@ -66,7 +68,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		bottomPanel.add(addButton);
 		this.add(bottomPanel,BorderLayout.SOUTH);
 		//Load the parameters and default values
-		loadSettingsFile(); // populates potentialParams
+		
 		currentParams = new DefaultListModel<Parameter>();
 		currentParamList = new JList<Parameter>();
 		currentParamList.setModel(currentParams);
@@ -92,6 +94,8 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		descriptionField.setEditable(false);
 		topPanel.add(descriptionField);
 		
+		loadSettingsFile(); // populates potentialParams
+		
 	}
 
 	@Override
@@ -111,6 +115,8 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			Parameter pr = currentParamList.getSelectedValue();
 			if(pr != null) {
 				currentParams.removeElement(pr);
+				options.remove(pr.getName());
+				this.parent.updateStagePanel();
 			}
 		}else if(e.getSource() == addButton) {
 			Parameter selected = potentialParamList.getSelectedValue();
@@ -118,6 +124,8 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 				updateCurrentParams(selected);
 				potentialParamList.clearSelection();
 				descriptionField.setText("");
+				// Tell the parent that it has updated
+				
 			}
 		}
 	}
@@ -143,6 +151,8 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			}
 			Parameter newpar = new Parameter(selected.getName(),inputValue,selected.getUnits(),selected.getDescription(),null);
 			currentParams.addElement(newpar);
+			this.grabOptions();
+			this.parent.updateStagePanel();
 		}else {
 			// Input error
 			JOptionPane.showMessageDialog(null, "Incorrect input for " + selected.getName());
@@ -190,7 +200,6 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 					}
 				}
 				Parameter pr = new Parameter(parameter_name,parameter_value,parameter_units,parameter_description,allowedValues);
-				System.out.println(pr);
 				potentialParams.addElement(pr);
 				keys.put(pr.getName(),pr);
 			}
@@ -203,6 +212,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			if(keys.containsKey(s)) {
 				Parameter pr = keys.get(s);
 				Parameter newPr = new Parameter(pr.getName(),this.options.get(s),pr.getUnits(),pr.getDescription(),pr.getAllowedValues());
+				System.out.println(newPr);
 				currentParams.addElement(newPr);
 			}
 		}

@@ -24,6 +24,7 @@ public class ExperimentalSettings {
 		// Constructor to start with an empty settings object
 		this.rSOptions = new HashMap<String,String>();
 		this.dSStages = new LinkedList<DSSettings>();
+		this.dSStages.add(new DSSettings());
 	}
 	public ExperimentalSettings(String fileName) {
 		// Constructor to populate from a file
@@ -109,8 +110,14 @@ public class ExperimentalSettings {
 	public String getOverallComments() {
 		return this.overallComments;
 	}
+	public void setOverallComments(String comments) {
+		this.overallComments = comments;
+	}
 	public String getRSComments() {
 		return this.rSComments;
+	}
+	public HashMap<String,String> getRSOptions() {
+		return this.rSOptions;
 	}
 	public void writeFile(JFrame parent) {
 		JFileChooser saveJfc = new JFileChooser();
@@ -142,14 +149,14 @@ public class ExperimentalSettings {
 	public void remove(DSSettings stage) {
 		this.dSStages.remove(stage);
 	}
-	public static void main(String [] args) {
-		// main for testing
-		JFileChooser jfc = new JFileChooser();
-		jfc.showOpenDialog(null);
-		ExperimentalSettings es = new ExperimentalSettings(jfc.getSelectedFile().getPath());
-		
-//		System.out.println(es);
-//		es.writeFile();
-		ExperimentScreen eScreen = new ExperimentScreen(es);
-	}
+//	public static void main(String [] args) {
+//		// main for testing
+//		JFileChooser jfc = new JFileChooser();
+//		jfc.showOpenDialog(null);
+//		ExperimentalSettings es = new ExperimentalSettings(jfc.getSelectedFile().getPath());
+//		
+////		System.out.println(es);
+////		es.writeFile();
+//		ExperimentScreen eScreen = new ExperimentScreen(es);
+//	}
 }

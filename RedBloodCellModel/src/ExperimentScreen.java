@@ -17,11 +17,14 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 	private JButton addButton,writeSettingsButton,runButton;
 	private JPanel dSPanel;
 	private HashMap<DSSettings,StagePanel> panelSettings;
+	private CommentsPanel cp;
+	private RBC_model rbc;
 	public ExperimentScreen(ExperimentalSettings es) {
+		this.rbc = new RBC_model();
 		this.panelSettings = new HashMap<DSSettings,StagePanel>();
 		this.experimentalSettings = es;
 		this.setSize(1000,1000);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		
@@ -30,7 +33,7 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 		dSPanel = new JPanel(new GridLayout(0,1));
 		
 		JPanel rsPanel = new JPanel(new GridLayout(0,1));
-		CommentsPanel cp = new CommentsPanel(this.experimentalSettings);
+		cp = new CommentsPanel(this.experimentalSettings);
 		cp.setBorder(BorderFactory.createTitledBorder("Overall Comments"));
 		rsPanel.add(cp);
 		
@@ -59,6 +62,7 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 		buttonPanel.add(writeSettingsButton);
 		
 		runButton = new JButton("Run Model");
+		runButton.addActionListener(this);
 		buttonPanel.add(runButton);
 		mainPanel.add(buttonPanel,BorderLayout.SOUTH);
 		
@@ -83,6 +87,11 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 			dSPanel.add(temp);
 			panelSettings.put(d, temp);
 		}
+		if(this.experimentalSettings.getNStages() == 1) {
+			DSSettings onlySettings = this.experimentalSettings.getDSStages().get(0);
+			StagePanel onlyPanel = panelSettings.get(onlySettings);
+			onlyPanel.disableDelete();
+		}
 		this.revalidate();
 	}
 	public void actionPerformed(ActionEvent e) {
@@ -90,15 +99,17 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 			// add a new DS
 			DSSettings newStage = new DSSettings();
 			this.experimentalSettings.addStage(newStage);
-			String title = "Dynamic Stage: " + this.experimentalSettings.getNStages();
-			StagePanel temp = new StagePanel(newStage,this);
-			temp.setBorder(BorderFactory.createTitledBorder(title));
-			this.dSPanel.add(temp);
-			this.revalidate();
-			this.panelSettings.put(newStage, temp);
-		}
-		if(e.getSource() == writeSettingsButton) {
+			this.clearDSPanel();
+			this.populateDSPanel();
+		}else if(e.getSource() == writeSettingsButton) {
+			// Process the comments to ensure there is a # at the start of each line
+			this.experimentalSettings.setOverallComments(this.cp.processComments());
+			for(DSSettings d: panelSettings.keySet()) {
+				panelSettings.get(d).processComment();
+			}
 			this.experimentalSettings.writeFile(this);
+		}else if(e.getSource() == runButton) {
+			new RunFrame(this.rbc,this.experimentalSettings,this);
 		}
 	}
 }

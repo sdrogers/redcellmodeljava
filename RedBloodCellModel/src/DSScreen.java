@@ -12,28 +12,26 @@ import javax.swing.JPanel;
 
 public class DSScreen extends JFrame implements ActionListener{
 	private JButton timeOptions,cellfractionOptions,transportOptions,permeabilityOptions;
-	private JButton runButton;
 	private OptionsFrame timeScreen,transportScreen,tempPermScreen;
 	private JPanel layoutPanel;
 	private boolean doneTime;
-	private RBC_model rbc;
 	private HashMap<String,String> options;
-	public DSScreen(HashMap<String,String> options,RBC_model rbc) {
+	private DSSettings dSSettings;
+	private StagePanel parent;
+	public DSScreen(DSSettings dSSettings,StagePanel parent) {
 		this.setTitle("Dynamic state options");
 		this.setSize(800, 300);
-		
-		this.rbc = rbc;
-		this.options = options;
+		this.dSSettings = dSSettings;
+		this.parent = parent;
+//		this.rbc = rbc;
+		this.options = this.dSSettings.getOptions();
 		
 		layoutPanel = new JPanel(new GridBagLayout());
 		
 //		timeScreen = new OptionsFrame("Time Options","resources/settingfiles/timeOptions.csv",options, this);
-		timeScreen = new OptionsFrame("Time Options","SettingFiles/timeOptions.csv",options, this);
-		transportScreen = new OptionsFrame("Transport Options","SettingFiles/transportDSOptions.csv",options,this);
-		tempPermScreen = new OptionsFrame("Temperature & permeability Options","SettingFiles/temppermeabilityDSOptions.csv",options,this);
-		runButton = new JButton("Run");
-		runButton.addActionListener(this);
-		runButton.setEnabled(false);
+		timeScreen = new OptionsFrame("Time Options","SettingFiles/timeOptions.csv",options, this.parent);
+		transportScreen = new OptionsFrame("Transport Options","SettingFiles/transportDSOptions.csv",options,this.parent);
+		tempPermScreen = new OptionsFrame("Temperature & permeability Options","SettingFiles/temppermeabilityDSOptions.csv",options,this.parent);
 		timeOptions = new JButton("Time options");
 		timeOptions.addActionListener(this);
 		transportOptions = new JButton("Transport options");
@@ -54,7 +52,6 @@ public class DSScreen extends JFrame implements ActionListener{
 		c.gridx = 0;
 		c.gridwidth = 3;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		layoutPanel.add(runButton,c);
 		this.add(layoutPanel);
 		
 		
@@ -63,28 +60,18 @@ public class DSScreen extends JFrame implements ActionListener{
 		if(e.getSource() == timeOptions) {
 			System.out.println("Clicked time");
 			timeScreen.makeVisible();
-			runButton.setEnabled(true); // need to check that something sensible has been done with time
-			this.setVisible(false);
+//			this.setVisible(false);
 		}else if(e.getSource() == transportOptions) {
 			transportScreen.makeVisible();
-			this.setVisible(false);
+//			this.setVisible(false);
 		}else if(e.getSource() == permeabilityOptions) {
 			tempPermScreen.makeVisible();
-			this.setVisible(false);
-		}else if(e.getActionCommand() == "Run") {
-			this.setVisible(false);
-			this.runModel();
-			
+//			this.setVisible(false);
 		}
 	}
 	public void makeVisible() {
 		this.setVisible(true);
 	}
-	private void runModel() {
-		RunFrame rf = new RunFrame(rbc,options,this);
-		this.setVisible(false);
-		rf.setVisible(true);
-		rf.runModel();
-	}
+
 
 }

@@ -16,6 +16,7 @@ public class Goldman {
 	private Double P_11 ;
 
 	private Double pkm ;
+	private Double defaultPkm;
 	private Double pkcak ;
 	private Double pgkh ;
 	
@@ -35,7 +36,7 @@ public class Goldman {
 		this.setFlux_K(0.0);
 		this.Goldman_factor = 0.0;
 		this.P_11 = 0.0;
-		this.setPkm(30.0);
+		this.setDefaultPkm(30.0);
 		this.setPkcak(1e-2);
 		
 		this.pgkh = 0.0;
@@ -84,7 +85,13 @@ public class Goldman {
 	public Double getPkm() {
 		return pkm;
 	}
-
+	public Double getDefaultPkm() {
+		return this.defaultPkm;
+	}
+	public void setDefaultPkm(Double pkm) {
+		this.defaultPkm = pkm;
+		this.setPkm(pkm);
+	}
 	public void setPkm(Double pkm) {
 		this.pkm = pkm;
 	}

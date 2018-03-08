@@ -8,6 +8,7 @@ public class CaPumpMg2 {
 	private Double capmgk;
 	private Double capmgki;
 	private Double fcapm;
+	private Double defaultFcapm;
 	private Double h1;
 	private Double capk;
 	private Double flux_Ca;
@@ -22,7 +23,7 @@ public class CaPumpMg2 {
 		this.setHik(4e-7);
 		this.setCapmgk(0.1);
 		this.capmgki = 7.0;
-		this.setFcapm(12.0);
+		this.setDefaultFcapm(12.0);
 		this.setH1(4.0);
 		this.capk = 2e-4;
 		this.setFlux_Ca(-0.03);
@@ -46,6 +47,13 @@ public class CaPumpMg2 {
 	}
 	public Double getFcapm() {
 		return fcapm;
+	}
+	public Double getDefaultFcapm() {
+		return defaultFcapm;
+	}
+	public void setDefaultFcapm(Double fcapm) {
+		this.defaultFcapm = fcapm;
+		this.setFcapm(fcapm);
 	}
 	public void setFcapm(Double fcapm) {
 		this.fcapm = fcapm;

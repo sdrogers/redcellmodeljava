@@ -33,7 +33,7 @@ public class StagePanel extends JPanel implements ActionListener {
 		
 		JPanel buttonPanel = new JPanel(new GridLayout(0,1));
 		editTimeButton = new JButton("Time & Data Output Frequency");
-		editTransportButton = new JButton("Transport Inhibition & Stimulation");
+		editTransportButton = new JButton("Transport Inhibition");
 		editTempButton = new JButton("Temperature & Permeabilities");
 		editFractionButton = new JButton("Cell Fraction & Medium Composition");
 		editTimeButton.addActionListener(this);

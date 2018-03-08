@@ -3,13 +3,14 @@ public class JacobsStewart {
 	private Region cell;
 	private Region medium;
 	private Double permeability;
+	private Double defaultPermeability;
 	private Double flux_A;
 	private Double flux_H;
 	
 	public JacobsStewart(Region cell,Region medium) {
 		this.cell = cell;
 		this.medium = medium;
-		this.setPermeability(2.5e8);
+		this.setDefaultPermeability(2.5e8);
 		this.flux_A = 0.0;
 		this.flux_H = 0.0;
 	}
@@ -28,6 +29,13 @@ public class JacobsStewart {
 	}
 	public Double getPermeability() {
 		return permeability;
+	}
+	public Double getDefaultPermeability() {
+		return defaultPermeability;
+	}
+	public void setDefaultPermeability(Double permeability) {
+		this.defaultPermeability = permeability;
+		this.setPermeability(permeability);
 	}
 	public void setPermeability(Double permeability) {
 		this.permeability = permeability;

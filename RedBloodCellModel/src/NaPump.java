@@ -1,6 +1,7 @@
 
 public class NaPump {
 	private Double P_1; //V_max for sodium pump
+	private Double defaultP_1;
 	private Double P_2; //V_max reverse 
 	private Double Na_to_K;
 	private Region cell;
@@ -75,8 +76,15 @@ public class NaPump {
 		this.compute_I(temperature);
 		this.compute_mgnap();
 		this.compute_phnap();
-		this.setP_1(Math.abs(this.flux_fwd/(this.mgnap*this.phnap*this.I_3*this.I_6)));
+		this.setDefaultP_1(Math.abs(this.flux_fwd/(this.mgnap*this.phnap*this.I_3*this.I_6)));
 		this.setP_2(Math.abs(this.flux_rev/((this.mgnap*this.phnap)*(this.I_9*this.I_11))));
+	}
+	private void setDefaultP_1(double P_1) {
+		this.defaultP_1 = P_1;
+		this.setP_1(P_1);
+	}
+	public Double getDefaultP_1() {
+		return defaultP_1;
 	}
 	private void compute_mgnap() {
 		this.mgnap = (this.cell.Mgf.getConcentration()/(this.mgnapk + this.cell.Mgf.getConcentration()))*(this.mgnapik/(this.mgnapik + this.cell.Mgf.getConcentration()));

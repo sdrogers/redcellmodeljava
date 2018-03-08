@@ -3,6 +3,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -48,6 +49,8 @@ public class RBCWelcomeScreen extends JFrame implements ActionListener {
 			new ExperimentScreen(new ExperimentalSettings());
 		}else if(e.getSource() == loadButton) {
 			// Load the options from a file
+			File workingDirectory = new File(System.getProperty("user.dir"));
+			jfc.setCurrentDirectory(workingDirectory);
 			jfc.showOpenDialog(this);
 			String fileName = jfc.getSelectedFile().getPath();
 			new ExperimentScreen(new ExperimentalSettings(fileName));

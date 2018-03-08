@@ -121,6 +121,12 @@ public class ExperimentalSettings {
 	}
 	public void writeFile(JFrame parent) {
 		JFileChooser saveJfc = new JFileChooser();
+
+		File workingDirectory = new File(System.getProperty("user.dir"));
+		saveJfc.setCurrentDirectory(workingDirectory);
+
+		
+		
 		int returnVal = saveJfc.showSaveDialog(parent); // Note that null doesn't work as parent!
 		String outputFileName = saveJfc.getSelectedFile().getPath();
 		File file = new File(outputFileName);

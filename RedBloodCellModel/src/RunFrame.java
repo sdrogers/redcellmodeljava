@@ -22,7 +22,7 @@ public class RunFrame extends JFrame implements ActionListener{
 	private JButton saveButton,returnButton,quitButton;
 	private JFileChooser jfc = new JFileChooser();
 	private ExperimentalSettings experimentalSettings;
-	public RunFrame(RBC_model rbc,ExperimentalSettings es,JFrame source) {
+	public RunFrame(ExperimentalSettings es,JFrame source) {
 		this.experimentalSettings = es;
 		File workingDirectory = new File(System.getProperty("user.dir"));
 		jfc.setCurrentDirectory(workingDirectory);
@@ -64,7 +64,8 @@ public class RunFrame extends JFrame implements ActionListener{
 	}
 	public void runModel() {
 		ArrayList<String> usedoptions = new ArrayList<String>();
-		
+		//
+		rbc = new RBC_model();
 		rbc.setup(experimentalSettings.getRSOptions(), usedoptions);
 		for(DSSettings d: experimentalSettings.getDSStages()) {
 			rbc.setupDS(d.getOptions(), usedoptions);

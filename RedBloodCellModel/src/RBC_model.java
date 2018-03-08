@@ -783,7 +783,8 @@ public class RBC_model {
 	private void set_transport_changes_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
 		String temp = options.get("na-pump-flux-change");
 		if(temp != null) {
-			this.getNapump().setP_1(Double.parseDouble(temp));
+			Double inhibFac = (100.0-Double.parseDouble(temp))/100.0;
+			this.getNapump().setP_1(this.getNapump().getDefaultP_1()*inhibFac);
 			usedoptions.add("na-pump-flux-change");
 		}
 		
@@ -794,16 +795,16 @@ public class RBC_model {
 		}
 		temp = options.get("naa-change");
 		if(temp != null) {
-			this.carriermediated.setPermeability_Na(
-					Double.parseDouble(temp)*this.carriermediated.getPermeability_Na());
+			this.carriermediated.setPermeability_Na(this.carriermediated.getDefaultPermability_Na()*Double.parseDouble(temp)/100.0);
 			usedoptions.add("naa-change");
 		}
 		temp = options.get("ka-change");
 		if(temp != null) {
-			this.carriermediated.setPermeability_K(Double.parseDouble(temp) *
-					this.carriermediated.getPermeability_K());
+			this.carriermediated.setPermeability_K(this.carriermediated.getDefaultPermeability_K() * Double.parseDouble(temp)/100.0);
 			usedoptions.add("ka-change");
 		}
+		// Check this one with Arieh
+		// Removed from GUI at the moment....
 		temp = options.get("cotransport-activation");
 		if(temp != null) {
 			Double co_f = Double.parseDouble(temp);
@@ -813,12 +814,14 @@ public class RBC_model {
 		temp = options.get("js-stimulation-inhibition");
 		if(temp != null) {
 			Double jsfactor = Double.parseDouble(temp);
-			this.JS.setPermeability(this.JS.getPermeability() * jsfactor);
+			jsfactor = (100.0 - jsfactor)/100.0;
+			this.JS.setPermeability(this.JS.getDefaultPermeability() * jsfactor);
 			usedoptions.add("js-stimulation-inhibition");
 		}
 		temp = options.get("vmax-pump-change");
 		if(temp != null) {
-			this.capump.setFcapm(this.capump.getFcapm() * Double.parseDouble(temp));
+			Double fc = (100.0 - Double.parseDouble(temp))/100.0;
+			this.capump.setFcapm(this.capump.getDefaultFcapm() * fc);
 			usedoptions.add("vmax-pump-change");
 		}
 		
@@ -830,8 +833,8 @@ public class RBC_model {
 		
 		temp = options.get("percentage-inhibition");
 		if(temp != null) {
-			this.goldman.setPkm(this.goldman.getPkm() * 
-					(100.0 - Double.parseDouble(temp))/100.0);
+			Double gc = (100.0 - Double.parseDouble(temp))/100.0;
+			this.goldman.setPkm(this.goldman.getDefaultPkm() * gc);
 			usedoptions.add("percentage-inhibition");
 		}
 	}

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -14,13 +15,11 @@ import javax.swing.JTextField;
 
 public class ExperimentScreen extends JFrame implements ActionListener {
 	private ExperimentalSettings experimentalSettings; 
-	private JButton addButton,writeSettingsButton,runButton;
+	private JButton addButton,writeSettingsButton,runButton,closeButton;
 	private JPanel dSPanel;
 	private HashMap<DSSettings,StagePanel> panelSettings;
 	private CommentsPanel cp;
-	private RBC_model rbc;
 	public ExperimentScreen(ExperimentalSettings es) {
-		this.rbc = new RBC_model();
 		this.panelSettings = new HashMap<DSSettings,StagePanel>();
 		this.experimentalSettings = es;
 		this.setSize(1000,1000);
@@ -35,12 +34,13 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 		JPanel rsPanel = new JPanel(new GridLayout(0,1));
 		cp = new CommentsPanel(this.experimentalSettings);
 		cp.setBorder(BorderFactory.createTitledBorder("Overall Comments"));
-		rsPanel.add(cp);
+		
 		
 		RSPanel r = new RSPanel(this.experimentalSettings);
 		r.setBorder(BorderFactory.createTitledBorder("Reference State"));
 		
 		rsPanel.add(r);
+		rsPanel.add(cp);
 		
 		statePanel.add(rsPanel);
 		statePanel.add(new JScrollPane(dSPanel));
@@ -57,9 +57,13 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 		addButton.addActionListener(this);
 		buttonPanel.add(addButton);
 		
-		writeSettingsButton = new JButton("Write Settings file");
+		writeSettingsButton = new JButton("Write Protocol file");
 		writeSettingsButton.addActionListener(this);
 		buttonPanel.add(writeSettingsButton);
+		
+		closeButton = new JButton("Close Experiment");
+		closeButton.addActionListener(this);
+		buttonPanel.add(closeButton);
 		
 		runButton = new JButton("Run Model");
 		runButton.addActionListener(this);
@@ -109,7 +113,26 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 			}
 			this.experimentalSettings.writeFile(this);
 		}else if(e.getSource() == runButton) {
-			new RunFrame(this.rbc,this.experimentalSettings,this);
+			if(checkOptions()) {
+				new RunFrame(this.experimentalSettings,this);
+			}else {
+				// error!
+			}
+		}else if(e.getSource() == closeButton) {
+			// reset the experiment
+			this.setVisible(false);
+			this.dispose();
 		}
+	}
+	private boolean checkOptions() {
+		int pos = 1;
+		for(DSSettings d: this.experimentalSettings.getDSStages()) {
+			if(!d.getOptions().containsKey("time")) {
+				JOptionPane.showMessageDialog(this, "Please enter time for stage "+pos);
+				return false;
+			}
+			pos += 1;
+		}
+		return true;
 	}
 }

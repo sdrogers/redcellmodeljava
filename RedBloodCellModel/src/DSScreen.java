@@ -11,8 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class DSScreen extends JFrame implements ActionListener{
-	private JButton timeOptions,cellfractionOptions,transportOptions,permeabilityOptions;
-	private OptionsFrame timeScreen,transportScreen,tempPermScreen;
+	private JButton timeOptions,cellfractionOptions,transportOptions,permeabilityOptions,fractionOptions;
+	private OptionsFrame timeScreen,transportScreen,tempPermScreen,cellFractionScreen;
 	private JPanel layoutPanel;
 	private boolean doneTime;
 	private HashMap<String,String> options;
@@ -32,12 +32,16 @@ public class DSScreen extends JFrame implements ActionListener{
 		timeScreen = new OptionsFrame("Time Options","SettingFiles/timeOptions.csv",options, this.parent);
 		transportScreen = new OptionsFrame("Transport Options","SettingFiles/transportDSOptions.csv",options,this.parent);
 		tempPermScreen = new OptionsFrame("Temperature & permeability Options","SettingFiles/temppermeabilityDSOptions.csv",options,this.parent);
+		cellFractionScreen = new OptionsFrame("Cell fraction","SettingFiles/cellfractionDSOptions.csv",options,this.parent);
+				
 		timeOptions = new JButton("Time options");
 		timeOptions.addActionListener(this);
 		transportOptions = new JButton("Transport options");
 		transportOptions.addActionListener(this);
 		permeabilityOptions = new JButton("Temperature & permeability options");
 		permeabilityOptions.addActionListener(this);
+		fractionOptions = new JButton("Cell fraction");
+		fractionOptions.addActionListener(this);
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
@@ -47,6 +51,8 @@ public class DSScreen extends JFrame implements ActionListener{
 		layoutPanel.add(transportOptions,c);
 		c.gridx = 2;
 		layoutPanel.add(permeabilityOptions,c);
+		c.gridx = 3;
+		layoutPanel.add(fractionOptions,c);
 		
 		c.gridy = 1;
 		c.gridx = 0;
@@ -67,6 +73,8 @@ public class DSScreen extends JFrame implements ActionListener{
 		}else if(e.getSource() == permeabilityOptions) {
 			tempPermScreen.makeVisible();
 //			this.setVisible(false);
+		}else if(e.getSource() == fractionOptions) {
+			cellFractionScreen.makeVisible();
 		}
 	}
 	public void makeVisible() {

@@ -9,12 +9,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class StagePanel extends JPanel implements ActionListener {
-	private JButton editTimeButton,editTransportButton,editTempButton,deleteButton;
+	private JButton editTimeButton,editTransportButton,editTempButton,deleteButton,editFractionButton;
 	private DSSettings dSSettings;
 	private JTextArea commentArea;
 	private JTextArea optionArea;
 	private ExperimentScreen experimentScreen;
-	private OptionsFrame timeScreen,tempPermScreen,transportScreen;
+	private OptionsFrame timeScreen,tempPermScreen,transportScreen,fractionScreen;
 	public StagePanel(DSSettings dSSettings,ExperimentScreen es) {
 		JPanel outerContent = new JPanel(new BorderLayout());
 		JPanel contentPanel = new JPanel(new GridLayout(0,2));
@@ -32,17 +32,22 @@ public class StagePanel extends JPanel implements ActionListener {
 		this.add(outerContent);
 		
 		JPanel buttonPanel = new JPanel(new GridLayout(0,1));
-		editTimeButton = new JButton("Edit Time Options");
-		editTransportButton = new JButton("Edit Transport Options");
-		editTempButton = new JButton("Edit Temp&Perm Options");
+		editTimeButton = new JButton("Time & Data Output Frequency");
+		editTransportButton = new JButton("Transport Inhibition & Stimulation");
+		editTempButton = new JButton("Temperature & Permeabilities");
+		editFractionButton = new JButton("Cell Fraction & Medium Composition");
 		editTimeButton.addActionListener(this);
 		editTransportButton.addActionListener(this);
 		editTempButton.addActionListener(this);
-		deleteButton = new JButton("delete");
+		editFractionButton.addActionListener(this);
+		deleteButton = new JButton("Delete This DS Stage");
 		deleteButton.addActionListener(this);
 		buttonPanel.add(editTimeButton);
-		buttonPanel.add(editTransportButton);
+		buttonPanel.add(editFractionButton);
 		buttonPanel.add(editTempButton);
+		buttonPanel.add(editTransportButton);
+		
+		
 		
 		
 		
@@ -69,6 +74,9 @@ public class StagePanel extends JPanel implements ActionListener {
 		}else if(e.getSource() == editTransportButton) {
 			transportScreen = new OptionsFrame("Transport Options","SettingFiles/transportDSOptions.csv",this.dSSettings.getOptions(),this);
 			transportScreen.makeVisible();
+		}else if(e.getSource() == editFractionButton) {
+			fractionScreen = new OptionsFrame("Fraction and Medium Options","SettingFiles/cellfractionDSOptions.csv",this.dSSettings.getOptions(),this);
+			fractionScreen.makeVisible();
 		}
 		
 	}

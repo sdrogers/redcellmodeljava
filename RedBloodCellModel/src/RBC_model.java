@@ -968,13 +968,13 @@ public class RBC_model {
 			this.ligchoice = Double.parseDouble(temp);
 		}
 		
-		temp = options.get("edgto");
+		temp = options.get("edgto"); // chelator concentration
 		if(temp != null) {
 			usedoptions.add("edgto");
 			this.edgto = Double.parseDouble(temp);
 		}
 		
-		if(this.ligchoice == 1) {
+		if(this.ligchoice == 1) { // EGTA
 			this.edghk1 = Math.pow(10,(-9.22));
 			this.edghk2 = Math.pow(10,(-8.65));
 			this.edgcak = Math.pow(10,(-10.34));
@@ -995,7 +995,7 @@ public class RBC_model {
 				this.medium.Mgf.setConcentration(this.medium.Mgt.getConcentration());
 			}
 
-		} else if(this.ligchoice == 2) {
+		} else if(this.ligchoice == 2) { // EDTA
 			this.edghk1 = Math.pow(10,(-9.84));
 			this.edghk2 = Math.pow(10,(-5.92));
 			this.edgcak = Math.pow(10,(-9.95));

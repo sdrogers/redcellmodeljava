@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -36,7 +37,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 	private DefaultListModel<Parameter> currentParams;
 	private JButton removeButton,addButton;
 	private final String fileName;
-	private JTextField descriptionField;
+	private JTextArea descriptionField;
 	HashMap<String,String> options;
 	private StagePanel parent;
 	public ParameterSelector(String fileName,HashMap<String,String> options,StagePanel parent) {
@@ -79,7 +80,8 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 						"10.0",
 						"some",
 						"a description",
-						null));
+						null,
+						"a display name"));
 		c.gridx = 1;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -90,7 +92,8 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		removeButton.addActionListener(this);
 		bottomPanel.add(removeButton);
 		
-		descriptionField = new JTextField(30);
+		descriptionField = new JTextArea();
+		descriptionField.setText("Click a parameter to see a description");
 		descriptionField.setEditable(false);
 		topPanel.add(descriptionField);
 		
@@ -149,7 +152,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			if(exists) {
 				currentParams.removeElement(foundParameter);			
 			}
-			Parameter newpar = new Parameter(selected.getName(),inputValue,selected.getUnits(),selected.getDescription(),null);
+			Parameter newpar = new Parameter(selected.getName(),inputValue,selected.getUnits(),selected.getDescription(),null,selected.getDisplayName());
 			currentParams.addElement(newpar);
 			this.grabOptions();
 			this.parent.updateStagePanel();
@@ -186,20 +189,26 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			reader = new CSVReader(isr);
 //			reader = new CSVReader(new FileReader(this.fileName));
 			String[] line;
+			line = reader.readNext(); // Read the headings
+			System.out.println(this.fileName);
+			for(String s: line) {
+				System.out.println("\t"+s);
+			}
 			while ((line = reader.readNext()) != null ) {
-				String parameter_name = line[0].trim();
-				String parameter_value = line[1].trim();
-				String parameter_units = line[2].trim();
-				String parameter_description = line[3].trim();
+				String display_name = line[0].trim();
+				String parameter_name = line[1].trim();
+				String parameter_value = line[2].trim();
+				String parameter_units = line[3].trim();
+				String parameter_description = line[4].trim();
 				HashSet<String> allowedValues = null;
-				if(line[4].length()>0) {
+				if(line[5].length()>0) {
 					String[] tokens = line[4].split(",");
 					allowedValues = new HashSet<String>();
 					for(String t: tokens) {
 						allowedValues.add(t);
 					}
 				}
-				Parameter pr = new Parameter(parameter_name,parameter_value,parameter_units,parameter_description,allowedValues);
+				Parameter pr = new Parameter(parameter_name,parameter_value,parameter_units,parameter_description,allowedValues,display_name);
 				potentialParams.addElement(pr);
 				keys.put(pr.getName(),pr);
 			}
@@ -211,7 +220,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		for(String s: this.options.keySet()) {
 			if(keys.containsKey(s)) {
 				Parameter pr = keys.get(s);
-				Parameter newPr = new Parameter(pr.getName(),this.options.get(s),pr.getUnits(),pr.getDescription(),pr.getAllowedValues());
+				Parameter newPr = new Parameter(pr.getName(),this.options.get(s),pr.getUnits(),pr.getDescription(),pr.getAllowedValues(),pr.getDisplayName());
 				System.out.println(newPr);
 				currentParams.addElement(newPr);
 			}

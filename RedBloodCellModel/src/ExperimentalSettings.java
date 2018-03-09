@@ -68,6 +68,7 @@ public class ExperimentalSettings {
 				}else if(line.length() > 1) {
 					// It's a parameter
 					String[] tokens = line.trim().split(" ");
+					System.out.println(line + " " + line.length() + " " + tokens.length);
 					String key = tokens[0];
 					String value = tokens[1];
 					if(this.loadState == 1) {
@@ -93,9 +94,14 @@ public class ExperimentalSettings {
 		return rString;
 	}
 	public String toString() {
-		String rString = this.overallComments + "\n";
+		String rString = "";
+		if(this.overallComments != null) {
+			rString = this.overallComments + "\n";
+		}
 		rString += "RS\n";
-		rString += this.rSComments;
+		if(this.rSComments != null) {
+			rString += this.rSComments;	
+		}
 		for(String key: rSOptions.keySet()) {
 			rString += key + " " + rSOptions.get(key) + "\n";
 		}

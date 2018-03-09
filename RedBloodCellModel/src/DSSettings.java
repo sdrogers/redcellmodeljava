@@ -28,7 +28,9 @@ public class DSSettings {
 	}
 	public String toString() {
 		String rString = "";
-		rString += this.description;
+		if(this.description != null) {
+			rString += this.description;
+		}
 		for(String key: stageOptions.keySet()) {
 			rString += key + " " + stageOptions.get(key) + "\n";
 		}

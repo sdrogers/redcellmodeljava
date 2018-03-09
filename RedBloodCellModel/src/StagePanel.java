@@ -66,16 +66,21 @@ public class StagePanel extends JPanel implements ActionListener {
 			this.experimentScreen.deleteStage(this.dSSettings);
 		}else if(e.getSource() == editTimeButton) {
 			// edit the parameters of this DS
-			timeScreen = new OptionsFrame("Time Options","SettingFiles/timeOptions.csv",this.dSSettings.getOptions(), this);
+			timeScreen = new OptionsFrame("Time Options","SettingFiles/timeOptions.csv",this.dSSettings.getOptions(), this,"");
 			timeScreen.makeVisible();
 		}else if(e.getSource() == editTempButton) {
-			tempPermScreen = new OptionsFrame("Temperature & permeability Options","SettingFiles/temppermeabilityDSOptions.csv",this.dSSettings.getOptions(),this);
+			tempPermScreen = new OptionsFrame("Temperature & permeability Options","SettingFiles/temppermeabilityDSOptions.csv",this.dSSettings.getOptions(),this,"");
 			tempPermScreen.makeVisible();
 		}else if(e.getSource() == editTransportButton) {
-			transportScreen = new OptionsFrame("Transport Options","SettingFiles/transportDSOptions.csv",this.dSSettings.getOptions(),this);
+			String helpText = "Percent changes for each transporter modify only their default Fmax values.\n"
+					+ "Default values are modified according to D*(100-I/100) where D is the default and I is the value entered here.\n"
+					+ "Fmax values stay modified in successive stages.\n"
+					+ "If changed again, change applies to original default value."
+					+ "For example, to inhibit by 80% in stage 1 enter 80. To return to the default in stage 2, enter 100.";
+			transportScreen = new OptionsFrame("Transport Options","SettingFiles/transportDSOptions.csv",this.dSSettings.getOptions(),this,helpText);
 			transportScreen.makeVisible();
 		}else if(e.getSource() == editFractionButton) {
-			fractionScreen = new OptionsFrame("Fraction and Medium Options","SettingFiles/cellfractionDSOptions.csv",this.dSSettings.getOptions(),this);
+			fractionScreen = new OptionsFrame("Fraction and Medium Options","SettingFiles/cellfractionDSOptions.csv",this.dSSettings.getOptions(),this,"");
 			fractionScreen.makeVisible();
 		}
 		

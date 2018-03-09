@@ -1629,11 +1629,13 @@ public class RBC_model {
 		Integer capstoich;
 		if(temp != null) {
 			capstoich = Integer.parseInt(temp);
+			this.capump.setCah(2-capstoich);
 			usedoptions.add("pump-electro");
 		} else {
-			capstoich = 0;
+//			capstoich = 2; // Default sets cah to 0 which is 2 protons per Ca
+			// This is now set in the constructor of the Calcium pump
 		}
-		this.capump.setCah(2-capstoich);
+		
 		
 		temp = rsoptions.get("h+ki");
 		if(temp != null) {

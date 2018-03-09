@@ -52,7 +52,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		GridBagConstraints c = new GridBagConstraints();
 		JPanel bottomPanel = new JPanel();
 		JPanel topPanel = new JPanel();
-		
+//		topPanel.add(new JTextArea(helpText));
 		this.add(topPanel, BorderLayout.NORTH);
 		potentialParams = new DefaultListModel<Parameter>();
 		potentialParamList = new JList<Parameter>();
@@ -64,7 +64,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		c.gridy = 0;
 		c.insets = new Insets(5,5,5,5);		
 		centerPanel.add(new JScrollPane(potentialParamList),c);
-		addButton = new JButton("Add new option value");
+		addButton = new JButton("Modify value");
 		addButton.addActionListener(this);
 		bottomPanel.add(addButton);
 		this.add(bottomPanel,BorderLayout.SOUTH);
@@ -135,7 +135,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 	private void updateCurrentParams(Parameter selected) {
 		// Does a parameter of this name exist?
 		
-		String inputValue = JOptionPane.showInputDialog("Please input a value for "+selected.getName()).trim();
+		String inputValue = JOptionPane.showInputDialog("Please input a value for "+selected.getDisplayName()).trim();
 		if(checkInput(inputValue,selected)) {
 			boolean exists = false;
 			int pos = 0;

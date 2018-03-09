@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 public class OptionsFrame extends JFrame implements ActionListener {
 	private ParameterSelector ps;
@@ -14,7 +16,7 @@ public class OptionsFrame extends JFrame implements ActionListener {
 	HashMap<String,String> options;
 	private StagePanel parent;
 	
-	public OptionsFrame(String title,String optionsFileName,HashMap<String,String> options,StagePanel parent) {
+	public OptionsFrame(String title,String optionsFileName,HashMap<String,String> options,StagePanel parent,String helpText) {
 		this.parent = parent;
 		this.options = options;
 		this.setTitle(title);
@@ -23,7 +25,11 @@ public class OptionsFrame extends JFrame implements ActionListener {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JPanel mainPanel = new JPanel(new GridBagLayout());
-		this.add(mainPanel);
+		this.add(mainPanel,BorderLayout.CENTER);
+		
+		JPanel topPanel = new JPanel();
+		topPanel.add(new JTextArea(helpText));
+		this.add(topPanel,BorderLayout.NORTH);
 		
 		GridBagConstraints c = new GridBagConstraints();
 		

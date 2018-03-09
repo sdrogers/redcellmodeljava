@@ -28,7 +28,7 @@ public class CaPumpMg2 {
 		this.capk = 2e-4;
 		this.setFlux_Ca(-0.03);
 		this.setFlux_H(0.0);
-		this.setCah(2);
+		this.setCah(0);
 	}
 	public void compute_flux() {
 		Double capmg = (this.cell.Mgf.getConcentration()/(this.getCapmgk()+this.cell.Mgf.getConcentration()))*(this.capmgki/(this.capmgki+this.cell.Mgf.getConcentration()));
@@ -38,10 +38,10 @@ public class CaPumpMg2 {
 		if(this.getCah() == 1) {
 			this.setFlux_H(-this.getFlux_Ca());
 		}
-		if(this.getCah() == 2) {
+		if(this.getCah() == 2) { // No protons
 			this.setFlux_H(0.0);
 		}
-		if(this.getCah() == 0) {
+		if(this.getCah() == 0) { // 2 protons: this should be default
 			this.setFlux_H(-2.0*this.getFlux_Ca());
 		}
 	}

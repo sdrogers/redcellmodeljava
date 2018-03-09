@@ -1,6 +1,5 @@
 Alternative Name,Parameter/Variable Name,Default Value,Units,Description,Allowed Values
 Cell fraction; Hct in %,fraction,0.00001,,Volume fraction of cells in suspension; low default value approximates circulation conditions or medium as infinite reservoir ,
-Buffer choice,buffer-name,HEPES,,"HEPES covers widest range of experimental material available on research with RBC suspensions, but other buffers available (A = anionic, C = cationic)","HEPES,A,C"
 Buffer concentration,bufferconc,10,mM,A standard HEPES concentration value frequently used in experiments ,
 Initial external pH,extph,7.4,pH units,A standard pH value frequently set at nthe start of experiments ,
 Exchange Na for Glucamine,nag,0,mM,Isoosmotic replacement of Na by impermeant monovalent cation,
@@ -12,5 +11,5 @@ Add or remove KCl,change-kcl,0,mM,Change medium KCl concentration and osmolarity
 Add (remove) sucrose,add-sucrose,0,mM,Increase medium osmolarity reversibly (upon removal) with impermeant neutral solute,
 Change Mg concentration,mgot,0.15,mM,Change the default value of the total Mg concentration in the medium,
 Change Ca concentration,caot,1,mM,Change the default value of the total Ca concentration in the medium,
-Add Ca/Mg chelator,chelator,0,,Choose whether or not to add a divalent cation chelator in the medium ,"0,1,2"
-Chelator concentration?,edgto,0,mM,Set the initial chelator concentration in the medium (chelators and buffers are assumed to be impermeant) ,
+Add Ca/Mg chelator,chelator,0,,Choose whether or not to add a divalent cation chelator in the medium ,
+Chelator concentration?,edgto,0,mM,Set the initial chelator concentration in the medium (chelators and buffers are assumed to be impermeant) ,"0,1,2"

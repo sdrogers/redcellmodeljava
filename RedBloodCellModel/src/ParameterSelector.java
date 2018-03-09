@@ -39,8 +39,8 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 	private final String fileName;
 	private JTextArea descriptionField;
 	HashMap<String,String> options;
-	private StagePanel parent;
-	public ParameterSelector(String fileName,HashMap<String,String> options,StagePanel parent) {
+	private Updateable parent;
+	public ParameterSelector(String fileName,HashMap<String,String> options,Updateable parent) {
 		this.options = options;
 		this.fileName = fileName;
 		this.parent = parent;
@@ -119,7 +119,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			if(pr != null) {
 				currentParams.removeElement(pr);
 				options.remove(pr.getName());
-				this.parent.updateStagePanel();
+				this.parent.update();
 			}
 		}else if(e.getSource() == addButton) {
 			Parameter selected = potentialParamList.getSelectedValue();
@@ -155,7 +155,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			Parameter newpar = new Parameter(selected.getName(),inputValue,selected.getUnits(),selected.getDescription(),null,selected.getDisplayName());
 			currentParams.addElement(newpar);
 			this.grabOptions();
-			this.parent.updateStagePanel();
+			this.parent.update();
 		}else {
 			// Input error
 			JOptionPane.showMessageDialog(null, "Incorrect input for " + selected.getName());
@@ -171,6 +171,10 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 				return false;
 			}
 		}else {
+			for(String key : p.getAllowedValues()) {
+				System.out.println("******" + key);
+			}
+			System.out.println("++++++" + newValue);
 			if(p.getAllowedValues().contains(newValue)) {
 				return true;
 			}else
@@ -202,7 +206,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 				String parameter_description = line[4].trim();
 				HashSet<String> allowedValues = null;
 				if(line[5].length()>0) {
-					String[] tokens = line[4].split(",");
+					String[] tokens = line[5].split(",");
 					allowedValues = new HashSet<String>();
 					for(String t: tokens) {
 						allowedValues.add(t);

@@ -10,7 +10,8 @@ public class RBC_model {
 	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
 	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CCa2+","CMg2+",
 	                                  "CHb","CX","COs","rA","rH","fHb","nHb","MNa","MK","MA","MB","MCat","MCaf",
-	                                  "FNaP","FCaP","FKP","FNa","FK","FA","FH","FW","FNaG","FKG","FAG","FHG"};
+	                                  "FNaP","FCaP","FKP","FNa","FK","FA","FH","FW","FNaG","FKG","FAG","FHG",
+	                                  "FA23Ca","FA23Mg","EA","EH","EK","ENa"};
 	
 	private ArrayList<ResultHash> resultList = new ArrayList<ResultHash>();
 	
@@ -97,6 +98,7 @@ public class RBC_model {
 	private Double duration_experiment;
 	private Integer n_its;
 	private Double T_6;
+	private int dp = 4; // number of decimal places in the output
 	
 	private Double Vw;
 	private Double VV;
@@ -1212,6 +1214,12 @@ public class RBC_model {
 			usedoptions.add("time");
 		}
 		
+		temp = options.get("dp");
+		if(temp != null) {
+			this.dp = Integer.parseInt(temp);
+			usedoptions.add("dp");
+		}
+		
 		this.I_43 = this.integration_interval_factor;
 		temp = options.get("integrationfactor");
 		if(temp != null) {
@@ -1428,6 +1436,28 @@ public class RBC_model {
 		}
 		
 		// Other code to be added here...
+		// New ones added for reduced RS in March 18
+		String temp = rsoptions.get("cna-conc");
+		if(temp != null) {
+			this.cell.Na.setConcentration(Double.parseDouble(temp));
+			usedoptions.add("cna-conc");
+		}
+		temp = rsoptions.get("ck-conc");
+		if(temp != null) {
+			this.cell.K.setConcentration(Double.parseDouble(temp));
+			usedoptions.add("ck-conc");
+		}
+		temp = rsoptions.get("mchc");
+		if(temp != null) {
+			this.mchc = Double.parseDouble(temp);
+			usedoptions.add("mchc");
+		}
+		temp = rsoptions.get("vw");
+		if(temp != null) {
+			this.Vw = Double.parseDouble(temp);
+			usedoptions.add("vw");
+		}
+
 	}
 	public void cellwaterscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
 		String hb_content_str = rsoptions.get("hb-content");
@@ -1459,6 +1489,8 @@ public class RBC_model {
 			this.cell.A.setConcentration(Double.parseDouble(temp));
 			usedoptions.add("cla-conc");
 		}
+		
+		
 	}
 	
 	public void chargeandpiscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
@@ -1471,6 +1503,19 @@ public class RBC_model {
 		if(temp != null) {
 			this.pit0 = Double.parseDouble(temp);
 			usedoptions.add("pi");
+		}
+		
+		// New option added for reduced RS, March 18
+		temp = rsoptions.get("hb-choice");
+		if(temp != null) {
+			if(temp == "HbA") {
+				this.A_1 = -1.0;
+				this.pit0 = 7.2;
+			}else if(temp == "HbS") {
+				this.A_1 = -8.0;
+				this.pit0 = 7.4;
+			}
+			usedoptions.add("hb-choice");
 		}
 	}
 	
@@ -1603,11 +1648,12 @@ public class RBC_model {
 
 		temp = rsoptions.get("vmax-cap");
 		if(temp != null) {
-			this.capump.setFcapm(Double.parseDouble(temp));
+			this.capump.setDefaultFcapm(Double.parseDouble(temp));
 			usedoptions.add("vmax-cap");
-		} else {
-			this.capump.setFcapm(12.0);
-		}
+		} 
+//		else {
+//			this.capump.setFcapm(12.0);
+//		}
 
 		temp = rsoptions.get("k1/2");
 		if(temp != null) {
@@ -1657,27 +1703,30 @@ public class RBC_model {
 		if(temp != null) {
 			this.passiveca.setFcalm(Double.parseDouble(temp));
 			usedoptions.add("pmax-pcag");
-		} else {
-			this.passiveca.setFcalm(0.05);
-		}
+		} 
+//		else {
+//			this.passiveca.setFcalm(0.05);
+//		}
 		
 		
 		temp = rsoptions.get("ca2+-pkmax");
 		if(temp != null) {
-			this.goldman.setPkm(Double.parseDouble(temp));
+			this.goldman.setDefaultPkm(Double.parseDouble(temp));
 			usedoptions.add("ca2+-pkmax");
-		} else {
-			this.goldman.setPkm(30.0);
-		}
+		} 
+//		else {
+//			this.goldman.setPkm(30.0);
+//		}
 		
 		
 		temp = rsoptions.get("ca2+-pkca");
 		if(temp != null) {
 			this.goldman.setPkcak(Double.parseDouble(temp));
 			usedoptions.add("ca2+-pkca");
-		} else {
-			this.goldman.setPkcak(1e-2);
 		}
+//		else {
+//			this.goldman.setPkcak(1e-2);
+//		}
 		if(this.benz2 != 0) {
 			this.cell.Caf.setConcentration(1e-8);
 			this.canr();
@@ -1813,6 +1862,16 @@ public class RBC_model {
 		new_result.setItem("FKG",this.goldman.getFlux_K());
 		new_result.setItem("FAG",this.goldman.getFlux_A());
 		new_result.setItem("FHG",this.goldman.getFlux_H());		
+		new_result.setItem("FA23Ca", this.a23.getFlux_Ca());
+		new_result.setItem("FA23Mg", this.a23.getFlux_Mg());
+		Double V_14 = -this.goldman.getRtoverf()*Math.log(this.medium.A.getConcentration()/this.cell.A.getConcentration());
+		new_result.setItem("EA", V_14);
+		Double V_13 = this.goldman.getRtoverf()*Math.log(this.medium.H.getConcentration()/this.cell.H.getConcentration());
+		new_result.setItem("EH", V_13);
+		Double V_15 = this.goldman.getRtoverf() * Math.log(this.medium.K.getConcentration()/this.cell.K.getConcentration());
+		new_result.setItem("EK", V_15);
+		Double V_16 = this.goldman.getRtoverf()*Math.log(this.medium.Na.getConcentration()/this.cell.Na.getConcentration());
+		new_result.setItem("ENa", V_16);
 		
 		this.resultList.add(new_result);
 	}
@@ -1828,10 +1887,11 @@ public class RBC_model {
 			headString += '\n';
 			filewriter.append(headString);
 			String resultString;
+			String numFormat = "%7." + this.dp + "f";
 			for(ResultHash r: this.resultList) {
-				resultString = String.format("%7.4f",60.0*r.getTime());
+				resultString = String.format(numFormat,60.0*r.getTime());
 				for(int i=0;i<this.publish_order.length;i++) {
-					resultString += ',' + String.format("%7.4f", r.getItem(this.publish_order[i]));
+					resultString += ',' + String.format(numFormat, r.getItem(this.publish_order[i]));
 				}
 //				System.out.println(resultString);
 				resultString += '\n';

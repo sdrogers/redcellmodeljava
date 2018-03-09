@@ -1,2 +1,3 @@
-na_efflux_fwd,-2,61,??,Forward Na pump flux,
-na_efflux_rev,0.0015,??,Reverse Na pump flux,
+Display name,code name,default,units,description,allowed values
+na e f,na_efflux_fwd,-2.61,??,Forward Na pump flux,
+na e r,na_efflux_rev,0.0015,??,Reverse Na pump flux,

@@ -22,7 +22,7 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 	public ExperimentScreen(ExperimentalSettings es) {
 		this.panelSettings = new HashMap<DSSettings,StagePanel>();
 		this.experimentalSettings = es;
-		this.setSize(1000,1000);
+		this.setSize(1300,1000);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JPanel mainPanel = new JPanel(new BorderLayout());

@@ -14,9 +14,9 @@ public class OptionsFrame extends JFrame implements ActionListener {
 	private ParameterSelector ps;
 	private JButton doneButton;
 	HashMap<String,String> options;
-	private StagePanel parent;
+	private Updateable parent;
 	
-	public OptionsFrame(String title,String optionsFileName,HashMap<String,String> options,StagePanel parent,String helpText) {
+	public OptionsFrame(String title,String optionsFileName,HashMap<String,String> options,Updateable parent,String helpText) {
 		this.parent = parent;
 		this.options = options;
 		this.setTitle(title);

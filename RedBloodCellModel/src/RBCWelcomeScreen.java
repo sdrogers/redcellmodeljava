@@ -15,7 +15,7 @@ public class RBCWelcomeScreen extends JFrame implements ActionListener {
 	private JButton newButton,loadButton;
 	private JFileChooser jfc;
 	public RBCWelcomeScreen() {
-		this.setSize(500,500);
+		this.setSize(300,300);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("RBC Model, GUI V2.0");
 		

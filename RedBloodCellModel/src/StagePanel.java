@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class StagePanel extends JPanel implements ActionListener {
+public class StagePanel extends JPanel implements ActionListener, Updateable {
 	private JButton editTimeButton,editTransportButton,editTempButton,deleteButton,editFractionButton;
 	private DSSettings dSSettings;
 	private JTextArea commentArea;
@@ -54,7 +54,7 @@ public class StagePanel extends JPanel implements ActionListener {
 		buttonPanel.add(deleteButton);
 		contentPanel.add(buttonPanel);
 	}
-	public void updateStagePanel() {
+	public void update() {
 		this.optionArea.setText(dSSettings.getOptionString());
 	}
 	public void disableDelete() {
@@ -75,7 +75,7 @@ public class StagePanel extends JPanel implements ActionListener {
 			String helpText = "Percent changes for each transporter modify only their default Fmax values.\n"
 					+ "Default values are modified according to D*(100-I/100) where D is the default and I is the value entered here.\n"
 					+ "Fmax values stay modified in successive stages.\n"
-					+ "If changed again, change applies to original default value."
+					+ "If changed again, change applies to original default value.\n"
 					+ "For example, to inhibit by 80% in stage 1 enter 80. To return to the default in stage 2, enter 100.";
 			transportScreen = new OptionsFrame("Transport Options","SettingFiles/transportDSOptions.csv",this.dSSettings.getOptions(),this,helpText);
 			transportScreen.makeVisible();

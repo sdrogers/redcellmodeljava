@@ -56,7 +56,11 @@ public class RunFrame extends JFrame implements ActionListener{
 		if(e.getSource() == saveButton) {
 			// save the output
 			int returnVal = jfc.showSaveDialog(this);
-			rbc.writeCsv(jfc.getSelectedFile().getPath());
+			String fName = jfc.getSelectedFile().getPath();
+			if(!fName.endsWith(".csv")) {
+				fName += ".csv";
+			}
+			rbc.writeCsv(fName);
 		}else if(e.getSource() == returnButton) {
 			this.setVisible(false);
 			this.dispose();

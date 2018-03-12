@@ -912,7 +912,7 @@ public class RBC_model {
 			this.medium.Na.setConcentration(this.medium.Na.getConcentration() + this.I_40);
 			this.medium.K.setConcentration(this.medium.K.getConcentration() - this.I_40);
 			usedoptions.add("NaxK");
-			options.remove("NaxK");
+//			options.remove("NaxK");
 		}
 		
 		temp = options.get("KxNa");
@@ -921,7 +921,7 @@ public class RBC_model {
 			this.medium.Na.setConcentration(this.medium.Na.getConcentration() - this.I_33);
 			this.medium.K.setConcentration(this.medium.K.getConcentration() + this.I_33);
 			usedoptions.add("KxNa");
-			options.remove("KxNa");
+		//	options.remove("KxNa");
 		}
 		
 		temp = options.get("change-nacl");
@@ -957,11 +957,11 @@ public class RBC_model {
 			}
 		}
 		
-		temp = options.get("cato");
+		temp = options.get("caot");
 		if(temp != null) {
 			Double catold = this.medium.Cat.getConcentration();
 			this.medium.Cat.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("cato");
+			usedoptions.add("caot");
 			if(this.medium.Cat.getConcentration() != 0) {
 				this.medium.A.setConcentration(this.medium.A.getConcentration() + 2.0*(this.medium.Cat.getConcentration() - catold));
 			}
@@ -1447,16 +1447,16 @@ public class RBC_model {
 			this.cell.K.setConcentration(Double.parseDouble(temp));
 			usedoptions.add("ck-conc");
 		}
-		temp = rsoptions.get("mchc");
-		if(temp != null) {
-			this.mchc = Double.parseDouble(temp);
-			usedoptions.add("mchc");
-		}
-		temp = rsoptions.get("vw");
-		if(temp != null) {
-			this.Vw = Double.parseDouble(temp);
-			usedoptions.add("vw");
-		}
+//		temp = rsoptions.get("mchc");
+//		if(temp != null) {
+//			this.mchc = Double.parseDouble(temp);
+//			usedoptions.add("mchc");
+//		}
+//		temp = rsoptions.get("vw");
+//		if(temp != null) {
+//			this.Vw = Double.parseDouble(temp);
+//			usedoptions.add("vw");
+//		}
 
 	}
 	public void cellwaterscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {

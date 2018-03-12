@@ -135,6 +135,9 @@ public class ExperimentalSettings {
 		
 		int returnVal = saveJfc.showSaveDialog(parent); // Note that null doesn't work as parent!
 		String outputFileName = saveJfc.getSelectedFile().getPath();
+		if(!outputFileName.endsWith(".txt")) {
+			outputFileName += ".txt";
+		}
 		File file = new File(outputFileName);
 		BufferedWriter writer = null;
 		try {

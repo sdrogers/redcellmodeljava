@@ -4,6 +4,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.Insets;
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,11 +41,11 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 	private final String fileName;
 	private JTextArea descriptionField;
 	HashMap<String,String> options;
-	private Updateable parent;
+	private Updateable parentComp;
 	public ParameterSelector(String fileName,HashMap<String,String> options,Updateable parent) {
 		this.options = options;
 		this.fileName = fileName;
-		this.parent = parent;
+		this.parentComp = parent;
 		this.setLayout(new BorderLayout());
 		title = new JLabel("a title");
 		this.add(title);
@@ -73,7 +75,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		currentParams = new DefaultListModel<Parameter>();
 		currentParamList = new JList<Parameter>();
 		currentParamList.setModel(currentParams);
-		currentParamList.setVisibleRowCount(10);
+		currentParamList.setVisibleRowCount(8);
 		currentParamList.setPrototypeCellValue(
 				new Parameter(
 						"a longish longer name",
@@ -81,7 +83,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 						"some",
 						"a description",
 						null,
-						"a display name"));
+						"a much longer display name..please fit"));
 		c.gridx = 1;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -98,6 +100,35 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		topPanel.add(descriptionField);
 		
 		loadSettingsFile(); // populates potentialParams
+		
+		
+		potentialParamList.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent evt) {
+				if(evt.getClickCount() == 2) {
+					Parameter selected = potentialParamList.getSelectedValue();
+					if(selected != null) {
+						updateCurrentParams(selected);
+						potentialParamList.clearSelection();
+						descriptionField.setText("");
+						// Tell the parent that it has updated
+						
+					}
+				}
+			}
+		});
+		
+		currentParamList.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent evt) {
+				if(evt.getClickCount() == 2) {
+					Parameter pr = currentParamList.getSelectedValue();
+					if(pr != null) {
+						currentParams.removeElement(pr);
+						options.remove(pr.getName());
+						parentComp.update();
+					}
+				}
+			}
+		});
 		
 	}
 
@@ -119,7 +150,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			if(pr != null) {
 				currentParams.removeElement(pr);
 				options.remove(pr.getName());
-				this.parent.update();
+				this.parentComp.update();
 			}
 		}else if(e.getSource() == addButton) {
 			Parameter selected = potentialParamList.getSelectedValue();
@@ -155,7 +186,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			Parameter newpar = new Parameter(selected.getName(),inputValue,selected.getUnits(),selected.getDescription(),null,selected.getDisplayName());
 			currentParams.addElement(newpar);
 			this.grabOptions();
-			this.parent.update();
+			this.parentComp.update();
 		}else {
 			// Input error
 			JOptionPane.showMessageDialog(null, "Incorrect input for " + selected.getName());

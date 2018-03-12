@@ -19,10 +19,11 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 	private JPanel dSPanel;
 	private HashMap<DSSettings,StagePanel> panelSettings;
 	private CommentsPanel cp;
+	private RSPanel r;
 	public ExperimentScreen(ExperimentalSettings es) {
 		this.panelSettings = new HashMap<DSSettings,StagePanel>();
 		this.experimentalSettings = es;
-		this.setSize(1300,1000);
+		this.setSize(1500,1000);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JPanel mainPanel = new JPanel(new BorderLayout());
@@ -36,7 +37,7 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 		cp.setBorder(BorderFactory.createTitledBorder("Overall Comments"));
 		
 		
-		RSPanel r = new RSPanel(this.experimentalSettings);
+		r = new RSPanel(this.experimentalSettings);
 		r.setBorder(BorderFactory.createTitledBorder("Reference State"));
 		
 		rsPanel.add(r);
@@ -111,6 +112,7 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 			for(DSSettings d: panelSettings.keySet()) {
 				panelSettings.get(d).processComment();
 			}
+			this.r.processComment();
 			this.experimentalSettings.writeFile(this);
 		}else if(e.getSource() == runButton) {
 			if(checkOptions()) {

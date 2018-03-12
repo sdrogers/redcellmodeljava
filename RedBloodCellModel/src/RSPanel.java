@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,27 +15,36 @@ public class RSPanel extends JPanel implements ActionListener,Updateable{
 	private JButton editButton;
 	private OptionsFrame rsScreen;
 	private JTextArea oArea;
+	private ParameterSelector ps;
+	private JTextArea rSArea;
 	public RSPanel(ExperimentalSettings es) {
 		this.experimentalSettings = es;
-		JPanel contentPanel = new JPanel(new GridLayout(0,2));
-		JTextArea rSArea = new JTextArea(this.experimentalSettings.getRSComments(),3,20);
-		rSArea.setEditable(false);
-		JPanel leftPanel = new JPanel(new GridLayout(0,1));
-		leftPanel.add(new JScrollPane(rSArea));
+		JPanel contentPanel = new JPanel(new BorderLayout());
+		rSArea = new JTextArea(this.experimentalSettings.getRSComments(),3,20);
+		rSArea.setEditable(true);
 		
-		oArea = new JTextArea(this.experimentalSettings.getRSString(),5,20);
-		oArea.setEditable(false);
-		leftPanel.add(new JScrollPane(oArea));
-		contentPanel.add(leftPanel);
+		contentPanel.add(new JScrollPane(rSArea),BorderLayout.NORTH);
+		
+		String fileName = "SettingFiles/RSOptions.csv";
+		ps = new ParameterSelector(fileName,es.getRSOptions(),this);
+		
+		contentPanel.add(ps,BorderLayout.CENTER);
+//		JPanel leftPanel = new JPanel(new GridLayout(0,1));
+//		leftPanel.add(new JScrollPane(rSArea));
+		
+//		oArea = new JTextArea(this.experimentalSettings.getRSString(),5,20);
+//		oArea.setEditable(false);
+//		leftPanel.add(new JScrollPane(oArea));
+//		contentPanel.add(leftPanel);
 		
 		this.add(contentPanel);
 		
 		// Add the stage panels
-		JPanel buttonPanel = new JPanel(new GridLayout(0,1));
+//		JPanel buttonPanel = new JPanel(new GridLayout(0,1));
 
-		editButton = new JButton("Edit Reference State");
-		editButton.addActionListener(this);
-		buttonPanel.add(editButton);
+//		editButton = new JButton("Edit Reference State");
+//		editButton.addActionListener(this);
+//		buttonPanel.add(editButton);
 
 //		naPump = new JButton("NaPump");
 //		noName = new JButton("No name");
@@ -49,8 +59,24 @@ public class RSPanel extends JPanel implements ActionListener,Updateable{
 //		hBa.addActionListener(this);
 //		calcium.addActionListener(this);
 		
-		contentPanel.add(buttonPanel);
+//		contentPanel.add(buttonPanel);
 		
+	}
+	public void processComment() {
+		// checks for # at beginning of each comment line
+		String newString = "";
+		String commentString = rSArea.getText();
+		for(String line: commentString.split("\n")) {
+			if(line.length() > 0) {
+				String newLine = line;
+				if(!line.startsWith("#")) {
+					newLine = "# " + line;
+				}
+				newString += newLine + "\n";
+			}
+		}
+		this.rSArea.setText(newString);
+		this.experimentalSettings.setRSComments(newString);
 	}
 	public void update() {
 		// Updates the parameter panel

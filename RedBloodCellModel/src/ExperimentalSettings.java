@@ -122,6 +122,9 @@ public class ExperimentalSettings {
 	public String getRSComments() {
 		return this.rSComments;
 	}
+	public void setRSComments(String rSComments) {
+		this.rSComments = rSComments;
+	}
 	public HashMap<String,String> getRSOptions() {
 		return this.rSOptions;
 	}

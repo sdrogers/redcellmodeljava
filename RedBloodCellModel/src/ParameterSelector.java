@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -47,7 +48,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		this.fileName = fileName;
 		this.parentComp = parent;
 		this.setLayout(new BorderLayout());
-		title = new JLabel("a title");
+		title = new JLabel("Change parameters");
 		this.add(title);
 		
 		JPanel centerPanel = new JPanel(new GridBagLayout());
@@ -97,6 +98,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		descriptionField = new JTextArea();
 		descriptionField.setText("Click a parameter to see a description");
 		descriptionField.setEditable(false);
+		descriptionField.setBackground(topPanel.getBackground());
 		topPanel.add(descriptionField);
 		
 		loadSettingsFile(); // populates potentialParams

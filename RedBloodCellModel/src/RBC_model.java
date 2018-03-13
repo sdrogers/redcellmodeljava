@@ -10,8 +10,8 @@ public class RBC_model {
 	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
 	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CCa2+","CMg2+",
 	                                  "CHb","CX","COs","rA","rH","fHb","nHb","MNa","MK","MA","MB","MCat","MCaf",
-	                                  "FNaP","FCaP","FKP","FNa","FK","FA","FH","FW","FNaG","FKG","FAG","FHG",
-	                                  "FA23Ca","FA23Mg","EA","EH","EK","ENa"};
+	                                  "MMgt","MMgf","FNaP","FCaP","FKP","FNa","FK","FA","FH","FCa","FW","FNaG","FKG",
+	                                  "FAG","FHG","FCaG","FAJS","FHJS","FA23Ca","FA23Mg","EA","EH","EK","ENa"};
 	
 	private ArrayList<ResultHash> resultList = new ArrayList<ResultHash>();
 	
@@ -1850,6 +1850,8 @@ public class RBC_model {
 		new_result.setItem("MB", this.buffer_conc);
 		new_result.setItem("MCat", this.medium.Cat.getConcentration());
 		new_result.setItem("MCaf", this.medium.Caf.getConcentration());
+		new_result.setItem("MMgt", this.medium.Mgt.getConcentration());
+		new_result.setItem("MMgf", this.medium.Mgf.getConcentration());
 		new_result.setItem("FNaP",this.getNapump().getFlux_net());
 		new_result.setItem("FCaP",this.capump.getFlux_Ca());
 		new_result.setItem("FKP",this.getNapump().getFlux_K());
@@ -1857,11 +1859,15 @@ public class RBC_model {
 		new_result.setItem("FK",this.total_flux_K);
 		new_result.setItem("FA",this.total_flux_A);
 		new_result.setItem("FH",this.total_flux_H);
+		new_result.setItem("FCa",this.total_flux_Ca);
 		new_result.setItem("FW",this.water.getFlux());
 		new_result.setItem("FNaG",this.goldman.getFlux_Na());
 		new_result.setItem("FKG",this.goldman.getFlux_K());
 		new_result.setItem("FAG",this.goldman.getFlux_A());
-		new_result.setItem("FHG",this.goldman.getFlux_H());		
+		new_result.setItem("FHG",this.goldman.getFlux_H());	
+		new_result.setItem("FCaG", this.passiveca.getFlux());
+		new_result.setItem("FAJS", this.JS.getFlux_A());
+		new_result.setItem("FHJS", this.JS.getFlux_H());
 		new_result.setItem("FA23Ca", this.a23.getFlux_Ca());
 		new_result.setItem("FA23Mg", this.a23.getFlux_Mg());
 		Double V_14 = -this.goldman.getRtoverf()*Math.log(this.medium.A.getConcentration()/this.cell.A.getConcentration());

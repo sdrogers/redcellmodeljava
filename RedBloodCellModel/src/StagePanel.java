@@ -9,12 +9,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class StagePanel extends JPanel implements ActionListener, Updateable {
-	private JButton editTimeButton,editTransportButton,editTempButton,deleteButton,editFractionButton;
+	private JButton editTimeButton,editTransportButton,editTempButton,deleteButton,editFractionButton,editPiezoButton;
 	private DSSettings dSSettings;
 	private JTextArea commentArea;
 	private JTextArea optionArea;
 	private ExperimentScreen experimentScreen;
-	private OptionsFrame timeScreen,tempPermScreen,transportScreen,fractionScreen;
+	private OptionsFrame timeScreen,tempPermScreen,transportScreen,fractionScreen,piezoScreen;
 	public StagePanel(DSSettings dSSettings,ExperimentScreen es) {
 		JPanel outerContent = new JPanel(new BorderLayout());
 		JPanel contentPanel = new JPanel(new GridLayout(0,2));
@@ -36,16 +36,19 @@ public class StagePanel extends JPanel implements ActionListener, Updateable {
 		editTransportButton = new JButton("Transport Inhibition");
 		editTempButton = new JButton("Temperature & Permeabilities");
 		editFractionButton = new JButton("Cell Fraction & Medium Composition");
+		editPiezoButton = new JButton("PIEZO");
 		editTimeButton.addActionListener(this);
 		editTransportButton.addActionListener(this);
 		editTempButton.addActionListener(this);
 		editFractionButton.addActionListener(this);
+		editPiezoButton.addActionListener(this);
 		deleteButton = new JButton("Delete This DS Stage");
 		deleteButton.addActionListener(this);
 		buttonPanel.add(editTimeButton);
 		buttonPanel.add(editFractionButton);
 		buttonPanel.add(editTempButton);
 		buttonPanel.add(editTransportButton);
+		buttonPanel.add(editPiezoButton);
 		
 		
 		
@@ -82,6 +85,9 @@ public class StagePanel extends JPanel implements ActionListener, Updateable {
 		}else if(e.getSource() == editFractionButton) {
 			fractionScreen = new OptionsFrame("Fraction and Medium Options","SettingFiles/cellfractionDSOptions.csv",this.dSSettings.getOptions(),this,"");
 			fractionScreen.makeVisible();
+		}else if(e.getSource() == editPiezoButton) {
+			piezoScreen = new OptionsFrame("Piezo Options","SettingFiles/piezoDSOptions.csv",this.dSSettings.getOptions(),this,"");
+			piezoScreen.makeVisible();
 		}
 		
 	}

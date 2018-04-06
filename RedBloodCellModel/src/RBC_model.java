@@ -203,6 +203,9 @@ public class RBC_model {
 	private double delta_A;
 
 	private double delta_Water;
+
+	
+	private Piezo piezo;
 	
 	public RBC_model() {
 		cell = new Region();
@@ -396,6 +399,36 @@ public class RBC_model {
 			ta.append(ad + '\n');
 		}
 	}
+	private void startPiezo() {
+		this.piezo.setOldCycles(this.cycles_per_print);
+		this.cycles_per_print = this.piezo.getCycles();
+		this.cycle_count = this.cycles_per_print - 1; // forces an output now
+		
+		this.piezo.setOldPKG(this.goldman.getPermeability_K());
+		this.goldman.setPermeability_K(this.piezo.getPkg());
+		this.piezo.setOldPNaG(this.goldman.getPermeability_Na());
+		this.goldman.setPermeability_Na(this.piezo.getPnag());
+		this.piezo.setOldPCaG(this.passiveca.getFcalm());
+		this.passiveca.setFcalm(this.piezo.getPcag());
+		this.piezo.setOldPAG(this.goldman.getPermeability_A());
+		this.goldman.setPermeability_A(this.piezo.getPag());
+
+		// Question here re default...
+		this.piezo.setOldPMCA(this.getNapump().getP_1());
+		this.getNapump().setP_1(this.napump.getP_1()*((100.0 - this.piezo.getPmca())/100.0)); // 90% inhibition
+	}
+	private void stopPiezo() {
+		this.cycle_count = this.cycles_per_print - 1; // forces an output now
+		this.goldman.setPermeability_K(this.piezo.getOldPKG());
+		this.goldman.setPermeability_Na(this.piezo.getOldPNaG());
+		this.passiveca.setFcalm(this.piezo.getOldPCaG());
+		this.goldman.setPermeability_A(this.piezo.getOldPAG());
+		this.getNapump().setP_1(this.piezo.getOldPMCA());
+	}
+	private void endPiezo() {
+		this.cycles_per_print = piezo.getOldCycles();
+		this.cycle_count = this.cycles_per_print - 1; // forces an output now
+	}
 	public void runall(JTextArea ta) {
 		this.output("RUNNING DS STAGE " + this.stage, ta);
 		this.output("Current Sampling time: " + 60.0*this.sampling_time,ta);
@@ -410,7 +443,55 @@ public class RBC_model {
 		this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
 		
 		this.publish();
+		
+		ArrayList<MileStone> mileStones = new ArrayList<MileStone>();
+		
+		if(this.piezo != null) {
+			// We have a piezo stage
+			Double pStart = this.piezo.getStartTime() + this.sampling_time;
+			Double pStop = pStart + this.piezo.getDuration();
+			Double pEnd = pStop + this.piezo.getRecovery();
+			mileStones.add(new MileStone(pStart,"PIEZO START"));
+			mileStones.add(new MileStone(pStop, "PIEZO STOP"));
+			mileStones.add(new MileStone(pEnd, "PIEZO END"));
+		}
+		
+		
+		// Add the END milstone always
+		mileStones.add(new MileStone(this.duration_experiment/60.0,"END"));
+		
+		// Check the ordering
+		if(mileStones.size() > 1) {
+			for(int i=1;i<mileStones.size();i++) {
+				if(mileStones.get(i).getTime() <= mileStones.get(i-1).getTime()) {
+					System.err.println("MILESTONES NOT IN ORDER");
+					return;
+				}
+			}
+		}
+		System.out.println("Milestones OK!");
+		int mileStonePos = 0;
+		String mileStoneOperation = null;
+		
+		
 		while(this.sampling_time*60 <= this.duration_experiment) {
+			if(mileStoneOperation!= null) {
+				this.output(mileStoneOperation, ta);
+				if(mileStoneOperation.equals("END")) {
+					break;
+				}
+				if(mileStoneOperation.equals("PIEZO START")) {
+					// Start the PIEZO
+					startPiezo();
+				}
+				if(mileStoneOperation.equals("PIEZO STOP")) {
+					stopPiezo();
+				}
+				if(mileStoneOperation.equals("PIEZO END")) {
+					endPiezo();
+				}
+			}
+			
 			this.getNapump().compute_flux(this.temp_celsius);
 			// Temperature dependence of the passive fluxes, uses Q10L
 			this.I_18 = Math.exp(((37.0-this.temp_celsius)/10.0)*Math.log(this.B_10));
@@ -422,7 +503,15 @@ public class RBC_model {
 			
 			this.totalionfluxes();
 			this.water.compute_flux(this.fHb, this.cbenz2, this.buffer_conc, this.edgto, this.I_18);
-			this.integrationInterval(); // cycle_count is increased here
+			
+			MileStone nextMileStone = mileStones.get(mileStonePos);
+			if(this.integrationInterval(nextMileStone)) { // cycle_count is increased here
+				mileStoneOperation = nextMileStone.getName();
+				mileStonePos += 1;
+				this.cycle_count = this.cycles_per_print; // Force an output
+			}else {
+				mileStoneOperation = null;
+			}
 			this.computeDeltas();
 			
 			this.updateContents();
@@ -462,6 +551,7 @@ public class RBC_model {
 			
 		
 		}
+		this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
 		this.publish();
 		this.output("Finished!",ta);
 		
@@ -542,7 +632,8 @@ public class RBC_model {
 	}
 	
 	
-	private void integrationInterval() {
+	private boolean integrationInterval(MileStone nextMileStone) {
+		boolean mileStoneFound = false;
 		// 8010 Integration interval
 		Double I_23 = 10.0 + 10.0*Math.abs(this.a23.getFlux_Mg()+this.total_flux_Ca) + Math.abs(this.goldman.getFlux_H()) + Math.abs(this.dedgh) + Math.abs(this.total_flux_Na) + Math.abs(this.total_flux_K) + Math.abs(this.total_flux_A) + Math.abs(this.total_flux_H) + Math.abs(this.water.getFlux()*100.0);
 		if(this.compute_delta_time) {
@@ -555,11 +646,17 @@ public class RBC_model {
 				System.out.println("WARNING: fixed delta_time is greater than computed value");
 			}
 		}
+		if(nextMileStone.check(this.sampling_time + this.delta_time)) {
+			// We've passed the milestone
+			this.delta_time = nextMileStone.getTime() - this.sampling_time;
+			mileStoneFound = true;
+		}
 //		System.out.println("DT: " + this.delta_time);
 		this.sampling_time = this.sampling_time + this.delta_time;
 //		System.out.println("ST: " + this.sampling_time);
 		this.cycle_count = this.cycle_count + 1;
 		this.n_its = this.n_its + 1;
+		return mileStoneFound;
 	}
 	
 	private class compute_all_fluxes implements NWRunner {
@@ -630,6 +727,7 @@ public class RBC_model {
 		this.set_cell_fraction_options(options, usedoptions);
 		this.set_transport_changes_options(options, usedoptions);
 		this.set_temp_permeability_options(options, usedoptions);
+		this.set_piezo_options(options,usedoptions);
 		
 		System.out.println();
 		System.out.println("Used DS options");
@@ -648,7 +746,80 @@ public class RBC_model {
 		System.out.println("Setup DS, stage = " + this.stage);
 		//this.publish();
 	}
-	
+	private void set_piezo_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
+		String temp = options.get("piezo");
+		if(temp != null) {
+			usedoptions.add("piezo");
+			if(!temp.equals("yes")) {
+				// piezo is off by default
+				this.piezo = null;
+			}else {
+				this.piezo = new Piezo();
+				temp = options.get("pizeo_start");
+				if(temp != null) {
+					usedoptions.add("piezo_start");
+					// Convert to hours and add to sampling time
+					piezo.setStartTime(Double.parseDouble(temp)/60.0);
+				}
+				
+				temp = options.get("piezo_duration");
+				if(temp != null) {
+					usedoptions.add("piezo_duration");
+					Double duration_ms = Double.parseDouble(temp);
+					Double duration_s = duration_ms / 1000.0;
+					Double duration_m = duration_s / 60.0;
+					Double duration_h = duration_m / 60.0;
+					piezo.setDuration(duration_h);
+				}
+				
+				temp = options.get("piezo_recovery");
+				if(temp != null) {
+					usedoptions.add("piezo_recovery");
+					piezo.setRecovery(Double.parseDouble(temp)/60.0);
+				}
+				
+				temp = options.get("piezo_cycles");
+				if(temp != null) {
+					usedoptions.add("piezo_cycles");
+					piezo.setCycles(Integer.parseInt(temp));
+				}
+				
+				temp = options.get("piezo_pkg");
+				if(temp != null) {
+					usedoptions.add("piezo_pkg");
+					piezo.setPkg(Double.parseDouble(temp));
+				}
+				
+				temp = options.get("piezo_pnag");
+				if(temp != null) {
+					usedoptions.add("piezo_pnag");
+					piezo.setPnag(Double.parseDouble(temp));
+				}
+				
+				temp = options.get("piezo_pcag");
+				if(temp != null) {
+					usedoptions.add("piezo_pcag");
+					piezo.setPcag(Double.parseDouble(temp));
+				}
+
+				temp = options.get("piezo_pag");
+				if(temp != null) {
+					usedoptions.add("piezo_pag");
+					piezo.setPag(Double.parseDouble(temp));
+				}
+				
+				temp = options.get("piezo_pmca");
+				if(temp != null) {
+					usedoptions.add("piezo_pmca");
+					piezo.setPmca(Double.parseDouble(temp));
+				}
+
+				
+				
+ 				
+			}
+		}
+	}
 	private void set_temp_permeability_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
 		Double defaultTemp = this.temp_celsius;
 		String temp = options.get("temperature");

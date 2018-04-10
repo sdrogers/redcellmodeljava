@@ -416,6 +416,9 @@ public class RBC_model {
 		// Question here re default...
 		this.piezo.setOldPMCA(this.getNapump().getP_1());
 		this.getNapump().setP_1(this.napump.getP_1()*((100.0 - this.piezo.getPmca())/100.0)); // 90% inhibition
+		
+		this.piezo.setOldIF(this.integration_interval_factor);
+		this.integration_interval_factor = this.piezo.getiF();
 	}
 	private void stopPiezo() {
 		this.cycle_count = this.cycles_per_print - 1; // forces an output now
@@ -428,6 +431,7 @@ public class RBC_model {
 	private void endPiezo() {
 		this.cycles_per_print = piezo.getOldCycles();
 		this.cycle_count = this.cycles_per_print - 1; // forces an output now
+		this.integration_interval_factor = this.piezo.getOldIF();
 	}
 	public void runall(JTextArea ta) {
 		this.output("RUNNING DS STAGE " + this.stage, ta);
@@ -445,7 +449,7 @@ public class RBC_model {
 		this.publish();
 		
 		ArrayList<MileStone> mileStones = new ArrayList<MileStone>();
-		
+		// Note milestones are always in *hours*
 		if(this.piezo != null) {
 			// We have a piezo stage
 			Double pStart = this.piezo.getStartTime() + this.sampling_time;
@@ -457,7 +461,7 @@ public class RBC_model {
 		}
 		
 		
-		// Add the END milstone always
+		// Add the END milestone always
 		mileStones.add(new MileStone(this.duration_experiment/60.0,"END"));
 		
 		// Check the ordering
@@ -481,7 +485,6 @@ public class RBC_model {
 					break;
 				}
 				if(mileStoneOperation.equals("PIEZO START")) {
-					// Start the PIEZO
 					startPiezo();
 				}
 				if(mileStoneOperation.equals("PIEZO STOP")) {
@@ -814,7 +817,11 @@ public class RBC_model {
 					piezo.setPmca(Double.parseDouble(temp));
 				}
 
-				
+				temp = options.get("piezo_integration");
+				if(temp != null) {
+					usedoptions.add("piezo_integration");
+					piezo.setiF(Double.parseDouble(temp));
+				}
 				
  				
 			}

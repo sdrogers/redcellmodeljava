@@ -61,6 +61,13 @@ public class Piezo {
 		return duration;
 	}
 	private Double oldIF;
+	private Double iF = 1e-5;
+	public Double getiF() {
+		return iF;
+	}
+	public void setiF(Double iF) {
+		this.iF = iF;
+	}
 	private Double oldPKG;
 	private Double oldPNaG;
 	private Double oldPCaG;

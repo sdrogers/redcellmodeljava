@@ -415,8 +415,10 @@ public class RBC_model {
 		this.goldman.setPermeability_A(this.piezo.getPag());
 
 		// Question here re default...
-		this.piezo.setOldPMCA(this.getNapump().getP_1());
-		this.getNapump().setP_1(this.napump.getP_1()*((100.0 - this.piezo.getPmca())/100.0)); // 90% inhibition
+		
+		this.piezo.setOldPMCA(this.capump.getFcapm());
+		Double fac = (100.0 - this.piezo.getPmca())/100.0;
+		this.capump.setFcapm(this.capump.getFcapm()*fac);
 		
 		this.piezo.setOldIF(this.integration_interval_factor);
 		this.integration_interval_factor = this.piezo.getiF();
@@ -427,7 +429,7 @@ public class RBC_model {
 		this.goldman.setPermeability_Na(this.piezo.getOldPNaG());
 		this.passiveca.setFcalm(this.piezo.getOldPCaG());
 		this.goldman.setPermeability_A(this.piezo.getOldPAG());
-		this.getNapump().setP_1(this.piezo.getOldPMCA());
+		this.capump.setFcapm(this.piezo.getOldPMCA());
 	}
 	private void endPiezo() {
 		this.cycles_per_print = piezo.getOldCycles();
@@ -1025,11 +1027,11 @@ public class RBC_model {
 			this.JS.setPermeability(this.JS.getDefaultPermeability() * jsfactor);
 			usedoptions.add("js-stimulation-inhibition");
 		}
-		temp = options.get("vmax-pump-change");
+		temp = options.get("ca-pump-vmax-change");
 		if(temp != null) {
 			Double fc = (100.0 - Double.parseDouble(temp))/100.0;
 			this.capump.setFcapm(this.capump.getDefaultFcapm() * fc);
-			usedoptions.add("vmax-pump-change");
+			usedoptions.add("ca-pump-vmax-change");
 		}
 		
 //		temp = options.get("vmax-leak-change");

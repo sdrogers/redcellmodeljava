@@ -20,7 +20,7 @@ public class OptionsFrame extends JFrame implements ActionListener {
 		this.parent = parent;
 		this.options = options;
 		this.setTitle(title);
-		this.setSize(600, 350);
+		this.setSize(600, 400);
 		ps = new ParameterSelector(optionsFileName,this.options,this.parent);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		

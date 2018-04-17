@@ -76,10 +76,10 @@ public class Goldman {
 	}
 	
 	public Double computePKGPiezo(Double I_18) {
-		return this.getPermeability_K()*(this.getPermeability_K() + this.P_11)/I_18;
+		return this.gflux(this.cell.K,this.medium.K)*(this.getPermeability_K())/I_18;
 	}
 	public Double computeFKGardos(Double I_18) {
-		return this.getPermeability_K()*(((this.computeP_6() - this.getPermeability_K()) + this.P_11)/I_18);
+		return this.gflux(this.cell.K,this.medium.K)*(((this.computeP_6() - this.getPermeability_K()))/I_18);
 	}
 	
 	public void compute_flux(Double Em, Double temperature, Double I_18) {

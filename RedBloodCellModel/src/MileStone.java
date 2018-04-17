@@ -23,4 +23,7 @@ public class MileStone {
 		// Note we print in minutes
 		return this.name + ": " + this.time*60.0;
 	}
+	public void setTime(Double time) {
+		this.time = time;
+	}
 }

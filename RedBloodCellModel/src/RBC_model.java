@@ -10,8 +10,9 @@ public class RBC_model {
 	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
 	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CCa2+","CMg2+",
 	                                  "CHb","CX","COs","rA","rH","fHb","nHb","MNa","MK","MA","MB","MCat","MCaf",
-	                                  "MMgt","MMgf","FNaP","FCaP","FKP","FNa","FK","FA","FH","FCa","FW","FNaG","FKG",
-	                                  "FAG","FHG","FCaG","FAJS","FHJS","FA23Ca","FA23Mg","EA","EH","EK","ENa"};
+	                                  "MMgt","MMgf","FNaP","FCaP","FKP","FNa","FKGpiezo","FKGgardos","FKG","FK",
+	                                  "FA","FH","FCa","FW","FNaG","FAG","FHG","FCaG","FAJS","FHJS","FA23Ca","FA23Mg",
+	                                  "EA","EH","EK","ENa"};
 	
 	private ArrayList<ResultHash> resultList = new ArrayList<ResultHash>();
 	
@@ -452,17 +453,40 @@ public class RBC_model {
 		// Note milestones are always in *hours*
 		if(this.piezo != null) {
 			// We have a piezo stage
+			
+			// Add the initial output points
+			for(int i=0;i<3;i++) { // Only need to loop 3 times as we always publish at the start
+				Double output_time = (0.5 + i*0.5)/60.0 + this.sampling_time;
+				mileStones.add(new MileStone(output_time,"PUBLISH"));
+			}
+			
+			
 			Double pStart = this.piezo.getStartTime() + this.sampling_time;
 			Double pStop = pStart + this.piezo.getDuration();
 			Double pEnd = pStop + this.piezo.getRecovery();
 			mileStones.add(new MileStone(pStart,"PIEZO START"));
 			mileStones.add(new MileStone(pStop, "PIEZO STOP"));
 			mileStones.add(new MileStone(pEnd, "PIEZO END"));
+			
+			// Add some forced points after
+			for(int i=0;i<4;i++) {
+				Double output_time = (3.5 + i*0.5)/60.0 + this.sampling_time;
+				mileStones.add(new MileStone(output_time,"PUBLISH"));
+
+			}
 		}
-		
-		
+				
 		// Add the END milestone always
 		mileStones.add(new MileStone(this.duration_experiment/60.0,"END"));
+		
+		if(mileStones.size() > 1) {
+			// Make sure the end is after the last of the PIEZO ones
+			int endPos = mileStones.size() - 1;
+			if(mileStones.get(endPos).getTime() <= mileStones.get(endPos-1).getTime()) {
+				double oldTime = mileStones.get(endPos-1).getTime();
+				mileStones.get(endPos).setTime(oldTime + 1.0/60.0); // Add 1 minute
+			}
+		}
 		
 		// Check the ordering
 		if(mileStones.size() > 1) {
@@ -483,6 +507,9 @@ public class RBC_model {
 				this.output(mileStoneOperation, ta);
 				if(mileStoneOperation.equals("END")) {
 					break;
+				}
+				if(mileStoneOperation.equals("PUBLISH")) {
+					this.cycle_count = this.cycles_per_print - 1; // Force a publish
 				}
 				if(mileStoneOperation.equals("PIEZO START")) {
 					startPiezo();
@@ -2056,6 +2083,8 @@ public class RBC_model {
 		new_result.setItem("EK", V_15);
 		Double V_16 = this.goldman.getRtoverf()*Math.log(this.medium.Na.getConcentration()/this.cell.Na.getConcentration());
 		new_result.setItem("ENa", V_16);
+		new_result.setItem("FKGpiezo", this.goldman.computePKGPiezo(I_18));
+		new_result.setItem("FKGgardos", this.goldman.computeFKGardos(I_18));
 		
 		this.resultList.add(new_result);
 	}

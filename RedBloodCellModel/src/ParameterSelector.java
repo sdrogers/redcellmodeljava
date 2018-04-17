@@ -187,6 +187,31 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			}
 			Parameter newpar = new Parameter(selected.getName(),inputValue,selected.getUnits(),selected.getDescription(),null,selected.getDisplayName());
 			currentParams.addElement(newpar);
+			
+			// A temporary hack (heard that before)
+			// adds default piezo time and accuracy if piezo turned on
+			if(newpar.getName().equals("piezo") && newpar.getValue().equals("yes")) {
+				// has time been set?
+				Parameter t = null;
+				Parameter acc = null;
+				for(Object p: currentParams.toArray()) {
+					Parameter pa = (Parameter) p;
+					if(pa.getName().equals("time")) {
+						t = pa;
+					}
+					if(pa.getName().equals("dp")) {
+						acc = pa;
+					}
+				}
+				if(t == null) {
+					t = new Parameter("time","5.0","minutes","Duration of experiment or of experimental stage in multistage simulation",null,"time");
+					currentParams.addElement(t);
+				}
+				if(acc == null) {
+					acc = new Parameter("dp","6","","The number of decimal places in the output csv file",null,"output accuracy");
+					currentParams.addElement(acc);
+				}
+			}
 			this.grabOptions();
 			this.parentComp.update();
 		}else {

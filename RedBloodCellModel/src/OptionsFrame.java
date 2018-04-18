@@ -28,7 +28,11 @@ public class OptionsFrame extends JFrame implements ActionListener {
 		this.add(mainPanel,BorderLayout.CENTER);
 		
 		JPanel topPanel = new JPanel();
-		topPanel.add(new JTextArea(helpText));
+		JTextArea helpArea = new JTextArea(5,40);
+		helpArea.setText(helpText);
+		helpArea.setLineWrap(true);
+		helpArea.setWrapStyleWord(true);
+		topPanel.add(helpArea);
 		this.add(topPanel,BorderLayout.NORTH);
 		
 		GridBagConstraints c = new GridBagConstraints();

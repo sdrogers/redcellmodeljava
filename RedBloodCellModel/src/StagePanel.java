@@ -75,11 +75,16 @@ public class StagePanel extends JPanel implements ActionListener, Updateable {
 			tempPermScreen = new OptionsFrame("Temperature & permeability Options","SettingFiles/temppermeabilityDSOptions.csv",this.dSSettings.getOptions(),this,"");
 			tempPermScreen.makeVisible();
 		}else if(e.getSource() == editTransportButton) {
-			String helpText = "Percent changes for each transporter modify only their default Fmax values.\n"
-					+ "Default values are modified according to D*(100-I/100) where D is the default and I is the value entered here.\n"
-					+ "Fmax values stay modified in successive stages.\n"
-					+ "If changed again, change applies to original default value.\n"
-					+ "For example, to inhibit by 80% in stage 1 enter 80. To return to the default in stage 2, enter 100.";
+			String helpText = "The default Fmax value, F, is modified according to F*(100-X)/100 "
+					+ "where X is the % inhibition you wish to apply."
+					+ "  F stays modified in successive stages unless modified again.  "
+					+ "Each successive modification applies the entered % inhibition with regard to the original default value."
+					+ "  To return to the original default value enter “0” (zero).";
+//			String helpText = "Percent changes for each transporter modify only their default Fmax values.\n"
+//					+ "Default values are modified according to D*(100-I/100) where D is the default and I is the value entered here.\n"
+//					+ "Fmax values stay modified in successive stages.\n"
+//					+ "If changed again, change applies to original default value.\n"
+//					+ "For example, to inhibit by 80% in stage 1 enter 80. To return to the default in stage 2, enter 100.";
 			transportScreen = new OptionsFrame("Transport Options","SettingFiles/transportDSOptions.csv",this.dSSettings.getOptions(),this,helpText);
 			transportScreen.makeVisible();
 		}else if(e.getSource() == editFractionButton) {

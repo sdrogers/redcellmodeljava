@@ -1,7 +1,7 @@
 
 public class Goldman {
-	private Region cell;
-	private Region medium; 
+	private final Region cell;
+	private final Region medium; 
 	private Double permeability_Na ;
 	private Double permeability_A ;
 	private Double permeability_H ;

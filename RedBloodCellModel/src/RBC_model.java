@@ -9,8 +9,8 @@ public class RBC_model {
 	
 	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
 	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CCa2+","CMg2+",
-	                                  "CHb","CX","COs","rA","rH","fHb","nHb","MNa","MK","MA","MB","MCat","MCaf",
-	                                  "MMgt","MMgf","FNaP","FCaP","FKP","FNa","FKGpiezo","FKGgardos","FKG","FK",
+	                                  "CHb","CX","nX","COs","rA","rH","fHb","nHb","MNa","MK","MA","MB","MCat","MCaf",
+	                                  "MMgt","MMgf","FNaP","FACo","FKCo","FNaCo","FCaP","FKP","FNa","FKGpiezo","FKGgardos","FKG","FK",
 	                                  "FA","FH","FCa","FW","FNaG","FAG","FHG","FCaG","FAJS","FHJS","FA23Ca","FA23Mg",
 	                                  "EA","EH","EK","ENa"};
 	
@@ -415,10 +415,10 @@ public class RBC_model {
 		this.goldman.setPermeability_A(this.piezo.getPag());
 
 		// Question here re default...
-		
-		this.piezo.setOldPMCA(this.capump.getFcapm());
+		this.piezo.setOldPMCA(this.capump.getDefaultFcapm());
 		Double fac = (100.0 - this.piezo.getPmca())/100.0;
-		this.capump.setFcapm(this.capump.getFcapm()*fac);
+		this.capump.setFcapm(this.capump.getDefaultFcapm() * fac);
+//		this.capump.setFcapm(this.capump.getFcapm()*fac);
 		
 		this.piezo.setOldIF(this.integration_interval_factor);
 		this.integration_interval_factor = this.piezo.getiF();
@@ -2046,6 +2046,7 @@ public class RBC_model {
 		new_result.setItem("CMg2+",this.cell.Mgf.getConcentration());
 		new_result.setItem("CHb",this.cell.Hb.getConcentration());
 		new_result.setItem("CX",this.cell.X.getConcentration());
+		new_result.setItem("nX", this.A_10);
 		new_result.setItem("COs",this.cell.COs.getConcentration());
 		new_result.setItem("rA",this.rA);
 		new_result.setItem("rH",this.rH);
@@ -2087,6 +2088,10 @@ public class RBC_model {
 		new_result.setItem("ENa", V_16);
 		new_result.setItem("FKGpiezo", this.goldman.computePKGPiezo(I_18));
 		new_result.setItem("FKGgardos", this.goldman.computeFKGardos(I_18));
+		
+		new_result.setItem("FACo", this.cotransport.getFlux_A());
+		new_result.setItem("FKCo", this.cotransport.getFlux_K());
+		new_result.setItem("FNaCo", this.cotransport.getFlux_Na());
 		
 		this.resultList.add(new_result);
 	}

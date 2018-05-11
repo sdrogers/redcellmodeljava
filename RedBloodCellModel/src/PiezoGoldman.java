@@ -1,5 +1,4 @@
-
-public class Goldman {
+public class PiezoGoldman {
 	private final Region cell;
 	private final Region medium; 
 	private Double permeability_Na ;
@@ -23,12 +22,12 @@ public class Goldman {
 	private Double rtoverf;
 	private Double foverrt;
 	
-	public Goldman(Region cell, Region medium) {
+	public PiezoGoldman(Region cell, Region medium) {
 		this.cell = cell;
 		this.medium = medium;
 		this.setPermeability_Na(0.0);
-		this.setPermeability_A(1.2);
-		this.setPermeability_H(2e-10);
+		this.setPermeability_A(0.0);
+		this.setPermeability_H(0.0);
 		this.setPermeability_K(0.0);
 		this.setFlux_Na(0.0);
 		this.setFlux_A(0.0);
@@ -36,6 +35,8 @@ public class Goldman {
 		this.setFlux_K(0.0);
 		this.Goldman_factor = 0.0;
 		this.P_11 = 0.0;
+		
+		// Check these....
 		this.setDefaultPkm(30.0);
 		this.setPkcak(1e-2);
 		
@@ -53,11 +54,11 @@ public class Goldman {
 	public Double getFoverrt() {
 		return this.foverrt;
 	}
-	public void compute_permeabilities(Double Em, Double temperature) {
-		this.gfactors(Em,temperature);
-		this.setPermeability_Na(Math.abs(this.getFlux_Na()/this.gflux(this.cell.Na,this.medium.Na)));
-		this.setPermeability_K(Math.abs(this.getFlux_K()/this.gflux(this.cell.K,this.medium.K)));
-	}
+//	public void compute_permeabilities(Double Em, Double temperature) {
+//		this.gfactors(Em,temperature);
+//		this.setPermeability_Na(Math.abs(this.getFlux_Na()/this.gflux(this.cell.Na,this.medium.Na)));
+//		this.setPermeability_K(Math.abs(this.getFlux_K()/this.gflux(this.cell.K,this.medium.K)));
+//	}
 	private void computeP_11() {
 		Double I_62 = 1.0/(1.0+ Math.pow(this.cell.H.getConcentration(),4.0)/2.5e-30);
 		this.P_11 = this.getPgkh()*I_62;
@@ -66,15 +67,15 @@ public class Goldman {
 		Double P_6 = this.getPermeability_K() + this.getPkm()*(Math.pow(this.cell.Caf.getConcentration(),4.0)/(Math.pow(this.getPkcak(),4.0) + Math.pow(this.cell.Caf.getConcentration(),4.0)));
 		return P_6;
 	}
-	private Double total_G_permeability_K() {
-////		Double I_62 = 1.0/(1.0+ Math.pow(this.cell.H.getConcentration(),4.0)/2.5e-30);
-////		this.P_11 = this.getPgkh()*I_62;
-////		Double P_6 = this.getPermeability_K() + this.getPkm()*(Math.pow(this.cell.Caf.getConcentration(),4.0)/(Math.pow(this.getPkcak(),4.0) + Math.pow(this.cell.Caf.getConcentration(),4.0)));
-//		return P_6 + this.P_11;
-		this.computeP_11();
-		return this.computeP_6() + this.P_11;
-	}
-	// These methods might now be obsolete
+//	private Double total_G_permeability_K() {
+//////		Double I_62 = 1.0/(1.0+ Math.pow(this.cell.H.getConcentration(),4.0)/2.5e-30);
+//////		this.P_11 = this.getPgkh()*I_62;
+//////		Double P_6 = this.getPermeability_K() + this.getPkm()*(Math.pow(this.cell.Caf.getConcentration(),4.0)/(Math.pow(this.getPkcak(),4.0) + Math.pow(this.cell.Caf.getConcentration(),4.0)));
+////		return P_6 + this.P_11;
+//		this.computeP_11();
+//		return this.computeP_6() + this.P_11;
+//	}
+	// These two methods might now be obsolete?
 	public Double computePKGPiezo(Double I_18) {
 		return this.gflux(this.cell.K,this.medium.K)*(this.getPermeability_K())/I_18;
 	}
@@ -87,7 +88,7 @@ public class Goldman {
 		this.setFlux_Na(this.fullgflux(this.cell.Na,this.medium.Na,this.getPermeability_Na(),I_18));
 		this.setFlux_A(this.fullgflux(this.cell.A,this.medium.A,this.getPermeability_A(),I_18));
 		this.setFlux_H(this.fullgflux(this.cell.H,this.medium.H,this.getPermeability_H(),I_18));
-		this.setFlux_K(this.fullgflux(this.cell.K,this.medium.K,this.total_G_permeability_K(),I_18));
+		this.setFlux_K(this.fullgflux(this.cell.K,this.medium.K,this.getPermeability_K(),I_18));
 	}
 	private Double gflux(Species cell_species, Species medium_species) {
 		return -cell_species.getZ()*this.Goldman_factor*(medium_species.getConcentration() - cell_species.getConcentration()*Math.exp(cell_species.getZ()*this.Goldman_factor))/(1.0-Math.exp(cell_species.getZ()*this.Goldman_factor));
@@ -194,3 +195,4 @@ public class Goldman {
 		this.permeability_H = permeability_H;
 	}
 }
+

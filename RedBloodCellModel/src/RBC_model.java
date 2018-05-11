@@ -10,9 +10,9 @@ public class RBC_model {
 	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
 	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CCa2+","CMg2+",
 	                                  "CHb","CX","nX","COs","rA","rH","fHb","nHb","MNa","MK","MA","MB","MCat","MCaf",
-	                                  "MMgt","MMgf","FNaP","FACo","FKCo","FNaCo","FCaP","FKP","FNa","FKGpiezo","FKGgardos","FKG","FK",
+	                                  "MMgt","MMgf","FNaP","FACo","FKCo","FNaCo","FCaP","FKP","FNa","FKGgardos","FKG","FK",
 	                                  "FA","FH","FCa","FW","FNaG","FAG","FHG","FCaG","FAJS","FHJS","FA23Ca","FA23Mg",
-	                                  "EA","EH","EK","ENa"};
+	                                  "EA","EH","EK","ENa","FzKG","FzNaG","FzAG","FzCaG"};
 	
 	private ArrayList<ResultHash> resultList = new ArrayList<ResultHash>();
 	
@@ -23,9 +23,11 @@ public class RBC_model {
 	private NaPump napump;
 	private CarrierMediated carriermediated;
 	private Goldman goldman;
+	private PiezoGoldman piezoGoldman;
 	private A23187 a23;
 	private WaterFlux water;
 	private PassiveCa passiveca;
+	private PiezoPassiveCa piezoPassiveca;
 	private CaPumpMg2 capump;
 	private Boolean debug = true;
 	
@@ -218,9 +220,11 @@ public class RBC_model {
 		setNapump(new NaPump(cell,medium));
 		carriermediated = new CarrierMediated(cell,medium);
 		goldman = new Goldman(cell,medium);
+		piezoGoldman = new PiezoGoldman(cell,medium);
 		a23 = new A23187(cell,medium);
 		water = new WaterFlux(cell,medium);
 		passiveca = new PassiveCa(cell,medium,goldman);
+		piezoPassiveca = new PiezoPassiveCa(cell,medium,goldman);
 		capump = new CaPumpMg2(cell,medium,getNapump());
 		
 		A_1 = -10.0; // Net charge on haemoglobin
@@ -405,30 +409,37 @@ public class RBC_model {
 		this.cycles_per_print = this.piezo.getCycles();
 		this.cycle_count = this.cycles_per_print - 1; // forces an output now
 		
-		this.piezo.setOldPKG(this.goldman.getPermeability_K());
-		this.goldman.setPermeability_K(this.piezo.getPkg());
-		this.piezo.setOldPNaG(this.goldman.getPermeability_Na());
-		this.goldman.setPermeability_Na(this.piezo.getPnag());
-		this.piezo.setOldPCaG(this.passiveca.getFcalm());
-		this.passiveca.setFcalm(this.piezo.getPcag());
-		this.piezo.setOldPAG(this.goldman.getPermeability_A());
-		this.goldman.setPermeability_A(this.piezo.getPag());
+		
+//		this.piezo.setOldPKG(this.goldman.getPermeability_K());
+		this.piezoGoldman.setPermeability_K(this.piezo.getPkg());
+//		this.piezo.setOldPNaG(this.goldman.getPermeability_Na());
+		this.piezoGoldman.setPermeability_Na(this.piezo.getPnag());
+//		this.piezo.setOldPAG(this.goldman.getPermeability_A());
+		this.piezoGoldman.setPermeability_A(this.piezo.getPag());
 
-		// Question here re default...
+		
+		// Do we need another of these???
+		// Yes - swap for piezoPassiveCa...
+//		this.piezo.setOldPCaG(this.passiveca.getFcalm());
+		this.piezoPassiveca.setFcalm(this.piezo.getPcag());
+		
+
+		// This stays the same?
 		this.piezo.setOldPMCA(this.capump.getDefaultFcapm());
 		Double fac = (100.0 - this.piezo.getPmca())/100.0;
 		this.capump.setFcapm(this.capump.getDefaultFcapm() * fac);
-//		this.capump.setFcapm(this.capump.getFcapm()*fac);
 		
 		this.piezo.setOldIF(this.integration_interval_factor);
 		this.integration_interval_factor = this.piezo.getiF();
 	}
 	private void stopPiezo() {
 		this.cycle_count = this.cycles_per_print - 1; // forces an output now
-		this.goldman.setPermeability_K(this.piezo.getOldPKG());
-		this.goldman.setPermeability_Na(this.piezo.getOldPNaG());
-		this.passiveca.setFcalm(this.piezo.getOldPCaG());
-		this.goldman.setPermeability_A(this.piezo.getOldPAG());
+		this.piezoGoldman.setPermeability_K(0.0);
+		this.piezoGoldman.setPermeability_Na(0.0);
+		this.piezoGoldman.setPermeability_A(0.0);
+
+		//???
+		this.piezoPassiveca.setFcalm(0.0);
 		this.capump.setFcapm(this.piezo.getOldPMCA());
 	}
 	private void endPiezo() {
@@ -667,7 +678,7 @@ public class RBC_model {
 	private boolean integrationInterval(MileStone nextMileStone) {
 		boolean mileStoneFound = false;
 		// 8010 Integration interval
-		Double I_23 = 10.0 + 10.0*Math.abs(this.a23.getFlux_Mg()+this.total_flux_Ca) + Math.abs(this.goldman.getFlux_H()) + Math.abs(this.dedgh) + Math.abs(this.total_flux_Na) + Math.abs(this.total_flux_K) + Math.abs(this.total_flux_A) + Math.abs(this.total_flux_H) + Math.abs(this.water.getFlux()*100.0);
+		Double I_23 = 10.0 + 10.0*Math.abs(this.a23.getFlux_Mg()+this.total_flux_Ca) + Math.abs(this.goldman.getFlux_H() + this.piezoGoldman.getFlux_H()) + Math.abs(this.dedgh) + Math.abs(this.total_flux_Na) + Math.abs(this.total_flux_K) + Math.abs(this.total_flux_A) + Math.abs(this.total_flux_H) + Math.abs(this.water.getFlux()*100.0);
 		if(this.compute_delta_time) {
 			this.delta_time = this.integration_interval_factor/I_23;
 		}else {
@@ -694,8 +705,10 @@ public class RBC_model {
 	private class compute_all_fluxes implements NWRunner {
 		public Double run(Double local_em) {
 			goldman.compute_flux(local_em, temp_celsius,I_18);
+			piezoGoldman.compute_flux(local_em, temp_celsius, I_18);
 			a23.compute_flux(I_18);
 			passiveca.compute_flux(I_18);
+			piezoPassiveca.compute_flux(I_18);
 			capump.compute_flux();
 			totalCaFlux();
 			totalFlux();
@@ -705,10 +718,12 @@ public class RBC_model {
 	}
 	
 	public void totalCaFlux() {
-		this.total_flux_Ca = this.a23.getFlux_Ca() + this.passiveca.getFlux() + this.capump.getFlux_Ca();
+		this.total_flux_Ca = this.a23.getFlux_Ca() + this.passiveca.getFlux() + this.piezoPassiveca.getFlux() + this.capump.getFlux_Ca();
 	}
 	public void totalFlux() {
-		this.total_flux = this.getNapump().getTotal_flux() + this.goldman.getFlux_H() + this.goldman.getFlux_Na() + this.goldman.getFlux_K() - this.goldman.getFlux_A() + this.capump.getCah()*this.capump.getFlux_Ca() + 2.0*this.passiveca.getFlux();
+		Double goldFlux = this.goldman.getFlux_H() + this.goldman.getFlux_Na() + this.goldman.getFlux_K() - this.goldman.getFlux_A();
+		Double pGoldFlux = this.piezoGoldman.getFlux_H() + this.piezoGoldman.getFlux_Na() + this.piezoGoldman.getFlux_K() - this.piezoGoldman.getFlux_A();
+		this.total_flux = this.getNapump().getTotal_flux() + goldFlux + pGoldFlux + this.capump.getCah()*this.capump.getFlux_Ca() + 2.0*this.passiveca.getFlux() + 2.0*this.piezoPassiveca.getFlux();
 	}
 	
 	public void setup(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
@@ -1529,15 +1544,15 @@ public class RBC_model {
 	private void totalionfluxes() {
 		// Total ion fluxes
 		// Na flux
-		this.total_flux_Na = this.getNapump().getFlux_net() + this.carriermediated.getFlux_Na() + this.goldman.getFlux_Na() + this.cotransport.getFlux_Na();
+		this.total_flux_Na = this.getNapump().getFlux_net() + this.carriermediated.getFlux_Na() + this.goldman.getFlux_Na() + this.piezoGoldman.getFlux_Na() + this.cotransport.getFlux_Na();
 		// K flux
-		this.total_flux_K = this.getNapump().getFlux_K() + this.carriermediated.getFlux_K() + this.goldman.getFlux_K() + this.cotransport.getFlux_K();
+		this.total_flux_K = this.getNapump().getFlux_K() + this.carriermediated.getFlux_K() + this.goldman.getFlux_K() + this.piezoGoldman.getFlux_K() + this.cotransport.getFlux_K();
 		// Anion flux
 //		System.out.println(this.goldman.getFlux_A() + "," + this.cotransport.getFlux_A() + "," + this.JS.getFlux_A() + "," + this.carriermediated.getFlux_Na() + this.carriermediated.getFlux_K());
-		this.total_flux_A = this.goldman.getFlux_A() + this.cotransport.getFlux_A() + this.JS.getFlux_A() + this.carriermediated.getFlux_Na() + this.carriermediated.getFlux_K();
+		this.total_flux_A = this.goldman.getFlux_A() + this.piezoGoldman.getFlux_A() + this.cotransport.getFlux_A() + this.JS.getFlux_A() + this.carriermediated.getFlux_Na() + this.carriermediated.getFlux_K();
 		// Net proton flux, includes H-flux through Ca pump
 //		System.out.println(this.goldman.getFlux_H() + "," + this.JS.getFlux_H() + "," + this.a23.getFlux_Mg() + "," + this.a23.getFlux_Ca() + "," + this.capump.getFlux_H());
-		this.total_flux_H = this.JS.getFlux_H() + this.goldman.getFlux_H() - 2*this.a23.getFlux_Mg()-2*this.a23.getFlux_Ca()+this.capump.getFlux_H();
+		this.total_flux_H = this.JS.getFlux_H() + this.goldman.getFlux_H() + this.piezoGoldman.getFlux_H() - 2*this.a23.getFlux_Mg()-2*this.a23.getFlux_Ca()+this.capump.getFlux_H();
 //		System.out.println(this.a23.getPermeability_Ca() + "," + this.a23.getPermeability_Mg());
 	}
 	
@@ -2086,8 +2101,13 @@ public class RBC_model {
 		new_result.setItem("EK", V_15);
 		Double V_16 = this.goldman.getRtoverf()*Math.log(this.medium.Na.getConcentration()/this.cell.Na.getConcentration());
 		new_result.setItem("ENa", V_16);
-		new_result.setItem("FKGpiezo", this.goldman.computePKGPiezo(I_18));
+//		new_result.setItem("FKGpiezo", this.goldman.computePKGPiezo(I_18));
 		new_result.setItem("FKGgardos", this.goldman.computeFKGardos(I_18));
+		new_result.setItem("FzKG", this.piezoGoldman.getFlux_K());
+		new_result.setItem("FzNaG", this.piezoGoldman.getFlux_Na());
+		new_result.setItem("FzAG", this.piezoGoldman.getFlux_A());
+		new_result.setItem("FzCaG", this.piezoPassiveca.getFlux());
+		
 		
 		new_result.setItem("FACo", this.cotransport.getFlux_A());
 		new_result.setItem("FKCo", this.cotransport.getFlux_K());

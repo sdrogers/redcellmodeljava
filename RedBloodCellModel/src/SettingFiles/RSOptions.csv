@@ -1,9 +1,9 @@
 display name,code name,default value,units,description,allowed values
 Haemoglobin (Hb) choices,hb-choice,HbA,,Choose between hba (normal Hb) and hbs (sickle cell Hb) ,"hba,hbs"
 Na efflux through Na/K pump,na-efflux-fwd,-2.61,mmol/Loch,Sodium efflux through the Na/K pump at 37C,
-[Na]i,cna-conc,10,mmol/Loc,Intracellular sodium concentration,
-[K]i,ck-conc,140,mmol/Loc,Intracellular potassium concentration,
-[A]i,cla-conc,95,mmol/Loc,Intracellular concentration of diffusible anion (Cl-+HCO3-),
+[Na]i,cna-conc,10,mmol/Locw,Intracellular sodium concentration,
+[K]i,ck-conc,140,mmol/Locw,Intracellular potassium concentration,
+[A]i,cla-conc,95,mmol/Locw,Intracellular concentration of diffusible anion (Cl-+HCO3-),
 MCHC,hb-content,34,g/dL,Mean cell Haemoglobin Concentration,
 PMCA Fmax,vmax-cap,12,mmol/Loch,Ca2+ saturated efflux through the calcium pump,
 PCaG,pmax-pcag,0.05,1/h,Passive Goldmanian Ca permeability,

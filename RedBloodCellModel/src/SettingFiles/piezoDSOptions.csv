@@ -1,7 +1,7 @@
 Alternative Name,Parameter/Variable Name,Default Value,Units,Description,Allowed Values
 Incorporate PIEZO stage,piezo,no,,Incorpoate a PIEZO stage,"yes,no"
 Frequency factor,piezo_integration,0.00001,,Integration factor,
-Cycles per print,piezo_cycles,111,,How often to present output during the PIEZO period,
+Cycles per print,piezo_cycles,7777,,How often to present output during the PIEZO period,
 Output accuracy,dp,4,,Output accuracy. Note: change here *or* in time and data output factors. Changes the accuracy for the entire experiment,
 Time,time,0,minutes,Duration of experiment or of experimental stage in multistage simulation. Note change here or in time and data output factors,
 PzKG,piezo_pkg,100,,Goldman K permeability (1-10),

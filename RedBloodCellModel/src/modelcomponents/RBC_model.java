@@ -2120,7 +2120,12 @@ public class RBC_model {
 		
 		this.resultList.add(new_result);
 	}
-	
+	public ArrayList<ResultHash> getResults() {
+		return this.resultList;
+	}
+	public String[] getPublishOrder() {
+		return this.publish_order;
+	}
 	public void writeCsv(String name) {
 		FileWriter filewriter = null;
 		try {

@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
+import javax.swing.text.DefaultCaret;
 
 import modelcomponents.RBC_model;
 import utilities.DSSettings;
@@ -27,9 +28,10 @@ public class RunFrame extends JFrame implements ActionListener{
 	private JFrame source;
 	private HashMap<String,String> options;
 	private JTextArea ta;
-	private JButton saveButton,returnButton,quitButton;
+	private JButton saveButton,returnButton,quitButton,plotButton;
 	private JFileChooser jfc = new JFileChooser();
 	private ExperimentalSettings experimentalSettings;
+	private JPanel plotPanel;
 	public RunFrame(ExperimentalSettings es,JFrame source) {
 		this.experimentalSettings = es;
 		File workingDirectory = new File(System.getProperty("user.dir"));
@@ -44,6 +46,10 @@ public class RunFrame extends JFrame implements ActionListener{
 		JPanel layoutPanel = new JPanel(new BorderLayout());
 		this.add(layoutPanel);
 		ta = new JTextArea();
+		
+		DefaultCaret caret = (DefaultCaret)ta.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		
 		layoutPanel.add(new JScrollPane(ta),BorderLayout.CENTER);
 		saveButton = new JButton("Save output");
 		JPanel bottomPanel = new JPanel();
@@ -52,8 +58,16 @@ public class RunFrame extends JFrame implements ActionListener{
 		saveButton.addActionListener(this);
 		saveButton.setEnabled(false);
 		returnButton = new JButton("Close Window");
+		returnButton.setEnabled(false);
 		returnButton.addActionListener(this);
 		bottomPanel.add(returnButton);
+		
+		plotButton = new JButton("Launch plotter");
+		plotButton.setEnabled(false);
+		plotButton.addActionListener(this);
+		bottomPanel.add(plotButton);
+		
+		
 		
 		this.setVisible(true);
 		
@@ -72,18 +86,42 @@ public class RunFrame extends JFrame implements ActionListener{
 		}else if(e.getSource() == returnButton) {
 			this.setVisible(false);
 			this.dispose();
+		}else if(e.getSource() == plotButton) {
+			//String[] series = {"pHi"};
+			new PlotChooser(rbc.getResults(),rbc.getPublishOrder());
 		}
 	}
 	public void runModel() {
-		ArrayList<String> usedoptions = new ArrayList<String>();
-		//
-		rbc = new RBC_model();
-		rbc.setup(experimentalSettings.getRSOptions(), usedoptions);
-		for(DSSettings d: experimentalSettings.getDSStages()) {
-			rbc.setupDS(d.getOptions(), usedoptions);
-			rbc.runall(ta);
+		new Worker().execute();
+		//		ArrayList<String> usedoptions = new ArrayList<String>();
+//		//
+//		rbc = new RBC_model();
+//		rbc.setup(experimentalSettings.getRSOptions(), usedoptions);
+//		for(DSSettings d: experimentalSettings.getDSStages()) {
+//			rbc.setupDS(d.getOptions(), usedoptions);
+//			rbc.runall(ta);
+//		}
+//		saveButton.setEnabled(true);
+	}
+	private class Worker extends SwingWorker<Void,String> {
+		public Void doInBackground() {
+			ArrayList<String> usedoptions = new ArrayList<String>();
+			//
+			rbc = new RBC_model();
+			rbc.setup(experimentalSettings.getRSOptions(), usedoptions);
+			for(DSSettings d: experimentalSettings.getDSStages()) {
+				rbc.setupDS(d.getOptions(), usedoptions);
+				rbc.runall(ta);
+			}
+			saveButton.setEnabled(true);
+			
+			return null;
 		}
-		saveButton.setEnabled(true);
+		public void done() {
+			saveButton.setEnabled(true);
+			returnButton.setEnabled(true);
+			plotButton.setEnabled(true);
+		}
 	}
 
 }

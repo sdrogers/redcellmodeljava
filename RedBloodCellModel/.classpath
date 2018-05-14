@@ -4,5 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/opencsv-4.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang3-3.7.jar"/>
+	<classpathentry kind="lib" path="lib/jmathplot.jar"/>
+	<classpathentry kind="lib" path="lib/jmathio.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

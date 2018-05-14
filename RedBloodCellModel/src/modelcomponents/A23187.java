@@ -1,6 +1,7 @@
 package modelcomponents;
 
 public class A23187 {
+	
 	private Region cell;
 	private Region medium;
 	private Double camk ;
@@ -33,10 +34,8 @@ public class A23187 {
 		Double camgo=(this.medium.Caf.getConcentration()/(this.getCamk()+(this.getCamk()*this.medium.Mgf.getConcentration()/this.getMgik())+this.medium.Caf.getConcentration()));
 		Double mgcai=(this.cell.Mgf.getConcentration()/(this.getMgmk()+(this.getMgmk()*this.cell.Caf.getConcentration()/this.getCaik())+this.cell.Mgf.getConcentration()));
 		Double camgi=(this.cell.Caf.getConcentration()/(this.getCamk()+(this.getCamk()*this.cell.Mgf.getConcentration()/this.getMgik())+this.cell.Caf.getConcentration()));
-//		System.out.println("Stuff: " + this.cell.H.getConcentration() + "," + this.medium.H.getConcentration() + "," + I_18);
 		this.setFlux_Mg(this.getPermeability_Mg()/I_18*(mgcao*Math.pow(this.cell.H.getConcentration(),2.0) - mgcai*Math.pow(this.medium.H.getConcentration(),2.0)));
 		this.setFlux_Ca(this.getPermeability_Ca()/I_18*(camgo*Math.pow(this.cell.H.getConcentration(),2.0) - camgi*Math.pow(this.medium.H.getConcentration(),2.0)));
-//		System.out.println("Fluxes: " + this.getFlux_Mg() + "," + this.getFlux_Ca());
 	}
 	public Double getFlux_Mg() {
 		return flux_Mg;

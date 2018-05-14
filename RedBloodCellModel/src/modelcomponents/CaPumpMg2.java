@@ -1,10 +1,9 @@
 package modelcomponents;
 
 public class CaPumpMg2 {
-	private Region cell;;
-	private Region medium;
-	// needs napump for temp factor
-	private NaPump napump;
+	private final Region cell;;
+	private final Region medium;
+	private final NaPump napump;
 	private Double hik;
 	private Double capmgk;
 	private Double capmgki;
@@ -19,7 +18,6 @@ public class CaPumpMg2 {
 	public CaPumpMg2(Region cell, Region medium, NaPump napump) {
 		this.cell = cell;
 		this.medium = medium;
-		// needs napump for temp factor
 		this.napump = napump;
 		this.setHik(4e-7);
 		this.setCapmgk(0.1);

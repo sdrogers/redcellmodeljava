@@ -14,12 +14,6 @@ public class PiezoGoldman {
 	private Double flux_K ;
 
 	private Double Goldman_factor ;
-	private Double P_11 ;
-
-	private Double pkm ;
-	private Double defaultPkm;
-	private Double pkcak ;
-	private Double pgkh ;
 	
 	private Double rtoverf;
 	private Double foverrt;
@@ -36,13 +30,7 @@ public class PiezoGoldman {
 		this.setFlux_H(0.0);
 		this.setFlux_K(0.0);
 		this.Goldman_factor = 0.0;
-		this.P_11 = 0.0;
-		
-		// Check these....
-		this.setDefaultPkm(30.0);
-		this.setPkcak(1e-2);
-		
-		this.pgkh = 0.0;
+				
 	}
 	
 	private void gfactors(Double Em, Double temperature) {
@@ -56,35 +44,7 @@ public class PiezoGoldman {
 	public Double getFoverrt() {
 		return this.foverrt;
 	}
-//	public void compute_permeabilities(Double Em, Double temperature) {
-//		this.gfactors(Em,temperature);
-//		this.setPermeability_Na(Math.abs(this.getFlux_Na()/this.gflux(this.cell.Na,this.medium.Na)));
-//		this.setPermeability_K(Math.abs(this.getFlux_K()/this.gflux(this.cell.K,this.medium.K)));
-//	}
-	private void computeP_11() {
-		Double I_62 = 1.0/(1.0+ Math.pow(this.cell.H.getConcentration(),4.0)/2.5e-30);
-		this.P_11 = this.getPgkh()*I_62;
-	}
-	private Double computeP_6() {
-		Double P_6 = this.getPermeability_K() + this.getPkm()*(Math.pow(this.cell.Caf.getConcentration(),4.0)/(Math.pow(this.getPkcak(),4.0) + Math.pow(this.cell.Caf.getConcentration(),4.0)));
-		return P_6;
-	}
-//	private Double total_G_permeability_K() {
-//////		Double I_62 = 1.0/(1.0+ Math.pow(this.cell.H.getConcentration(),4.0)/2.5e-30);
-//////		this.P_11 = this.getPgkh()*I_62;
-//////		Double P_6 = this.getPermeability_K() + this.getPkm()*(Math.pow(this.cell.Caf.getConcentration(),4.0)/(Math.pow(this.getPkcak(),4.0) + Math.pow(this.cell.Caf.getConcentration(),4.0)));
-////		return P_6 + this.P_11;
-//		this.computeP_11();
-//		return this.computeP_6() + this.P_11;
-//	}
-	// These two methods might now be obsolete?
-	public Double computePKGPiezo(Double I_18) {
-		return this.gflux(this.cell.K,this.medium.K)*(this.getPermeability_K())/I_18;
-	}
-	public Double computeFKGardos(Double I_18) {
-		return this.gflux(this.cell.K,this.medium.K)*(((this.computeP_6() - this.getPermeability_K()))/I_18);
-	}
-	
+
 	public void compute_flux(Double Em, Double temperature, Double I_18) {
 		this.gfactors(Em,temperature);
 		this.setFlux_Na(this.fullgflux(this.cell.Na,this.medium.Na,this.getPermeability_Na(),I_18));
@@ -103,28 +63,6 @@ public class PiezoGoldman {
 		return this.Goldman_factor;
 	}
 	
-	public Double getPkm() {
-		return pkm;
-	}
-	public Double getDefaultPkm() {
-		return this.defaultPkm;
-	}
-	public void setDefaultPkm(Double pkm) {
-		this.defaultPkm = pkm;
-		this.setPkm(pkm);
-	}
-	public void setPkm(Double pkm) {
-		this.pkm = pkm;
-	}
-
-	public Double getPkcak() {
-		return pkcak;
-	}
-
-	public void setPkcak(Double pkcak) {
-		this.pkcak = pkcak;
-	}
-
 	public Double getFlux_A() {
 		return flux_A;
 	}
@@ -163,14 +101,6 @@ public class PiezoGoldman {
 
 	public void setPermeability_K(Double permeability_K) {
 		this.permeability_K = permeability_K;
-	}
-
-	public Double getPgkh() {
-		return pgkh;
-	}
-
-	public void setPgkh(Double pgkh) {
-		this.pgkh = pgkh;
 	}
 
 	public Double getPermeability_Na() {

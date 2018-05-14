@@ -1,8 +1,8 @@
 package modelcomponents;
 
 public class WaterFlux {
-	private Region cell;
-	private Region medium;
+	private final Region cell;
+	private final Region medium;
 	private Double flux;
 	private Double permeability;
 	

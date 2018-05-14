@@ -68,17 +68,13 @@ public class Goldman {
 		return P_6;
 	}
 	private Double total_G_permeability_K() {
-////		Double I_62 = 1.0/(1.0+ Math.pow(this.cell.H.getConcentration(),4.0)/2.5e-30);
-////		this.P_11 = this.getPgkh()*I_62;
-////		Double P_6 = this.getPermeability_K() + this.getPkm()*(Math.pow(this.cell.Caf.getConcentration(),4.0)/(Math.pow(this.getPkcak(),4.0) + Math.pow(this.cell.Caf.getConcentration(),4.0)));
-//		return P_6 + this.P_11;
 		this.computeP_11();
 		return this.computeP_6() + this.P_11;
 	}
-	// These methods might now be obsolete
-	public Double computePKGPiezo(Double I_18) {
-		return this.gflux(this.cell.K,this.medium.K)*(this.getPermeability_K())/I_18;
-	}
+//	// These methods might now be obsolete
+//	public Double computePKGPiezo(Double I_18) {
+//		return this.gflux(this.cell.K,this.medium.K)*(this.getPermeability_K())/I_18;
+//	}
 	public Double computeFKGardos(Double I_18) {
 		return this.gflux(this.cell.K,this.medium.K)*(((this.computeP_6() - this.getPermeability_K()))/I_18);
 	}

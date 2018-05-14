@@ -8,6 +8,9 @@ import javax.swing.JTextArea;
 
 import utilities.ExperimentalSettings;
 
+// Wrapper for a JPanel and text area that processes the 
+// comments to ensure formatting is correct
+
 public class CommentsPanel extends JPanel {
 	private ExperimentalSettings experimentalSettings;
 	private JTextArea ta;

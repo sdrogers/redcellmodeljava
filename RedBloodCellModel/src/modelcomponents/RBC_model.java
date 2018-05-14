@@ -1,21 +1,8 @@
-package base;
+package modelcomponents;
 import java.util.HashMap;
 
 import javax.swing.JTextArea;
 
-import modelcomponents.A23187;
-import modelcomponents.CaPumpMg2;
-import modelcomponents.CarrierMediated;
-import modelcomponents.Cotransport;
-import modelcomponents.Goldman;
-import modelcomponents.JacobsStewart;
-import modelcomponents.NaPump;
-import modelcomponents.PassiveCa;
-import modelcomponents.Piezo;
-import modelcomponents.PiezoGoldman;
-import modelcomponents.PiezoPassiveCa;
-import modelcomponents.Region;
-import modelcomponents.WaterFlux;
 import utilities.MileStone;
 import utilities.NWRunner;
 import utilities.ResultHash;

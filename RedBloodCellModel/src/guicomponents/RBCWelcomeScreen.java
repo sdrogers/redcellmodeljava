@@ -1,4 +1,4 @@
-package base;
+package guicomponents;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import guicomponents.ExperimentScreen;
 import utilities.ExperimentalSettings;
 
 public class RBCWelcomeScreen extends JFrame implements ActionListener {

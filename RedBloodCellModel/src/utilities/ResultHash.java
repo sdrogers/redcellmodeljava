@@ -1,5 +1,6 @@
 package utilities;
 import java.util.HashMap;
+
 public class ResultHash {
 	private HashMap<String,Double> map;
 	private Double time;

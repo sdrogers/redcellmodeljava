@@ -15,9 +15,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 
-import base.RBC_model;
+import modelcomponents.RBC_model;
 import utilities.DSSettings;
 import utilities.ExperimentalSettings;
+
+// Class that represents the screen we see when we run
+// also responsible for instantiating the actual model and running it
 
 public class RunFrame extends JFrame implements ActionListener{
 	private RBC_model rbc;

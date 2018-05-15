@@ -1,5 +1,6 @@
 package guicomponents;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -23,7 +24,7 @@ public class OptionsFrame extends JFrame implements ActionListener {
 		this.parent = parent;
 		this.options = options;
 		this.setTitle(title);
-		this.setSize(600, 400);
+		this.setSize(700, 400);
 		ps = new ParameterSelector(optionsFileName,this.options,this.parent);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
@@ -35,6 +36,8 @@ public class OptionsFrame extends JFrame implements ActionListener {
 		helpArea.setText(helpText);
 		helpArea.setLineWrap(true);
 		helpArea.setWrapStyleWord(true);
+		helpArea.setEditable(false);
+		helpArea.setBackground(this.getBackground()); // What colour is BG??!
 		topPanel.add(helpArea);
 		this.add(topPanel,BorderLayout.NORTH);
 		

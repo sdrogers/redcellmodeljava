@@ -130,6 +130,9 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 					if(pr != null) {
 						currentParams.removeElement(pr);
 						options.remove(pr.getName());
+						if(pr.getName().equals("piezo")) {
+							removePiezo();
+						}
 						parentComp.update();
 					}
 				}
@@ -154,6 +157,9 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			System.out.println("You clicked on remove");
 			Parameter pr = currentParamList.getSelectedValue();
 			if(pr != null) {
+				if(pr.getName().equals("piezo")) {
+					removePiezo();
+				}
 				currentParams.removeElement(pr);
 				options.remove(pr.getName());
 				this.parentComp.update();
@@ -194,34 +200,46 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			
 			// A temporary hack (heard that before)
 			// adds default piezo time and accuracy if piezo turned on
-			// todo: add all the other bits and pieces for defaults...??
 			if(newpar.getName().equals("piezo") && newpar.getValue().equals("yes")) {
-				// has time been set?
-				Parameter t = null;
-				Parameter acc = null;
-				for(Object p: currentParams.toArray()) {
-					Parameter pa = (Parameter) p;
-					if(pa.getName().equals("time")) {
-						t = pa;
-					}
-					if(pa.getName().equals("dp")) {
-						acc = pa;
-					}
-				}
-				if(t == null) {
-					t = new Parameter("time","5.0","minutes","Duration of experiment or of experimental stage in multistage simulation",null,"time");
-					currentParams.addElement(t);
-				}
-				if(acc == null) {
-					acc = new Parameter("dp","6","","The number of decimal places in the output csv file",null,"output accuracy");
-					currentParams.addElement(acc);
-				}
+				addPiezo();
 			}
 			this.grabOptions();
 			this.parentComp.update();
 		}else {
 			// Input error
 			JOptionPane.showMessageDialog(null, "Incorrect input for " + selected.getName());
+		}
+	}
+	// Method to add all piezo once yes is clicked
+	private void addPiezo() {
+		Object[] allParams = potentialParams.toArray();
+		for(Object o: allParams) {
+			Parameter p = (Parameter) o;
+			boolean found = false;
+			for(Object chosenO: currentParams.toArray()) {
+				Parameter chosenP = (Parameter) chosenO;
+				if(chosenP.getName().equals(p.getName())) {
+					found = true;
+					break;
+				}
+			}
+			if(!found) {
+				currentParams.addElement(p);
+			}
+		}
+	}
+	// Method to remove all piezo once no is clicked
+	private void removePiezo() {
+		Object[] allParams = potentialParams.toArray();
+		for(Object o: allParams) {
+			Parameter p = (Parameter) o;
+			for(Object chosenO: currentParams.toArray()) {
+				Parameter chosenP = (Parameter) chosenO;
+				if(chosenP.getName().equals(p.getName()) && chosenP.getValue() == p.getValue()) {
+					currentParams.removeElement(chosenP);
+					options.remove(chosenP.getName());
+				}
+			}
 		}
 	}
 	private boolean checkInput(String newValue,Parameter p) {

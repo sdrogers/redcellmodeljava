@@ -74,12 +74,14 @@ public class PlotChooser extends JFrame implements ActionListener {
 		if(e.getSource() == plotButton) {
 			// Get all selected elements and add to an array
 			Object[] oArray = plotList.getSelectedValuesList().toArray();
-			String[] series = new String[oArray.length];
-			int pos = 0;
-			for(Object o: oArray) {
-				series[pos++] = (String)o;
+			if(oArray.length>0) {
+				String[] series = new String[oArray.length];
+				int pos = 0;
+				for(Object o: oArray) {
+					series[pos++] = (String)o;
+				}
+				new PlotFrame(results,series);
 			}
-			new PlotFrame(results,series);
 		}
 	}
 }

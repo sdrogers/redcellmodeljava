@@ -13,8 +13,8 @@ import java.io.IOException;
 public class RBC_model {
 	
 	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
-	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CCa2+","CMg2+",
-	                                  "CHb","CX","nX","COs","rA","rH","fHb","nHb","MNa","MK","MA","MB","MCat","MCaf",
+	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CH/nM","CCa2+","CMg2+",
+	                                  "CHb","CX","nX","COs","rA","rH","fHb","nHb","MNa","MK","MA","MH/nM","MB","MCat","MCaf",
 	                                  "MMgt","MMgf","FNaP","FACo","FKCo","FNaCo","FCaP","FKP","FNa","FKGgardos","FKG","FK",
 	                                  "FA","FH","FCa","FW","FNaG","FAG","FHG","FCaG","FAJS","FHJS","FA23Ca","FA23Mg",
 	                                  "EA","EH","EK","ENa","FzKG","FzNaG","FzAG","FzCaG"};
@@ -548,7 +548,8 @@ public class RBC_model {
 			this.JS.compute_flux(this.I_18);
 			
 			this.Em = this.newton_raphson(new compute_all_fluxes(), this.Em, 0.001, 0.0001, 100, 0, false);
-			
+
+
 			this.totalionfluxes();
 			this.water.compute_flux(this.fHb, this.cbenz2, this.buffer_conc, this.edgto, this.I_18);
 			
@@ -665,6 +666,8 @@ public class RBC_model {
 
 		// compute mgf
 		this.cell.Mgf.setConcentration(this.newton_raphson(new Eqmg(),0.02,0.0001,0.00001,100,0, false));
+		
+
 		// compute caf
 		this.canr();
 	}
@@ -724,6 +727,8 @@ public class RBC_model {
 	
 	public void totalCaFlux() {
 		this.total_flux_Ca = this.a23.getFlux_Ca() + this.passiveca.getFlux() + this.piezoPassiveca.getFlux() + this.capump.getFlux_Ca();
+//		System.out.println("Ca flux: " + this.total_flux_Ca);
+//		System.out.println("A23: " + this.a23.getFlux_Ca() + " passive: "+ this.passiveca.getFlux() + " pump: " + this.capump.getFlux_Ca());
 	}
 	public void totalFlux() {
 		Double goldFlux = this.goldman.getFlux_H() + this.goldman.getFlux_Na() + this.goldman.getFlux_K() - this.goldman.getFlux_A();
@@ -1756,7 +1761,8 @@ public class RBC_model {
 		this.VV = (1.0 - this.A_11) + this.Vw;
 		
 		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001,100,0, false);
-//		System.out.println(conc);
+
+		//		System.out.println(conc);
 		this.cell.Mgf.setConcentration(conc);
 		
 		
@@ -1969,8 +1975,15 @@ public class RBC_model {
 		this.b1cak = this.b1cak * 1000.0;
 		this.benz2 = this.benz2 * 1000.0;
 		this.benz2k = this.benz2k * 1000.0;
-		
+//		System.out.println();
+//		System.out.println();
+//		System.out.println("Initial: " + this.cell.Caf.getConcentration());
 		Double conc = this.newton_raphson(new Eqca(),this.cell.Caf.getConcentration(),0.000001, 0.000001,100,0, false);
+//		Double conc = this.newton_raphson(new Eqca(),0.12735271872550802,0.000001, 0.000001,100,0, true);
+//		Double conc2 = this.newton_raphson(new Eqca(),0.06236444130115539,0.000001, 0.000001,100,0, true);
+
+		
+//		System.out.println("DONE:" + conc + " " + conc2);
 		this.cell.Caf.setConcentration(conc);
 		
 		this.cell.Caf.setConcentration(this.cell.Caf.getConcentration()/1000.0);
@@ -1983,7 +1996,13 @@ public class RBC_model {
 	
 	private class Eqca implements NWRunner {
 		public Double run(Double local_x6) {
+//			Double term1 = local_x6*(Math.pow(alpha,-1.0));
+//			Double term2 = ((b1ca/VV)*local_x6/(b1cak+local_x6));
+//			Double term3 = ((benz2/VV)*local_x6/(benz2k+local_x6));
+//			System.out.println("1: " + term1 + " 2: " + term2 + " 3: " + term3 + " VV: " + VV);
+//			System.out.println("" + alpha + " " + b1ca + " " + b1cak + " " + benz2 + " " + benz2k);
 			cabb = local_x6*(Math.pow(alpha,-1.0))+((b1ca/VV)*local_x6/(b1cak+local_x6))+((benz2/VV)*local_x6/(benz2k+local_x6));
+//			System.out.println("CABB: " + cabb + " Cat: " + cell.Cat.getAmount());
 			Double y = cell.Cat.getAmount() - cabb;
 			return y;
 		}
@@ -2015,7 +2034,7 @@ public class RBC_model {
 			Double S = (Y_2 - Y_1) / (X_2 - X_1);
 			X_3 = X_1 - (Y_1/S);
 			if(verbose) {
-				System.out.println("X_3: " + X_3 + ", S: " + S + ", Y/S: " + Y_1/S);
+				System.out.println("It: " + no_its + ", X_3: " + X_3 + ", S: " + S + ", Y/S: " + Y_1/S);
 			}
 //			System.out.println(Math.abs(Y_2));
 			// Note the bit here that isn't copied...
@@ -2062,6 +2081,7 @@ public class RBC_model {
 		new_result.setItem("CNa",this.cell.Na.getConcentration());
 		new_result.setItem("CK",this.cell.K.getConcentration());
 		new_result.setItem("CA",this.cell.A.getConcentration());
+		new_result.setItem("CH/nM", 1e9*Math.pow(10.0,-this.cell.getpH()));
 		new_result.setItem("CCa2+",this.cell.Caf.getConcentration());
 		new_result.setItem("CMg2+",this.cell.Mgf.getConcentration());
 		new_result.setItem("CHb",this.cell.Hb.getConcentration());
@@ -2075,6 +2095,7 @@ public class RBC_model {
 		new_result.setItem("MNa",this.medium.Na.getConcentration());
 		new_result.setItem("MK",this.medium.K.getConcentration());
 		new_result.setItem("MA",this.medium.A.getConcentration());
+		new_result.setItem("MH/nM", 1e9*Math.pow(10.0, -this.medium.getpH()));
 		new_result.setItem("MB", this.buffer_conc);
 		new_result.setItem("MCat", this.medium.Cat.getConcentration());
 		new_result.setItem("MCaf", this.medium.Caf.getConcentration());

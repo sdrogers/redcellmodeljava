@@ -24,7 +24,7 @@ public class OptionsFrame extends JFrame implements ActionListener {
 		this.parent = parent;
 		this.options = options;
 		this.setTitle(title);
-		this.setSize(700, 400);
+		this.setSize(800, 500);
 		ps = new ParameterSelector(optionsFileName,this.options,this.parent);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
@@ -37,7 +37,7 @@ public class OptionsFrame extends JFrame implements ActionListener {
 		helpArea.setLineWrap(true);
 		helpArea.setWrapStyleWord(true);
 		helpArea.setEditable(false);
-		helpArea.setBackground(this.getBackground()); // What colour is BG??!
+		helpArea.setBackground(this.getBackground()); 
 		topPanel.add(helpArea);
 		this.add(topPanel,BorderLayout.NORTH);
 		

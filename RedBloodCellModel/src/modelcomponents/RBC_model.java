@@ -14,11 +14,11 @@ public class RBC_model {
 	
 	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
 	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CH/nM","CCa2+","CMg2+",
-	                                  "CHb","CX","nX","COs","rA","rH","fHb","nHb","MNa","MK","MA","MH/nM","MB","MCat","MCaf",
+	                                  "CX","CHb","fHb","COs","MOs","rA","rH","nHb","MNa","MK","MA","MH/nM","MB","MCat","MCaf",
 	                                  "MMgt","MMgf","FNaP","FACo","FKCo","FNaCo","FCaP","FKP","FNa","FKGgardos","FKG","FK",
 	                                  "FA","FH","FCa","FW","FNaG","FAG","FHG","FCaG","FAJS","FHJS","FA23Ca","FA23Mg",
-	                                  "EA","EH","EK","ENa","FzKG","FzNaG","FzAG","FzCaG"};
-	
+	                                  "EA","EH","EK","ENa","FzKG","FzNaG","FzAG","FzCaG","fHb*CHb","nX","Msucr","Mgluc-",
+	                                  "Mgluc+","EN test"};
 	private ArrayList<ResultHash> resultList = new ArrayList<ResultHash>();
 	
 	private Region cell;
@@ -712,12 +712,12 @@ public class RBC_model {
 	
 	private class compute_all_fluxes implements NWRunner {
 		public Double run(Double local_em) {
-			goldman.compute_flux(local_em, temp_celsius,I_18);
+			getGoldman().compute_flux(local_em, temp_celsius,I_18);
 			piezoGoldman.compute_flux(local_em, temp_celsius, I_18);
 			a23.compute_flux(I_18);
 			passiveca.compute_flux(I_18);
 			piezoPassiveca.compute_flux(I_18);
-			capump.compute_flux();
+			getCapump().compute_flux();
 			totalCaFlux();
 			totalFlux();
 			return total_flux;
@@ -779,10 +779,14 @@ public class RBC_model {
 	}
 	
 	public void setupDS(HashMap<String,String> options,ArrayList<String> usedoptions) {
-		
-		this.set_screen_time_factor_options(options, usedoptions);
+		/*
+		 * todo: finish moving options parsers to their own class
+		 */
+//		this.set_screen_time_factor_options(options, usedoptions);
+		OptionsParsers.set_screen_time_factor_options(options,usedoptions,this);
 		this.set_cell_fraction_options(options, usedoptions);
-		this.set_transport_changes_options(options, usedoptions);
+//		this.set_transport_changes_options(options, usedoptions);
+		OptionsParsers.set_transport_changes_options(options, usedoptions, this);
 		this.set_temp_permeability_options(options, usedoptions);
 		this.set_piezo_options(options,usedoptions);
 		
@@ -2087,7 +2091,8 @@ public class RBC_model {
 		new_result.setItem("CHb",this.cell.Hb.getConcentration());
 		new_result.setItem("CX",this.cell.X.getConcentration());
 		new_result.setItem("nX", this.A_10);
-		new_result.setItem("COs",this.cell.COs.getConcentration());
+		new_result.setItem("COs",this.cell.Os.getConcentration());
+		new_result.setItem("MOs",this.medium.Os.getConcentration());
 		new_result.setItem("rA",this.rA);
 		new_result.setItem("rH",this.rH);
 		new_result.setItem("fHb",this.fHb);
@@ -2138,6 +2143,19 @@ public class RBC_model {
 		new_result.setItem("FACo", this.cotransport.getFlux_A());
 		new_result.setItem("FKCo", this.cotransport.getFlux_K());
 		new_result.setItem("FNaCo", this.cotransport.getFlux_Na());
+		
+		
+		new_result.setItem("fHb*CHb", this.fHb*this.cell.Hb.getConcentration());
+		new_result.setItem("Msucr", this.medium.Sucrose.getConcentration());
+		new_result.setItem("Mgluc-", this.medium.Gluconate.getConcentration());
+		new_result.setItem("Mgluc+", this.medium.Glucamine.getConcentration());
+		
+		double enFluxTest = this.total_flux_Na
+				+ this.total_flux_K
+				+ this.total_flux_H
+				- this.total_flux_A
+				+ 2.0*(this.total_flux_Ca+this.a23.getFlux_Mg());
+		new_result.setItem("EN test", enFluxTest);
 		
 		this.resultList.add(new_result);
 	}
@@ -2190,5 +2208,77 @@ public class RBC_model {
 
 	public int getStage() {
 		return this.stage;
+	}
+	public Double getDuration_experiment() {
+		return duration_experiment;
+	}
+	public void setDuration_experiment(Double duration_experiment) {
+		this.duration_experiment = duration_experiment;
+	}
+	public int getDp() {
+		return dp;
+	}
+	public void setDp(int dp) {
+		this.dp = dp;
+	}
+	public Double getI_43() {
+		return I_43;
+	}
+	public void setI_43(Double i_43) {
+		I_43 = i_43;
+	}
+	public Double getIntegration_interval_factor() {
+		return integration_interval_factor;
+	}
+	public void setIntegration_interval_factor(Double integration_interval_factor) {
+		this.integration_interval_factor = integration_interval_factor;
+	}
+	public boolean isCompute_delta_time() {
+		return compute_delta_time;
+	}
+	public void setCompute_delta_time(boolean compute_delta_time) {
+		this.compute_delta_time = compute_delta_time;
+	}
+	public double getDelta_time() {
+		return delta_time;
+	}
+	public void setDelta_time(double delta_time) {
+		this.delta_time = delta_time;
+	}
+	public Integer getCycles_per_print() {
+		return cycles_per_print;
+	}
+	public void setCycles_per_print(Integer cycles_per_print) {
+		this.cycles_per_print = cycles_per_print;
+	}
+	public CarrierMediated getCarriermediated() {
+		return carriermediated;
+	}
+	public void setCarriermediated(CarrierMediated carriermediated) {
+		this.carriermediated = carriermediated;
+	}
+	public Cotransport getCotransport() {
+		return cotransport;
+	}
+	public void setCotransport(Cotransport cotransport) {
+		this.cotransport = cotransport;
+	}
+	public JacobsStewart getJS() {
+		return JS;
+	}
+	public void setJS(JacobsStewart jS) {
+		JS = jS;
+	}
+	public CaPumpMg2 getCapump() {
+		return capump;
+	}
+	public void setCapump(CaPumpMg2 capump) {
+		this.capump = capump;
+	}
+	public Goldman getGoldman() {
+		return goldman;
+	}
+	public void setGoldman(Goldman goldman) {
+		this.goldman = goldman;
 	}
 }

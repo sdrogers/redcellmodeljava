@@ -1585,7 +1585,34 @@ public class RBC_model {
 
 		// Sum M
 		this.medium.Os.setConcentration(this.medium.Na.getConcentration()+ this.medium.K.getConcentration() + this.medium.A.getConcentration() + this.buffer_conc + this.medium.Gluconate.getConcentration() + this.medium.Glucamine.getConcentration() + this.medium.Sucrose.getConcentration() + (this.medium.Mgf.getConcentration() + this.medium.Caf.getConcentration() + this.edgto));
-		this.cell.Os.setAmount(this.cell.Na.getAmount() + this.cell.K.getAmount() + this.cell.A.getAmount() + this.fHb*this.cell.Hb.getAmount() + this.cell.X.getAmount() + this.cell.Mgt.getAmount() + (this.cell.Mgf.getConcentration()+this.cell.Caf.getConcentration())*this.Vw + this.benz2);
+		
+		/*
+		 * Does anything use the Os amount?
+		 */
+		this.cell.Os.setAmount(
+				this.cell.Na.getAmount() + 
+				this.cell.K.getAmount() + 
+				this.cell.A.getAmount() + 
+				this.fHb*this.cell.Hb.getAmount() + 
+				this.cell.X.getAmount() + 
+				this.cell.Mgt.getAmount() + 
+				(this.cell.Mgf.getConcentration()+this.cell.Caf.getConcentration())*this.Vw
+				+ this.benz2);
+		
+		/*
+		 * Added this code here to stop it having zero as the initial value
+		 * 
+		 */
+		this.cell.Os.setConcentration(
+				this.cell.Na.getConcentration() + 
+				this.cell.K.getConcentration() + 
+				this.cell.A.getConcentration() + 
+				this.fHb*this.cell.Hb.getConcentration() + 
+				this.cell.X.getConcentration() + 
+				this.cell.Mgf.getConcentration() + 
+				this.cell.Caf.getConcentration() + 
+				this.cbenz2);
+		System.out.println("And this? " + this.cell.Os.getConcentration());
 	}
 	
 	private void secureisonoticityRS() {

@@ -14,7 +14,16 @@ public class WaterFlux {
 	}
 	
 	public void compute_flux(Double fHb, Double cbenz2, Double buffer_conc,Double edgto, Double I_18) {
-		this.cell.Os.setConcentration(this.cell.Na.getConcentration() + this.cell.K.getConcentration() + this.cell.A.getConcentration() + fHb*this.cell.Hb.getConcentration() + this.cell.X.getConcentration() + this.cell.Mgf.getConcentration() + this.cell.Caf.getConcentration() + cbenz2);
+		this.cell.Os.setConcentration(
+				this.cell.Na.getConcentration() + 
+				this.cell.K.getConcentration() + 
+				this.cell.A.getConcentration() + 
+				fHb*this.cell.Hb.getConcentration() + 
+				this.cell.X.getConcentration() + 
+				this.cell.Mgf.getConcentration() + 
+				this.cell.Caf.getConcentration() + 
+				cbenz2);
+		System.out.println("Is this happening? " + this.cell.Os.getConcentration());
 		this.medium.Os.setConcentration(this.medium.Na.getConcentration() + this.medium.K.getConcentration() + this.medium.A.getConcentration() + buffer_conc + this.medium.Gluconate.getConcentration() + this.medium.Glucamine.getConcentration() + this.medium.Sucrose.getConcentration() + (this.medium.Mgf.getConcentration()+this.medium.Caf.getConcentration()+edgto));
 		Double D_7 = this.cell.Os.getConcentration() - this.medium.Os.getConcentration();
 		this.setFlux((this.getPermeability()/I_18)*D_7);

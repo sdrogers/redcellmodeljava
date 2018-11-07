@@ -1,11 +1,13 @@
 package guicomponents;
 
 
+import java.awt.Font;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
 import org.math.plot.*;
+import org.math.plot.plots.Plot;
 
 import utilities.ResultHash;
 
@@ -34,10 +36,13 @@ public class PlotFrame extends JFrame {
 			plot.addLinePlot(s, x,y);
 			combined += s;
 		}
-		
-		plot.getAxis(0).setLabelText("time");
+		Font labelFont = new Font("SansSerif",0,24);
+		plot.getAxis(0).setLabelText("Time (m)");
         plot.getAxis(1).setLabelText(combined);
-		
+        plot.getAxis(0).setLabelFont(labelFont);
+        plot.getAxis(1).setLabelFont(labelFont);
+        plot.getAxis(0).setLightLabelFont(labelFont);
+        plot.getAxis(1).setLightLabelFont(labelFont);
 		this.setContentPane(plot);
 		this.setVisible(true);
 	}

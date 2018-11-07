@@ -58,10 +58,6 @@ public class StagePanel extends JPanel implements ActionListener, Updateable {
 		buttonPanel.add(editTransportButton);
 		buttonPanel.add(editPiezoButton);
 		
-		
-		
-		
-		
 		buttonPanel.add(deleteButton);
 		contentPanel.add(buttonPanel);
 	}

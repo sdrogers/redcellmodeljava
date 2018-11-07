@@ -2094,7 +2094,7 @@ public class RBC_model {
 	
 	public void publish() {
 //		System.out.println("Publishing at time: " + this.sampling_time);
-		ResultHash new_result = new ResultHash(this.sampling_time);
+		ResultHash new_result = new ResultHash(this.sampling_time*60.0); // convert to minutes for publishing
 		
 		new_result.setItem("Vw",this.Vw);
 		new_result.setItem("V/V",this.VV);

@@ -26,7 +26,7 @@ public class OptionsFrame extends JFrame implements ActionListener {
 		this.setTitle(title);
 		this.setSize(800, 500);
 		ps = new ParameterSelector(optionsFileName,this.options,this.parent);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
 		JPanel mainPanel = new JPanel(new GridBagLayout());
 		this.add(mainPanel,BorderLayout.CENTER);

@@ -3,6 +3,8 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -18,6 +20,8 @@ public class StagePanel extends JPanel implements ActionListener, Updateable {
 	private JTextArea commentArea;
 	private JTextArea optionArea;
 	private ExperimentScreen experimentScreen;
+	
+	
 	private OptionsFrame timeScreen,tempPermScreen,transportScreen,fractionScreen,piezoScreen;
 	public StagePanel(DSSettings dSSettings,ExperimentScreen es) {
 		JPanel outerContent = new JPanel(new BorderLayout());
@@ -73,10 +77,14 @@ public class StagePanel extends JPanel implements ActionListener, Updateable {
 			this.experimentScreen.deleteStage(this.dSSettings);
 		}else if(e.getSource() == editTimeButton) {
 			// edit the parameters of this DS
-			timeScreen = new OptionsFrame("Time Options","SettingFiles/timeOptions.csv",this.dSSettings.getOptions(), this,"");
+			if(timeScreen == null) {
+				timeScreen = new OptionsFrame("Time Options","SettingFiles/timeOptions.csv",this.dSSettings.getOptions(), this,"");
+			}
 			timeScreen.makeVisible();
 		}else if(e.getSource() == editTempButton) {
-			tempPermScreen = new OptionsFrame("Temperature & permeability Options","SettingFiles/temppermeabilityDSOptions.csv",this.dSSettings.getOptions(),this,"");
+			if(tempPermScreen == null) {
+				tempPermScreen = new OptionsFrame("Temperature & permeability Options","SettingFiles/temppermeabilityDSOptions.csv",this.dSSettings.getOptions(),this,"");
+			}
 			tempPermScreen.makeVisible();
 		}else if(e.getSource() == editTransportButton) {
 			String helpText = "The default Fmax value, F, is modified according to F*(100-X)/100 "
@@ -89,13 +97,19 @@ public class StagePanel extends JPanel implements ActionListener, Updateable {
 //					+ "Fmax values stay modified in successive stages.\n"
 //					+ "If changed again, change applies to original default value.\n"
 //					+ "For example, to inhibit by 80% in stage 1 enter 80. To return to the default in stage 2, enter 100.";
-			transportScreen = new OptionsFrame("Transport Options","SettingFiles/transportDSOptions.csv",this.dSSettings.getOptions(),this,helpText);
+			if(transportScreen == null) {
+				transportScreen = new OptionsFrame("Transport Options","SettingFiles/transportDSOptions.csv",this.dSSettings.getOptions(),this,helpText);
+			}
 			transportScreen.makeVisible();
 		}else if(e.getSource() == editFractionButton) {
-			fractionScreen = new OptionsFrame("Fraction and Medium Options","SettingFiles/cellfractionDSOptions.csv",this.dSSettings.getOptions(),this,"");
+			if(fractionScreen == null) {
+				fractionScreen = new OptionsFrame("Fraction and Medium Options","SettingFiles/cellfractionDSOptions.csv",this.dSSettings.getOptions(),this,"");
+			}
 			fractionScreen.makeVisible();
 		}else if(e.getSource() == editPiezoButton) {
-			piezoScreen = new OptionsFrame("Piezo Options","SettingFiles/piezoDSOptions.csv",this.dSSettings.getOptions(),this,"");
+			if(piezoScreen == null) {
+				piezoScreen = new OptionsFrame("Piezo Options","SettingFiles/piezoDSOptions.csv",this.dSSettings.getOptions(),this,"");
+			}
 			piezoScreen.makeVisible();
 		}
 		
@@ -116,6 +130,7 @@ public class StagePanel extends JPanel implements ActionListener, Updateable {
 		this.commentArea.setText(newString);
 		this.dSSettings.setComments(newString);
 	}
+	
 	
 
 }

@@ -65,7 +65,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		potentialParamList = new JList<Parameter>();
 		potentialParamList.setModel(potentialParams);
 		potentialParamList.addListSelectionListener(this);
-		potentialParamList.setBorder(BorderFactory.createTitledBorder("Available parameters"));
+		potentialParamList.setBorder(BorderFactory.createTitledBorder("Default values"));
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;

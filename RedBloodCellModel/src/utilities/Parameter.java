@@ -39,7 +39,7 @@ public class Parameter {
 		return s;
 	}
 	public int hashCode() {
-		return name.hashCode(); // hash on name so we dont end up with duplicates
+		return name.hashCode(); // hash on name so we don't end up with duplicates
 	}
 	public HashSet<String> getAllowedValues() {
 		return this.allowedValues;

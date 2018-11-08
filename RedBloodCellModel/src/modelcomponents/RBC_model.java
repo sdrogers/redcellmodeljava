@@ -66,7 +66,7 @@ public class RBC_model {
 	//# self.B_8 = 37.0
 	private Double temp_celsius;
 	//# self.B_9 = 4.0
-	private Double B_10;
+	private Double Q10Passive; // was B10, B_10, B[10] // ADD TO TAB FOR PERMEABILITIES
 	
 	private Double delta_H;
 	private	Double D_6;
@@ -261,8 +261,8 @@ public class RBC_model {
 		//# self.B_8 = 37.0
 		temp_celsius = 37.0;
 		//# self.B_9 = 4.0
-		B_10 = 2.0; // Q10L. Q10 - defines the number of times by which a dynamic process changes with temperature change of 10deg.
-		// Q10L (B_10) the factor for leaks. Q10P is the factor for pumps 
+		Q10Passive = 2.0; // Q10L. Q10 - defines the number of times by which a dynamic process changes with temperature change of 10deg.
+		// Q10L (Q10Passive) the factor for leaks. Q10P is the factor for pumps 
 		
 		
 		
@@ -544,7 +544,7 @@ public class RBC_model {
 			
 			this.getNapump().compute_flux(this.temp_celsius);
 			// Temperature dependence of the passive fluxes, uses Q10L
-			this.I_18 = Math.exp(((37.0-this.temp_celsius)/10.0)*Math.log(this.B_10));
+			this.I_18 = Math.exp(((37.0-this.temp_celsius)/10.0)*Math.log(this.Q10Passive));
 			this.carriermediated.compute_flux(this.I_18);
 			this.cotransport.compute_flux(this.I_18);
 			this.JS.compute_flux(this.I_18);
@@ -1715,6 +1715,21 @@ public class RBC_model {
 		if(temp != null) {
 			this.cell.K.setConcentration(Double.parseDouble(temp));
 			usedoptions.add("ck-conc");
+		}
+		
+		temp = rsoptions.get("q10-passive");
+		if(temp != null) {
+			this.Q10Passive = Double.parseDouble(temp);
+			usedoptions.add("q10-passive");
+		}
+		/*
+		 *  The following sets the active Q10 in the sodium pump
+		 *  which is also used by the Ca-Mg transporter 
+		 */
+		temp = rsoptions.get("q10-active");
+		if(temp != null) {
+			this.napump.setQ10Active(Double.parseDouble(temp));
+			usedoptions.add("q10-active");
 		}
 //		temp = rsoptions.get("mchc");
 //		if(temp != null) {

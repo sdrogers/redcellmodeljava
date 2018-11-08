@@ -22,7 +22,7 @@ public class NaPump {
 	private Double I_6;
 	private Double I_9;
 	private Double I_11;
-	private Double B_9; //Q10P
+	private Double Q10Active; // Previously known as B_9
 	private Double mgnapk;
 	private Double mgnapik;
 	private Double I_77;
@@ -50,11 +50,14 @@ public class NaPump {
 		this.I_6 = 0.0;
 		this.I_9 = 0.0;
 		this.I_11 = 0.0;
-		this.B_9 = 4.0;
+		this.Q10Active = 4.0;
 		this.mgnapk = 0.05;
 		this.mgnapik = 4.0;
 		this.I_77 = 7.216; //pH dependence of sodium pump, with I78
 		this.I_78 = 0.4;
+	}
+	public void setQ10Active(Double Q10Active) {
+		this.Q10Active = Q10Active;
 	}
 	private void compute_I(Double temperature) {
 		Double I_1 = this.B_1*(1 + (this.cell.K.getConcentration()/this.B_4));
@@ -69,7 +72,7 @@ public class NaPump {
 		Double I_10 = this.medium.Na.getConcentration()/(this.medium.Na.getConcentration() + this.B_2*(1 + this.medium.K.getConcentration()/this.B_3));
 		this.I_11 = Math.pow(I_10, 3.0);
 		// I_17 is temperature dependent factor for na and ca pumps - possibly re-factor out of a particular pump
-		this.I_17 = Math.exp(((37.0-temperature)/10.0)*Math.log(this.B_9));
+		this.I_17 = Math.exp(((37.0-temperature)/10.0)*Math.log(this.Q10Active));
 	}
 	
 	public void compute_permeabilities(Double temperature) {

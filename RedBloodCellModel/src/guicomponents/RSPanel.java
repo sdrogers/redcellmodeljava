@@ -82,14 +82,14 @@ public class RSPanel extends JPanel implements ActionListener,Updateable{
 		this.rSArea.setText(newString);
 		this.experimentalSettings.setRSComments(newString);
 	}
-	public void update() {
-		// Updates the parameter panel
-		HashMap<String,String> params = experimentalSettings.getRSOptions();
-		String newContent = "";
-		for(String key: params.keySet()) {
-			newContent += key + " " + params.get(key) + "\n";
-		}
-		oArea.setText(newContent);
+	public void update() { // TODO delete this method -- it's obsolete
+		// Updates the parameter panel 
+//		HashMap<String,String> params = experimentalSettings.getRSOptions();
+//		String newContent = "";
+//		for(String key: params.keySet()) {
+//			newContent += key + " " + params.get(key) + "\n";
+//		}
+//		oArea.setText(newContent);
 		
 	}
 	public void actionPerformed(ActionEvent e) {

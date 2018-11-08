@@ -1,5 +1,5 @@
 Alternative name,Parameter/Variable name,default value,Units,Description,"Allowed values (if blank, a number is assumed)"
-na-pump,na-pump-flux-change,,%,"Na pump Vmax inhibition, percent",
-j-s-cycle,js-stimulation-inhibition,,%,Jacobs-Stewart cycle stimulation-inhibition factor,
-PMCA,ca-pump-vmax-change,,%,Ca pump Vmax stimulation-inhibition factor,
-gardos-channel,percentage-inhibition,,%,"Gardos channel Pmax inhibition, percent",
+Na/K pump,na-pump-flux-change,0,%,"Na pump Vmax inhibition, percent",
+J-S cycle,js-stimulation-inhibition,0,%,Jacobs-Stewart cycle stimulation-inhibition factor,
+PMCA,ca-pump-vmax-change,0,%,Ca pump Vmax stimulation-inhibition factor,
+Gardos channel,percentage-inhibition,0,%,"Gardos channel Pmax inhibition, percent",

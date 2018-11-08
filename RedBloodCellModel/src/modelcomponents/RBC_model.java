@@ -1,6 +1,7 @@
 package modelcomponents;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 import utilities.MileStone;
@@ -779,6 +780,7 @@ public class RBC_model {
 			for(String option: rsoptions.keySet()) {
 				if(!usedoptions.contains(option)) {
 					System.out.println(option);
+					JOptionPane.showMessageDialog(null,"Didn't recognise " + option + " for DS - tell Simon!");
 				}
 			}
 		}		
@@ -808,6 +810,7 @@ public class RBC_model {
 		for(String option: options.keySet()) {
 			if(!usedoptions.contains(option)) {
 				System.out.println(option);
+				JOptionPane.showMessageDialog(null,"Didn't recognise " + option + " for DS - tell Simon!");
 			}
 		}
 		this.stage += 1;
@@ -815,9 +818,9 @@ public class RBC_model {
 		//this.publish();
 	}
 	private void set_piezo_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
-		String temp = options.get("piezo");
+		String temp = options.get("Incorporate PIEZO stage");
 		if(temp != null) {
-			usedoptions.add("piezo");
+			usedoptions.add("Incorporate PIEZO stage");
 			if(!temp.equals("yes")) {
 				// piezo is off by default
 				this.piezo = null;
@@ -846,45 +849,45 @@ public class RBC_model {
 					piezo.setRecovery(Double.parseDouble(temp)/60.0);
 				}
 				
-				temp = options.get("piezo_cycles");
+				temp = options.get("Piezo Cycles per print");
 				if(temp != null) {
-					usedoptions.add("piezo_cycles");
+					usedoptions.add("Piezo Cycles per print");
 					piezo.setCycles(Integer.parseInt(temp));
 				}
 				
-				temp = options.get("piezo_pkg");
+				temp = options.get("PzKG");
 				if(temp != null) {
-					usedoptions.add("piezo_pkg");
+					usedoptions.add("PzKG");
 					piezo.setPkg(Double.parseDouble(temp));
 				}
 				
-				temp = options.get("piezo_pnag");
+				temp = options.get("PzNaG");
 				if(temp != null) {
-					usedoptions.add("piezo_pnag");
+					usedoptions.add("PzNaG");
 					piezo.setPnag(Double.parseDouble(temp));
 				}
 				
-				temp = options.get("piezo_pcag");
+				temp = options.get("PzCaG");
 				if(temp != null) {
-					usedoptions.add("piezo_pcag");
+					usedoptions.add("PzCaG");
 					piezo.setPcag(Double.parseDouble(temp));
 				}
 
-				temp = options.get("piezo_pag");
+				temp = options.get("PzAG");
 				if(temp != null) {
-					usedoptions.add("piezo_pag");
+					usedoptions.add("PzAG");
 					piezo.setPag(Double.parseDouble(temp));
 				}
 				
-				temp = options.get("piezo_pmca");
+				temp = options.get("PMCA inhibition");
 				if(temp != null) {
-					usedoptions.add("piezo_pmca");
+					usedoptions.add("PMCA inhibition");
 					piezo.setPmca(Double.parseDouble(temp));
 				}
 
-				temp = options.get("piezo_integration");
+				temp = options.get("Piezo Frequency factor");
 				if(temp != null) {
-					usedoptions.add("piezo_integration");
+					usedoptions.add("Piezo Frequency factor");
 					piezo.setiF(Double.parseDouble(temp));
 				}
 				
@@ -894,10 +897,10 @@ public class RBC_model {
 	}
 	private void set_temp_permeability_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
 		Double defaultTemp = this.temp_celsius;
-		String temp = options.get("temperature");
+		String temp = options.get("Temperature");
 		if(temp != null) {
 			this.temp_celsius = Double.parseDouble(temp);
-			usedoptions.add("temperature");
+			usedoptions.add("Temperature");
 			Double piold = this.pit0 - (0.016*defaultTemp);
 			Double pinew = this.pit0 - (0.016*this.temp_celsius);
 			this.I_74 = pinew;
@@ -926,16 +929,16 @@ public class RBC_model {
 			}
 		}
 		
-		temp = options.get("water-perm");
+		temp = options.get("Water permeability");
 		if(temp != null) {
 			this.water.setPermeability(Double.parseDouble(temp));
-			usedoptions.add("water-perm");
+			usedoptions.add("Water permeability");
 		}
 		
-		temp = options.get("pgk");
+		temp = options.get("PKG");
 		if(temp != null) {
 			this.goldman.setPermeability_K(Double.parseDouble(temp));
-			usedoptions.add("pgk");
+			usedoptions.add("PKG");
 		}
 		
 		temp = options.get("pgkh");
@@ -944,36 +947,36 @@ public class RBC_model {
 			usedoptions.add("pgkh");
 		}
 		
-		temp = options.get("pgna");
+		temp = options.get("PNaG");
 		if(temp != null) {
 			this.goldman.setPermeability_Na(Double.parseDouble(temp));
-			usedoptions.add("pgna");
+			usedoptions.add("PNaG");
 		}
 		
-		temp = options.get("pga");
+		temp = options.get("PAG");
 		if(temp != null) {
 			this.goldman.setPermeability_A(Double.parseDouble(temp));
-			usedoptions.add("pga");
+			usedoptions.add("PAG");
 		}
 		
-		temp = options.get("pgh");
+		temp = options.get("PHG");
 		if(temp != null) {
 			this.goldman.setPermeability_H(Double.parseDouble(temp));
-			usedoptions.add("pgh");
+			usedoptions.add("PHG");
 		}
 		
 		// New option Jan 2018
-		temp = options.get("pgca");
+		temp = options.get("PCaG");
 		if(temp != null) {
 			this.passiveca.setFcalm(Double.parseDouble(temp));
-			usedoptions.add("pgca");
+			usedoptions.add("PCaG");
 		}
 		
 		
-		temp = options.get("pmg");
+		temp = options.get("PA23187CaMg");
 		if(temp != null) {
 			this.a23.setPermeability_Mg(Double.parseDouble(temp));
-			usedoptions.add("pmg");
+			usedoptions.add("PA23187CaMg");
 			temp = options.get("a23cam");
 			if(temp != null) {
 				this.a23.setCamk(Double.parseDouble(temp));
@@ -1006,11 +1009,17 @@ public class RBC_model {
 		
 		this.a23.setPermeability_Ca(this.a23.getPermeability_Mg());
 		
-		temp = options.get("pit0");
+		temp = options.get("Hb pI(0oC) 7.2(Oxy) or 7.5(Deoxy)");
 		if(temp != null) {
 			this.I_67 = this.pit0; // Store old value
-			this.pit0 = Double.parseDouble(temp);
-			usedoptions.add("pit0");	
+			usedoptions.add("Hb pI(0oC) 7.2(Oxy) or 7.5(Deoxy)");
+			if(temp.equals("Oxy")) {
+				this.pit0 = 7.2;
+			}else if(temp.equals("Deoxy")) {
+				this.pit0 = 7.5;
+			}else {
+				this.pit0 = 7.2;
+			}
 			this.cell.setpH(this.pit0 - this.I_67 + this.cell.getpH());
 			this.cell.H.setConcentration(Math.pow(10.0, -this.cell.getpH()));
 			this.I_74 = this.pit0 - (0.016*this.temp_celsius);
@@ -1024,7 +1033,7 @@ public class RBC_model {
 		}
 		
 	}
-	
+	// Obsolete method - remove me
 	private void set_transport_changes_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
 		String temp = options.get("na-pump-flux-change");
 		if(temp != null) {
@@ -1085,10 +1094,10 @@ public class RBC_model {
 	}
 	
 	private void set_cell_fraction_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
-		String temp = options.get("fraction");
+		String temp = options.get("Cell volume fraction");
 		if(temp != null) {
 			this.fraction = Double.parseDouble(temp);
-			usedoptions.add("fraction");
+			usedoptions.add("Cell volume fraction");
 		}
 		
 		if(this.A_7 != this.fraction) {
@@ -1112,32 +1121,32 @@ public class RBC_model {
 			}	
 		}
 		
-		temp = options.get("bufferconc");
+		temp = options.get("HEPES concentration");
 		if(temp != null) {
 			this.buffer_conc = Double.parseDouble(temp);
-			usedoptions.add("bufferconc");
+			usedoptions.add("HEPES concentration");
 		}
 		
 		this.A_12 = this.medium.getpH();
-		temp = options.get("extph");
+		temp = options.get("Initial medium pH");
 		if(temp != null) {
 			this.medium.setpH(Double.parseDouble(temp));
-			usedoptions.add("extph");
+			usedoptions.add("Initial medium pH");
 		}
 		this.phadjust();
 		
-		temp = options.get("nag");
+		temp = options.get("Exchange Na for Glucamine");
 		if(temp != null) {
 			this.I_72 = Double.parseDouble(temp);
-			usedoptions.add("nag");
+			usedoptions.add("Exchange Na for Glucamine");
 			this.medium.Glucamine.setConcentration(this.medium.Glucamine.getConcentration() + this.I_72);
 			this.medium.Na.setConcentration(this.medium.Na.getConcentration() - this.I_72);
 		}
 		// Should this one be removed once done?
-		temp = options.get("acl");
+		temp = options.get("Exchange Cl(A) for gluconate");
 		if(temp != null) {
 			this.I_73 = Double.parseDouble(temp);
-			usedoptions.add("acl");
+			usedoptions.add("Exchange Cl(A) for gluconate");
 			this.medium.Gluconate.setConcentration(this.medium.Gluconate.getConcentration() + this.I_73);
 			this.medium.A.setConcentration(this.medium.A.getConcentration() - this.I_73);
 			if(this.I_73 != 0) {
@@ -1149,76 +1158,76 @@ public class RBC_model {
 			}
 		}
 		
-		temp = options.get("NaxK");
+		temp = options.get("NaReplace KCl with NaCl");
 		if(temp != null) {
-			this.I_40 = Double.parseDouble(options.get("NaxK"));
+			this.I_40 = Double.parseDouble(temp);
 			this.medium.Na.setConcentration(this.medium.Na.getConcentration() + this.I_40);
 			this.medium.K.setConcentration(this.medium.K.getConcentration() - this.I_40);
-			usedoptions.add("NaxK");
+			usedoptions.add("Replace KCl with NaCl");
 //			options.remove("NaxK");
 		}
 		
-		temp = options.get("KxNa");
+		temp = options.get("Replace NaCl with KCl");
 		if(temp != null) {
-			this.I_33 = Double.parseDouble(options.get("KxNa"));
+			this.I_33 = Double.parseDouble(temp);
 			this.medium.Na.setConcentration(this.medium.Na.getConcentration() - this.I_33);
 			this.medium.K.setConcentration(this.medium.K.getConcentration() + this.I_33);
-			usedoptions.add("KxNa");
+			usedoptions.add("Replace NaCl with KCl");
 		//	options.remove("KxNa");
 		}
 		
-		temp = options.get("change-nacl");
+		temp = options.get("Add or remove NaCl");
 		if(temp != null) {
 			this.I_45 = Double.parseDouble(options.get("change-nacl"));
 			this.medium.Na.setConcentration(this.medium.Na.getConcentration() + this.I_45);
 			this.medium.A.setConcentration(this.medium.A.getConcentration() + this.I_45);
-			usedoptions.add("change-nacl");
+			usedoptions.add("Add or remove NaCl");
 		}
 		
-		temp = options.get("change-kcl");
+		temp = options.get("Add or remove KCl");
 		if(temp != null) {
-			this.I_34 = Double.parseDouble(options.get("change-kcl"));
+			this.I_34 = Double.parseDouble(temp);
 			this.medium.K.setConcentration(this.medium.K.getConcentration() + this.I_34);
 			this.medium.A.setConcentration(this.medium.A.getConcentration() + this.I_34);
-			usedoptions.add("change-kcl");
+			usedoptions.add("Add or remove KCl");
 		}
 		
-		temp = options.get("add-sucrose");
+		temp = options.get("Add or remove sucrose");
 		if(temp != null) {
-			this.I_46 = Double.parseDouble(options.get("add-sucrose"));
+			this.I_46 = Double.parseDouble(temp);
 			this.medium.Sucrose.setConcentration(this.medium.Sucrose.getConcentration() + this.I_46);
-			usedoptions.add("add-sucrose");
+			usedoptions.add("Add or remove sucrose");
 		}
 		
-		temp = options.get("mgot");
+		temp = options.get("Mg concentration");
 		if(temp != null) {
 			Double mgtold = this.medium.Mgt.getConcentration();
 			this.medium.Mgt.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("mgot");
+			usedoptions.add("Mg concentration");
 			if(this.medium.Mgt.getConcentration() != 0) {
 				this.medium.A.setConcentration(this.medium.A.getConcentration() + 2.0*(this.medium.Mgt.getConcentration() - mgtold));
 			}
 		}
 		
-		temp = options.get("caot");
+		temp = options.get("Ca concentration");
 		if(temp != null) {
 			Double catold = this.medium.Cat.getConcentration();
 			this.medium.Cat.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("caot");
+			usedoptions.add("Ca concentration");
 			if(this.medium.Cat.getConcentration() != 0) {
 				this.medium.A.setConcentration(this.medium.A.getConcentration() + 2.0*(this.medium.Cat.getConcentration() - catold));
 			}
 		}
 		
-		temp = options.get("chelator");
+		temp = options.get("Add EGTA(1) or EDTA(2) (0 for no chelator)");
 		if(temp!=null) {
-			usedoptions.add("chelator");
+			usedoptions.add("Add EGTA(1) or EDTA(2) (0 for no chelator)");
 			this.ligchoice = Double.parseDouble(temp);
 		}
 		
-		temp = options.get("edgto"); // chelator concentration
+		temp = options.get("Chelator concentration"); // chelator concentration
 		if(temp != null) {
-			usedoptions.add("edgto");
+			usedoptions.add("Chelator concentration");
 			this.edgto = Double.parseDouble(temp);
 		}
 		
@@ -1449,48 +1458,48 @@ public class RBC_model {
 			}
 		}
 	}
-	
+	// THIS METHOD IS OBSOLETE...
 	private void set_screen_time_factor_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
-		String temp = options.get("time");
+		String temp = options.get("Time");
 		if(temp != null) {
 			this.duration_experiment += Double.parseDouble(temp);
-			usedoptions.add("time");
+			usedoptions.add("Time");
 		}
 		
-		temp = options.get("dp");
+		temp = options.get("Output Accuracy");
 		if(temp != null) {
 			this.dp = Integer.parseInt(temp);
-			usedoptions.add("dp");
+			usedoptions.add("Output Accuracy");
 		}
 		
 		this.I_43 = this.integration_interval_factor;
-		temp = options.get("integrationfactor");
+		temp = options.get("Frequency Factor");
 		if(temp != null) {
 			this.integration_interval_factor = Double.parseDouble(temp);
-			usedoptions.add("integrationfactor");
+			usedoptions.add("Frequency Factor");
 		}
 		
-		temp = options.get("compute_delta_time");
+		temp = options.get("Regular dt");
 		if(temp != null) {
 			if(temp.equals("no")) {
 				this.compute_delta_time = false;
-				usedoptions.add("compute_delta_time");
+				usedoptions.add("Regular dt");
 			}else if(temp.equals("yes")) {
 				this.compute_delta_time = true;
-				usedoptions.add("compute_delta_time");
+				usedoptions.add("Regular dt");
 			}else {
 				System.out.println("Invalud value for field compute_delta_time");
 			}
 		}
-		temp = options.get("delta_time");
+		temp = options.get("Delta Time");
 		if(temp != null) {
 			this.delta_time = Double.parseDouble(temp);
-			usedoptions.add("delta_time");
+			usedoptions.add("Delta Time");
 		}
-		temp = options.get("cyclesperprint");
+		temp = options.get("Cycles per print");
 		if(temp != null) {
 			this.cycles_per_print = Integer.parseInt(temp);
-			usedoptions.add("cyclesperprint");
+			usedoptions.add("Cycles per print");
 		}
 		
 	}
@@ -1680,10 +1689,10 @@ public class RBC_model {
 	}
 	
 	public void naPumpScreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
-		String na_efflux_fwd = rsoptions.get("na-efflux-fwd");
+		String na_efflux_fwd = rsoptions.get("Na/K pump Na efflux");
 		if(na_efflux_fwd != null) {
 			this.getNapump().setFluxFwd(Double.parseDouble(na_efflux_fwd));
-			usedoptions.add("na-efflux-fwd");
+			usedoptions.add("Na/K pumpNa efflux");
 		}
 		
 		if(this.getNapump().getFluxFwd() == -2.61) {
@@ -1706,30 +1715,30 @@ public class RBC_model {
 		
 		// Other code to be added here...
 		// New ones added for reduced RS in March 18
-		String temp = rsoptions.get("cna-conc");
+		String temp = rsoptions.get("[Na]i");
 		if(temp != null) {
 			this.cell.Na.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("cna-conc");
+			usedoptions.add("[Na]i");
 		}
-		temp = rsoptions.get("ck-conc");
+		temp = rsoptions.get("[K]i");
 		if(temp != null) {
 			this.cell.K.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("ck-conc");
+			usedoptions.add("[K]i");
 		}
 		
-		temp = rsoptions.get("q10-passive");
+		temp = rsoptions.get("Q10 passive");
 		if(temp != null) {
 			this.Q10Passive = Double.parseDouble(temp);
-			usedoptions.add("q10-passive");
+			usedoptions.add("Q10 passive");
 		}
 		/*
 		 *  The following sets the active Q10 in the sodium pump
 		 *  which is also used by the Ca-Mg transporter 
 		 */
-		temp = rsoptions.get("q10-active");
+		temp = rsoptions.get("Q10 active");
 		if(temp != null) {
 			this.napump.setQ10Active(Double.parseDouble(temp));
-			usedoptions.add("q10-active");
+			usedoptions.add("Q10 active");
 		}
 //		temp = rsoptions.get("mchc");
 //		if(temp != null) {
@@ -1744,19 +1753,19 @@ public class RBC_model {
 
 	}
 	public void cellwaterscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
-		String hb_content_str = rsoptions.get("hb-content");
+		String hb_content_str = rsoptions.get("MCHC");
 		if(hb_content_str != null) {
-			usedoptions.add("hb-content");
+			usedoptions.add("MCHC");
 			this.hb_content = Double.parseDouble(hb_content_str);
 		}
 		this.cell.Hb.setAmount(this.hb_content * 10.0/64.5);
 		this.I_79 = 1.0 - this.hb_content/136.0;
 		this.vlysis = 1.45;
 		if(this.hb_content == 34.0) {
-			String temp = rsoptions.get("cell-water");
+			String temp = rsoptions.get("Cell water content");
 			if(temp != null) {
 				this.I_79 = Double.parseDouble(temp);
-				usedoptions.add("cell-water");
+				usedoptions.add("Cell water content");
 			}
 			temp = rsoptions.get("lytic-cell-water");
 			if(temp != null) {
@@ -1768,10 +1777,10 @@ public class RBC_model {
 	}
 	
 	public void cellanionprotonscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
-		String temp = rsoptions.get("cla-conc");
+		String temp = rsoptions.get("[A]i");
 		if(temp != null) {
 			this.cell.A.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("cla-conc");
+			usedoptions.add("[A]i");
 		}
 		
 		
@@ -1790,7 +1799,8 @@ public class RBC_model {
 		}
 		
 		// New option added for reduced RS, March 18
-		temp = rsoptions.get("hb-choice");
+//		temp = rsoptions.get("hb-choice");
+		temp = rsoptions.get("Haemoglobin (A or S)");
 		if(temp != null) {
 			if(temp == "HbA") {
 				this.A_1 = -1.0;
@@ -1799,7 +1809,7 @@ public class RBC_model {
 				this.A_1 = -8.0;
 				this.pit0 = 7.4;
 			}
-			usedoptions.add("hb-choice");
+			usedoptions.add("Haemoglobin (HbA or HbS)");
 		}
 	}
 	
@@ -1931,10 +1941,10 @@ public class RBC_model {
 		}
 		this.cbenz2 = this.benz2/this.Vw;
 
-		temp = rsoptions.get("vmax-cap");
+		temp = rsoptions.get("PMCA Fmax");
 		if(temp != null) {
 			this.capump.setDefaultFcapm(Double.parseDouble(temp));
-			usedoptions.add("vmax-cap");
+			usedoptions.add("PMCA Fmax");
 		} 
 //		else {
 //			this.capump.setFcapm(12.0);
@@ -1984,30 +1994,30 @@ public class RBC_model {
 			this.capump.setCapmgk(0.1);
 		}
 		
-		temp = rsoptions.get("pmax-pcag");
+		temp = rsoptions.get("PCaG");
 		if(temp != null) {
 			this.passiveca.setFcalm(Double.parseDouble(temp));
-			usedoptions.add("pmax-pcag");
+			usedoptions.add("PCaG");
 		} 
 //		else {
 //			this.passiveca.setFcalm(0.05);
 //		}
 		
 		
-		temp = rsoptions.get("ca2+-pkmax");
+		temp = rsoptions.get("PKGardosMax");
 		if(temp != null) {
 			this.goldman.setDefaultPkm(Double.parseDouble(temp));
-			usedoptions.add("ca2+-pkmax");
+			usedoptions.add("PKGardosMax");
 		} 
 //		else {
 //			this.goldman.setPkm(30.0);
 //		}
 		
 		
-		temp = rsoptions.get("ca2+-pkca");
+		temp = rsoptions.get("KCa(Gardos channel)");
 		if(temp != null) {
 			this.goldman.setPkcak(Double.parseDouble(temp));
-			usedoptions.add("ca2+-pkca");
+			usedoptions.add("KCa(Gardos channel)");
 		}
 //		else {
 //			this.goldman.setPkcak(1e-2);

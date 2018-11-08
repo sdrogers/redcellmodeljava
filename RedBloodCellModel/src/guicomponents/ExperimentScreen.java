@@ -38,7 +38,7 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 		
 		JPanel rsPanel = new JPanel(new GridLayout(0,1));
 		cp = new CommentsPanel(this.experimentalSettings);
-		cp.setBorder(BorderFactory.createTitledBorder("Overall Comments"));
+		cp.setBorder(BorderFactory.createTitledBorder("Experiment details"));
 		
 		
 		r = new RSPanel(this.experimentalSettings);
@@ -118,6 +118,8 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 			}
 			this.r.processComment();
 			this.experimentalSettings.writeFile(this);
+			this.cp.processFilename();
+			this.repaint();
 		}else if(e.getSource() == runButton) {
 			if(checkOptions()) {
 				new RunFrame(this.experimentalSettings,this);

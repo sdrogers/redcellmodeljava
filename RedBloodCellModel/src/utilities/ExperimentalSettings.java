@@ -40,7 +40,9 @@ public class ExperimentalSettings {
 	public int getNStages() {
 		return this.dSStages.size();
 	}
-	
+	public String getFileName() {
+		return this.inputFileName;
+	}
 	private void loadFromFile() {
 		BufferedReader reader = null;
 		File file = new File(this.inputFileName);
@@ -96,8 +98,11 @@ public class ExperimentalSettings {
 	}
 	public String toString() {
 		String rString = "";
+		if(this.inputFileName != null) {
+			rString += "# " + this.inputFileName + "\n";
+		}
 		if(this.overallComments != null) {
-			rString = this.overallComments + "\n";
+			rString += this.overallComments + "\n";
 		}
 		rString += "RS\n";
 		if(this.rSComments != null) {
@@ -107,10 +112,12 @@ public class ExperimentalSettings {
 			rString += key + " " + rSOptions.get(key) + "\n";
 		}
 		rString += "\n";
+		int dsPos = 1;
 		for(DSSettings d: this.dSStages) {
-			rString += "DS\n";
+			rString += "DS " + dsPos + "\n";
 			rString += d;
 			rString += "\n";
+			dsPos += 1;
 		}
 		return rString;
 	}
@@ -146,6 +153,7 @@ public class ExperimentalSettings {
 		BufferedWriter writer = null;
 		try {
 			writer = new BufferedWriter(new FileWriter(file));
+			this.inputFileName = outputFileName;
 			writer.write(this.toString());
 		}catch(IOException e) {
 			e.printStackTrace();

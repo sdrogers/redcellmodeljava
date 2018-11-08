@@ -21,6 +21,8 @@ public class RBC_model {
 	                                  "Mgluc+","EN test"};
 	private ArrayList<ResultHash> resultList = new ArrayList<ResultHash>();
 	
+	private final double MIN_BUFFER_CONC = 1e-10;
+	
 	private Region cell;
 	private Region medium;
 	private JacobsStewart JS;
@@ -655,8 +657,13 @@ public class RBC_model {
 		}else {
 			this.medium.Hb.setConcentration(this.medium.Hb.getConcentration()*I_30 - this.delta_H*this.A_8);
 			this.medium.H.setConcentration(this.A_5*(this.medium.Hb.getConcentration()/(this.buffer_conc-this.medium.Hb.getConcentration())));
-
+			if(this.medium.H.getConcentration() < MIN_BUFFER_CONC) {
+				this.medium.H.setConcentration(MIN_BUFFER_CONC);
+			}
 			this.medium.setpH(-Math.log(this.medium.H.getConcentration())/Math.log(10.0));
+			if(Double.isNaN((this.medium.getpH()))) {
+				System.out.println("Warning: pH = NaN, Buffer conc = " + this.medium.H.getConcentration());
+			}
 		}
 
 		// Cell concentrations and external concentrations
@@ -1612,7 +1619,6 @@ public class RBC_model {
 				this.cell.Mgf.getConcentration() + 
 				this.cell.Caf.getConcentration() + 
 				this.cbenz2);
-		System.out.println("And this? " + this.cell.Os.getConcentration());
 	}
 	
 	private void secureisonoticityRS() {

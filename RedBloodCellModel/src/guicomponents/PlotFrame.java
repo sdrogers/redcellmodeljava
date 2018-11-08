@@ -36,13 +36,14 @@ public class PlotFrame extends JFrame {
 			plot.addLinePlot(s, x,y);
 			combined += s;
 		}
-		Font labelFont = new Font("SansSerif",0,24);
+		Font labelFont = new Font("SansSerif",Font.BOLD,24);
+		Font tickFont = new Font("SansSerif",0,18);
 		plot.getAxis(0).setLabelText("Time (m)");
         plot.getAxis(1).setLabelText(combined);
         plot.getAxis(0).setLabelFont(labelFont);
         plot.getAxis(1).setLabelFont(labelFont);
-        plot.getAxis(0).setLightLabelFont(labelFont);
-        plot.getAxis(1).setLightLabelFont(labelFont);
+        plot.getAxis(0).setLightLabelFont(tickFont);
+        plot.getAxis(1).setLightLabelFont(tickFont);
 		this.setContentPane(plot);
 		this.setVisible(true);
 	}

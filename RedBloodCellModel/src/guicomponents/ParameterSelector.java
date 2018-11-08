@@ -92,7 +92,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		c.gridx = 1;
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
-		currentParamList.setBorder(BorderFactory.createTitledBorder("Changed parameters"));
+		currentParamList.setBorder(BorderFactory.createTitledBorder("Modified values"));
 		centerPanel.add(new JScrollPane(currentParamList),c);
 		this.add(centerPanel, BorderLayout.CENTER);
 		removeButton = new JButton("Remove");
@@ -100,7 +100,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		bottomPanel.add(removeButton);
 		
 		descriptionField = new JTextArea();
-		descriptionField.setText("Click a parameter to see a description");
+		descriptionField.setText("Click on an entry to see a description");
 		descriptionField.setEditable(false);
 		descriptionField.setBackground(topPanel.getBackground());
 		topPanel.add(descriptionField);
@@ -177,8 +177,15 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 	}
 	private void updateCurrentParams(Parameter selected) {
 		// Does a parameter of this name exist?
-		
-		String inputValue = JOptionPane.showInputDialog("Please input a value for "+selected.getDisplayName()).trim();
+		String displayString = "Please input a value for "+selected.getDisplayName();
+		if(selected.getAllowedValues() != null) {
+			displayString += "  (permitted values = ";
+			for(String v: selected.getAllowedValues()) {
+				displayString += v + ", ";
+			}
+			displayString = displayString.substring(0,displayString.length()-2) + ")";
+		}
+		String inputValue = JOptionPane.showInputDialog(displayString).trim();
 		if(checkInput(inputValue,selected)) {
 			boolean exists = false;
 			int pos = 0;
@@ -293,7 +300,8 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 						allowedValues.add(t);
 					}
 				}
-				Parameter pr = new Parameter(parameter_name,parameter_value,parameter_units,parameter_description,allowedValues,display_name);
+//				Parameter pr = new Parameter(parameter_name,parameter_value,parameter_units,parameter_description,allowedValues,display_name);
+				Parameter pr = new Parameter(display_name,parameter_value,parameter_units,parameter_description,allowedValues,display_name);
 				potentialParams.addElement(pr);
 				keys.put(pr.getName(),pr);
 			}
@@ -305,7 +313,8 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		for(String s: this.options.keySet()) {
 			if(keys.containsKey(s)) {
 				Parameter pr = keys.get(s);
-				Parameter newPr = new Parameter(pr.getName(),this.options.get(s),pr.getUnits(),pr.getDescription(),pr.getAllowedValues(),pr.getDisplayName());
+//				Parameter newPr = new Parameter(pr.getName(),this.options.get(s),pr.getUnits(),pr.getDescription(),pr.getAllowedValues(),pr.getDisplayName());
+				Parameter newPr = new Parameter(pr.getDisplayName(),this.options.get(s),pr.getUnits(),pr.getDescription(),pr.getAllowedValues(),pr.getDisplayName());
 				System.out.println(newPr);
 				currentParams.addElement(newPr);
 			}

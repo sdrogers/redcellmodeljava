@@ -70,7 +70,7 @@ public class ExperimentalSettings {
 					this.loadState += 1;
 				}else if(line.length() > 1) {
 					// It's a parameter
-					String[] tokens = line.trim().split(" ");
+					String[] tokens = line.trim().split(":");
 					System.out.println(line + " " + line.length() + " " + tokens.length);
 					String key = tokens[0];
 					String value = tokens[1];
@@ -109,7 +109,7 @@ public class ExperimentalSettings {
 			rString += this.rSComments;	
 		}
 		for(String key: rSOptions.keySet()) {
-			rString += key + " " + rSOptions.get(key) + "\n";
+			rString += key + ":" + rSOptions.get(key) + "\n";
 		}
 		rString += "\n";
 		int dsPos = 1;

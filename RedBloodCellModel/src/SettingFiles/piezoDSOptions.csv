@@ -7,5 +7,5 @@ Time,time,5,minutes,Duration of experiment or of experimental stage in multistag
 PzKG,piezo_pkg,100,1/h,Goldman K permeability (1-10),
 PzNaG,piezo_pnag,1,1/h,Goldman Na permeability (0.8-8),
 PzAG,piezo_pag,100,1/h,Goldmanian Anion permeability (50),
-PzCaG,piezo_pcag,500,,Goldmanian Ca permeability (100),
+PzCaG,piezo_pcag,500,1/h,Goldmanian Ca permeability (100),
 PMCA inhibition,piezo_pmca,99,%,% inhibition,

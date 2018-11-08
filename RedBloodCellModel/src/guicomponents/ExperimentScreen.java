@@ -38,7 +38,7 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 		
 		JPanel rsPanel = new JPanel(new GridLayout(0,1));
 		cp = new CommentsPanel(this.experimentalSettings);
-		cp.setBorder(BorderFactory.createTitledBorder("Experiment details"));
+//		cp.setBorder(BorderFactory.createTitledBorder("Experiment details"));
 		
 		
 		r = new RSPanel(this.experimentalSettings);
@@ -135,7 +135,7 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 	private boolean checkOptions() {
 		int pos = 1;
 		for(DSSettings d: this.experimentalSettings.getDSStages()) {
-			if(!d.getOptions().containsKey("time")) {
+			if(!d.getOptions().containsKey("Time")) {
 				JOptionPane.showMessageDialog(this, "Please enter time for stage "+pos);
 				return false;
 			}

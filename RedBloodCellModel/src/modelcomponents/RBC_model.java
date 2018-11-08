@@ -2236,7 +2236,7 @@ public class RBC_model {
 			String resultString;
 			String numFormat = "%7." + this.dp + "f";
 			for(ResultHash r: this.resultList) {
-				resultString = String.format(numFormat,60.0*r.getTime());
+				resultString = String.format(numFormat,r.getTime());
 				for(int i=0;i<this.publish_order.length;i++) {
 					resultString += ',' + String.format(numFormat, r.getItem(this.publish_order[i]));
 				}

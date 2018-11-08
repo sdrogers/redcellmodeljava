@@ -34,7 +34,7 @@ public class PlotFrame extends JFrame {
 				pos++;
 			}
 			plot.addLinePlot(s, x,y);
-			combined += s;
+			combined += s + " ";
 		}
 		Font labelFont = new Font("SansSerif",Font.BOLD,24);
 		Font tickFont = new Font("SansSerif",0,18);

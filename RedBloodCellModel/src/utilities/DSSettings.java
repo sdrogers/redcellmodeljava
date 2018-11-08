@@ -20,7 +20,7 @@ public class DSSettings {
 	public String getOptionString() {
 		String rString = "";
 		for(String key: stageOptions.keySet()) {
-			rString += key + " " + stageOptions.get(key) + "\n";
+			rString += key + ":" + stageOptions.get(key) + "\n";
 		}
 		return rString;
 	}
@@ -33,7 +33,7 @@ public class DSSettings {
 			rString += this.description;
 		}
 		for(String key: stageOptions.keySet()) {
-			rString += key + " " + stageOptions.get(key) + "\n";
+			rString += key + ":" + stageOptions.get(key) + "\n";
 		}
 		return rString;
 	}

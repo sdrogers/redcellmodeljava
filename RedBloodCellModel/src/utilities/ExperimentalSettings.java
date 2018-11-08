@@ -92,7 +92,7 @@ public class ExperimentalSettings {
 	public String getRSString() {
 		String rString = "";
 		for(String key: this.rSOptions.keySet()) {
-			rString += key + " " + this.rSOptions.get(key) + "\n"; 
+			rString += key + ":" + this.rSOptions.get(key) + "\n"; 
 		}
 		return rString;
 	}

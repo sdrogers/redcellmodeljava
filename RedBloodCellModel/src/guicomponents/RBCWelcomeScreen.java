@@ -12,11 +12,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import utilities.ExampleProtocols;
 import utilities.ExperimentalSettings;
 
 public class RBCWelcomeScreen extends JFrame implements ActionListener {
 	private JButton newButton,loadButton;
 	private JFileChooser jfc;
+	private JButton pkgButton;
 	public RBCWelcomeScreen() {
 		this.setSize(500,500);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,12 +30,18 @@ public class RBCWelcomeScreen extends JFrame implements ActionListener {
 		newButton.addActionListener(this);
 		loadButton.addActionListener(this);
 		
+		JPanel centerPanel = new JPanel(new BorderLayout());
 		JTextArea infoArea = new JTextArea(10,20);
 		infoArea.setEditable(false);
 		infoArea.append("Welcome to the RBC model\n");
 		infoArea.append("========================\n\n");
 		infoArea.append("Some helpful words will appear here in due course");
-		this.add(infoArea, BorderLayout.CENTER);
+		centerPanel.add(infoArea,BorderLayout.CENTER);
+		
+		pkgButton = new JButton("PKG 30, PAG 50");
+		pkgButton.addActionListener(this);
+		centerPanel.add(pkgButton,BorderLayout.SOUTH);
+		this.add(centerPanel, BorderLayout.CENTER);
 		
 		JPanel buttonPanel = new JPanel(new FlowLayout());
 		
@@ -57,7 +65,8 @@ public class RBCWelcomeScreen extends JFrame implements ActionListener {
 			jfc.showOpenDialog(this);
 			String fileName = jfc.getSelectedFile().getPath();
 			new ExperimentScreen(new ExperimentalSettings(fileName));
-			
+		}else if(e.getSource() == pkgButton) {
+			new ExperimentScreen(ExampleProtocols.getPKG());
 		}
 	}
 	

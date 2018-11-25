@@ -16,7 +16,7 @@ import utilities.Updateable;
 
 public class OptionsFrame extends JFrame implements ActionListener {
 	private ParameterSelector ps;
-	private JButton doneButton;
+//	private JButton doneButton;
 	HashMap<String,String> options;
 	private Updateable parent;
 	
@@ -43,29 +43,29 @@ public class OptionsFrame extends JFrame implements ActionListener {
 		
 		GridBagConstraints c = new GridBagConstraints();
 		
-		doneButton = new JButton("Done");
-		doneButton.addActionListener(this);
+//		doneButton = new JButton("Done");
+//		doneButton.addActionListener(this);
 		
 		c.gridx=0;
 		c.gridy=0;
 		mainPanel.add(ps);
 		c.gridx=0;
 		c.gridy=1;
-		mainPanel.add(doneButton,c);
+//		mainPanel.add(doneButton,c);
 		
 //		this.setVisible(true);
 
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == doneButton) {
+//		if(e.getSource() == doneButton) {
 //			System.out.println("Pressed done");
-			this.setVisible(false);
+//			this.setVisible(false);
 //			this.grabOptions();
 //			this.parent.updateStagePanel();
 //			parent.setVisible(true);
 //			this.rbcgui.doneMenu(this);
-		}
+//		}
 	}
 //	private void grabOptions() {
 //		// gets the options from the parameter selector

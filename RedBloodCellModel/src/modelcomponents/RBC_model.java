@@ -1802,10 +1802,10 @@ public class RBC_model {
 //		temp = rsoptions.get("hb-choice");
 		temp = rsoptions.get("Haemoglobin (A or S)");
 		if(temp != null) {
-			if(temp == "HbA") {
+			if(temp == "A") {
 				this.A_1 = -1.0;
 				this.pit0 = 7.2;
-			}else if(temp == "HbS") {
+			}else if(temp == "S") {
 				this.A_1 = -8.0;
 				this.pit0 = 7.4;
 			}

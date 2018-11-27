@@ -780,7 +780,7 @@ public class RBC_model {
 			for(String option: rsoptions.keySet()) {
 				if(!usedoptions.contains(option)) {
 					System.out.println(option);
-					JOptionPane.showMessageDialog(null,"Didn't recognise " + option + " for DS - tell Simon!");
+					JOptionPane.showMessageDialog(null,"Didn't recognise " + option + " for RS - tell Simon!");
 				}
 			}
 		}		
@@ -1692,7 +1692,7 @@ public class RBC_model {
 		String na_efflux_fwd = rsoptions.get("Na/K pump Na efflux");
 		if(na_efflux_fwd != null) {
 			this.getNapump().setFluxFwd(Double.parseDouble(na_efflux_fwd));
-			usedoptions.add("Na/K pumpNa efflux");
+			usedoptions.add("Na/K pump Na efflux");
 		}
 		
 		if(this.getNapump().getFluxFwd() == -2.61) {
@@ -1809,7 +1809,7 @@ public class RBC_model {
 				this.A_1 = -8.0;
 				this.pit0 = 7.4;
 			}
-			usedoptions.add("Haemoglobin (HbA or HbS)");
+			usedoptions.add("Haemoglobin (A or S)");
 		}
 	}
 	

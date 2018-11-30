@@ -36,8 +36,9 @@ public class NaPump {
 		this.medium = medium;
 		this.flux_fwd = -2.61;
 		this.flux_rev = 0.0015;
-		this.setFlux_net(this.flux_fwd + this.flux_rev);
-		this.setFlux_K(-this.getFlux_net()/this.Na_to_K);
+//		this.setFlux_net(this.flux_fwd + this.flux_rev);
+		this.setFlux_net();
+		this.setFlux_K();
 		this.setTotal_flux(this.getFlux_net() + this.getFlux_K());
 		this.I_17 = 0.0;
 		this.B_1 = 0.2;
@@ -74,7 +75,6 @@ public class NaPump {
 		// I_17 is temperature dependent factor for na and ca pumps - possibly re-factor out of a particular pump
 		this.I_17 = Math.exp(((37.0-temperature)/10.0)*Math.log(this.Q10Active));
 	}
-	
 	public void compute_permeabilities(Double temperature) {
 		this.compute_I(temperature);
 		this.compute_mgnap();
@@ -103,8 +103,8 @@ public class NaPump {
 		this.compute_phnap();
 		this.flux_fwd = -(this.getP_1()/this.I_17)*this.mgnap*this.phnap*this.I_3*this.I_6;
 		this.flux_rev = (this.getP_2()/this.I_17)*this.mgnap*this.phnap*this.I_9*this.I_11;
-		this.setFlux_net(this.flux_fwd + this.flux_rev);
-		this.setFlux_K(-this.getFlux_net()/this.Na_to_K);
+		this.setFlux_net();
+		this.setFlux_K();
 		this.setTotal_flux(this.getFlux_net() + this.getFlux_K());
 	}
 	
@@ -126,14 +126,18 @@ public class NaPump {
 	public Double getFlux_net() {
 		return flux_net;
 	}
-	public void setFlux_net(Double flux_net) {
-		this.flux_net = flux_net;
+//	public void setFlux_net(Double flux_net) {
+	public void setFlux_net() {
+//		this.flux_net = flux_net;
+		this.flux_net = this.flux_fwd + this.flux_rev;
 	}
 	public Double getFlux_K() {
 		return flux_K;
 	}
-	public void setFlux_K(Double flux_K) {
-		this.flux_K = flux_K;
+//	public void setFlux_K(Double flux_K) {
+	public void setFlux_K() {
+//		this.flux_K = flux_K;
+		this.flux_K = -this.getFlux_net()/this.Na_to_K;
 	}
 	public Double getP_1() {
 		return P_1;

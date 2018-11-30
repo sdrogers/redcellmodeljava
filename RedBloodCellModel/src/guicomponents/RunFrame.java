@@ -96,14 +96,18 @@ public class RunFrame extends JFrame implements ActionListener{
 	}
 	private class Worker extends SwingWorker<Void,String> {
 		public Void doInBackground() {
+			ArrayList<String> usedoptionsRS = new ArrayList<String>();
 			ArrayList<String> usedoptions = new ArrayList<String>();
 			//
 			rbc = new RBC_model();
-			rbc.setup(experimentalSettings.getRSOptions(), usedoptions);
+			rbc.setup(experimentalSettings.getRSOptions(), usedoptionsRS);
 			for(DSSettings d: experimentalSettings.getDSStages()) {
 				rbc.setupDS(d.getOptions(), usedoptions);
 				rbc.runall(ta);
 			}
+			
+
+			
 			saveButton.setEnabled(true);
 			
 			return null;

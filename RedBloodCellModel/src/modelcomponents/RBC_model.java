@@ -770,6 +770,8 @@ public class RBC_model {
 			
 			this.computeRS();
 			
+			
+			
 			System.out.println("Used RS options");
 			for(String option: usedoptions) {
 				System.out.println(option);
@@ -1508,6 +1510,8 @@ public class RBC_model {
 	public void computeRS() {
 		this.medium.A.setConcentration(this.medium.A.getConcentration() + 2*(this.medium.Mgt.getConcentration() + this.medium.Cat.getConcentration()));
 		this.computehtRS();
+		
+		
 		this.A_7 = this.fraction;
 		this.A_8 = this.A_7/(1-this.A_7);
 		
@@ -1543,7 +1547,9 @@ public class RBC_model {
 	private void fluxesRS() {
 		// Flux-rates and RS fluxes
 		this.getNapump().compute_permeabilities(this.temp_celsius);
-
+		this.getNapump().setFlux_net();
+		this.getNapump().setFlux_K();
+		
 		this.carriermediated.setFlux_Na(-(1-this.fG)*this.getNapump().getFlux_net());
 		this.carriermediated.setFlux_K(-this.carriermediated.getFlux_Na()/this.Na_to_K);
 		this.carriermediated.compute_permeabilities();
@@ -1638,7 +1644,7 @@ public class RBC_model {
 		Double summ = this.medium.Na.getConcentration() + this.medium.K.getConcentration() + this.medium.A.getConcentration() + this.buffer_conc + this.medium.Gluconate.getConcentration() + this.medium.Glucamine.getConcentration() + this.medium.Sucrose.getConcentration() + this.medium.Mgt.getConcentration() + this.medium.Cat.getConcentration();
 		Double sumq = this.cell.Na.getAmount() + this.cell.K.getAmount() + this.cell.A.getAmount() + (this.cell.Mgf.getConcentration()+this.cell.Caf.getConcentration())*this.Vw + this.fHb*this.cell.Hb.getAmount() + this.benz2;
 		this.cell.X.setAmount(this.Vw*summ - sumq);
-
+		
 		
 	}
 	
@@ -1679,7 +1685,6 @@ public class RBC_model {
 		}else {
 			this.medium.K.setConcentration(this.medium.A.getConcentration() + this.edgneg + this.medium.Gluconate.getConcentration() + (this.buffer_conc - this.medium.Hb.getConcentration()) - this.medium.Glucamine.getConcentration() - this.medium.Na.getConcentration() - 2*this.medium.Mgf.getConcentration() - 2*this.medium.Caf.getConcentration());
 		}
-
 	}
 	
 	public void computehtRS() {

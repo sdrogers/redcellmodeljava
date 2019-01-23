@@ -116,8 +116,6 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 						updateCurrentParams(selected);
 						potentialParamList.clearSelection();
 						descriptionField.setText("");
-						// Tell the parent that it has updated
-						
 					}
 				}
 			}
@@ -130,7 +128,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 					if(pr != null) {
 						currentParams.removeElement(pr);
 						options.remove(pr.getName());
-						if(pr.getName().equals("piezo")) {
+						if(pr.getName().equals("Incorporate PIEZO stage")) {
 							removePiezo();
 						}
 						parentComp.update();
@@ -207,9 +205,10 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			
 			// A temporary hack (heard that before)
 			// adds default piezo time and accuracy if piezo turned on
-			if(newpar.getName().equals("piezo") && newpar.getValue().equals("yes")) {
+			if(newpar.getName().equals("Incorporate PIEZO stage") && newpar.getValue().equals("yes")) {
 				addPiezo();
 			}
+			
 			this.grabOptions();
 			this.parentComp.update();
 		}else {
@@ -249,6 +248,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 			}
 		}
 	}
+	
 	private boolean checkInput(String newValue,Parameter p) {
 		if(p.getAllowedValues() == null) {
 			// Just has to be parsable as a double

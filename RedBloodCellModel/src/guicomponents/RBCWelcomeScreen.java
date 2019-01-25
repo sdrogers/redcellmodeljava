@@ -1,5 +1,6 @@
 package guicomponents;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -20,7 +21,7 @@ public class RBCWelcomeScreen extends JFrame implements ActionListener {
 	private JFileChooser jfc;
 	private JButton pkgButton;
 	public RBCWelcomeScreen() {
-		this.setSize(500,500);
+		this.setSize(500,600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("RBC Model, GUI V2.0");
 		
@@ -31,12 +32,17 @@ public class RBCWelcomeScreen extends JFrame implements ActionListener {
 		loadButton.addActionListener(this);
 		
 		JPanel centerPanel = new JPanel(new BorderLayout());
+
+		JPanel buffPanel = new JPanel(new BorderLayout());
 		JTextArea infoArea = new JTextArea(10,20);
 		infoArea.setEditable(false);
 		infoArea.append("Welcome to the RBC model\n");
 		infoArea.append("========================\n\n");
 		infoArea.append("Some helpful words will appear here in due course");
-		centerPanel.add(infoArea,BorderLayout.CENTER);
+		buffPanel.add(infoArea,BorderLayout.NORTH);
+		buffPanel.add(new ImagePanel(),BorderLayout.CENTER);
+		buffPanel.setBackground(Color.WHITE);
+		centerPanel.add(buffPanel,BorderLayout.CENTER);
 		
 		pkgButton = new JButton("PKG 30, PAG 50");
 		pkgButton.addActionListener(this);

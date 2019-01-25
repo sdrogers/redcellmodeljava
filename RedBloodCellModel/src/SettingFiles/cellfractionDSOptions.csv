@@ -1,7 +1,7 @@
 Alternative Name,Parameter/Variable Name,Default Value,Units,Description,Allowed Values
 Cell volume fraction,fraction,0.00001,,Volume fraction of cells in suspension; low default value approximates circulation conditions or medium as infinite reservoir ,
-HEPES concentration,bufferconc,10,mM,A standard HEPES concentration value frequently used in experiments ,
-Initial medium pH,extph,7.4,,A standard pH value frequently set at nthe start of experiments ,
+HEPES-Na concentration,bufferconc,10,mM,A standard HEPES-Na concentration value frequently used in experiments ,
+Medium pH,extph,7.4,,A standard pH value frequently set at the start of experiments ,
 Exchange Na for Glucamine,nag,0,mM,Isoosmotic replacement of Na by impermeant monovalent cation,
 Exchange Cl(A) for gluconate,acl,0,mM,Isoosmotic replacement of permeant anion (Cl/A) by impermeany monovalent anion,
 Replace NaCl with KCl,KxNa,0,mM,Isoosmotic replacement of Na for K,

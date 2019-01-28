@@ -1,5 +1,6 @@
 package guicomponents;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -11,10 +12,10 @@ import javax.swing.JPanel;
 public class ImagePanel extends JPanel{
 	private BufferedImage image;
 	public ImagePanel() {
+		this.setBackground(Color.BLUE);
 		try {
-			InputStream is = ClassLoader.getSystemResourceAsStream("SettingFiles/RBC.jpg");
 			image = ImageIO.read(
-					ClassLoader.getSystemResourceAsStream("SettingFiles/RBC.jpg"));
+					ClassLoader.getSystemResourceAsStream("SettingFiles/RBCannotated500.jpg"));
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -22,7 +23,9 @@ public class ImagePanel extends JPanel{
 	@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-//        g.drawImage(image, 0, 0, this);
-        	g.drawImage(image, 0, 0, 500,500,0,0,1050,1050,this);
+        int w = this.getWidth();
+        int h = this.getHeight();
+        g.drawImage(image, 0, 0, w,h,0,0,500,338,this);
+//        	g.drawImage(image, 0, 0, 500,700,0,0,1050,1050,this);
     }
 }

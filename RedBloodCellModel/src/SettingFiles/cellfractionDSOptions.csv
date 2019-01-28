@@ -9,7 +9,7 @@ Replace KCl with NaCl,NaxK,0,mM,Isoosmotic replacement of K for Na,
 Add or remove NaCl,change-nacl,0,mM,Change medium NaCl concentration and osmolarity,
 Add or remove KCl,change-kcl,0,mM,Change medium KCl concentration and osmolarity,
 Add or remove sucrose,add-sucrose,0,mM,Increase medium osmolarity reversibly (upon removal) with impermeant neutral solute,
-Mg concentration,mgot,0.15,mM,Change the default value of the total Mg concentration in the medium,
+Mg concentration,mgot,0.2,mM,Change the default value of the total Mg concentration in the medium,
 Ca concentration,caot,1,mM,Change the default value of the total Ca concentration in the medium,
 Add EGTA(1) or EDTA(2) (0 for no chelator),chelator,0,,Choose whether or not to add a divalent cation chelator in the medium ,"0,1,2"
 Chelator concentration,edgto,0,mM,Set the initial chelator concentration in the medium (chelators and buffers are assumed to be impermeant) ,

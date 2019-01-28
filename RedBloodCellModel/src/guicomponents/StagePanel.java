@@ -99,7 +99,9 @@ public class StagePanel extends JPanel implements ActionListener, Updateable {
 			transportScreen.makeVisible();
 		}else if(e.getSource() == editFractionButton) {
 			if(fractionScreen == null) {
-				fractionScreen = new OptionsFrame("Fraction and Medium Options","SettingFiles/cellfractionDSOptions.csv",this.dSSettings.getOptions(),this,"");
+				String helpText = "Default medium composition in the initial Reference steady-state (mM):\n" + 
+						"NaCl, 145; KCl, 5; HEPES-Na, pH 7.4 at 37oC, 10; MgCl2, 0.2; CaCl2, 1.0";
+				fractionScreen = new OptionsFrame("Fraction and Medium Options","SettingFiles/cellfractionDSOptions.csv",this.dSSettings.getOptions(),this,helpText);
 			}
 			fractionScreen.makeVisible();
 		}else if(e.getSource() == editPiezoButton) {

@@ -835,11 +835,12 @@ public class RBC_model {
 					piezo.setStartTime(Double.parseDouble(temp)/60.0);
 				}
 				
-				temp = options.get("piezo_duration");
+				temp = options.get("Open state");
 				if(temp != null) {
-					usedoptions.add("piezo_duration");
-					Double duration_ms = Double.parseDouble(temp);
-					Double duration_s = duration_ms / 1000.0;
+					usedoptions.add("Open state");
+//					Double duration_ms = Double.parseDouble(temp);
+					Double duration_s = Double.parseDouble(temp);
+//					Double duration_s = duration_ms / 1000.0;
 					Double duration_m = duration_s / 60.0;
 					Double duration_h = duration_m / 60.0;
 					piezo.setDuration(duration_h);

@@ -821,6 +821,10 @@ public class RBC_model {
 	}
 	private void set_piezo_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
 		String temp = options.get("Incorporate PIEZO stage");
+		if(temp == null) {
+			this.piezo = null;
+			return;
+		}
 		if(temp != null) {
 			usedoptions.add("Incorporate PIEZO stage");
 			if(!temp.equals("yes")) {

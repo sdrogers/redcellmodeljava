@@ -1,4 +1,7 @@
 package modelcomponents;
+
+import java.util.ArrayList;
+
 // Stores the state of the Piezo
 // and the values with which to change the permeabilities
 // note that the actual changes are made by the model class

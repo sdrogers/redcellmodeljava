@@ -18,6 +18,8 @@ public class MultiStagePiezo {
 	 */
 	public static void main(String[] args) throws Exception {
 //		ArrayList<ResultHash> r = new ArrayList<ResultHash>();
+		double max_time = Double.parseDouble(args[0]);
+		String out_file = args[1];
 		HashMap<String,String> RSOptions = new HashMap<String,String>();
 		HashMap<String,String> DSOptions = new HashMap<String,String>();
 		DSOptions.put("Time", "1.0");
@@ -33,7 +35,7 @@ public class MultiStagePiezo {
 		rbc.setup(RSOptions, new ArrayList<String>());
 		Double time = rbc.getSamplingTime();
 //		for(int i = 0;i<5;i++) {
-		while(time < 48.0) {
+		while(time < max_time) {
 			rbc.setupDS(DSOptions, new ArrayList<String>());
 			rbc.setPublish(false);
 			rbc.runall(null);
@@ -51,7 +53,7 @@ public class MultiStagePiezo {
 		}
 		
 //		rbc.setResults(r);
-		rbc.writeCsv("/Users/simon/TempStuff/multi_piezo.csv");
+		rbc.writeCsv(out_file);
 	}
 	private static final long MEGABYTE = 1024L * 1024L;
 	public static long bytesToMegabytes(long bytes) {

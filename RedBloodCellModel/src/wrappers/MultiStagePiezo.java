@@ -33,7 +33,7 @@ public class MultiStagePiezo {
 		rbc.setup(RSOptions, new ArrayList<String>());
 		Double time = rbc.getSamplingTime();
 //		for(int i = 0;i<5;i++) {
-		while(time <48.0) {
+		while(time < 48.0) {
 			rbc.setupDS(DSOptions, new ArrayList<String>());
 			rbc.setPublish(false);
 			rbc.runall(null);
@@ -46,16 +46,8 @@ public class MultiStagePiezo {
 				rbc.setPublish(false);
 //			}
 			
-			rbc.writeCsv("/Users/simon/TempStuff/piezo_test.csv");
+//			rbc.writeCsv("/Users/simon/TempStuff/piezo_test.csv");
 //			rbc.clearResults();
-			Runtime runtime = Runtime.getRuntime();
-		    // Run the garbage collector
-		    runtime.gc();	
-		    // Calculate the used memory
-		    long memory = runtime.totalMemory() - runtime.freeMemory();
-		    System.out.println("Used memory is bytes: " + memory);
-		    System.out.println("Used memory is megabytes: "
-		        + bytesToMegabytes(memory));
 		}
 		
 //		rbc.setResults(r);

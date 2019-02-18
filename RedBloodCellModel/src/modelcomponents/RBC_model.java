@@ -537,8 +537,9 @@ public class RBC_model implements Serializable {
 			}
 		}
 		
-		
-		System.out.println("Milestones OK!");
+		if(this.verbose) {
+			System.out.println("Milestones OK!");
+		}
 		int mileStonePos = 0;
 		String mileStoneOperation = null;
 		

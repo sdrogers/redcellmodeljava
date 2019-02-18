@@ -1,6 +1,8 @@
 package modelcomponents;
 
-public class A23187 {
+import java.io.Serializable;
+
+public class A23187 implements Serializable {
 	
 	private Region cell;
 	private Region medium;

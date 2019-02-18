@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -14,7 +15,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class ExperimentalSettings {
+public class ExperimentalSettings implements Serializable {
 	private HashMap<String,String> rSOptions;
 	private LinkedList<DSSettings> dSStages;
 	private String inputFileName = null;

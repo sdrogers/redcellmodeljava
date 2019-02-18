@@ -1,7 +1,8 @@
 package utilities;
+import java.io.Serializable;
 import java.util.HashSet;
 
-public class Parameter {
+public class Parameter implements Serializable{
 	private final String name;
 	private final String value;
 	private final String units;

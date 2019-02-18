@@ -1,6 +1,8 @@
 package modelcomponents;
 
-public class WaterFlux {
+import java.io.Serializable;
+
+public class WaterFlux implements Serializable {
 	private final Region cell;
 	private final Region medium;
 	private Double flux;

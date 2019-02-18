@@ -1,5 +1,8 @@
 package modelcomponents;
-public class NaPump {
+
+import java.io.Serializable;
+
+public class NaPump implements Serializable {
 	private Double P_1; //V_max for sodium pump
 	private Double defaultP_1;
 	private Double P_2; //V_max reverse 

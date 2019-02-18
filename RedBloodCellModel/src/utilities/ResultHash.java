@@ -1,7 +1,8 @@
 package utilities;
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class ResultHash {
+public class ResultHash implements Serializable{
 	private HashMap<String,Double> map;
 	private Double time;
 	public ResultHash(Double time) {

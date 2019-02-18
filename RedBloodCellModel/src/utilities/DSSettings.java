@@ -1,7 +1,8 @@
 package utilities;
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class DSSettings {
+public class DSSettings implements Serializable{
 	private String description;
 	private HashMap<String,String> stageOptions;
 	public DSSettings() {

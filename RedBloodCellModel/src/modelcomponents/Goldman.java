@@ -1,6 +1,8 @@
 package modelcomponents;
 
-public class Goldman {
+import java.io.Serializable;
+
+public class Goldman implements Serializable{
 	private final Region cell;
 	private final Region medium; 
 	private Double permeability_Na ;

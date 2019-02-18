@@ -1,6 +1,9 @@
 package modelcomponents;
+
+import java.io.Serializable;
+
 // Class to represent a cell or a membrane
-public class Region {
+public class Region implements Serializable{
 	public Species Na;
 	public Species K;
 	public Species A;

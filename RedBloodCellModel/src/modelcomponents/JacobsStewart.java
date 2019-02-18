@@ -1,6 +1,8 @@
 package modelcomponents;
 
-public class JacobsStewart {
+import java.io.Serializable;
+
+public class JacobsStewart implements Serializable{
 	private Region cell;
 	private Region medium;
 	private Double permeability;

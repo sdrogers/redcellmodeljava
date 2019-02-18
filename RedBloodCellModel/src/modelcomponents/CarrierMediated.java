@@ -1,6 +1,8 @@
 package modelcomponents;
 
-public class CarrierMediated {
+import java.io.Serializable;
+
+public class CarrierMediated implements Serializable {
 	private Region cell;
 	private Region medium;
 	private Double flux_Na;

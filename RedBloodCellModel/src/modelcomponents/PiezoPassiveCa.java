@@ -1,6 +1,8 @@
 package modelcomponents;
 
-public class PiezoPassiveCa {
+import java.io.Serializable;
+
+public class PiezoPassiveCa implements Serializable{
 	private final Region cell; 
 	private final Region medium;
 	private final Goldman goldman;

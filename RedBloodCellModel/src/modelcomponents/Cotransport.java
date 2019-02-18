@@ -1,6 +1,8 @@
 package modelcomponents;
 
-public class Cotransport {
+import java.io.Serializable;
+
+public class Cotransport implements Serializable {
 	private Double permeability = 0.000000001;
 	private Double flux_A = 0.0;
 	private Double flux_Na = 0.0;

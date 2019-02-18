@@ -1,6 +1,8 @@
 package modelcomponents;
 
-public class CaPumpMg2 {
+import java.io.Serializable;
+
+public class CaPumpMg2 implements Serializable{
 	private final Region cell;;
 	private final Region medium;
 	private final NaPump napump;

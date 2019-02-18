@@ -11,7 +11,8 @@ import utilities.ResultHash;
 import java.util.ArrayList;
 import java.io.FileWriter;
 import java.io.IOException;
-public class RBC_model {
+import java.io.Serializable;
+public class RBC_model implements Serializable {
 	
 	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
 	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CH/nM","CCa2+","CMg2+",
@@ -21,6 +22,9 @@ public class RBC_model {
 	                                  "EA","EH","EK","ENa","FzKG","FzNaG","FzAG","FzCaG","fHb*CHb","nX","Msucr","Mgluc-",
 	                                  "Mgluc+","EN test"};
 	private ArrayList<ResultHash> resultList = new ArrayList<ResultHash>();
+	
+	private boolean verbose = true;
+	private boolean doPublish = true;
 	
 	private final double MIN_BUFFER_CONC = 1e-10;
 	
@@ -405,11 +409,22 @@ public class RBC_model {
 
 		this.stage = 0;
 	}
+	public Double getSamplingTime() {
+		return this.sampling_time;
+	}
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
+	}
+	public void setPublish(boolean publish) {
+		this.doPublish = publish; // Used to stop publishing events
+	}
 	public void output(String ad,JTextArea ta) {
-		if(ta == null) {
-			System.out.println(ad);
-		}else {
-			ta.append(ad + '\n');
+		if(this.verbose) {
+			if(ta == null) {
+				System.out.println(ad);
+			}else {
+				ta.append(ad + '\n');
+			}
 		}
 	}
 	private void startPiezo() {
@@ -474,13 +489,13 @@ public class RBC_model {
 		// Note milestones are always in *hours*
 		if(this.piezo != null) {
 			// We have a piezo stage
-			
-			// Add the initial output points
-			for(int i=0;i<3;i++) { // Only need to loop 3 times as we always publish at the start
-				Double output_time = (0.5 + i*0.5)/60.0 + this.sampling_time;
-				mileStones.add(new MileStone(output_time,"PUBLISH"));
+			if(this.piezo.getStartTime() > 0.0) {
+				// Add the initial output points
+				for(int i=0;i<3;i++) { // Only need to loop 3 times as we always publish at the start
+					Double output_time = (0.5 + i*0.5)/60.0 + this.sampling_time;
+					mileStones.add(new MileStone(output_time,"PUBLISH"));
+				}
 			}
-			
 			
 			Double pStart = this.piezo.getStartTime() + this.sampling_time;
 			Double pStop = pStart + this.piezo.getDuration();
@@ -489,35 +504,40 @@ public class RBC_model {
 			mileStones.add(new MileStone(pStop, "PIEZO STOP"));
 			mileStones.add(new MileStone(pEnd, "PIEZO END"));
 			
-			// Add some forced points after
-			for(int i=0;i<4;i++) {
-				Double output_time = (3.5 + i*0.5)/60.0 + this.sampling_time;
-				mileStones.add(new MileStone(output_time,"PUBLISH"));
-
-			}
+//			// Add some forced points after
+//			int i =0;
+//			while(i<4 && (3.5+i*0.5)/60.0 < this.duration_experiment) {
+////			for(int i=0;i<4;i++) {
+//				Double output_time = (3.5 + i*0.5)/60.0 + this.sampling_time;
+//				mileStones.add(new MileStone(output_time,"PUBLISH"));
+//
+//			}
 		}
-				
 		// Add the END milestone always
+		
 		mileStones.add(new MileStone(this.duration_experiment/60.0,"END"));
 		
-		if(mileStones.size() > 1) {
-			// Make sure the end is after the last of the PIEZO ones
-			int endPos = mileStones.size() - 1;
-			if(mileStones.get(endPos).getTime() <= mileStones.get(endPos-1).getTime()) {
-				double oldTime = mileStones.get(endPos-1).getTime();
-				mileStones.get(endPos).setTime(oldTime + 1.0/60.0); // Add 1 minute
-			}
-		}
-		
+//		if(mileStones.size() > 1) {
+//			// Make sure the end is after the last of the PIEZO ones
+//			int endPos = mileStones.size() - 1;
+//			if(mileStones.get(endPos).getTime() <= mileStones.get(endPos-1).getTime()) {
+//				double oldTime = mileStones.get(endPos-1).getTime();
+//				mileStones.get(endPos).setTime(oldTime + 1.0/60.0); // Add 1 minute
+//			}
+//		}
+
 		// Check the ordering
 		if(mileStones.size() > 1) {
 			for(int i=1;i<mileStones.size();i++) {
+//				System.out.println(mileStones.get(i).getName() + " " + mileStones.get(i).getTime());
 				if(mileStones.get(i).getTime() <= mileStones.get(i-1).getTime()) {
 					System.err.println("MILESTONES NOT IN ORDER");
 					return;
 				}
 			}
 		}
+		
+		
 		System.out.println("Milestones OK!");
 		int mileStonePos = 0;
 		String mileStoneOperation = null;
@@ -801,18 +821,20 @@ public class RBC_model {
 		this.set_temp_permeability_options(options, usedoptions);
 		this.set_piezo_options(options,usedoptions);
 		
-		System.out.println();
-		System.out.println("Used DS options");
-		for(String option: usedoptions) {
-			System.out.println(option);
-		}
-		
-		System.out.println();
-		System.out.println("Unused DS options");
-		for(String option: options.keySet()) {
-			if(!usedoptions.contains(option)) {
+		if(this.verbose) { 
+			System.out.println();
+			System.out.println("Used DS options");
+			for(String option: usedoptions) {
 				System.out.println(option);
-				JOptionPane.showMessageDialog(null,"Didn't recognise " + option + " for DS - tell Simon!");
+			}
+			
+			System.out.println();
+			System.out.println("Unused DS options");
+			for(String option: options.keySet()) {
+				if(!usedoptions.contains(option)) {
+					System.out.println(option);
+					JOptionPane.showMessageDialog(null,"Didn't recognise " + option + " for DS - tell Simon!");
+				}
 			}
 		}
 		this.stage += 1;
@@ -832,13 +854,12 @@ public class RBC_model {
 				this.piezo = null;
 			}else {
 				this.piezo = new Piezo();
-				temp = options.get("pizeo_start");
+				temp = options.get("piezo_start");
 				if(temp != null) {
 					usedoptions.add("piezo_start");
 					// Convert to hours and add to sampling time
 					piezo.setStartTime(Double.parseDouble(temp)/60.0);
 				}
-				
 				temp = options.get("Open state");
 				if(temp != null) {
 					usedoptions.add("Open state");
@@ -1105,13 +1126,16 @@ public class RBC_model {
 		if(temp != null) {
 			this.fraction = Double.parseDouble(temp);
 			usedoptions.add("Cell volume fraction");
-		}
+//		}
+			/*
+			 * Note: this change to overcome the problems that build up over multiple consecutive dynamic states
+			 */
 		
-		if(this.A_7 != this.fraction) {
-			this.A_7 = this.fraction;
-			this.A_8 = this.A_7/(1.0 - this.A_7);
+			if(this.A_7 != this.fraction) {
+				this.A_7 = this.fraction;
+				this.A_8 = this.A_7/(1.0 - this.A_7);
+			}
 		}
-		
 		temp = options.get("buffer-name");
 		if(temp != null) {
 			int buffer_number = Integer.parseInt(temp);
@@ -2134,7 +2158,11 @@ public class RBC_model {
 	}
 	
 	public void publish() {
-//		System.out.println("Publishing at time: " + this.sampling_time);
+		if(!this.doPublish) {
+			return;
+		}
+		
+		System.out.println("Publishing at time: " + this.sampling_time);
 		ResultHash new_result = new ResultHash(this.sampling_time*60.0); // convert to minutes for publishing
 		
 		new_result.setItem("Vw",this.Vw);
@@ -2227,8 +2255,21 @@ public class RBC_model {
 		
 		this.resultList.add(new_result);
 	}
+	public void clearResults() {
+		/*
+		 * Method used to wipe the arraylist to avoid
+		 * clogging up memory with enormous quantities of dirt.
+		 */
+		this.resultList = new ArrayList<ResultHash>(); 
+	}
 	public ArrayList<ResultHash> getResults() {
 		return this.resultList;
+	}
+	public ResultHash getLastResult() {
+		return this.resultList.get(this.resultList.size()-1);
+	}
+	public void setResults(ArrayList<ResultHash> resultList) {
+		this.resultList = resultList;
 	}
 	public String[] getPublishOrder() {
 		return this.publish_order;

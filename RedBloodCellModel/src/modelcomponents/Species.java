@@ -1,6 +1,9 @@
 package modelcomponents;
+
+import java.io.Serializable;
+
 // Class to represent the chemical species being modelled
-public class Species {
+public class Species implements Serializable {
 	private Double concentration = 0.0;
 	private Double amount = 0.0;
 	private Integer z = 1;

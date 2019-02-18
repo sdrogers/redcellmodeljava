@@ -1,6 +1,8 @@
 package utilities;
 
-public class MileStone {
+import java.io.Serializable;
+
+public class MileStone implements Serializable {
 	private Double time;
 	private String name;
 	public MileStone(Double time,String name) {

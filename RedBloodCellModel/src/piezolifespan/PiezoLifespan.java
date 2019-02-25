@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 
 import modelcomponents.RBC_model;
@@ -30,12 +32,13 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 	private JButton runButton,stopButton,saveButton,changePiezoButton;
 	private JTextArea modelOutput;
 	private ModelWorker worker;
-	private PlotWorker plotter;
 	private RBC_model rbc;
 	private Plot2DPanel[] plot = new Plot2DPanel[4];
 	private JTextField timeField,cycleField;
 	private OptionsFrame piezoOptionsFrame;
 	HashMap<String,String> DSOptions;
+	private JFileChooser jfc = new JFileChooser();
+
 	public PiezoLifespan() {
 		this.setSize(1000, 1000);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,12 +60,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		changePiezoButton = new JButton("Change PIEZO parameters");
 		
 		
-		buttonPanel.add(new JLabel("Max model time (hours): "));
-		timeField = new JTextField("1.0");
-		buttonPanel.add(timeField);
-		buttonPanel.add(new JLabel("Number of PIEZO cycles per output: "));
-		cycleField = new JTextField("1440");
-		buttonPanel.add(cycleField);
+		
 		
 		
 		buttonPanel.add(runButton);
@@ -80,7 +78,27 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		
 		JPanel outputPanel = new JPanel(new GridLayout(2,0));
 		modelOutput = new JTextArea(20,30);
-		outputPanel.add(new JScrollPane(modelOutput));
+		JPanel topPanel = new JPanel(new GridLayout(0,2));
+		topPanel.add(new JScrollPane(modelOutput));
+
+		JPanel entryPanel = new JPanel(new GridLayout(0,2));
+		topPanel.add(entryPanel);
+		
+		entryPanel.add(new JLabel("Max model time (hours): ",SwingConstants.RIGHT));
+		timeField = new JTextField("1.0");
+		entryPanel.add(timeField);
+		entryPanel.add(new JLabel("Number of PIEZO cycles per output: ",SwingConstants.RIGHT));
+		cycleField = new JTextField("1440");
+		entryPanel.add(cycleField);
+		
+		entryPanel.add(new JLabel("k(Na/K pump):",SwingConstants.RIGHT));
+		entryPanel.add(new JTextField("1.7e-6"));
+		entryPanel.add(new JLabel("k(PMCA):",SwingConstants.RIGHT));
+		entryPanel.add(new JTextField("5.2e-6"));
+		
+		
+		outputPanel.add(topPanel);
+	
 		JPanel justPlots = new JPanel(new GridLayout(2,2));
 		for(int i=0;i<4;i++) {
 			plot[i] = new Plot2DPanel("SOUTH");
@@ -98,7 +116,6 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		DSOptions.put("piezo_start","0.0");
 		DSOptions.put("Output Accuracy","6");
 		Double stage_time = 1.0; // minutes
-//		Double open_time = 1.0/120.0; // 0.5 seconds - TODO make this 0.4
 		Double open_time = 0.4*(1.0/60.0); // 0.4 seconds
 		Double recovery_time = stage_time - open_time - 1e-6;
 		DSOptions.put("piezo_recovery",""+recovery_time);
@@ -115,18 +132,20 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		public Void doInBackground() {
 			rbc = new RBC_model();
 			HashMap<String,String> RSOptions = new HashMap<String,String>();
-//			
-			
 			rbc.setVerbose(false);
 			rbc.setup(RSOptions, new ArrayList<String>());
 			Double time = rbc.getSamplingTime();
 			Double max_time = Double.parseDouble(timeField.getText());
 			int cycles_per_output = Integer.parseInt(cycleField.getText());
 			int cycle_counter = 0;
-//			rbc.setPublish(true);
-//			rbc.publish();
-//			rbc.setPublish(false);
-//			publish(rbc.getLastResult());
+			/*
+			 * Need to decide if we should have the initial point
+
+			rbc.setPublish(true);
+			rbc.publish();
+			rbc.setPublish(false);
+			publish(rbc.getLastResult()); 
+			*/
 			while(time < max_time) {
 				if(this.isCancelled()) {
 					break;
@@ -135,32 +154,22 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 				rbc.setPublish(false);
 				rbc.runall(null);
 				time = rbc.getSamplingTime();
-//				if(time % 1.0 == 0.0) {
-//					System.out.println("Time: " + time);
-					
-//				}
 				cycle_counter++;
 				if(cycle_counter == cycles_per_output) {
 					// make some output
 					rbc.setPublish(true);
 					rbc.publish();
-//					r.add(rbc.getLastResult());
 					rbc.setPublish(false);
 					publish(rbc.getLastResult());
 					cycle_counter = 0;
 				}
 				
 				
-//				rbc.writeCsv("/Users/simon/TempStuff/piezo_test.csv");
-//				rbc.clearResults();
 			}
 			rbc.setPublish(true);
 			rbc.publish();
-//			r.add(rbc.getLastResult());
 			rbc.setPublish(false);
 			publish(rbc.getLastResult());
-//			rbc.setResults(r);
-//			rbc.writeCsv(out_file);
 			resetButtons();
 			return null;
 		}
@@ -173,11 +182,9 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		}
 		
 	}
-	private void make_plots() {
+	private void make_plots() { 
 		int n_results = rbc.getResults().size();
-		String combined = "";
 		String[][] series = {{"V/V",},{"CNa","CK","CA"},{"Em"},{"rA","rH"}};
-		MultiPlotData mpd = new MultiPlotData();
 		int plot_pos = 0;
 		for(String[] s: series) {
 			plot[plot_pos].removeAllPlots();
@@ -196,101 +203,23 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 				plot[plot_pos].addLinePlot(s[i], x,y[i]);
 			}
 			plot_pos ++;
-//			plot.addLinePlot(s, x,y);
-//			combined += s + " ";
-			mpd.addPlot(new PlotData(s,x,y));
 		}
 
-	}
-	private class PlotWorker extends SwingWorker<Void,MultiPlotData> {
-		public Void doInBackground() {
-			while(true) {
-				if(this.isCancelled()) {
-					break;
-				}
-				try {
-					Thread.sleep(2000);
-					// Make an output array and publish it
-					int n_results = rbc.getResults().size();
-					String combined = "";
-					String[][] series = {{"V/V",},{"CNa","CK","CA"},{"Em"},{"rA","rH"}};
-					MultiPlotData mpd = new MultiPlotData();
-					int plot_pos = 0;
-					for(String[] s: series) {
-						plot[plot_pos].removeAllPlots();
-						double[] x = new double[n_results];
-						double[][] y = new double[s.length][n_results];
-						int pos = 0;
-						for(ResultHash r: rbc.getResults()) {
-							x[pos] = r.getTime();
-							for(int i=0;i<s.length;i++) {
-								y[i][pos] = r.getItem(s[i]);
-							}
-							pos++;
-							
-						}
-						for(int i=0;i<y.length;i++) {
-							plot[plot_pos].addLinePlot(s[i], x,y[i]);
-						}
-//						plot.addLinePlot(s, x,y);
-//						combined += s + " ";
-						mpd.addPlot(new PlotData(s,x,y));
-					}
-					publish(mpd);
-				}catch(InterruptedException e) {
-					// do nothing, it's all good
-				}
-			}
-			return null;
-		}
-		public void process(List<MultiPlotData> s) {
-			if(s.size() > 0) {
-				MultiPlotData mpd = s.get(s.size()-1);
-				for(int i=0;i<mpd.plots.size();i++) {
-					plot[i].removeAllPlots();
-					PlotData temp = mpd.plots.get(i);
-					for(int j=0;j<temp.y.length;j++) {
-						plot[i].addLinePlot(temp.s[j], temp.x,temp.y[j]);
-					}
-				}
-			}			
-		}
-	}
-	private class MultiPlotData {
-		public ArrayList<PlotData> plots = new ArrayList<PlotData>();
-		public void addPlot(PlotData p) {
-			plots.add(p);
-		}
-	}
-	private class PlotData {
-		public String[] s;
-		public double[] x;
-		public double[][] y;
-		public PlotData(String[] s,double[] x,double[][] y) {
-			this.s = s;
-			this.x = x;
-			this.y = y;
-		}
 	}
 	private void resetButtons() {
 		runButton.setEnabled(true);
 		stopButton.setEnabled(false);
 		saveButton.setEnabled(true);
-		if(plotter != null) {
-			plotter.cancel(true);
-		}
 	}
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == runButton) {
-			this.modelOutput.setText("Time\tV/V\n");
+			this.modelOutput.setText("Time\tV/V\tEm\n");
 			stopButton.setEnabled(true);
 			runButton.setEnabled(false);
 			saveButton.setEnabled(false);
 			changePiezoButton.setEnabled(false);
 			worker = new ModelWorker();
 			worker.execute();
-//			plotter = new PlotWorker();
-//			plotter.execute();
 		}else if(e.getSource() == stopButton) {
 			runButton.setEnabled(true);
 			stopButton.setEnabled(false);
@@ -299,13 +228,14 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 			if(worker != null) {
 				worker.cancel(true);
 			}
-			if(plotter!= null) {
-				plotter.cancel(true);
-			}
 		}else if(e.getSource() == saveButton) {
 			if(rbc != null) {
-				// Open a save dialog - copy from run frame
-				// call write_csv
+				int returnVal = jfc.showSaveDialog(this);
+				String fName = jfc.getSelectedFile().getPath();
+				if(!fName.endsWith(".csv")) {
+					fName += ".csv";
+				}
+				rbc.writeCsv(fName);
 			}
 		}else if(e.getSource() == changePiezoButton) {
 			piezoOptionsFrame = new OptionsFrame("PIEZO options","SettingFiles/piezoDSOptions.csv",DSOptions,this,"");

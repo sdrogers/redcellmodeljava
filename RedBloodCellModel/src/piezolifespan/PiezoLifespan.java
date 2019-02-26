@@ -34,7 +34,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 	private ModelWorker worker;
 	private RBC_model rbc;
 	private Plot2DPanel[] plot = new Plot2DPanel[4];
-	private JTextField timeField,cycleField;
+	private JTextField timeField,cycleField,caKField,pmcaKField;
 	private OptionsFrame piezoOptionsFrame;
 	HashMap<String,String> DSOptions;
 	private JFileChooser jfc = new JFileChooser();
@@ -91,10 +91,12 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		cycleField = new JTextField("1440");
 		entryPanel.add(cycleField);
 		
-		entryPanel.add(new JLabel("k(Na/K pump):",SwingConstants.RIGHT));
-		entryPanel.add(new JTextField("1.7e-6"));
-		entryPanel.add(new JLabel("k(PMCA):",SwingConstants.RIGHT));
-		entryPanel.add(new JTextField("5.2e-6"));
+		entryPanel.add(new JLabel("k(Na/K pump) (1/min): ",SwingConstants.RIGHT));
+		caKField = new JTextField("1.7e-6");
+		entryPanel.add(caKField);
+		pmcaKField = new JTextField("5.2e-6");
+		entryPanel.add(new JLabel("k(PMCA) (1/min): ",SwingConstants.RIGHT));
+		entryPanel.add(pmcaKField);
 		
 		
 		outputPanel.add(topPanel);
@@ -146,11 +148,22 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 			rbc.setPublish(false);
 			publish(rbc.getLastResult()); 
 			*/
+
+			Double naK = Double.parseDouble(caKField.getText());
+			Double pmcaK = Double.parseDouble(pmcaKField.getText());
+			Double FMaxCa = rbc.getCaPump().getDefaultFcapm();
+			Double FMaxNa = rbc.getNapump().getP_1();
+			Double FMaxNaRev = rbc.getNapump().getP_2();
+			Double timeInMinutes = 0.0;
 			while(time < max_time) {
+				timeInMinutes = time*60.0; // RBC time is in hours
 				if(this.isCancelled()) {
 					break;
 				}
 				rbc.setupDS(DSOptions, new ArrayList<String>());
+				rbc.getCaPump().setDefaultFcapm(FMaxCa - pmcaK*timeInMinutes);
+				rbc.getNapump().setP_1(FMaxNa - naK*timeInMinutes);
+				rbc.getNapump().setP_2(FMaxNaRev - naK*timeInMinutes);
 				rbc.setPublish(false);
 				rbc.runall(null);
 				time = rbc.getSamplingTime();
@@ -163,6 +176,9 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 					publish(rbc.getLastResult());
 					cycle_counter = 0;
 				}
+				System.out.println("fcapm: " + rbc.getCaPump().getDefaultFcapm());
+				System.out.println("p1: " + rbc.getNapump().getP_1());
+				System.out.println("p2: " + rbc.getNapump().getP_2());
 				
 				
 			}

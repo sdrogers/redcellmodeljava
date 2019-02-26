@@ -470,6 +470,8 @@ public class RBC_model implements Serializable {
 		this.cycle_count = this.cycles_per_print - 1; // forces an output now
 		this.integration_interval_factor = this.piezo.getOldIF();
 	}
+	
+
 	public void runall(JTextArea ta) {
 		this.output("RUNNING DS STAGE " + this.stage, ta);
 		this.output("Current Sampling time: " + 60.0*this.sampling_time,ta);
@@ -746,7 +748,7 @@ public class RBC_model implements Serializable {
 			a23.compute_flux(I_18);
 			passiveca.compute_flux(I_18);
 			piezoPassiveca.compute_flux(I_18);
-			getCapump().compute_flux();
+			getCaPump().compute_flux();
 			totalCaFlux();
 			totalFlux();
 			return total_flux;
@@ -2379,7 +2381,7 @@ public class RBC_model implements Serializable {
 	public void setJS(JacobsStewart jS) {
 		JS = jS;
 	}
-	public CaPumpMg2 getCapump() {
+	public CaPumpMg2 getCaPump() {
 		return capump;
 	}
 	public void setCapump(CaPumpMg2 capump) {

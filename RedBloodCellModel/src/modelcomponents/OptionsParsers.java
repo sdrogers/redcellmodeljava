@@ -89,7 +89,7 @@ public class OptionsParsers {
 		temp = options.get("PMCA");
 		if(temp != null) {
 			Double fc = (100.0 - Double.parseDouble(temp))/100.0;
-			model.getCapump().setFcapm(model.getCapump().getDefaultFcapm() * fc);
+			model.getCaPump().setFcapm(model.getCaPump().getDefaultFcapm() * fc);
 			usedoptions.add("PMCA");
 		}
 		

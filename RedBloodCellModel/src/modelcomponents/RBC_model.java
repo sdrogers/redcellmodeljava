@@ -823,7 +823,6 @@ public class RBC_model implements Serializable {
 		OptionsParsers.set_transport_changes_options(options, usedoptions, this);
 		this.set_temp_permeability_options(options, usedoptions);
 		this.set_piezo_options(options,usedoptions);
-		
 		if(this.verbose) { 
 			System.out.println();
 			System.out.println("Used DS options");

@@ -1161,10 +1161,10 @@ public class RBC_model implements Serializable {
 		}
 		
 		this.A_12 = this.medium.getpH();
-		temp = options.get("Initial medium pH");
+		temp = options.get("Medium pH");
 		if(temp != null) {
 			this.medium.setpH(Double.parseDouble(temp));
-			usedoptions.add("Initial medium pH");
+			usedoptions.add("Medium pH");
 		}
 		this.phadjust();
 		

@@ -118,6 +118,7 @@ public class RBC_model implements Serializable {
 	private Double Vw;
 	private Double VV;
 	private Double fraction;
+	private Double defaultFraction;
 	private Double mchc;
 	private Double density;
 	private Double Em;
@@ -427,6 +428,9 @@ public class RBC_model implements Serializable {
 			}
 		}
 	}
+	public Double getDefaultFraction() {
+		return this.defaultFraction;
+	}
 	private void startPiezo() {
 		this.piezo.setOldCycles(this.cycles_per_print);
 		this.cycles_per_print = this.piezo.getCycles();
@@ -454,6 +458,8 @@ public class RBC_model implements Serializable {
 		
 		this.piezo.setOldIF(this.integration_interval_factor);
 		this.integration_interval_factor = this.piezo.getiF();
+		
+		this.fraction = this.piezo.getPiezoFraction();
 	}
 	private void stopPiezo() {
 		this.cycle_count = this.cycles_per_print - 1; // forces an output now
@@ -464,6 +470,8 @@ public class RBC_model implements Serializable {
 		//???
 		this.piezoPassiveca.setFcalm(0.0);
 		this.capump.setFcapm(this.piezo.getOldPMCA());
+		
+		this.fraction = this.defaultFraction;
 	}
 	private void endPiezo() {
 		this.cycles_per_print = piezo.getOldCycles();
@@ -777,7 +785,8 @@ public class RBC_model implements Serializable {
 			
 			this.cycles_per_print = 777;
 			this.Vw = this.I_79;
-			this.fraction = 0.000001;
+			this.fraction = 1e-4; 
+			this.defaultFraction = 1e-4;
 			this.medium.setpH(7.4);
 			this.A_12 = this.medium.getpH();
 			this.A_11 = 1.0-this.hb_content/136.0;
@@ -921,6 +930,11 @@ public class RBC_model implements Serializable {
 					piezo.setiF(Double.parseDouble(temp));
 				}
 				
+				temp = options.get("Transit cell volume fraction");
+				if(temp != null) {
+					usedoptions.add("Transit cell volume fraction");
+					piezo.setPiezoFraction(Double.parseDouble(temp));
+				}
  				
 			}
 		}
@@ -1127,6 +1141,8 @@ public class RBC_model implements Serializable {
 		String temp = options.get("Cell volume fraction");
 		if(temp != null) {
 			this.fraction = Double.parseDouble(temp);
+			this.defaultFraction = this.fraction;
+			
 			usedoptions.add("Cell volume fraction");
 //		}
 			/*

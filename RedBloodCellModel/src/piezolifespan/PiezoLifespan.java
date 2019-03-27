@@ -262,6 +262,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		runButton.setEnabled(true);
 		stopButton.setEnabled(false);
 		saveButton.setEnabled(true);
+		changePiezoButton.setEnabled(true);
 	}
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == runButton) {

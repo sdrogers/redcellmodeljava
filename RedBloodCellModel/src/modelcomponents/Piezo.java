@@ -17,6 +17,7 @@ public class Piezo implements Serializable {
 	private Double pcag = 100.0;
 	private Double pag = 50.0;
 	private Double pmca = 90.0;
+	private Double piezoFraction = 0.0001;
 	public Double getPkg() {
 		return pkg;
 	}
@@ -127,5 +128,11 @@ public class Piezo implements Serializable {
 	}
 	public Integer getOldCycles() {
 		return this.oldCycles;
+	}
+	public Double getPiezoFraction() {
+		return piezoFraction;
+	}
+	public void setPiezoFraction(Double piezoFraction) {
+		this.piezoFraction = piezoFraction;
 	}
  }

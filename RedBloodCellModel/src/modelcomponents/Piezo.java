@@ -18,6 +18,20 @@ public class Piezo implements Serializable {
 	private Double pag = 50.0;
 	private Double pmca = 90.0;
 	private Double piezoFraction = 0.0001;
+	private Double piezoJS = 100.0;
+	private boolean restoreMedium = false;
+	public void setRestoreMedium(boolean res) {
+		this.restoreMedium = res;
+	}
+	public boolean getRestoreMedium() {
+		return restoreMedium;
+	}
+	public Double getPiezoJS() {
+		return piezoJS;
+	}
+	public void setPiezoJS(Double piezoJS) {
+		this.piezoJS = piezoJS;
+	}
 	public Double getPkg() {
 		return pkg;
 	}

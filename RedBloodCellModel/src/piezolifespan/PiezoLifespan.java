@@ -30,16 +30,17 @@ import guicomponents.OptionsFrame;
 
 
 public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
-	private JButton runButton,stopButton,saveButton,changePiezoButton,rsButton;
+	private JButton runButton,stopButton,saveButton,changePiezoButton,rsButton,mediumButton;
 	private JTextArea modelOutput;
 	private ModelWorker worker;
 	private RBC_model rbc;
 	private Plot2DPanel[] plot = new Plot2DPanel[4];
 	private JTextField timeField,cycleField,caKField,pmcaKField,tnapField;
-	private OptionsFrame piezoOptionsFrame,rsOptionsFrame;
-	HashMap<String,String> DSOptions,RSOptions;
+	private OptionsFrame piezoOptionsFrame,rsOptionsFrame,mediumOptionsFrame;
+	HashMap<String,String> DSOptions,RSOptions,mediumOptions;
 	private JFileChooser jfc = new JFileChooser();
 
+	
 	public PiezoLifespan() {
 		this.setSize(1000, 1000);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,6 +61,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		saveButton = new JButton("Save csv");
 		changePiezoButton = new JButton("Change PIEZO parameters");
 		rsButton = new JButton("Change Reference State");
+		mediumButton = new JButton("Change Default Media");
 		
 		
 		
@@ -69,12 +71,14 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		buttonPanel.add(saveButton);
 		buttonPanel.add(changePiezoButton);
 		buttonPanel.add(rsButton);
+		buttonPanel.add(mediumButton);
 		
 		runButton.addActionListener(this);
 		stopButton.addActionListener(this);
 		saveButton.addActionListener(this);
 		changePiezoButton.addActionListener(this);
 		rsButton.addActionListener(this);
+		mediumButton.addActionListener(this);
 		
 		stopButton.setEnabled(false);
 		saveButton.setEnabled(false);
@@ -101,7 +105,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		pmcaKField = new JTextField("7e-6");
 		entryPanel.add(new JLabel("k(PMCA) (1/min): ",SwingConstants.RIGHT));
 		entryPanel.add(pmcaKField);
-		tnapField = new JTextField("86400");
+		tnapField = new JTextField("0");
 		entryPanel.add(new JLabel("TNaP (minutes): ",SwingConstants.RIGHT));
 		entryPanel.add(tnapField);
 		
@@ -121,27 +125,38 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 	private void makeOptionsDefault() {
 		DSOptions = new HashMap<String,String>();
 		RSOptions = new HashMap<String,String>();
+		mediumOptions = new HashMap<String,String>();
+		
 		DSOptions.put("Time", "1.0");
 		DSOptions.put("Incorporate PIEZO stage","yes");
 		DSOptions.put("piezo_start","0.0");
 		DSOptions.put("Output Accuracy","6");
 		Double stage_time = 1.0; // minutes
-		Double open_time = 0.4*(1.0/60.0); // 0.4 seconds
+		Double open_time = 4.0*(1.0/60.0); // 4.0 seconds
 		Double recovery_time = stage_time - open_time - 1e-6;
 		DSOptions.put("piezo_recovery",""+recovery_time);
 		DSOptions.put("Open state",""+0.4);
 		
-		DSOptions.put("Piezo Frequency factor", "0.00001");
+		DSOptions.put("Piezo Frequency factor", "0.0001");
 		DSOptions.put("Piezo Cycles per print","111");
-		DSOptions.put("PzKG","0.3");
-		DSOptions.put("PzNaG", "0.15");
-		DSOptions.put("PzAG","10.0");
-		DSOptions.put("PzCaG","1.0");
+		DSOptions.put("PzKG","1.0");
+		DSOptions.put("PzNaG", "0.8");
+		DSOptions.put("PzAG","50.0");
+		DSOptions.put("PzCaG","60.0");
 		DSOptions.put("PMCA inhibition","0.0");
 		
-		RSOptions.put("[Na]i","5.0");
-		RSOptions.put("[K]i","145.0");
-		RSOptions.put("Cell water content","0.82");
+		DSOptions.put("Restore Medium","yes");
+		
+//		RSOptions.put("[Na]i","5.0");
+//		RSOptions.put("[K]i","145.0");
+//		RSOptions.put("Cell water content","0.82");
+		
+		mediumOptions.put("HEPES-Na concentration","10.0");
+		mediumOptions.put("Medium pH","7.4");
+		mediumOptions.put("NaCl","145.0");
+		mediumOptions.put("KCl","5.0");
+		mediumOptions.put("Mg concentration","0.2");
+		mediumOptions.put("Ca concentration","1.0");
 	}
 	private class ModelWorker extends SwingWorker<Void,ResultHash> {
 		public Void doInBackground() {
@@ -152,11 +167,15 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 			
 			
 			rbc.setVerbose(false);
+			System.out.println("Setting RS");
 			rbc.setup(RSOptions, new ArrayList<String>());
+			System.out.println("Done");
 			Double time = rbc.getSamplingTime();
 			Double max_time = Double.parseDouble(timeField.getText());
 			int cycles_per_output = Integer.parseInt(cycleField.getText());
 			int cycle_counter = 0;
+			
+			rbc.setMediumDefaults(mediumOptions);
 			
 			rbc.setPublish(true);
 			rbc.publish();
@@ -296,6 +315,9 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		}else if(e.getSource() == rsButton) {
 			rsOptionsFrame = new OptionsFrame("Reference state options","SettingFiles/RSOptions.csv",RSOptions,this,"");
 			rsOptionsFrame.makeVisible();
+		}else if(e.getSource() == mediumButton) {
+			mediumOptionsFrame = new OptionsFrame("Default Medium options,","SettingFiles/mediumDefaultOptions.csv",mediumOptions,this,"");
+			mediumOptionsFrame.makeVisible();
 		}
 	}
 	

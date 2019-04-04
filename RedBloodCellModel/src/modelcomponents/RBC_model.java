@@ -222,7 +222,7 @@ public class RBC_model implements Serializable {
 
 	
 	private Piezo piezo;
-	
+	private HashMap<String,String> mediumDefaults;
 	public RBC_model() {
 		cell = new Region();
 		medium = new Region();
@@ -459,7 +459,16 @@ public class RBC_model implements Serializable {
 		this.piezo.setOldIF(this.integration_interval_factor);
 		this.integration_interval_factor = this.piezo.getiF();
 		
-		this.fraction = this.piezo.getPiezoFraction();
+		Double jsfactor = this.piezo.getPiezoJS();
+		this.JS.setPermeability(this.JS.getDefaultPermeability() * jsfactor);
+
+		
+		
+//		this.fraction = this.piezo.getPiezoFraction();
+//		if(this.A_7 != this.fraction) {
+//			this.A_7 = this.fraction;
+//			this.A_8 = this.A_7/(1.0 - this.A_7);
+//		}
 	}
 	private void stopPiezo() {
 		this.cycle_count = this.cycles_per_print - 1; // forces an output now
@@ -471,7 +480,21 @@ public class RBC_model implements Serializable {
 		this.piezoPassiveca.setFcalm(0.0);
 		this.capump.setFcapm(this.piezo.getOldPMCA());
 		
-		this.fraction = this.defaultFraction;
+		
+		this.JS.setPermeability(this.JS.getDefaultPermeability());
+		
+		if(this.piezo.getRestoreMedium()) {
+			this.restoreMedium(mediumDefaults);
+		}
+		
+//		this.fraction = this.defaultFraction;
+//		if(this.A_7 != this.fraction) {
+//			this.A_7 = this.fraction;
+//			this.A_8 = this.A_7/(1.0 - this.A_7);
+//		}
+	}
+	public void setMediumDefaults(HashMap<String,String> md) {
+		mediumDefaults = md;
 	}
 	private void endPiezo() {
 		this.cycles_per_print = piezo.getOldCycles();
@@ -479,7 +502,20 @@ public class RBC_model implements Serializable {
 		this.integration_interval_factor = this.piezo.getOldIF();
 	}
 	
-
+	private void restoreMedium(HashMap<String,String> mediumOptions) {
+		String temp = mediumOptions.get("HEPES-Na concentration"); //:10
+		this.buffer_conc = Double.parseDouble(temp);
+		temp = mediumOptions.get("Medium pH"); // 7.4
+		this.medium.setpH(Double.parseDouble(temp));
+		temp = mediumOptions.get("NaCl"); // 145.0
+		this.medium.Na.setConcentration(Double.parseDouble(temp)); // or amount??
+		temp = mediumOptions.get("KCl"); // 5.0
+		this.medium.K.setConcentration(Double.parseDouble(temp));
+		temp = mediumOptions.get("Mg concentration"); // 0.2
+		this.medium.Mgf.setConcentration(Double.parseDouble(temp)); // OR MgT??
+		temp = mediumOptions.get("Ca concentration"); // 1.0
+		this.medium.Caf.setConcentration(Double.parseDouble(temp)); // or CaT??
+	}
 	public void runall(JTextArea ta) {
 		this.output("RUNNING DS STAGE " + this.stage, ta);
 		this.output("Current Sampling time: " + 60.0*this.sampling_time,ta);
@@ -935,7 +971,22 @@ public class RBC_model implements Serializable {
 					usedoptions.add("Transit cell volume fraction");
 					piezo.setPiezoFraction(Double.parseDouble(temp));
 				}
- 				
+				
+				temp = options.get("Piezo JS Inhibition/Stimulation");
+				if(temp != null) {
+					Double jsfactor = Double.parseDouble(temp);
+					jsfactor = (100.0 - jsfactor)/100.0;
+					piezo.setPiezoJS(jsfactor);
+					usedoptions.add("Piezo JS Inhibition/Stimulation");
+				}
+ 				temp = options.get("Restore Medium");
+ 				if(temp != null) {
+ 					if(temp.equals("yes")) {
+ 						piezo.setRestoreMedium(true);
+ 					}else {
+ 						piezo.setRestoreMedium(false);
+ 					}
+ 				}
 			}
 		}
 	}
@@ -1170,10 +1221,10 @@ public class RBC_model implements Serializable {
 			}	
 		}
 		
-		temp = options.get("HEPES concentration");
+		temp = options.get("HEPES-Na concentration");
 		if(temp != null) {
 			this.buffer_conc = Double.parseDouble(temp);
-			usedoptions.add("HEPES concentration");
+			usedoptions.add("HEPES-Na concentration");
 		}
 		
 		this.A_12 = this.medium.getpH();

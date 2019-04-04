@@ -459,16 +459,16 @@ public class RBC_model implements Serializable {
 		this.piezo.setOldIF(this.integration_interval_factor);
 		this.integration_interval_factor = this.piezo.getiF();
 		
+		
 		Double jsfactor = this.piezo.getPiezoJS();
 		this.JS.setPermeability(this.JS.getDefaultPermeability() * jsfactor);
 
-		
-		
-//		this.fraction = this.piezo.getPiezoFraction();
-//		if(this.A_7 != this.fraction) {
-//			this.A_7 = this.fraction;
-//			this.A_8 = this.A_7/(1.0 - this.A_7);
-//		}
+			
+		this.fraction = this.piezo.getPiezoFraction();
+		if(this.A_7 != this.fraction) {
+			this.A_7 = this.fraction;
+			this.A_8 = this.A_7/(1.0 - this.A_7);
+		}
 	}
 	private void stopPiezo() {
 		this.cycle_count = this.cycles_per_print - 1; // forces an output now
@@ -487,11 +487,11 @@ public class RBC_model implements Serializable {
 			this.restoreMedium(mediumDefaults);
 		}
 		
-//		this.fraction = this.defaultFraction;
-//		if(this.A_7 != this.fraction) {
-//			this.A_7 = this.fraction;
-//			this.A_8 = this.A_7/(1.0 - this.A_7);
-//		}
+		this.fraction = this.defaultFraction;
+		if(this.A_7 != this.fraction) {
+			this.A_7 = this.fraction;
+			this.A_8 = this.A_7/(1.0 - this.A_7);
+		}
 	}
 	public void setMediumDefaults(HashMap<String,String> md) {
 		mediumDefaults = md;
@@ -813,6 +813,20 @@ public class RBC_model implements Serializable {
 	
 	public void setup(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
 		if(this.stage == 0) {
+			
+			// Some Piezo things - move them
+			String temp = rsoptions.get("NaCl");
+			if(temp != null) {
+				this.medium.Na.setConcentration(Double.parseDouble(temp));
+				usedoptions.add("NaCl");
+			}
+
+			temp = rsoptions.get("KCl");
+			if(temp != null) {
+				this.medium.K.setConcentration(Double.parseDouble(temp));
+				usedoptions.add("KCl");
+			}
+			
 			System.out.println("Setting up the RS");
 			this.naPumpScreenRS(rsoptions,usedoptions);
 			this.cellwaterscreenRS(rsoptions, usedoptions);
@@ -828,6 +842,9 @@ public class RBC_model implements Serializable {
 			this.A_11 = 1.0-this.hb_content/136.0;
 			this.R = 1.0; // check type - flag to determine that we're computing reference state
 			this.sampling_time = 0.0;
+			
+			
+
 			
 			
 			this.setmgdefaults();
@@ -853,6 +870,8 @@ public class RBC_model implements Serializable {
 					JOptionPane.showMessageDialog(null,"Didn't recognise " + option + " for RS - tell Simon!");
 				}
 			}
+			
+			
 		}		
 		// this.publish();
 	}

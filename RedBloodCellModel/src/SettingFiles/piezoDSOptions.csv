@@ -2,7 +2,7 @@ Alternative Name,Parameter/Variable Name,Default Value,Units,Description,Allowed
 Incorporate PIEZO stage,piezo,no,,Incorpoate a PIEZO stage,"yes,no"
 Open state,piezo_duration,4.0,seconds,Duration of the PIEZO open state,
 Output Accuracy,dp,6,,Output accuracy. Note: change here *or* in time and data output factors. Changes the accuracy for the entire experiment,
-Piezo Frequency factor,piezo_integration,0.0001,,Integration factor,
+Piezo Frequency factor,piezo_integration,0.001,,Integration factor,
 Piezo Cycles per print,piezo_cycles,111,,How often to present output during the PIEZO period,
 PzKG,piezo_pkg,1.0,1/h,Goldman K permeability (1-10),
 PzNaG,piezo_pnag,0.8,1/h,Goldman Na permeability (0.8-8),

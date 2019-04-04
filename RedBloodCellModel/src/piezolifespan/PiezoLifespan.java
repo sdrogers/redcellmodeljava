@@ -137,7 +137,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		DSOptions.put("piezo_recovery",""+recovery_time);
 		DSOptions.put("Open state",""+0.4);
 		
-		DSOptions.put("Piezo Frequency factor", "0.0001");
+		DSOptions.put("Piezo Frequency factor", "0.001");
 		DSOptions.put("Piezo Cycles per print","111");
 		DSOptions.put("PzKG","1.0");
 		DSOptions.put("PzNaG", "0.8");
@@ -147,9 +147,9 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		
 		DSOptions.put("Restore Medium","yes");
 		
-//		RSOptions.put("[Na]i","5.0");
-//		RSOptions.put("[K]i","145.0");
-//		RSOptions.put("Cell water content","0.82");
+		RSOptions.put("KCl","5.0");
+		RSOptions.put("NaCl","145.0");
+		RSOptions.put("Cell water content","0.67");
 		
 		mediumOptions.put("HEPES-Na concentration","10.0");
 		mediumOptions.put("Medium pH","7.4");
@@ -313,7 +313,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 			piezoOptionsFrame = new OptionsFrame("PIEZO options","SettingFiles/piezoDSOptions.csv",DSOptions,this,"");
 			piezoOptionsFrame.makeVisible();
 		}else if(e.getSource() == rsButton) {
-			rsOptionsFrame = new OptionsFrame("Reference state options","SettingFiles/RSOptions.csv",RSOptions,this,"");
+			rsOptionsFrame = new OptionsFrame("Reference state options","SettingFiles/piezoLifespanRSOptions.csv",RSOptions,this,"");
 			rsOptionsFrame.makeVisible();
 		}else if(e.getSource() == mediumButton) {
 			mediumOptionsFrame = new OptionsFrame("Default Medium options,","SettingFiles/mediumDefaultOptions.csv",mediumOptions,this,"");

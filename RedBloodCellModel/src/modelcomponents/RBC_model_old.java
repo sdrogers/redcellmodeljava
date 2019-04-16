@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
-public class RBC_model implements Serializable {
+public class RBC_model_old implements Serializable {
 	
 	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
 	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CH/nM","CCa2+","CMg2+",
@@ -41,16 +41,19 @@ public class RBC_model implements Serializable {
 	private PassiveCa passiveca;
 	private PiezoPassiveCa piezoPassiveca;
 	private CaPumpMg2 capump;
+	private Boolean debug = true;
 	
 	private Double A_1;
 	private Double A_2;
 	private Double A_3;
+	// private Double A_4 = 7.2;
 	private Double pit0;
 	private Double A_5;
 	private boolean compute_delta_time = true; // Whether to compute this, or use a constant
 	private Double integration_interval_factor; // Integration factor
 	private Double A_7;
 	private Double A_8;
+	// private Double A_9 = 0.0;
 	private Double hb_content;
 	private Double A_10;
 	private Double A_11;
@@ -71,22 +74,38 @@ public class RBC_model implements Serializable {
 	private Double Q10Passive; // was B10, B_10, B[10] // ADD TO TAB FOR PERMEABILITIES
 	
 	private Double delta_H;
+	private	Double D_6;
+	private Double D_12;
 	
 	
 	private Double total_flux_Na;
 	private Double total_flux_K;
 	private Double total_flux_A;
 	private Double total_flux_H;
+	private Double napmaxf;
+//	private Double napump.flux_rev = 0.;
+	private Double napmaxr;
 	
-		
+	
+	private Double I_3;
+	private Double I_6;
+	private Double I_9;
+	private Double I_11;
+	private Double I_12;
+	
 	
 	private Double I_18;
 	private Double I_73;
+	private Double I_77;
+	private Double I_78;
 	private Double I_79; 
 	
 	private Double buffer_conc;
 	private Double Q_4;
 	
+	
+	private Double Q_8;
+	private Double R;
 
 	private Double sampling_time;
 	private int cycle_count;
@@ -109,6 +128,7 @@ public class RBC_model implements Serializable {
 	private Double nHb;
 	
 	
+	private Double X_6;
 	private Double total_flux;
 	private Double diff2;
 	private Double diff3;
@@ -131,7 +151,14 @@ public class RBC_model implements Serializable {
 	
 	private Double mgb;
 	private Double mgb0;
+	private Double mgcao;
+	private Double mgcai;
+//	private Double cell.Mgt.amount;
+	private Double camgi;
+	private Double camgo;
+	private Double cab;
 	private Double cabb;
+//	private Double cell.Cat.concentration;
 	private Double total_flux_Ca;
 	
 	
@@ -147,13 +174,16 @@ public class RBC_model implements Serializable {
 	private Double dpgp;
 	private String BufferType;
 	private Double vlysis;
-	
+	// is gca ever used?
+	private Double gca;
 	private Double ff;
 	private Double delta_Mg;
 	private Double delta_Ca;
-	
+	private Double q0;
 
 	private Double I_74;
+	private int Z;
+	private boolean RS_computed;
 	private Integer stage;
 
 	private Double I_43;
@@ -176,6 +206,10 @@ public class RBC_model implements Serializable {
 
 	private Double I_67;
 
+	private boolean finished;
+
+	private boolean in_progress;
+
 	private double delta_time = 0.1; // Initial value in case it is not computed
 
 	private double delta_Na;
@@ -189,7 +223,7 @@ public class RBC_model implements Serializable {
 	
 	private Piezo piezo;
 	private HashMap<String,String> mediumDefaults;
-	public RBC_model() {
+	public RBC_model_old() {
 		cell = new Region();
 		medium = new Region();
 		
@@ -259,17 +293,30 @@ public class RBC_model implements Serializable {
 		//# self.cell.Hbpm.concentration
 		
 		this.delta_H = 0.0;
+		this.D_6 = 0.001; // Cord - for the NR
+		this.D_12 =  0.0001; // NR delta
 		
 		this.total_flux_Na = 0.0;
 		this.total_flux_K = 0.0;
 		this.total_flux_A = 0.0;
 		this.total_flux_H = 0.0;
+		this.napmaxf = 1.0;
 		this.getNapump().setFluxRev(0.0015);
+		this.napmaxr = 1.0;
 		
+		// These are napump things
+		this.I_3 = 0.0;
+		this.I_6 = 0.0;
+		this.I_9 = 0.0;
+		this.I_11 = 0.0;
+		// This is a co-transport thing
+		this.I_12 = 0.0;
 		
 		
 		this.I_18 = 0.0;
 		this.I_73 = 0.0; // Exchange chloride for gluconate (in the medium)
+		this.I_77 = 7.216; // Just in NaPump - remove
+		this.I_78 = 0.4; // Just in NaPump - remove
 		this.I_79 = 0.75; // Water volume (as proportion of total)
 		
 		this.medium.Na.setConcentration(145.0);
@@ -289,6 +336,8 @@ public class RBC_model implements Serializable {
 		
 		
 		
+		this.Q_8 = 0.0; // Osmotic coefficient of haemoglobin - only used in the reference state
+		this.R = 0.0; // Check the type
 
 		this.sampling_time = 0.0;
 		this.cycle_count = 0;
@@ -308,6 +357,7 @@ public class RBC_model implements Serializable {
 		this.fHb = 0.0;
 		this.nHb = 0.0;
 		
+		this.X_6 = 0.0;
 		this.total_flux = 0.0;
 		this.diff2 = 0.00001;
 		this.diff3 = 0.00001;
@@ -330,7 +380,12 @@ public class RBC_model implements Serializable {
 		
 		this.mgb = 0.0; // mg buffering
 		this.mgb0 = 0.0;
+		this.mgcao = 0.0;
+		this.mgcai = 0.0;
 		this.cell.Mgt.setAmount(2.5);
+		this.camgi = 0.0;
+		this.camgo = 0.0;
+		this.cab = 0.0; // ca buffering
 		this.cabb = 0.0;
 		this.cell.Cat.setConcentration(0.0);
 		this.total_flux_Ca = 0.0;
@@ -348,6 +403,7 @@ public class RBC_model implements Serializable {
 		this.dpgp = 0.0;
 		this.BufferType = "HEPES";
 		this.vlysis = 1.45;
+		this.gca = 0.0;
 		this.ff = 0.0;
 		this.delta_Mg = 0.0;
 		this.delta_Ca = 0.0;
@@ -428,7 +484,6 @@ public class RBC_model implements Serializable {
 		this.JS.setPermeability(this.JS.getDefaultPermeability());
 		
 		if(this.piezo.getRestoreMedium()) {
-			System.err.println("RESTORING");
 			this.restoreMedium(mediumDefaults);
 		}
 		
@@ -465,9 +520,13 @@ public class RBC_model implements Serializable {
 		this.output("RUNNING DS STAGE " + this.stage, ta);
 		this.output("Current Sampling time: " + 60.0*this.sampling_time,ta);
 		this.output("Running until: " + this.duration_experiment,ta);
-				
+		
+		this.finished = false;
+		this.in_progress = true;
+		
 		this.cycle_count = 0;
 		this.n_its = 0;
+		this.Z = 0;
 		this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
 		
 		this.publish();
@@ -603,6 +662,7 @@ public class RBC_model implements Serializable {
 //			}
 			
 			if(this.cycle_count == this.cycles_per_print) {
+				this.Z += 1;
 				this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
 				this.publish();
 				this.cycle_count = 0;
@@ -620,6 +680,7 @@ public class RBC_model implements Serializable {
 		this.Vw = this.Vw + this.delta_Water;
 		this.cell.Hb.setConcentration(this.cell.Hb.getAmount()/this.Vw);
 		this.fHb = 1.0 + this.A_2*this.cell.Hb.getConcentration()+this.A_3*Math.pow(this.cell.Hb.getConcentration(),2);
+		Double I_28 = this.fHb*this.cell.Hb.getAmount();
 		this.cell.Na.setAmount(this.cell.Na.getAmount() + this.delta_Na);
 		this.cell.K.setAmount(this.cell.K.getAmount() + this.delta_K);
 		this.cell.A.setAmount(this.cell.A.getAmount() + this.delta_A);
@@ -628,11 +689,13 @@ public class RBC_model implements Serializable {
 		this.nHb = this.Q_4/this.cell.Hb.getAmount();
 		this.cell.Mgt.setAmount(this.cell.Mgt.getAmount()+this.delta_Mg);
 		this.cell.Cat.setAmount(this.cell.Cat.getAmount() + this.delta_Ca);
+		this.gca = this.cell.Cat.getAmount();
 
 		// Cell pH and cell proton concentration
 		this.cell.setpH(this.I_74 + this.nHb/this.A_1);
 		this.cell.H.setConcentration(Math.pow(10,(-this.cell.getpH())));
 		this.nHb = this.A_1*(this.cell.getpH()-this.I_74);
+		this.Q_8 = I_28;
 		this.VV = (1-this.A_11) + this.Vw;
 		this.mchc = this.hb_content/this.VV;
 		this.density = (this.hb_content/100 + this.Vw)/this.VV;
@@ -765,7 +828,7 @@ public class RBC_model implements Serializable {
 				this.cell.K.setAmount(Double.parseDouble(temp)*this.Vw);
 				usedoptions.add("KCl");
 			}
-			
+
 			System.out.println("Setting up the RS");
 			this.naPumpScreenRS(rsoptions,usedoptions);
 			this.cellwaterscreenRS(rsoptions, usedoptions);
@@ -779,6 +842,7 @@ public class RBC_model implements Serializable {
 			this.medium.setpH(7.4);
 			this.A_12 = this.medium.getpH();
 			this.A_11 = 1.0-this.hb_content/136.0;
+			this.R = 1.0; // check type - flag to determine that we're computing reference state
 			this.sampling_time = 0.0;
 			
 			
@@ -819,10 +883,10 @@ public class RBC_model implements Serializable {
 		 * todo: finish moving options parsers to their own class
 		 */
 //		this.set_screen_time_factor_options(options, usedoptions);
-		OptionsParsers.set_screen_time_factor_options(options,usedoptions,this);
+		OptionsParsers_old.set_screen_time_factor_options(options,usedoptions,this);
 		this.set_cell_fraction_options(options, usedoptions);
 //		this.set_transport_changes_options(options, usedoptions);
-		OptionsParsers.set_transport_changes_options(options, usedoptions, this);
+		OptionsParsers_old.set_transport_changes_options(options, usedoptions, this);
 		this.set_temp_permeability_options(options, usedoptions);
 		this.set_piezo_options(options,usedoptions);
 		if(this.verbose) { 
@@ -1382,6 +1446,7 @@ public class RBC_model implements Serializable {
 		boolean finished = false;
 		while(!finished) {
 			int bbb = 0;
+			int rr = 1;
 			Double buff = this.medium.H.getConcentration();
 			Double hhold = buff;
 			this.it_counter = 0;
@@ -1394,6 +1459,7 @@ public class RBC_model implements Serializable {
 			this.medium.H.setConcentration(X_3);
 
 			
+			rr = 2;
 			buff = this.medium.Caf.getConcentration();
 			Double cafold = buff;
 			diff1 = 0.0001 * cafold;
@@ -1405,6 +1471,7 @@ public class RBC_model implements Serializable {
 			}
 			this.medium.Caf.setConcentration(X_3);
 			
+			rr = 3;
 			buff = this.medium.Mgf.getConcentration();
 			Double mgfold = buff;
 			diff1 = 0.0001 * mgfold;
@@ -1584,9 +1651,13 @@ public class RBC_model implements Serializable {
 
 		this.fluxesRS();
 		
+		this.R = 0.0;
 		this.cycle_count = 0;
 		this.n_its = 0;
+		this.Z = 0;
 		this.duration_experiment = 0.0;
+
+		this.RS_computed = true;
 
 		// Set stage to zero everytime the RS is computed - stage = 1 means we're about to start DS 1
 		this.stage = 0;
@@ -1614,10 +1685,12 @@ public class RBC_model implements Serializable {
 
 		// Zero-factor for cotransport
 		this.cotransport.compute_zero_factor();
+		this.X_6 = this.Vw;
 		// this.cotransportmediatedfluxes()
 		this.cotransport.compute_flux(this.I_18);
 		this.totalionfluxes();
 
+		this.Q_8 = this.fHb*this.cell.Hb.getAmount(); // How many solute equivalents (cell.Hb.getAmount() = QHb)
 		// fHb is osmotic coefficient of haemoglobin
 
 		this.chbetc();
@@ -1746,6 +1819,11 @@ public class RBC_model implements Serializable {
 			usedoptions.add("Na/K pump Na efflux");
 		}
 		
+		if(this.getNapump().getFluxFwd() == -2.61) {
+			this.napmaxf = 1.0;
+		}else {
+			this.napmaxf = 0.0;
+		}
 		
 		String na_efflux_rev = rsoptions.get("na-efflux-rev");
 		if(na_efflux_rev != null) {
@@ -1753,6 +1831,11 @@ public class RBC_model implements Serializable {
 			usedoptions.add("na-efflux-rev");
 		}
 		
+		if(this.getNapump().getFluxRev() == 0.0015) {
+			this.napmaxr = 1.0;
+		}else {
+			this.napmaxr = 0.0;
+		}
 		
 		// Other code to be added here...
 		// New ones added for reduced RS in March 18
@@ -1857,10 +1940,15 @@ public class RBC_model implements Serializable {
 	public void setmgdefaults() {
 		this.cell.Mgt.setAmount(2.5);
 		this.medium.Mgt.setConcentration(0.2);
+		
+		this.q0 = 0.05;
 		this.atp = 1.2;
 		this.dpgp = 15.0;
 		this.VV = (1.0 - this.A_11) + this.Vw;
+		
 		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001,100,0, false);
+
+		//		System.out.println(conc);
 		this.cell.Mgf.setConcentration(conc);
 		
 		

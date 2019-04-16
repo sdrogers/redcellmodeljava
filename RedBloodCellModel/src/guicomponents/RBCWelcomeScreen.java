@@ -22,7 +22,7 @@ import utilities.ExperimentalSettings;
 public class RBCWelcomeScreen extends JFrame implements ActionListener {
 	private JButton newButton,loadButton;
 	private JFileChooser jfc;
-	private JButton pkgButton;
+	private JButton pkgButton,protocolAButton;
 	public RBCWelcomeScreen() {
 		this.setSize(500,450);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,6 +57,11 @@ public class RBCWelcomeScreen extends JFrame implements ActionListener {
 		pkgButton = new JButton("PKG 30, PAG 50");
 		pkgButton.addActionListener(this);
 		demoProtocols.add(pkgButton);
+		
+		protocolAButton = new JButton("Protocol A");
+		protocolAButton.addActionListener(this);
+		demoProtocols.add(protocolAButton);
+		
 		demoProtocols.setBorder(BorderFactory.createTitledBorder("Demo protocols"));
 		JPanel bottomButtons = new JPanel(new FlowLayout());
 		bottomButtons.add(newButton);
@@ -86,6 +91,8 @@ public class RBCWelcomeScreen extends JFrame implements ActionListener {
 			new ExperimentScreen(new ExperimentalSettings(fileName));
 		}else if(e.getSource() == pkgButton) {
 			new ExperimentScreen(ExampleProtocols.getPKG());
+		}else if(e.getSource() == protocolAButton) {
+			new ExperimentScreen(ExampleProtocols.getA());
 		}
 	}
 	

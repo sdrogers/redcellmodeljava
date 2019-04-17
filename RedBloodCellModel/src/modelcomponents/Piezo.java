@@ -8,7 +8,8 @@ import java.util.ArrayList;
 // note that the actual changes are made by the model class
 // Note also that time here is in minutes
 public class Piezo implements Serializable {
-	private Double startTime = 2.0/60.0; // hours
+//	private Double startTime = 2.0/60.0; // hours
+	private Double startTime = 0.0;
 	private Double duration = (1.0/120.0)/60.0; // hours
 	private Double recovery = 1.0/60.0; // hours
 	private Integer cycles = 7;

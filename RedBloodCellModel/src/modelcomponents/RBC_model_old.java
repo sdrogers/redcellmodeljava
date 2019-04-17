@@ -507,6 +507,12 @@ public class RBC_model_old implements Serializable {
 		this.buffer_conc = Double.parseDouble(temp);
 		temp = mediumOptions.get("Medium pH"); // 7.4
 		this.medium.setpH(Double.parseDouble(temp));
+		
+		this.medium.H.setConcentration(Math.pow(10, -this.medium.getpH()));
+		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
+			
+		
+		
 		temp = mediumOptions.get("NaCl"); // 145.0
 		this.medium.Na.setConcentration(Double.parseDouble(temp)); // or amount??
 		temp = mediumOptions.get("KCl"); // 5.0
@@ -515,6 +521,12 @@ public class RBC_model_old implements Serializable {
 		this.medium.Mgt.setConcentration(Double.parseDouble(temp)); // OR MgT??
 		temp = mediumOptions.get("Ca concentration"); // 1.0
 		this.medium.Cat.setConcentration(Double.parseDouble(temp)); // or CaT??
+
+		temp = mediumOptions.get("Mg concentration"); // 0.2
+		this.medium.Mgf.setConcentration(Double.parseDouble(temp)); // OR MgT??
+		temp = mediumOptions.get("Ca concentration"); // 1.0
+		this.medium.Caf.setConcentration(Double.parseDouble(temp)); // or CaT??
+
 	}
 	public void runall(JTextArea ta) {
 		this.output("RUNNING DS STAGE " + this.stage, ta);
@@ -548,8 +560,12 @@ public class RBC_model_old implements Serializable {
 			Double pEnd = pStop + this.piezo.getRecovery();
 			mileStones.add(new MileStone(pStart,"PIEZO START"));
 			mileStones.add(new MileStone(pStop, "PIEZO STOP"));
-			mileStones.add(new MileStone(pEnd, "PIEZO END"));
 			
+			Double endTime = this.duration_experiment/60.0;
+			if(pEnd >= endTime) {
+				pEnd = endTime - 1e-6;
+			}
+			mileStones.add(new MileStone(pEnd, "PIEZO END"));
 //			// Add some forced points after
 //			int i =0;
 //			while(i<4 && (3.5+i*0.5)/60.0 < this.duration_experiment) {
@@ -573,9 +589,11 @@ public class RBC_model_old implements Serializable {
 //		}
 
 		// Check the ordering
+		for(int i=0;i<mileStones.size();i++) {
+			System.err.println(mileStones.get(i).getName() + " " + mileStones.get(i).getTime());
+		}
 		if(mileStones.size() > 1) {
 			for(int i=1;i<mileStones.size();i++) {
-//				System.out.println(mileStones.get(i).getName() + " " + mileStones.get(i).getTime());
 				if(mileStones.get(i).getTime() <= mileStones.get(i-1).getTime()) {
 					System.err.println("MILESTONES NOT IN ORDER");
 					return;
@@ -1007,6 +1025,7 @@ public class RBC_model_old implements Serializable {
  					}else {
  						piezo.setRestoreMedium(false);
  					}
+ 					usedoptions.add("Restore Medium");
  				}
 			}
 		}

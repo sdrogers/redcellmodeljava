@@ -512,9 +512,9 @@ public class RBC_model_old implements Serializable {
 		temp = mediumOptions.get("KCl"); // 5.0
 		this.medium.K.setConcentration(Double.parseDouble(temp));
 		temp = mediumOptions.get("Mg concentration"); // 0.2
-		this.medium.Mgf.setConcentration(Double.parseDouble(temp)); // OR MgT??
+		this.medium.Mgt.setConcentration(Double.parseDouble(temp)); // OR MgT??
 		temp = mediumOptions.get("Ca concentration"); // 1.0
-		this.medium.Caf.setConcentration(Double.parseDouble(temp)); // or CaT??
+		this.medium.Cat.setConcentration(Double.parseDouble(temp)); // or CaT??
 	}
 	public void runall(JTextArea ta) {
 		this.output("RUNNING DS STAGE " + this.stage, ta);

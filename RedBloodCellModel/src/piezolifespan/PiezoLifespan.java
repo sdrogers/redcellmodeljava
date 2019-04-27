@@ -142,18 +142,26 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		DSOptions.put("PzKG","1.0");
 		DSOptions.put("PzNaG", "0.8");
 		DSOptions.put("PzAG","50.0");
-		DSOptions.put("PzCaG","60.0");
+		DSOptions.put("PzCaG","70.0");
 		DSOptions.put("PMCA inhibition","0.0");
+		DSOptions.put("Transit cell volume fraction","0.9");
+		DSOptions.put("Piezo JS Inhibition/Stimulation","0.0");
+		
 		
 		DSOptions.put("Restore Medium","yes");
 		
-		RSOptions.put("KCl","145.0");
-		RSOptions.put("NaCl","5.0");
-		RSOptions.put("Cell water content","0.82");
+		RSOptions.put("Na/K pump Na efflux","-3.2");
+		RSOptions.put("[K]i","145.0");
+		RSOptions.put("[Na]i","5.0");
+		RSOptions.put("[A]i","95.0");
+		RSOptions.put("Cell water content","0.85");
+		RSOptions.put("PMCA Fmax","12.0");
+		RSOptions.put("PKGardosMax","30.0");
+		RSOptions.put("KCa(Gardos channel)","0.01");
 		
 		mediumOptions.put("HEPES-Na concentration","10.0");
 		mediumOptions.put("Medium pH","7.4");
-		mediumOptions.put("NaCl","145.0");
+		mediumOptions.put("NaCl","140.0");
 		mediumOptions.put("KCl","5.0");
 		mediumOptions.put("Mg concentration","0.2");
 		mediumOptions.put("Ca concentration","1.0");
@@ -223,7 +231,9 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 					rbc.setPublish(true);
 					rbc.publish();
 					rbc.setPublish(false);
-					publish(rbc.getLastResult());
+					ResultHash r = rbc.getLastResult();
+					r.setItem("TransitHct", rbc.getFinalPiezoHct());
+					publish(r);
 					cycle_counter = 0;
 				}
 				System.out.println("fcapm: " + rbc.getCaPump().getDefaultFcapm());
@@ -242,12 +252,13 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		public void process(List<ResultHash> res) {
 			ResultHash lastItem = res.get(res.size()-1);
 			Double time = lastItem.getTime();
-			String newLine = String.format("%8.2f%8.4f%8.2f%8.2f%8.2f\n",
+			String newLine = String.format("%8.2f%8.4f%8.2f%8.2f%8.2f%8.2f\n",
 					lastItem.getTime(),
 					lastItem.getItem("V/V"),
 					lastItem.getItem("Em"),
 					lastItem.getItem("FNaP"),
-					lastItem.getItem("FCaP"));
+					lastItem.getItem("FCaP"),
+					lastItem.getItem("TransitHct"));
 			modelOutput.append(newLine);
 			make_plots();
 		}
@@ -285,7 +296,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 	}
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == runButton) {
-			this.modelOutput.setText(String.format("%8s%8s%8s%8s%8s\n", "Time","V/V","Em","FNaP","FCaP"));
+			this.modelOutput.setText(String.format("%8s%8s%8s%8s%8s%8s\n", "Time","V/V","Em","FNaP","FCaP","TransHct"));
 			stopButton.setEnabled(true);
 			runButton.setEnabled(false);
 			saveButton.setEnabled(false);

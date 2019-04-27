@@ -1,7 +1,7 @@
 display name,code name,default value,units,description,allowed values
 HEPES-Na concentration,HEPES-Na concentration,10,,,
 Medium pH,Medium pH,7.4,,,
-NaCl,NaCl,145,,,
+NaCl,NaCl,140,,,
 KCl,KCl,5,,,
 Mg concentration,Mg concentration,0.2,,,
-Ca concentration,Ca concentration,0.2,,,
+Ca concentration,Ca concentration,1.0,,,

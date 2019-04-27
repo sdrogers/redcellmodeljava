@@ -189,6 +189,7 @@ public class RBC_model implements Serializable {
 	
 	private Piezo piezo;
 	private HashMap<String,String> mediumDefaults;
+	private Double finalPiezoHct;
 	public RBC_model() {
 		cell = new Region();
 		medium = new Region();
@@ -416,6 +417,7 @@ public class RBC_model implements Serializable {
 
 			
 		this.fraction = this.piezo.getPiezoFraction();
+		
 		if(this.A_7 != this.fraction) {
 			this.A_7 = this.fraction;
 			this.A_8 = this.A_7/(1.0 - this.A_7);
@@ -440,6 +442,9 @@ public class RBC_model implements Serializable {
 			this.publish();
 		}
 		
+		this.finalPiezoHct = this.fraction * 100.0;
+		System.err.println(this.finalPiezoHct);
+		
 		this.fraction = this.defaultFraction;
 		if(this.A_7 != this.fraction) {
 			this.A_7 = this.fraction;
@@ -447,6 +452,10 @@ public class RBC_model implements Serializable {
 		}
 		
 		
+		
+	}
+	public Double getFinalPiezoHct() {
+		return this.finalPiezoHct;
 	}
 	public void setMediumDefaults(HashMap<String,String> md) {
 		mediumDefaults = md;
@@ -1245,7 +1254,7 @@ public class RBC_model implements Serializable {
 			}
 		}
 		
-		temp = options.get("NaReplace KCl with NaCl");
+		temp = options.get("Replace KCl with NaCl");
 		if(temp != null) {
 			this.I_40 = Double.parseDouble(temp);
 			this.medium.Na.setConcentration(this.medium.Na.getConcentration() + this.I_40);

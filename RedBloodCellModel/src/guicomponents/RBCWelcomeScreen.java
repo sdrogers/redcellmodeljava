@@ -22,7 +22,7 @@ import utilities.ExperimentalSettings;
 public class RBCWelcomeScreen extends JFrame implements ActionListener {
 	private JButton newButton,loadButton;
 	private JFileChooser jfc;
-	private JButton pkgButton,protocolAButton;
+	private JButton pkgButton,protocolAButton,protocolBButton,protocolCButton,protocolDButton,protocolEButton,protocolFButton,protocolGButton;
 	public RBCWelcomeScreen() {
 		this.setSize(500,450);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,6 +61,36 @@ public class RBCWelcomeScreen extends JFrame implements ActionListener {
 		protocolAButton = new JButton("Protocol A");
 		protocolAButton.addActionListener(this);
 		demoProtocols.add(protocolAButton);
+
+//		protocolBButton = new JButton("Protocol B");
+//		protocolBButton.addActionListener(this);
+//		demoProtocols.add(protocolBButton);
+//
+//
+//		protocolCButton = new JButton("Protocol C");
+//		protocolCButton.addActionListener(this);
+//		demoProtocols.add(protocolCButton);
+//
+//		protocolDButton = new JButton("Protocol D");
+//		protocolDButton.addActionListener(this);
+//		demoProtocols.add(protocolDButton);
+//
+//		
+//		protocolEButton = new JButton("Protocol E");
+//		protocolEButton.addActionListener(this);
+//		demoProtocols.add(protocolEButton);
+//
+//		
+//		protocolFButton = new JButton("Protocol F");
+//		protocolFButton.addActionListener(this);
+//		demoProtocols.add(protocolFButton);
+//
+//		
+//		protocolGButton = new JButton("Protocol G");
+//		protocolGButton.addActionListener(this);
+//		demoProtocols.add(protocolGButton);
+
+		
 		
 		demoProtocols.setBorder(BorderFactory.createTitledBorder("Demo protocols"));
 		JPanel bottomButtons = new JPanel(new FlowLayout());

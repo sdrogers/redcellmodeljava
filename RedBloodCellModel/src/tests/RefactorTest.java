@@ -8,20 +8,37 @@ public class RefactorTest {
 	public static void main(String[] args) {
 		
 		ExperimentalSettings experimentalSettings = ExampleProtocols.getPKG();
-		double[] timeDiffs = new double[3];
-		timeDiffs[0] = run(experimentalSettings);
+		ArrayList<Double> timeDiffs = new ArrayList<Double>();
+		timeDiffs.add(run(experimentalSettings));
 		
 		experimentalSettings = ExampleProtocols.getA();
-		timeDiffs[1] = run(experimentalSettings);
+		timeDiffs.add(run(experimentalSettings));
 		
 		experimentalSettings = ExampleProtocols.getB();
-		timeDiffs[2] = run(experimentalSettings);
+		timeDiffs.add(run(experimentalSettings));
+		
+		experimentalSettings = ExampleProtocols.getC();
+		timeDiffs.add(run(experimentalSettings));
+		
+		experimentalSettings = ExampleProtocols.getD();
+		timeDiffs.add(run(experimentalSettings));
+		
+		experimentalSettings = ExampleProtocols.getE();
+		timeDiffs.add(run(experimentalSettings));
+
+		experimentalSettings = ExampleProtocols.getF();
+		timeDiffs.add(run(experimentalSettings));
+		
+		
+		experimentalSettings = ExampleProtocols.getG();
+		timeDiffs.add(run(experimentalSettings));
+		
 		
 		System.out.println();
 		System.out.println();
 		System.out.println();
-		for(int i=0;i<timeDiffs.length;i++) {
-			System.out.println(timeDiffs[i]);
+		for(Double d: timeDiffs) {
+			System.out.println(d);
 		}
 		
 	}

@@ -12,5 +12,3 @@ KCa(Gardos channel),ca2+-pkca,0.01,mM,K(1/2) of Ca activation of the KCNN channe
 Cell water content,cell-water,0.75,L/Loc,Water content of the RS cell,
 Q10 active,Q10 active,4,,Q10 of active transport,
 Q10 passive,Q10 passive,2,,Q10 of passive transport,
-NaCl,NaCl,145,,,
-KCl,KCl,5,,,

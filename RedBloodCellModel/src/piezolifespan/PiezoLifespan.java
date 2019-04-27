@@ -146,10 +146,10 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		DSOptions.put("PMCA inhibition","0.0");
 		DSOptions.put("Transit cell volume fraction","0.9");
 		DSOptions.put("Piezo JS Inhibition/Stimulation","0.0");
-		
-		
+//		
+//		
 		DSOptions.put("Restore Medium","yes");
-		
+//		
 		RSOptions.put("Na/K pump Na efflux","-3.2");
 		RSOptions.put("[K]i","145.0");
 		RSOptions.put("[Na]i","5.0");
@@ -165,6 +165,12 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		mediumOptions.put("KCl","5.0");
 		mediumOptions.put("Mg concentration","0.2");
 		mediumOptions.put("Ca concentration","1.0");
+		
+//		DSOptions.put("PzCaG","60.0");
+				
+				
+				
+
 	}
 	private class ModelWorker extends SwingWorker<Void,ResultHash> {
 		public Void doInBackground() {

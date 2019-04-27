@@ -789,7 +789,7 @@ public class RBC_model implements Serializable {
 	public void setup(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
 		if(this.stage == 0) {
 			
-			// Some Piezo things - move them
+//			// Some Piezo things - move them
 			String temp = rsoptions.get("NaCl");
 			if(temp != null) {
 				this.cell.Na.setConcentration(Double.parseDouble(temp));

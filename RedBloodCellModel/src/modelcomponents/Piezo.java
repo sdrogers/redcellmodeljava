@@ -19,7 +19,7 @@ public class Piezo implements Serializable {
 	private Double pag = 50.0;
 	private Double pmca = 90.0;
 	private Double piezoFraction = 0.0001;
-	private Double piezoJS = 100.0;
+	private Double piezoJS = 1.0; // I.e. multiplicative, so by default, don't change
 	private boolean restoreMedium = false;
 	public void setRestoreMedium(boolean res) {
 		this.restoreMedium = res;

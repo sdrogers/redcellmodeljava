@@ -503,15 +503,7 @@ public class RBC_model_old implements Serializable {
 	}
 	
 	private void restoreMedium(HashMap<String,String> mediumOptions) {
-		String temp = mediumOptions.get("HEPES-Na concentration"); //:10
-		this.buffer_conc = Double.parseDouble(temp);
-		temp = mediumOptions.get("Medium pH"); // 7.4
-		this.medium.setpH(Double.parseDouble(temp));
-		
-		this.medium.H.setConcentration(Math.pow(10, -this.medium.getpH()));
-		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
-			
-		
+	String temp;
 		
 		temp = mediumOptions.get("NaCl"); // 145.0
 		this.medium.Na.setConcentration(Double.parseDouble(temp)); // or amount??
@@ -521,11 +513,22 @@ public class RBC_model_old implements Serializable {
 		this.medium.Mgt.setConcentration(Double.parseDouble(temp)); // OR MgT??
 		temp = mediumOptions.get("Ca concentration"); // 1.0
 		this.medium.Cat.setConcentration(Double.parseDouble(temp)); // or CaT??
-
+		
+		
 		temp = mediumOptions.get("Mg concentration"); // 0.2
 		this.medium.Mgf.setConcentration(Double.parseDouble(temp)); // OR MgT??
 		temp = mediumOptions.get("Ca concentration"); // 1.0
 		this.medium.Caf.setConcentration(Double.parseDouble(temp)); // or CaT??
+		
+		temp = mediumOptions.get("HEPES-Na concentration"); //:10
+		this.buffer_conc = Double.parseDouble(temp);
+		temp = mediumOptions.get("Medium pH"); // 7.4
+		this.medium.setpH(Double.parseDouble(temp));
+		this.phadjust();
+//		this.medium.H.setConcentration(Math.pow(10, -this.medium.getpH()));
+//		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
+
+		
 
 	}
 	public void runall(JTextArea ta) {

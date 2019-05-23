@@ -503,7 +503,7 @@ public class RBC_model_old implements Serializable {
 	}
 	
 	private void restoreMedium(HashMap<String,String> mediumOptions) {
-	String temp;
+		String temp;
 		
 		temp = mediumOptions.get("NaCl"); // 145.0
 		this.medium.Na.setConcentration(Double.parseDouble(temp)); // or amount??

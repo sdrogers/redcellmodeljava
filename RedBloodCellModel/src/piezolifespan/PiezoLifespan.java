@@ -126,7 +126,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		DSOptions = new HashMap<String,String>();
 		RSOptions = new HashMap<String,String>();
 		mediumOptions = new HashMap<String,String>();
-		
+
 		DSOptions.put("Time", "1.0");
 		DSOptions.put("Incorporate PIEZO stage","yes");
 		DSOptions.put("piezo_start","0.0");
@@ -151,7 +151,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		DSOptions.put("Restore Medium","yes");
 //		
 		RSOptions.put("Na/K pump Na efflux","-3.2");
-		RSOptions.put("[K]i","145.0");
+		RSOptions.put("[K]i","14.0");
 		RSOptions.put("[Na]i","5.0");
 		RSOptions.put("[A]i","95.0");
 		RSOptions.put("Cell water content","0.85");
@@ -159,12 +159,12 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		RSOptions.put("PKGardosMax","30.0");
 		RSOptions.put("KCa(Gardos channel)","0.01");
 		
-		mediumOptions.put("HEPES-Na concentration","10.0");
-		mediumOptions.put("Medium pH","7.4");
-		mediumOptions.put("NaCl","140.0");
-		mediumOptions.put("KCl","5.0");
-		mediumOptions.put("Mg concentration","0.2");
-		mediumOptions.put("Ca concentration","1.0");
+		mediumOptions.put("Restored Medium HEPES-Na concentration","10.0");
+		mediumOptions.put("Restored Medium pH","7.4");
+		mediumOptions.put("Restored Medium Na","140.0");
+		mediumOptions.put("Restored Medium K","5.0");
+		mediumOptions.put("Restored Medium Mg","0.2");
+		mediumOptions.put("Restored Medium Ca","1.0");
 		
 //		DSOptions.put("PzCaG","60.0");
 				
@@ -188,9 +188,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 			Double max_time = Double.parseDouble(timeField.getText());
 			int cycles_per_output = Integer.parseInt(cycleField.getText());
 			int cycle_counter = 0;
-			
 			rbc.setMediumDefaults(mediumOptions);
-			
 			rbc.setPublish(true);
 			rbc.publish();
 			rbc.setPublish(false);

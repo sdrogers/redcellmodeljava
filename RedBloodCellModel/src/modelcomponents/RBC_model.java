@@ -204,7 +204,7 @@ public class RBC_model implements Serializable {
 		a23 = new A23187(cell,medium);
 		water = new WaterFlux(cell,medium);
 		passiveca = new PassiveCa(cell,medium,goldman);
-		piezoPassiveca = new PiezoPassiveCa(cell,medium,goldman);
+		piezoPassiveca = new PiezoPassiveCa(cell,medium,piezoGoldman);
 		capump = new CaPumpMg2(cell,medium,getNapump());
 		
 		A_1 = -10.0; // Net charge on haemoglobin
@@ -355,12 +355,12 @@ public class RBC_model implements Serializable {
 
 		this.stage = 0;
 		this.mediumDefaults = new HashMap<String,String>();
-		this.mediumDefaults.put("HEPES-Na concentration","10.0");
-		this.mediumDefaults.put("Medium pH","7.4");
-		this.mediumDefaults.put("NaCl","145.0");
-		this.mediumDefaults.put("KCl","5.0");
-		this.mediumDefaults.put("Mg concentration","0.2");
-		this.mediumDefaults.put("Ca concentration","1.0"); 
+		this.mediumDefaults.put("Restored Medium HEPES-Na concentration","10.0");
+		this.mediumDefaults.put("Restored Medium pH","7.4");
+		this.mediumDefaults.put("Restored Medium Na","145.0"); // 145.54168
+		this.mediumDefaults.put("Restored Medium K","5.0"); // 5.00253
+		this.mediumDefaults.put("Restored Medium Mg","0.2");
+		this.mediumDefaults.put("Restored Medium Ca","1.0"); 
 	}
 	public Double getSamplingTime() {
 		return this.sampling_time;
@@ -395,13 +395,12 @@ public class RBC_model implements Serializable {
 		this.piezoGoldman.setPermeability_Na(this.piezo.getPnag());
 //		this.piezo.setOldPAG(this.goldman.getPermeability_A());
 		this.piezoGoldman.setPermeability_A(this.piezo.getPag());
-
+		
 		
 		// Do we need another of these???
 		// Yes - swap for piezoPassiveCa...
 //		this.piezo.setOldPCaG(this.passiveca.getFcalm());
 		this.piezoPassiveca.setFcalm(this.piezo.getPcag());
-		
 
 		// This stays the same?
 		this.piezo.setOldPMCA(this.capump.getDefaultFcapm());
@@ -429,21 +428,17 @@ public class RBC_model implements Serializable {
 		this.piezoGoldman.setPermeability_Na(0.0);
 		this.piezoGoldman.setPermeability_A(0.0);
 
-		//???
 		this.piezoPassiveca.setFcalm(0.0);
 		this.capump.setFcapm(this.piezo.getOldPMCA());
 		
 		
 		this.JS.setPermeability(this.JS.getDefaultPermeability());
-		
+
 		if(this.piezo.getRestoreMedium()) {
-			System.err.println("RESTORING");
 			this.restoreMedium(mediumDefaults);
 			this.publish();
 		}
-		
 		this.finalPiezoHct = this.fraction * 100.0;
-		System.err.println(this.finalPiezoHct);
 		
 		this.fraction = this.defaultFraction;
 		if(this.A_7 != this.fraction) {
@@ -451,6 +446,8 @@ public class RBC_model implements Serializable {
 			this.A_8 = this.A_7/(1.0 - this.A_7);
 		}
 		
+		
+	
 		
 		
 	}
@@ -467,31 +464,72 @@ public class RBC_model implements Serializable {
 	}
 	
 	private void restoreMedium(HashMap<String,String> mediumOptions) {
-			
-		String temp;
+String temp;
 		
-		temp = mediumOptions.get("NaCl"); // 145.0
+		temp = mediumOptions.get("Restored Medium Na"); // 145.0
 		this.medium.Na.setConcentration(Double.parseDouble(temp)); // or amount??
-		temp = mediumOptions.get("KCl"); // 5.0
+		temp = mediumOptions.get("Restored Medium K"); // 5.0
 		this.medium.K.setConcentration(Double.parseDouble(temp));
-		temp = mediumOptions.get("Mg concentration"); // 0.2
+		temp = mediumOptions.get("Restored Medium Mg"); // 0.2
 		this.medium.Mgt.setConcentration(Double.parseDouble(temp)); // OR MgT??
-		temp = mediumOptions.get("Ca concentration"); // 1.0
+		temp = mediumOptions.get("Restored Medium Ca"); // 1.0
 		this.medium.Cat.setConcentration(Double.parseDouble(temp)); // or CaT??
 		
 		
-		temp = mediumOptions.get("Mg concentration"); // 0.2
+		temp = mediumOptions.get("Restored Medium Mg"); // 0.2
 		this.medium.Mgf.setConcentration(Double.parseDouble(temp)); // OR MgT??
-		temp = mediumOptions.get("Ca concentration"); // 1.0
+		temp = mediumOptions.get("Restored Medium Ca"); // 1.0
 		this.medium.Caf.setConcentration(Double.parseDouble(temp)); // or CaT??
 		
-		temp = mediumOptions.get("HEPES-Na concentration"); //:10
+		temp = mediumOptions.get("Restored Medium HEPES-Na concentration"); //:10
 		this.buffer_conc = Double.parseDouble(temp);
-		temp = mediumOptions.get("Medium pH"); // 7.4
+		temp = mediumOptions.get("Restored Medium pH"); // 7.4
 		this.medium.setpH(Double.parseDouble(temp));
 		this.phadjust();
 //		this.medium.H.setConcentration(Math.pow(10, -this.medium.getpH()));
 //		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
+
+//		String temp;
+//		temp = this.piezo.getMediumDefaultsItem("Restored Medium Na"); 
+//		System.err.println(temp);
+//		Double na = Double.parseDouble(temp);
+//		if(na > 0)
+//		{
+//			this.medium.Na.setConcentration(na);
+//		}
+//		
+//		temp = this.piezo.getMediumDefaultsItem("Restored Medium K");
+//		System.err.println(temp);
+//		Double k = Double.parseDouble(temp);
+//		if(k > 0) {
+//			this.medium.K.setConcentration(k);
+//		}
+//		
+//
+//		temp = this.piezo.getMediumDefaultsItem("Restored Medium Mg"); 
+//		System.err.println(temp);
+//		this.medium.Mgt.setConcentration(Double.parseDouble(temp)); 
+//		this.medium.Mgf.setConcentration(Double.parseDouble(temp)); 
+//
+//		temp = this.piezo.getMediumDefaultsItem("Restored Medium Ca"); 
+//		System.err.println(temp);
+//		this.medium.Cat.setConcentration(Double.parseDouble(temp)); 		
+//		this.medium.Caf.setConcentration(Double.parseDouble(temp)); 
+//		
+//		temp = this.piezo.getMediumDefaultsItem("Restored Medium HEPES-Na concentration"); 
+//		System.err.println(temp);
+//		this.buffer_conc = Double.parseDouble(temp);
+//		
+//
+//			
+//		
+//		temp = this.piezo.getMediumDefaultsItem("Restored Medium pH"); 
+//		System.err.println(temp);
+//		this.medium.setpH(Double.parseDouble(temp));
+//		this.phadjust();
+		
+		
+		
 
 		
 	}
@@ -571,6 +609,8 @@ public class RBC_model implements Serializable {
 		String mileStoneOperation = null;
 		
 		
+		
+		
 		while(this.sampling_time*60 <= this.duration_experiment) {
 			if(mileStoneOperation!= null) {
 				this.output(mileStoneOperation, ta);
@@ -599,8 +639,7 @@ public class RBC_model implements Serializable {
 			this.JS.compute_flux(this.I_18);
 			
 			this.Em = this.newton_raphson(new compute_all_fluxes(), this.Em, 0.001, 0.0001, 100, 0, false);
-
-
+			
 			this.totalionfluxes();
 			this.water.compute_flux(this.fHb, this.cbenz2, this.buffer_conc, this.edgto, this.I_18);
 			
@@ -654,6 +693,24 @@ public class RBC_model implements Serializable {
 		this.publish();
 		this.output("Finished!",ta);
 		
+	}
+	private void printAllFluxes() {
+//		System.out.println("");
+		System.out.println("All fluxes:");
+		System.out.println("Goldman Na: " + this.goldman.getFlux_Na());
+		System.out.println("Goldman K: " + this.goldman.getFlux_K());
+		System.out.println("Goldman H: " + this.goldman.getFlux_H());
+		System.out.println("Goldman A: " + this.goldman.getFlux_A());
+		System.out.println("Passive Ca: " + this.passiveca.getFlux());
+		System.out.println("JS: "+ this.JS.getFlux_A() + ", " + this.JS.getFlux_H());
+		System.out.println("JS perm: " + this.JS.getPermeability());
+		System.out.println("Medium A: " + this.medium.A.getConcentration());
+		System.out.println("Medium H: " + this.medium.H.getConcentration());
+		System.out.println("Cell A: " + this.cell.A.getConcentration());
+		System.out.println("Cell H: " + this.cell.H.getConcentration());
+		System.out.println("I18: " + I_18);
+		System.out.println("Ca Pump Ca: " + this.capump.getFlux_Ca() + ", H: " + this.capump.getFlux_H());
+
 	}
 	private void updateContents() {
 		Double Vw_old = this.Vw;
@@ -984,6 +1041,12 @@ public class RBC_model implements Serializable {
  						piezo.setRestoreMedium(false);
  					}
  					usedoptions.add("Restore Medium");
+ 				}
+ 				for(String key: options.keySet()) {
+ 					if(key.startsWith("Restored Medium")) {
+ 						this.piezo.setMediumDefaultItem(key, options.get(key));
+ 						usedoptions.add(key);
+ 					}
  				}
 			}
 		}
@@ -2205,7 +2268,7 @@ public class RBC_model implements Serializable {
 			return;
 		}
 		
-		System.out.println("Publishing at time: " + this.sampling_time);
+//		System.out.println("Publishing at time: " + this.sampling_time);
 		ResultHash new_result = new ResultHash(this.sampling_time*60.0); // convert to minutes for publishing
 		
 		new_result.setItem("Vw",this.Vw);

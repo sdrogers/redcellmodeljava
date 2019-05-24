@@ -464,69 +464,106 @@ public class RBC_model implements Serializable {
 	}
 	
 	private void restoreMedium(HashMap<String,String> mediumOptions) {
-String temp;
-		
-		temp = mediumOptions.get("Restored Medium Na"); // 145.0
-		this.medium.Na.setConcentration(Double.parseDouble(temp)); // or amount??
-		temp = mediumOptions.get("Restored Medium K"); // 5.0
-		this.medium.K.setConcentration(Double.parseDouble(temp));
-		temp = mediumOptions.get("Restored Medium Mg"); // 0.2
-		this.medium.Mgt.setConcentration(Double.parseDouble(temp)); // OR MgT??
-		temp = mediumOptions.get("Restored Medium Ca"); // 1.0
-		this.medium.Cat.setConcentration(Double.parseDouble(temp)); // or CaT??
+
 		
 		
-		temp = mediumOptions.get("Restored Medium Mg"); // 0.2
-		this.medium.Mgf.setConcentration(Double.parseDouble(temp)); // OR MgT??
-		temp = mediumOptions.get("Restored Medium Ca"); // 1.0
-		this.medium.Caf.setConcentration(Double.parseDouble(temp)); // or CaT??
+//			String temp = mediumOptions.get("Restored Medium HEPES-Na concentration"); //:10
+//			this.buffer_conc = Double.parseDouble(temp);
+//			temp = mediumOptions.get("Restored Medium pH"); // 7.4
+//			this.medium.setpH(Double.parseDouble(temp));
+//			
+//			this.medium.H.setConcentration(Math.pow(10, -this.medium.getpH()));
+//			this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
+//				
+//			
+//			
+//			System.err.println("RRRRRRRRRR " + this.medium.getpH() + "..." + A_12);
+//			temp = mediumOptions.get("Restored Medium Na"); // 145.0
+//			this.medium.Na.setConcentration(Double.parseDouble(temp)); // or amount??
+//			temp = mediumOptions.get("Restored Medium K"); // 5.0
+//			this.medium.K.setConcentration(Double.parseDouble(temp));
+//			temp = mediumOptions.get("Restored Medium Mg"); // 0.2
+//			this.medium.Mgt.setConcentration(Double.parseDouble(temp)); // OR MgT??
+//			temp = mediumOptions.get("Restored Medium Ca"); // 1.0
+//			this.medium.Cat.setConcentration(Double.parseDouble(temp)); // or CaT??
+//			
+//			
+//			temp = mediumOptions.get("Restored Medium Mg"); // 0.2
+//			this.medium.Mgf.setConcentration(Double.parseDouble(temp)); // OR MgT??
+//			temp = mediumOptions.get("Restored Medium Ca"); // 1.0
+//			this.medium.Caf.setConcentration(Double.parseDouble(temp)); // or CaT??
+//		
 		
-		temp = mediumOptions.get("Restored Medium HEPES-Na concentration"); //:10
-		this.buffer_conc = Double.parseDouble(temp);
-		temp = mediumOptions.get("Restored Medium pH"); // 7.4
-		this.medium.setpH(Double.parseDouble(temp));
-		this.phadjust();
+		
+//		String temp;
+//		
+//		temp = mediumOptions.get("Restored Medium Na"); // 145.0
+//		this.medium.Na.setConcentration(Double.parseDouble(temp)); // or amount??
+//		temp = mediumOptions.get("Restored Medium K"); // 5.0
+//		this.medium.K.setConcentration(Double.parseDouble(temp));
+//		temp = mediumOptions.get("Restored Medium Mg"); // 0.2
+//		this.medium.Mgt.setConcentration(Double.parseDouble(temp)); // OR MgT??
+//		temp = mediumOptions.get("Restored Medium Ca"); // 1.0
+//		this.medium.Cat.setConcentration(Double.parseDouble(temp)); // or CaT??
+//		
+//		
+//		temp = mediumOptions.get("Restored Medium Mg"); // 0.2
+//		this.medium.Mgf.setConcentration(Double.parseDouble(temp)); // OR MgT??
+//		temp = mediumOptions.get("Restored Medium Ca"); // 1.0
+//		this.medium.Caf.setConcentration(Double.parseDouble(temp)); // or CaT??
+//		
+//		temp = mediumOptions.get("Restored Medium HEPES-Na concentration"); //:10
+//		this.buffer_conc = Double.parseDouble(temp);
+//		temp = mediumOptions.get("Restored Medium pH"); // 7.4
+//		this.medium.setpH(Double.parseDouble(temp));
+//		System.err.println("Before: " + this.medium.Na.getConcentration());
+//		this.phadjust();
+//		System.err.println("After: " + this.medium.Na.getConcentration());
+//		System.exit(0);
 //		this.medium.H.setConcentration(Math.pow(10, -this.medium.getpH()));
 //		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
 
-//		String temp;
-//		temp = this.piezo.getMediumDefaultsItem("Restored Medium Na"); 
-//		System.err.println(temp);
-//		Double na = Double.parseDouble(temp);
-//		if(na > 0)
-//		{
-//			this.medium.Na.setConcentration(na);
-//		}
-//		
-//		temp = this.piezo.getMediumDefaultsItem("Restored Medium K");
-//		System.err.println(temp);
-//		Double k = Double.parseDouble(temp);
-//		if(k > 0) {
-//			this.medium.K.setConcentration(k);
-//		}
-//		
-//
-//		temp = this.piezo.getMediumDefaultsItem("Restored Medium Mg"); 
-//		System.err.println(temp);
-//		this.medium.Mgt.setConcentration(Double.parseDouble(temp)); 
-//		this.medium.Mgf.setConcentration(Double.parseDouble(temp)); 
-//
-//		temp = this.piezo.getMediumDefaultsItem("Restored Medium Ca"); 
-//		System.err.println(temp);
-//		this.medium.Cat.setConcentration(Double.parseDouble(temp)); 		
-//		this.medium.Caf.setConcentration(Double.parseDouble(temp)); 
-//		
-//		temp = this.piezo.getMediumDefaultsItem("Restored Medium HEPES-Na concentration"); 
-//		System.err.println(temp);
-//		this.buffer_conc = Double.parseDouble(temp);
-//		
-//
-//			
-//		
-//		temp = this.piezo.getMediumDefaultsItem("Restored Medium pH"); 
-//		System.err.println(temp);
-//		this.medium.setpH(Double.parseDouble(temp));
-//		this.phadjust();
+		String temp;
+		temp = this.piezo.getMediumDefaultsItem("Restored Medium Na"); 
+		System.err.println(temp);
+		Double na = Double.parseDouble(temp);
+		if(na > 0)
+		{
+			this.medium.Na.setConcentration(na);
+		}
+		
+		temp = this.piezo.getMediumDefaultsItem("Restored Medium K");
+		System.err.println(temp);
+		Double k = Double.parseDouble(temp);
+		if(k > 0) {
+			this.medium.K.setConcentration(k);
+		}
+		
+
+		temp = this.piezo.getMediumDefaultsItem("Restored Medium Mg"); 
+		System.err.println(temp);
+		this.medium.Mgt.setConcentration(Double.parseDouble(temp)); 
+		this.medium.Mgf.setConcentration(Double.parseDouble(temp)); 
+
+		temp = this.piezo.getMediumDefaultsItem("Restored Medium Ca"); 
+		System.err.println(temp);
+		this.medium.Cat.setConcentration(Double.parseDouble(temp)); 		
+		this.medium.Caf.setConcentration(Double.parseDouble(temp)); 
+		
+		temp = this.piezo.getMediumDefaultsItem("Restored Medium HEPES-Na concentration"); 
+		System.err.println(temp);
+		this.buffer_conc = Double.parseDouble(temp);
+		
+
+			
+		
+		temp = this.piezo.getMediumDefaultsItem("Restored Medium pH"); 
+		
+		this.medium.setpH(Double.parseDouble(temp));
+		System.err.println("Na before ph adjust: " + this.medium.Na.getConcentration() + " (" + A_12 + ")");
+
+		this.phadjust();
+		System.err.println("Na after ph adjust: " + this.medium.Na.getConcentration());
 		
 		
 		
@@ -1248,6 +1285,8 @@ String temp;
 			usedoptions.add("percentage-inhibition");
 		}
 	}
+	
+	
 	
 	private void set_cell_fraction_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
 		String temp = options.get("Cell volume fraction");

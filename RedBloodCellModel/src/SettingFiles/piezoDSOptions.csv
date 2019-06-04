@@ -11,7 +11,7 @@ PzCaG,piezo_pcag,60,1/h,Goldmanian Ca permeability (100),
 PMCA inhibition,PMCA inhibition,0,,,
 Transit cell volume fraction,Transit cell volume fraction,0.0001,,Cell volume fraction during Piezo transition,
 Piezo JS Inhibition/Stimulation,Piezo JS Inhibition/Stimulation,0,%,Piezo specific Jacobs-Stewart cycle stimulation-inhibition factor,
-Restore Medium,Restore Medium,yes,,Restore medium at start of inter-transit period,"yes,no"
+Restore Medium,Restore Medium,no,,Restore medium at start of inter-transit period,"yes,no"
 Restored Medium HEPES-Na concentration,Restored Medium HEPES-Na concentration,10,,,
 Restored Medium pH,Restored Medium pH,7.4,,,
 Restored Medium Na,Restored Medium Na,145,,,

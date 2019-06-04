@@ -157,7 +157,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		DSOptions.put("Restored Medium Ca","1.0");
 		
 		RSOptions.put("Na/K pump Na efflux","-3.2");
-		RSOptions.put("[K]i","14.0");
+		RSOptions.put("[K]i","145.0");
 		RSOptions.put("[Na]i","5.0");
 		RSOptions.put("[A]i","95.0");
 		RSOptions.put("Cell water content","0.85");

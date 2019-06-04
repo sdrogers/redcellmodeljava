@@ -30,7 +30,7 @@ import guicomponents.OptionsFrame;
 
 
 public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
-	private JButton runButton,stopButton,saveButton,changePiezoButton,rsButton,mediumButton;
+	private JButton runButton,stopButton,saveButton,changePiezoButton,rsButton;
 	private JTextArea modelOutput;
 	private ModelWorker worker;
 	private RBC_model rbc;
@@ -61,7 +61,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		saveButton = new JButton("Save csv");
 		changePiezoButton = new JButton("Change PIEZO parameters");
 		rsButton = new JButton("Change Reference State");
-		mediumButton = new JButton("Change Default Media");
+		
 		
 		
 		
@@ -71,14 +71,14 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		buttonPanel.add(saveButton);
 		buttonPanel.add(changePiezoButton);
 		buttonPanel.add(rsButton);
-		buttonPanel.add(mediumButton);
+		
 		
 		runButton.addActionListener(this);
 		stopButton.addActionListener(this);
 		saveButton.addActionListener(this);
 		changePiezoButton.addActionListener(this);
 		rsButton.addActionListener(this);
-		mediumButton.addActionListener(this);
+		
 		
 		stopButton.setEnabled(false);
 		saveButton.setEnabled(false);
@@ -315,9 +315,6 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		}else if(e.getSource() == rsButton) {
 			rsOptionsFrame = new OptionsFrame("Reference state options","SettingFiles/piezoLifespanRSOptions.csv",RSOptions,this,"");
 			rsOptionsFrame.makeVisible();
-		}else if(e.getSource() == mediumButton) {
-			mediumOptionsFrame = new OptionsFrame("Default Medium options,","SettingFiles/mediumDefaultOptions.csv",mediumOptions,this,"");
-			mediumOptionsFrame.makeVisible();
 		}
 	}
 	

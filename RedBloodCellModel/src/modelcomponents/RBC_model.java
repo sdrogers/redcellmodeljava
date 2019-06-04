@@ -460,13 +460,20 @@ public class RBC_model implements Serializable {
 	private void restoreMedium() {
 			
 		this.buffer_conc = this.piezo.getRestoreHepesNa();
+		
 		this.medium.setpH(this.piezo.getRestorepH());
 		
 		this.medium.H.setConcentration(Math.pow(10, -this.medium.getpH()));
 		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
 		
-		this.medium.Na.setConcentration(this.piezo.getRestoreNa());
-		this.medium.K.setConcentration(this.piezo.getRestoreK());
+		if(this.piezo.getRestoreNa() > 0) {
+			this.medium.Na.setConcentration(this.piezo.getRestoreNa());
+		}
+		
+		if(this.piezo.getRestoreK() > 0) {
+			this.medium.K.setConcentration(this.piezo.getRestoreK());
+		}
+		
 		
 		this.medium.Caf.setConcentration(this.piezo.getRestoreCa());
 		this.medium.Cat.setConcentration(this.piezo.getRestoreCa());

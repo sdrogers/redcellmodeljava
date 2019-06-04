@@ -188,9 +188,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 			Double max_time = Double.parseDouble(timeField.getText());
 			int cycles_per_output = Integer.parseInt(cycleField.getText());
 			int cycle_counter = 0;
-			
-			rbc.setMediumDefaults(mediumOptions);
-			
+						
 			rbc.setPublish(true);
 			rbc.publish();
 			rbc.setPublish(false);

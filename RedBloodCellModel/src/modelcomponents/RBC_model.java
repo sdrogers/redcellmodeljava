@@ -188,7 +188,7 @@ public class RBC_model implements Serializable {
 
 	
 	private Piezo piezo;
-	private HashMap<String,String> mediumDefaults;
+	
 	private Double finalPiezoHct;
 	public RBC_model() {
 		cell = new Region();
@@ -354,13 +354,7 @@ public class RBC_model implements Serializable {
 		this.delta_Ca = 0.0;
 
 		this.stage = 0;
-		this.mediumDefaults = new HashMap<String,String>();
-		this.mediumDefaults.put("Restored Medium HEPES-Na concentration","10.0");
-		this.mediumDefaults.put("Restored Medium pH","7.4");
-		this.mediumDefaults.put("Restored Medium Na","145.0");
-		this.mediumDefaults.put("Restored Medium K","5.0");
-		this.mediumDefaults.put("Restored Medium Mg","0.2");
-		this.mediumDefaults.put("Restored Medium Ca","1.0"); 
+		
 	}
 	public Double getSamplingTime() {
 		return this.sampling_time;
@@ -438,7 +432,7 @@ public class RBC_model implements Serializable {
 		
 		if(this.piezo.getRestoreMedium()) {
 			System.err.println("RESTORING");
-			this.restoreMedium(mediumDefaults);
+			this.restoreMedium();
 			this.publish();
 		}
 		
@@ -457,18 +451,14 @@ public class RBC_model implements Serializable {
 	public Double getFinalPiezoHct() {
 		return this.finalPiezoHct;
 	}
-	public void setMediumDefaults(HashMap<String,String> md) {
-		mediumDefaults = md;
-	}
 	private void endPiezo() {
 		this.cycles_per_print = piezo.getOldCycles();
 		this.cycle_count = this.cycles_per_print - 1; // forces an output now
 		this.integration_interval_factor = this.piezo.getOldIF();
 	}
 	
-	private void restoreMedium(HashMap<String,String> mediumOptions) {
+	private void restoreMedium() {
 			
-		String temp = mediumOptions.get("Restored Medium HEPES-Na concentration"); //:10
 		this.buffer_conc = this.piezo.getRestoreHepesNa();
 		this.medium.setpH(this.piezo.getRestorepH());
 		

@@ -475,8 +475,6 @@ public class RBC_model implements Serializable {
 		this.medium.Mgt.setConcentration(this.piezo.getRestoreMg());
 		
 		
-	
-		
 	}
 	public void runall(JTextArea ta) {
 		this.output("RUNNING DS STAGE " + this.stage, ta);
@@ -512,27 +510,12 @@ public class RBC_model implements Serializable {
 				pEnd = endTime - 1e-6;
 			}
 			mileStones.add(new MileStone(pEnd, "PIEZO END"));
-//			// Add some forced points after
-//			int i =0;
-//			while(i<4 && (3.5+i*0.5)/60.0 < this.duration_experiment) {
-////			for(int i=0;i<4;i++) {
-//				Double output_time = (3.5 + i*0.5)/60.0 + this.sampling_time;
-//				mileStones.add(new MileStone(output_time,"PUBLISH"));
-//
-//			}
+
 		}
 		// Add the END milestone always
 		
 		mileStones.add(new MileStone(this.duration_experiment/60.0,"END"));
 		
-//		if(mileStones.size() > 1) {
-//			// Make sure the end is after the last of the PIEZO ones
-//			int endPos = mileStones.size() - 1;
-//			if(mileStones.get(endPos).getTime() <= mileStones.get(endPos-1).getTime()) {
-//				double oldTime = mileStones.get(endPos-1).getTime();
-//				mileStones.get(endPos).setTime(oldTime + 1.0/60.0); // Add 1 minute
-//			}
-//		}
 
 		// Check the ordering
 		for(int i=0;i<mileStones.size();i++) {

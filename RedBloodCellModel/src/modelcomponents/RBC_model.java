@@ -458,10 +458,13 @@ public class RBC_model implements Serializable {
 	}
 	
 	private void restoreMedium() {
-			
-		this.buffer_conc = this.piezo.getRestoreHepesNa();
 		
+		/*
+		 * The code below (commented out) is the version that makes lifespan behave properly
+		 */
+		this.buffer_conc = this.piezo.getRestoreHepesNa();
 		this.medium.setpH(this.piezo.getRestorepH());
+		
 		
 		this.medium.H.setConcentration(Math.pow(10, -this.medium.getpH()));
 		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
@@ -480,6 +483,19 @@ public class RBC_model implements Serializable {
 		
 		this.medium.Mgf.setConcentration(this.piezo.getRestoreMg());
 		this.medium.Mgt.setConcentration(this.piezo.getRestoreMg());
+		
+		
+		/*
+		 * The following is an alternative, that makes use of the code to setup the cell
+		 * fraction options in the DS...
+		 */
+		
+//		HashMap<String,String> tempOptions = new HashMap<String,String>();
+//		tempOptions.put("Mg concentration", ""+this.piezo.getRestoreMg());
+//		tempOptions.put("Ca concentration", ""+this.piezo.getRestoreCa());
+//		tempOptions.put("Medium pH", ""+this.piezo.getRestorepH());
+//		tempOptions.put("HEPES-Na concentration",""+this.piezo.getRestoreHepesNa());
+//		this.set_cell_fraction_options(tempOptions, new ArrayList<String>());
 		
 		
 	}

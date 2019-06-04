@@ -565,10 +565,14 @@ public class RBC_model implements Serializable {
 		this.phadjust();
 		System.err.println("Na after ph adjust: " + this.medium.Na.getConcentration());
 		
+//		
 		
-		
-
-		
+//		this.medium.H.setConcentration(Math.pow(10.0,(-this.medium.getpH())));
+//		// Protonized buffer concentration;
+//		this.pkhepes = 7.83 - 0.014*this.temp_celsius;
+//		this.A_5 = Math.pow(10.0,(-this.pkhepes));
+//		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5+this.medium.H.getConcentration())));
+//		
 	}
 	public void runall(JTextArea ta) {
 		this.output("RUNNING DS STAGE " + this.stage, ta);

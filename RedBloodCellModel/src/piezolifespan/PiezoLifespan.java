@@ -159,12 +159,12 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		RSOptions.put("PKGardosMax","30.0");
 		RSOptions.put("KCa(Gardos channel)","0.01");
 		
-		mediumOptions.put("HEPES-Na concentration","10.0");
-		mediumOptions.put("Medium pH","7.4");
-		mediumOptions.put("NaCl","140.0");
-		mediumOptions.put("KCl","5.0");
-		mediumOptions.put("Mg concentration","0.2");
-		mediumOptions.put("Ca concentration","1.0");
+		mediumOptions.put("Restored Medium HEPES-Na concentration","10.0");
+		mediumOptions.put("Restored Medium pH","7.4");
+		mediumOptions.put("Restored Medium Na","145.0");
+		mediumOptions.put("Restored Medium K","5.0");
+		mediumOptions.put("Restored Medium Mg","0.2");
+		mediumOptions.put("Restored Medium Ca","1.0");
 		
 //		DSOptions.put("PzCaG","60.0");
 				

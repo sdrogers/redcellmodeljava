@@ -204,7 +204,7 @@ public class RBC_model implements Serializable {
 		a23 = new A23187(cell,medium);
 		water = new WaterFlux(cell,medium);
 		passiveca = new PassiveCa(cell,medium,goldman);
-		piezoPassiveca = new PiezoPassiveCa(cell,medium,goldman);
+		piezoPassiveca = new PiezoPassiveCa(cell,medium,piezoGoldman);
 		capump = new CaPumpMg2(cell,medium,getNapump());
 		
 		A_1 = -10.0; // Net charge on haemoglobin
@@ -468,8 +468,17 @@ public class RBC_model implements Serializable {
 	
 	private void restoreMedium(HashMap<String,String> mediumOptions) {
 			
-		String temp;
+		String temp = mediumOptions.get("HEPES-Na concentration"); //:10
+		this.buffer_conc = Double.parseDouble(temp);
+		temp = mediumOptions.get("Medium pH"); // 7.4
+		this.medium.setpH(Double.parseDouble(temp));
 		
+		this.medium.H.setConcentration(Math.pow(10, -this.medium.getpH()));
+		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
+			
+		
+		
+		System.err.println("RRRRRRRRRR " + this.medium.getpH());
 		temp = mediumOptions.get("NaCl"); // 145.0
 		this.medium.Na.setConcentration(Double.parseDouble(temp)); // or amount??
 		temp = mediumOptions.get("KCl"); // 5.0
@@ -485,14 +494,7 @@ public class RBC_model implements Serializable {
 		temp = mediumOptions.get("Ca concentration"); // 1.0
 		this.medium.Caf.setConcentration(Double.parseDouble(temp)); // or CaT??
 		
-		temp = mediumOptions.get("HEPES-Na concentration"); //:10
-		this.buffer_conc = Double.parseDouble(temp);
-		temp = mediumOptions.get("Medium pH"); // 7.4
-		this.medium.setpH(Double.parseDouble(temp));
-		this.phadjust();
-//		this.medium.H.setConcentration(Math.pow(10, -this.medium.getpH()));
-//		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
-
+	
 		
 	}
 	public void runall(JTextArea ta) {

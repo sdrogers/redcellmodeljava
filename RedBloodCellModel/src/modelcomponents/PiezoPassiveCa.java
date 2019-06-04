@@ -5,11 +5,11 @@ import java.io.Serializable;
 public class PiezoPassiveCa implements Serializable{
 	private final Region cell; 
 	private final Region medium;
-	private final Goldman goldman;
+	private final PiezoGoldman goldman;
 	private Double flux;
 	private Double fcalm;
 	
-	public PiezoPassiveCa(Region cell, Region medium, Goldman goldman) {
+	public PiezoPassiveCa(Region cell, Region medium, PiezoGoldman goldman) {
 		this.cell = cell;
 		this.medium = medium;
 		this.goldman = goldman;

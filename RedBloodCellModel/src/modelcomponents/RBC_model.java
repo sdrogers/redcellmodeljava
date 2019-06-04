@@ -355,12 +355,12 @@ public class RBC_model implements Serializable {
 
 		this.stage = 0;
 		this.mediumDefaults = new HashMap<String,String>();
-		this.mediumDefaults.put("HEPES-Na concentration","10.0");
-		this.mediumDefaults.put("Medium pH","7.4");
-		this.mediumDefaults.put("NaCl","145.0");
-		this.mediumDefaults.put("KCl","5.0");
-		this.mediumDefaults.put("Mg concentration","0.2");
-		this.mediumDefaults.put("Ca concentration","1.0"); 
+		this.mediumDefaults.put("Restored Medium HEPES-Na concentration","10.0");
+		this.mediumDefaults.put("Restored Medium pH","7.4");
+		this.mediumDefaults.put("Restored Medium Na","145.0");
+		this.mediumDefaults.put("Resoted Medium K","5.0");
+		this.mediumDefaults.put("Restored Medium Mg","0.2");
+		this.mediumDefaults.put("Restored Medium Ca","1.0"); 
 	}
 	public Double getSamplingTime() {
 		return this.sampling_time;

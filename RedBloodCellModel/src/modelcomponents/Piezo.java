@@ -22,31 +22,53 @@ public class Piezo implements Serializable {
 	private Double piezoFraction = 0.0001;
 	private Double piezoJS = 1.0; // I.e. multiplicative, so by default, don't change
 	private boolean restoreMedium = false;
-	private HashMap<String,String> mediumDefaults;
 	
+	// Defaults for restoring medium
+	private Double restoreHepesNa = 10.0;
+	private Double restorepH = 7.4;
+	private Double restoreNa = 145.0;
+	private Double restoreK = 5.0;
+	private Double restoreMg = 0.2;
+	private Double restoreCa = 1.0;
 	
-	public Piezo() {
-		this.mediumDefaults = new HashMap<String,String>();
-		this.mediumDefaults.put("Restored Medium HEPES-Na concentration","10.0");
-		this.mediumDefaults.put("Restored Medium pH","7.4");
-		this.mediumDefaults.put("Restored Medium Na","145.54168"); // 145.0
-		this.mediumDefaults.put("Restored Medium K","5.00253"); // 5.0
-		this.mediumDefaults.put("Restored Medium Mg","0.2");
-		this.mediumDefaults.put("Restored Medium Ca","1.0"); 
-	}
-	public void printKeys() {
-		for(String key: this.mediumDefaults.keySet()) {
-			System.err.println(key);
-		}
-	}
-	public void setMediumDefaultItem(String key, String value) {
-		System.err.println("Setting " + key);
-		this.mediumDefaults.put(key, value);
-	}
-	public String getMediumDefaultsItem(String key) {
-		return this.mediumDefaults.get(key);
-	}
+
 	
+	public Double getRestoreHepesNa() {
+		return restoreHepesNa;
+	}
+	public void setRestoreHepesNa(Double restoreHepesNa) {
+		this.restoreHepesNa = restoreHepesNa;
+	}
+	public Double getRestorepH() {
+		return restorepH;
+	}
+	public void setRestorepH(Double restorepH) {
+		this.restorepH = restorepH;
+	}
+	public Double getRestoreNa() {
+		return restoreNa;
+	}
+	public void setRestoreNa(Double restoreNa) {
+		this.restoreNa = restoreNa;
+	}
+	public Double getRestoreK() {
+		return restoreK;
+	}
+	public void setRestoreK(Double restoreK) {
+		this.restoreK = restoreK;
+	}
+	public Double getRestoreMg() {
+		return restoreMg;
+	}
+	public void setRestoreMg(Double restoreMg) {
+		this.restoreMg = restoreMg;
+	}
+	public Double getRestoreCa() {
+		return restoreCa;
+	}
+	public void setRestoreCa(Double restoreCa) {
+		this.restoreCa = restoreCa;
+	}
 	public void setRestoreMedium(boolean res) {
 		this.restoreMedium = res;
 	}

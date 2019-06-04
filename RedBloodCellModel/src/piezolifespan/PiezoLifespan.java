@@ -146,10 +146,16 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		DSOptions.put("PMCA inhibition","0.0");
 		DSOptions.put("Transit cell volume fraction","0.9");
 		DSOptions.put("Piezo JS Inhibition/Stimulation","0.0");
-//		
-//		
-		DSOptions.put("Restore Medium","yes");
-//		
+		DSOptions.put("Restore Medium","yes");		
+		
+
+		DSOptions.put("Restored Medium HEPES-Na concentration","10.0");
+		DSOptions.put("Restored Medium pH","7.4");
+		DSOptions.put("Restored Medium Na","145.0");
+		DSOptions.put("Restored Medium K","5.0");
+		DSOptions.put("Restored Medium Mg","0.2");
+		DSOptions.put("Restored Medium Ca","1.0");
+		
 		RSOptions.put("Na/K pump Na efflux","-3.2");
 		RSOptions.put("[K]i","145.0");
 		RSOptions.put("[Na]i","5.0");
@@ -158,24 +164,12 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		RSOptions.put("PMCA Fmax","12.0");
 		RSOptions.put("PKGardosMax","30.0");
 		RSOptions.put("KCa(Gardos channel)","0.01");
-		
-		DSOptions.put("Restored Medium HEPES-Na concentration","10.0");
-		DSOptions.put("Restored Medium pH","7.4");
-		DSOptions.put("Restored Medium Na","145.0");
-		DSOptions.put("Restored Medium K","5.0");
-		DSOptions.put("Restored Medium Mg","0.2");
-		DSOptions.put("Restored Medium Ca","1.0");
-		
-//		DSOptions.put("PzCaG","60.0");
-				
-				
-				
+										
 
 	}
 	private class ModelWorker extends SwingWorker<Void,ResultHash> {
 		public Void doInBackground() {
 			rbc = new RBC_model();
-//			HashMap<String,String> RSOptions = new HashMap<String,String>();
 			
 			
 			
@@ -210,12 +204,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 				System.out.println("Settuping up DS");
 				rbc.setupDS(DSOptions, new ArrayList<String>());
 				System.out.println("Done setup");
-				
-//				
-//				rbc.getCaPump().setDefaultFcapm(FMaxCa - pmcaK*timeInMinutes);
-//				rbc.getNapump().setP_1(FMaxNa - naK*timeInMinutes);
-//				rbc.getNapump().setP_2(FMaxNaRev - naK*timeInMinutes);
-//				
+					
 				
 				// New exponential decay version
 				rbc.getCaPump().setDefaultFcapm(FMaxCa*Math.exp(-pmcaK*timeInMinutes));
@@ -231,7 +220,6 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 				cycle_counter++;
 				System.out.println(cycles_per_output);
 				if(cycle_counter == cycles_per_output) {
-					// make some output
 					rbc.setPublish(true);
 					rbc.publish();
 					rbc.setPublish(false);
@@ -240,9 +228,6 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 					publish(r);
 					cycle_counter = 0;
 				}
-				System.out.println("fcapm: " + rbc.getCaPump().getDefaultFcapm());
-				System.out.println("p1: " + rbc.getNapump().getP_1());
-				System.out.println("p2: " + rbc.getNapump().getP_2());
 				
 				
 			}

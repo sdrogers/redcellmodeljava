@@ -358,7 +358,7 @@ public class RBC_model implements Serializable {
 		this.mediumDefaults.put("Restored Medium HEPES-Na concentration","10.0");
 		this.mediumDefaults.put("Restored Medium pH","7.4");
 		this.mediumDefaults.put("Restored Medium Na","145.0");
-		this.mediumDefaults.put("Resoted Medium K","5.0");
+		this.mediumDefaults.put("Restored Medium K","5.0");
 		this.mediumDefaults.put("Restored Medium Mg","0.2");
 		this.mediumDefaults.put("Restored Medium Ca","1.0"); 
 	}
@@ -469,29 +469,21 @@ public class RBC_model implements Serializable {
 	private void restoreMedium(HashMap<String,String> mediumOptions) {
 			
 		String temp = mediumOptions.get("Restored Medium HEPES-Na concentration"); //:10
-		this.buffer_conc = Double.parseDouble(temp);
-		temp = mediumOptions.get("Restored Medium pH"); // 7.4
-		this.medium.setpH(Double.parseDouble(temp));
+		this.buffer_conc = this.piezo.getRestoreHepesNa();
+		this.medium.setpH(this.piezo.getRestorepH());
 		
 		this.medium.H.setConcentration(Math.pow(10, -this.medium.getpH()));
 		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
-			
 		
+		this.medium.Na.setConcentration(this.piezo.getRestoreNa());
+		this.medium.K.setConcentration(this.piezo.getRestoreK());
 		
-		temp = mediumOptions.get("Restored Medium Na"); // 145.0
-		this.medium.Na.setConcentration(Double.parseDouble(temp)); // or amount??
-		temp = mediumOptions.get("Restored Medium K"); // 5.0
-		this.medium.K.setConcentration(Double.parseDouble(temp));
-		temp = mediumOptions.get("Restored Medium Mg"); // 0.2
-		this.medium.Mgt.setConcentration(Double.parseDouble(temp)); // OR MgT??
-		temp = mediumOptions.get("Restored Medium Ca"); // 1.0
-		this.medium.Cat.setConcentration(Double.parseDouble(temp)); // or CaT??
+		this.medium.Caf.setConcentration(this.piezo.getRestoreCa());
+		this.medium.Cat.setConcentration(this.piezo.getRestoreCa());
 		
+		this.medium.Mgf.setConcentration(this.piezo.getRestoreMg());
+		this.medium.Mgt.setConcentration(this.piezo.getRestoreMg());
 		
-		temp = mediumOptions.get("Restored Medium Mg"); // 0.2
-		this.medium.Mgf.setConcentration(Double.parseDouble(temp)); // OR MgT??
-		temp = mediumOptions.get("Restored Medium Ca"); // 1.0
-		this.medium.Caf.setConcentration(Double.parseDouble(temp)); // or CaT??
 		
 	
 		
@@ -986,6 +978,38 @@ public class RBC_model implements Serializable {
  					}
  					usedoptions.add("Restore Medium");
  				}
+ 				temp = options.get("Restored Medium HEPES-Na concentration");
+ 				if(temp != null) {
+ 					piezo.setRestoreHepesNa(Double.parseDouble(temp));
+ 					usedoptions.add("Restored Medium HEPES-Na concentration");
+ 				}
+ 				temp = options.get("Restored Medium pH");
+ 				if(temp != null) {
+ 					piezo.setRestorepH(Double.parseDouble(temp));
+ 					usedoptions.add("Restored Medium pH");
+ 				}
+ 				temp = options.get("Restored Medium Na");
+ 				if(temp != null) {
+ 					piezo.setRestoreNa(Double.parseDouble(temp));
+ 					usedoptions.add("Restored Medium Na");
+ 				}
+ 				temp = options.get("Restored Medium K");
+ 				if(temp != null) {
+ 					piezo.setRestoreK(Double.parseDouble(temp));
+ 					usedoptions.add("Restored Medium K");
+ 				}
+ 				temp = options.get("Restored Medium Mg");
+ 				if(temp != null) {
+ 					piezo.setRestoreMg(Double.parseDouble(temp));
+ 					usedoptions.add("Restored Medium Mg");
+ 				}
+ 				temp = options.get("Resotred Medium Ca");
+ 				if(temp != null) {
+ 					piezo.setRestoreCa(Double.parseDouble(temp));
+ 					usedoptions.add("Restored Medium Ca");
+ 				}
+
+ 				
 			}
 		}
 	}

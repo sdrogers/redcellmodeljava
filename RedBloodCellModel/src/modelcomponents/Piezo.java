@@ -21,6 +21,53 @@ public class Piezo implements Serializable {
 	private Double piezoFraction = 0.0001;
 	private Double piezoJS = 1.0; // I.e. multiplicative, so by default, don't change
 	private boolean restoreMedium = false;
+	
+	// Defaults for restoring medium
+	private Double restoreHepesNa = 10.0;
+	private Double restorepH = 7.4;
+	private Double restoreNa = 145.0;
+	private Double restoreK = 5.0;
+	private Double restoreMg = 0.2;
+	private Double restoreCa = 1.0;
+	
+
+	
+	public Double getRestoreHepesNa() {
+		return restoreHepesNa;
+	}
+	public void setRestoreHepesNa(Double restoreHepesNa) {
+		this.restoreHepesNa = restoreHepesNa;
+	}
+	public Double getRestorepH() {
+		return restorepH;
+	}
+	public void setRestorepH(Double restorepH) {
+		this.restorepH = restorepH;
+	}
+	public Double getRestoreNa() {
+		return restoreNa;
+	}
+	public void setRestoreNa(Double restoreNa) {
+		this.restoreNa = restoreNa;
+	}
+	public Double getRestoreK() {
+		return restoreK;
+	}
+	public void setRestoreK(Double restoreK) {
+		this.restoreK = restoreK;
+	}
+	public Double getRestoreMg() {
+		return restoreMg;
+	}
+	public void setRestoreMg(Double restoreMg) {
+		this.restoreMg = restoreMg;
+	}
+	public Double getRestoreCa() {
+		return restoreCa;
+	}
+	public void setRestoreCa(Double restoreCa) {
+		this.restoreCa = restoreCa;
+	}
 	public void setRestoreMedium(boolean res) {
 		this.restoreMedium = res;
 	}

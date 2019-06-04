@@ -21,17 +21,9 @@ public class JacobsStewart implements Serializable{
 		Double I_13 = -(this.getPermeability()/I_18)*
 				(this.cell.A.getConcentration()*this.cell.H.getConcentration() - 
 						(this.medium.A.getConcentration()*this.medium.H.getConcentration()));
-//		System.out.println(this.getPermeability());
-//		System.out.println(I_18);
-//		System.out.println(this.cell.A.getConcentration());
-//		System.out.println(this.cell.H.getConcentration());
-//		System.out.println(this.medium.A.getConcentration());
-//		System.out.println(this.medium.H.getConcentration());
-//		System.out.println(I_13);
 		this.flux_A = I_13;
 		this.flux_H = I_13;
 	}
-	
 	public Double getFlux_A() {
 		return this.flux_A;
 	}

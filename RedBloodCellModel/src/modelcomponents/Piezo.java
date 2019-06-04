@@ -2,7 +2,6 @@ package modelcomponents;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 // Stores the state of the Piezo
 // and the values with which to change the permeabilities

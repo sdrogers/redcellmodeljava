@@ -389,12 +389,13 @@ public class RBC_model implements Serializable {
 		this.piezoGoldman.setPermeability_Na(this.piezo.getPnag());
 //		this.piezo.setOldPAG(this.goldman.getPermeability_A());
 		this.piezoGoldman.setPermeability_A(this.piezo.getPag());
-		
+
 		
 		// Do we need another of these???
 		// Yes - swap for piezoPassiveCa...
 //		this.piezo.setOldPCaG(this.passiveca.getFcalm());
 		this.piezoPassiveca.setFcalm(this.piezo.getPcag());
+		
 
 		// This stays the same?
 		this.piezo.setOldPMCA(this.capump.getDefaultFcapm());
@@ -422,18 +423,21 @@ public class RBC_model implements Serializable {
 		this.piezoGoldman.setPermeability_Na(0.0);
 		this.piezoGoldman.setPermeability_A(0.0);
 
+		//???
 		this.piezoPassiveca.setFcalm(0.0);
 		this.capump.setFcapm(this.piezo.getOldPMCA());
 		
 		
 		this.JS.setPermeability(this.JS.getDefaultPermeability());
-
+		
 		if(this.piezo.getRestoreMedium()) {
 			System.err.println("RESTORING");
 			this.restoreMedium();
 			this.publish();
 		}
+		
 		this.finalPiezoHct = this.fraction * 100.0;
+		System.err.println(this.finalPiezoHct);
 		
 		this.fraction = this.defaultFraction;
 		if(this.A_7 != this.fraction) {
@@ -441,8 +445,6 @@ public class RBC_model implements Serializable {
 			this.A_8 = this.A_7/(1.0 - this.A_7);
 		}
 		
-		
-	
 		
 		
 	}
@@ -473,14 +475,6 @@ public class RBC_model implements Serializable {
 		this.medium.Mgt.setConcentration(this.piezo.getRestoreMg());
 		
 		
-//		
-		
-//		this.medium.H.setConcentration(Math.pow(10.0,(-this.medium.getpH())));
-//		// Protonized buffer concentration;
-//		this.pkhepes = 7.83 - 0.014*this.temp_celsius;
-//		this.A_5 = Math.pow(10.0,(-this.pkhepes));
-//		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5+this.medium.H.getConcentration())));
-//		
 	}
 	public void runall(JTextArea ta) {
 		this.output("RUNNING DS STAGE " + this.stage, ta);
@@ -543,8 +537,6 @@ public class RBC_model implements Serializable {
 		String mileStoneOperation = null;
 		
 		
-		
-		
 		while(this.sampling_time*60 <= this.duration_experiment) {
 			if(mileStoneOperation!= null) {
 				this.output(mileStoneOperation, ta);
@@ -573,7 +565,8 @@ public class RBC_model implements Serializable {
 			this.JS.compute_flux(this.I_18);
 			
 			this.Em = this.newton_raphson(new compute_all_fluxes(), this.Em, 0.001, 0.0001, 100, 0, false);
-			
+
+
 			this.totalionfluxes();
 			this.water.compute_flux(this.fHb, this.cbenz2, this.buffer_conc, this.edgto, this.I_18);
 			
@@ -627,24 +620,6 @@ public class RBC_model implements Serializable {
 		this.publish();
 		this.output("Finished!",ta);
 		
-	}
-	private void printAllFluxes() {
-//		System.out.println("");
-		System.out.println("All fluxes:");
-		System.out.println("Goldman Na: " + this.goldman.getFlux_Na());
-		System.out.println("Goldman K: " + this.goldman.getFlux_K());
-		System.out.println("Goldman H: " + this.goldman.getFlux_H());
-		System.out.println("Goldman A: " + this.goldman.getFlux_A());
-		System.out.println("Passive Ca: " + this.passiveca.getFlux());
-		System.out.println("JS: "+ this.JS.getFlux_A() + ", " + this.JS.getFlux_H());
-		System.out.println("JS perm: " + this.JS.getPermeability());
-		System.out.println("Medium A: " + this.medium.A.getConcentration());
-		System.out.println("Medium H: " + this.medium.H.getConcentration());
-		System.out.println("Cell A: " + this.cell.A.getConcentration());
-		System.out.println("Cell H: " + this.cell.H.getConcentration());
-		System.out.println("I18: " + I_18);
-		System.out.println("Ca Pump Ca: " + this.capump.getFlux_Ca() + ", H: " + this.capump.getFlux_H());
-
 	}
 	private void updateContents() {
 		Double Vw_old = this.Vw;
@@ -1208,8 +1183,6 @@ public class RBC_model implements Serializable {
 			usedoptions.add("percentage-inhibition");
 		}
 	}
-	
-	
 	
 	private void set_cell_fraction_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
 		String temp = options.get("Cell volume fraction");
@@ -2230,7 +2203,7 @@ public class RBC_model implements Serializable {
 			return;
 		}
 		
-//		System.out.println("Publishing at time: " + this.sampling_time);
+		System.out.println("Publishing at time: " + this.sampling_time);
 		ResultHash new_result = new ResultHash(this.sampling_time*60.0); // convert to minutes for publishing
 		
 		new_result.setItem("Vw",this.Vw);

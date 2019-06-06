@@ -13,12 +13,12 @@ public class Piezo implements Serializable {
 	private Double duration = (1.0/120.0)/60.0; // hours
 	private Double recovery = 1.0/60.0; // hours
 	private Integer cycles = 7;
-	private Double pkg = 10.0;
-	private Double pnag = 8.0;
-	private Double pcag = 100.0;
+	private Double pkg = 0.0;
+	private Double pnag = 0.0;
+	private Double pcag = 10.0;
 	private Double pag = 50.0;
-	private Double pmca = 90.0;
-	private Double piezoFraction = 0.0001;
+	private Double pmca = 0.0; // check this
+	private Double piezoFraction = 0.9;
 	private Double piezoJS = 1.0; // I.e. multiplicative, so by default, don't change
 	private boolean restoreMedium = false;
 	

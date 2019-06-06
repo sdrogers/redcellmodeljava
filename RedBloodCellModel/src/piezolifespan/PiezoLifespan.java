@@ -179,11 +179,15 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 			rbc.setup(RSOptions, new ArrayList<String>());
 			System.out.println("Done");
 			
-//			HashMap<String,String> tempDSOptions = new HashMap<String,String>();
-//			tempDSOptions.put("Time","2.0");
-//			tempDSOptions.put("Cell Volume Fraction","0.00001");
-//			rbc.setupDS(tempDSOptions, new ArrayList<String>());
-//			rbc.runall(null);
+
+			/*
+			 * Following chunk runs a 2 minute blank, to get to SS
+			 */
+			HashMap<String,String> tempDSOptions = new HashMap<String,String>();
+			tempDSOptions.put("Time","2.0");
+			tempDSOptions.put("Cell Volume Fraction","0.00001");
+			rbc.setupDS(tempDSOptions, new ArrayList<String>());
+			rbc.runall(null);
 			
 			Double time = rbc.getSamplingTime();
 			Double max_time = Double.parseDouble(timeField.getText());

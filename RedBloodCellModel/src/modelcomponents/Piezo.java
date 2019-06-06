@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Piezo implements Serializable {
 //	private Double startTime = 2.0/60.0; // hours
 	private Double startTime = 0.0;
-	private Double duration = (1.0/120.0)/60.0; // hours
+	private Double duration = (0.4/60.0)/60.0; // (1.0/120.0)/60.0; // hours
 	private Double recovery = 1.0/60.0; // hours
 	private Integer cycles = 7;
 	private Double pkg = 0.0;

@@ -430,11 +430,6 @@ public class RBC_model implements Serializable {
 		
 		this.JS.setPermeability(this.JS.getDefaultPermeability());
 		
-		if(this.piezo.getRestoreMedium()) {
-			System.err.println("RESTORING");
-			this.restoreMedium();
-			this.publish();
-		}
 		
 		this.finalPiezoHct = this.fraction * 100.0;
 		System.err.println(this.finalPiezoHct);
@@ -445,6 +440,11 @@ public class RBC_model implements Serializable {
 			this.A_8 = this.A_7/(1.0 - this.A_7);
 		}
 		
+		if(this.piezo.getRestoreMedium()) {
+			System.err.println("RESTORING");
+			this.restoreMedium();
+			this.publish();
+		}
 		
 		
 	}

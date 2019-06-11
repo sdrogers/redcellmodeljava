@@ -495,6 +495,10 @@ public class RBC_model implements Serializable {
 		tempOptions.put("Ca concentration", ""+this.piezo.getRestoreCa());
 		tempOptions.put("Medium pH", ""+this.piezo.getRestorepH());
 		tempOptions.put("HEPES-Na concentration",""+this.piezo.getRestoreHepesNa());
+		
+		tempOptions.put("NaCl", ""+this.piezo.getRestoreNa());
+		tempOptions.put("KCl",""+this.piezo.getRestoreK());
+		
 		this.set_cell_fraction_options(tempOptions, new ArrayList<String>());
 		
 		

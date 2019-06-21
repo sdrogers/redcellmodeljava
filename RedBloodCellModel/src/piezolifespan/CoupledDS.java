@@ -26,11 +26,18 @@ public class CoupledDS {
 		r.publish();
 		r.setPublish(false);
 		r.runall(new JTextArea());
-		int cycles_per_output = 10;
+		int cycles_per_output = 1;
 		int cycle_count = 0;
 		while(r.getSamplingTime() < 1.0) {
 			r.setupDS(dS1Options, new ArrayList<String>());
 			r.runall(new JTextArea());
+			
+			Double deltaNa = 145.0 - r.getMediumNaConcentration();
+			Double deltaK = 5.0 - r.getMediumKConcentration();
+			
+			dS2Options.put("Add or remove NaCl", "" + deltaNa);
+			dS2Options.put("Add or remove KCl", "" + deltaK);
+			
 			r.setupDS(dS2Options, new ArrayList<String>());
 			r.runall(new JTextArea());
 			cycle_count ++;
@@ -71,18 +78,15 @@ public class CoupledDS {
 		dS2Options.put("PAG","1.2");
 		dS2Options.put("Medium pH","7.4");
 		
-		// compute time in hours of 1 minute minus 0.4 seconds
+		// compute time in mins of 1 minute minus 0.4 seconds
 		Double time_mins = 1.0 - (0.4 / 60.0);
-		Double time_hours = time_mins / 60.0;
 		
-		
-		dS2Options.put("Time",""+time_hours);
+		dS2Options.put("Time",""+time_mins);
 		dS2Options.put("Ca concentration","1.0");
 		dS2Options.put("PCaG","0.05");
 		dS2Options.put("HEPES-Na concentration","10.0");
 		dS2Options.put("Mg concentration","0.2");
-		dS2Options.put("NaCl","145.0");
-		dS2Options.put("KCl","5.0");
+		
 
 		return dS2Options;
 	}
@@ -90,6 +94,7 @@ public class CoupledDS {
 		HashMap<String,String> initial = new HashMap<String,String>();
 		initial.put("Cell volume fraction","0.00001");
 		initial.put("Time","2.0");
+		initial.put("Output Accuracy","6");
 		return initial;
 	}
 

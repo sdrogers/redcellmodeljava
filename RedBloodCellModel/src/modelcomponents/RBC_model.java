@@ -496,6 +496,10 @@ public class RBC_model implements Serializable {
 		tempOptions.put("Medium pH", ""+this.piezo.getRestorepH());
 		tempOptions.put("HEPES-Na concentration",""+this.piezo.getRestoreHepesNa());
 		
+		
+		/*
+		 * These do nothing!!
+		 */
 		tempOptions.put("NaCl", ""+this.piezo.getRestoreNa());
 		tempOptions.put("KCl",""+this.piezo.getRestoreK());
 		
@@ -1410,6 +1414,13 @@ public class RBC_model implements Serializable {
 		
 		this.chelator();
 		this.oldedgta();
+	}
+	
+	public Double getMediumNaConcentration() {
+		return this.medium.Na.getConcentration();
+	}
+	public Double getMediumKConcentration() {
+		return this.medium.K.getConcentration();
 	}
 	
 	private void oldedgta() {

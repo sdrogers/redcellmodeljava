@@ -1299,9 +1299,13 @@ public class RBC_model implements Serializable {
 		//	options.remove("KxNa");
 		}
 		
+		
+		
+		
+		
 		temp = options.get("Add or remove NaCl");
 		if(temp != null) {
-			this.I_45 = Double.parseDouble(options.get("change-nacl"));
+			this.I_45 = Double.parseDouble(temp);
 			this.medium.Na.setConcentration(this.medium.Na.getConcentration() + this.I_45);
 			this.medium.A.setConcentration(this.medium.A.getConcentration() + this.I_45);
 			usedoptions.add("Add or remove NaCl");

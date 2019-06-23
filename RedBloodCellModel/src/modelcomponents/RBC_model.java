@@ -416,6 +416,7 @@ public class RBC_model implements Serializable {
 			this.A_7 = this.fraction;
 			this.A_8 = this.A_7/(1.0 - this.A_7);
 		}
+		System.err.println("Fraction @ Piezo: " + this.fraction);
 	}
 	private void stopPiezo() {
 		this.cycle_count = this.cycles_per_print - 1; // forces an output now
@@ -510,7 +511,6 @@ public class RBC_model implements Serializable {
 //		tempOptions.put("KCl",""+this.piezo.getRestoreK());
 		
 		this.set_cell_fraction_options(tempOptions, new ArrayList<String>());
-		System.err.println("K!: " + this.getMediumKConcentration());
 		
 	}
 	public void runall(JTextArea ta) {

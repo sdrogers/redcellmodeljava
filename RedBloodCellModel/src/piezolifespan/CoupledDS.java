@@ -28,7 +28,7 @@ public class CoupledDS {
 		r.runall(new JTextArea());
 		int cycles_per_output = 1;
 		int cycle_count = 0;
-		while(r.getSamplingTime() < 1.0) {
+		while(r.getSamplingTime() < 24.0) {
 			r.setupDS(dS1Options, new ArrayList<String>());
 			r.runall(new JTextArea());
 			
@@ -39,6 +39,24 @@ public class CoupledDS {
 			dS2Options.put("Add or remove KCl", "" + deltaK);
 			
 			r.setupDS(dS2Options, new ArrayList<String>());
+			
+			// New exponential decay version
+			Double timeInMinutes = 0.0;
+			timeInMinutes = r.getSamplingTime()*60.0;
+			Double FMaxCa = r.getCaPump().getDefaultFcapm();
+			Double FMaxNa = r.getNapump().getP_1();
+			Double FMaxNaRev = r.getNapump().getP_2();
+			Double pmcaK = 7e-6;
+			Double tNaP = 0.0;
+			Double naK = 7e-6;
+			r.getCaPump().setDefaultFcapm(FMaxCa*Math.exp(-pmcaK*timeInMinutes));
+			if(timeInMinutes > tNaP) {
+				r.getNapump().setP_1(FMaxNa*Math.exp(-naK*(timeInMinutes - tNaP)));
+				r.getNapump().setP_2(FMaxNaRev*Math.exp(-naK*(timeInMinutes - tNaP)));
+			}
+			
+			
+			
 			r.runall(new JTextArea());
 			cycle_count ++;
 			if(cycle_count == cycles_per_output) {
@@ -48,7 +66,7 @@ public class CoupledDS {
 				cycle_count = 0;
 			}
 		}
-		r.writeCsv("/Users/simon/TempStuff/Arieh/PiezoBig/cds_NaK.csv");
+		r.writeCsv("/Users/simon/TempStuff/Arieh/PiezoBig/cds_day_with_decay.csv");
 	}
 	public static HashMap<String,String> makeRSOptions() {
 		HashMap<String,String> RSOptions = new HashMap<String,String>();

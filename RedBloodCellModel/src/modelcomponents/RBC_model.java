@@ -501,16 +501,16 @@ public class RBC_model implements Serializable {
 		 * These do nothing!!
 		 */
 		
-		Double deltaNa = this.getMediumNaConcentration() - this.piezo.getRestoreNa();
+		Double deltaNa = this.piezo.getRestoreNa() - this.getMediumNaConcentration();
 		tempOptions.put("Add or remove NaCl",""+deltaNa);
-		Double deltaK = this.getMediumKConcentration() - this.piezo.getRestoreK();
-		tempOptions.put("Add of remove KCl",""+deltaK);
+		Double deltaK = this.piezo.getRestoreK() - this.getMediumKConcentration();
+		tempOptions.put("Add or remove KCl",""+ deltaK);
 		
 //		tempOptions.put("NaCl", ""+this.piezo.getRestoreNa());
 //		tempOptions.put("KCl",""+this.piezo.getRestoreK());
 		
 		this.set_cell_fraction_options(tempOptions, new ArrayList<String>());
-		
+		System.err.println("K!: " + this.getMediumKConcentration());
 		
 	}
 	public void runall(JTextArea ta) {

@@ -500,8 +500,14 @@ public class RBC_model implements Serializable {
 		/*
 		 * These do nothing!!
 		 */
-		tempOptions.put("NaCl", ""+this.piezo.getRestoreNa());
-		tempOptions.put("KCl",""+this.piezo.getRestoreK());
+		
+		Double deltaNa = this.getMediumNaConcentration() - this.piezo.getRestoreNa();
+		tempOptions.put("Add or remove NaCl",""+deltaNa);
+		Double deltaK = this.getMediumKConcentration() - this.piezo.getRestoreK();
+		tempOptions.put("Add of remove KCl",""+deltaK);
+		
+//		tempOptions.put("NaCl", ""+this.piezo.getRestoreNa());
+//		tempOptions.put("KCl",""+this.piezo.getRestoreK());
 		
 		this.set_cell_fraction_options(tempOptions, new ArrayList<String>());
 		

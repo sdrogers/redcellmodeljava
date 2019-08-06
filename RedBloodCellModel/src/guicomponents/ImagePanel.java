@@ -15,7 +15,7 @@ public class ImagePanel extends JPanel{
 		this.setBackground(Color.BLUE);
 		try {
 			image = ImageIO.read(
-					ClassLoader.getSystemResourceAsStream("SettingFiles/RBCannotated500.jpg"));
+					ClassLoader.getSystemResourceAsStream("SettingFiles/RBCrgb_resize.jpg"));
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -25,7 +25,8 @@ public class ImagePanel extends JPanel{
         super.paintComponent(g);
         int w = this.getWidth();
         int h = this.getHeight();
-        g.drawImage(image, 0, 0, w,h,0,0,500,338,this);
+        g.drawImage(image, 0, 0, w,h,0,0,500,310,this);
+//        g.drawImage(image,0,0,null);
 //        	g.drawImage(image, 0, 0, 500,700,0,0,1050,1050,this);
     }
 }

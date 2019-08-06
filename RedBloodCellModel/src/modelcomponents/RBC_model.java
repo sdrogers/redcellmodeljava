@@ -408,7 +408,6 @@ public class RBC_model implements Serializable {
 		
 		Double jsfactor = this.piezo.getPiezoJS();
 		this.JS.setPermeability(this.JS.getDefaultPermeability() * jsfactor);
-
 			
 		this.fraction = this.piezo.getPiezoFraction();
 		

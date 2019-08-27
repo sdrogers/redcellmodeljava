@@ -497,19 +497,15 @@ public class RBC_model implements Serializable {
 		tempOptions.put("HEPES-Na concentration",""+this.piezo.getRestoreHepesNa());
 		
 		
-		/*
-		 * These do nothing!!
-		 */
 		
-		Double deltaNa = this.piezo.getRestoreNa() - this.getMediumNaConcentration();
-		tempOptions.put("Add or remove NaCl",""+deltaNa);
-		Double deltaK = this.piezo.getRestoreK() - this.getMediumKConcentration();
-		tempOptions.put("Add or remove KCl",""+ deltaK);
+		// Uncomment this code if you want to attempt to restore medium K and Na
+//		Double deltaNa = this.piezo.getRestoreNa() - this.getMediumNaConcentration();
+//		tempOptions.put("Add or remove NaCl",""+deltaNa);
+//		Double deltaK = this.piezo.getRestoreK() - this.getMediumKConcentration();
+//		tempOptions.put("Add or remove KCl",""+ deltaK);
 		
-//		tempOptions.put("NaCl", ""+this.piezo.getRestoreNa());
-//		tempOptions.put("KCl",""+this.piezo.getRestoreK());
 		
-		this.set_cell_fraction_options(tempOptions, new ArrayList<String>());
+//		this.set_cell_fraction_options(tempOptions, new ArrayList<String>());
 		
 	}
 	public void runall(JTextArea ta) {

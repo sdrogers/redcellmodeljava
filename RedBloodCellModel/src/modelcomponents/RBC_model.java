@@ -2365,10 +2365,10 @@ public class RBC_model implements Serializable {
 		new_result.setItem("TransitHct", this.finalPiezoHct);
 		
 		
-		new_result.setItem("FzKTransit", this.finalPiezoFK);
-		new_result.setItem("FzNaTransit", this.finalPiezoFNa);
-		new_result.setItem("FzATransit", this.finalPiezoFA);
-		new_result.setItem("FzCaTransit", this.finalPiezoFCa);
+		new_result.setItem("FzKGTransit", this.finalPiezoFK);
+		new_result.setItem("FzNaGTransit", this.finalPiezoFNa);
+		new_result.setItem("FzAGTransit", this.finalPiezoFA);
+		new_result.setItem("FzCaGTransit", this.finalPiezoFCa);
 		
 		double enFluxTest = this.total_flux_Na
 				+ this.total_flux_K

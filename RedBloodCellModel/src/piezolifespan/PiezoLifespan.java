@@ -38,7 +38,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
             "MMgt","MMgf","FNaP","FACo","FKCo","FNaCo","FCaP","FKP","FNa","FKGgardos","FKG","FK",
             "FA","FH","FCa","FW","FNaG","FAG","FHG","FCaG","FAJS","FHJS","FA23Ca","FA23Mg",
             "EA","EH","EK","ENa","FzKG","FzNaG","FzAG","FzCaG","fHb*CHb","nX","Msucr","Mgluc-",
-            "Mgluc+","EN test","TransitHct","FzKTransit","FzNaTransit","FzATransit","FzCaTransit"};
+            "Mgluc+","EN test","TransitHct","FzKGTransit","FzNaGTransit","FzAGTransit","FzCaGTransit"};
 	
 	
 	private JButton runButton,stopButton,saveButton,changePiezoButton,rsButton;

@@ -189,7 +189,13 @@ public class RBC_model implements Serializable {
 	
 	private Piezo piezo;
 	
-	private Double finalPiezoHct;
+	private Double finalPiezoHct = 0.0;
+	private int total_cycle_count;
+	private Double finalPiezoCCa = 0.0;
+	private Double finalPiezoFK = 0.0;
+	private Double finalPiezoFNa = 0.0;
+	private Double finalPiezoFA = 0.0;
+	private Double finalPiezoFCa = 0.0;
 	public RBC_model() {
 		cell = new Region();
 		medium = new Region();
@@ -293,6 +299,7 @@ public class RBC_model implements Serializable {
 
 		this.sampling_time = 0.0;
 		this.cycle_count = 0;
+		this.total_cycle_count = 0;
 		this.cycles_per_print = 777;
 		this.duration_experiment = 0.0;
 		this.n_its = 0;
@@ -356,6 +363,12 @@ public class RBC_model implements Serializable {
 		this.stage = 0;
 		
 	}
+	/*
+	 * Used in Piezo to produce slightly different output
+	 */
+	public void setPublishOrder(String[] publish_order) {
+		this.publish_order = publish_order;
+	}
 	public Double getSamplingTime() {
 		return this.sampling_time;
 	}
@@ -418,6 +431,14 @@ public class RBC_model implements Serializable {
 		System.err.println("Fraction @ Piezo: " + this.fraction);
 	}
 	private void stopPiezo() {
+		
+		// Save the final fluxes
+		this.finalPiezoFK = this.piezoGoldman.getFlux_K();
+		this.finalPiezoFNa = this.piezoGoldman.getFlux_Na();
+		this.finalPiezoFA = this.piezoGoldman.getFlux_A();
+		this.finalPiezoFCa = this.capump.getFlux_Ca();
+
+		
 		this.cycle_count = this.cycles_per_print - 1; // forces an output now
 		this.piezoGoldman.setPermeability_K(0.0);
 		this.piezoGoldman.setPermeability_Na(0.0);
@@ -433,6 +454,10 @@ public class RBC_model implements Serializable {
 		
 		this.finalPiezoHct = this.fraction * 100.0;
 		System.err.println(this.finalPiezoHct);
+		
+		this.finalPiezoCCa = this.cell.Cat.getConcentration(); 
+		
+		
 		
 		this.fraction = this.defaultFraction;
 		if(this.A_7 != this.fraction) {
@@ -450,6 +475,9 @@ public class RBC_model implements Serializable {
 	}
 	public Double getFinalPiezoHct() {
 		return this.finalPiezoHct;
+	}
+	public Double getFinalPiezoCCa() {
+		return this.finalPiezoCCa;
 	}
 	private void endPiezo() {
 		this.cycles_per_print = piezo.getOldCycles();
@@ -646,12 +674,15 @@ public class RBC_model implements Serializable {
 				this.cycle_count = 0;
 			}
 			
-		
+			this.total_cycle_count += 1;
 		}
 		this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
 		this.publish();
 		this.output("Finished!",ta);
 		
+	}
+	public int getTotalCycleCount() {
+		return total_cycle_count;
 	}
 	private void updateContents() {
 		Double Vw_old = this.Vw;
@@ -2329,6 +2360,15 @@ public class RBC_model implements Serializable {
 		new_result.setItem("Msucr", this.medium.Sucrose.getConcentration());
 		new_result.setItem("Mgluc-", this.medium.Gluconate.getConcentration());
 		new_result.setItem("Mgluc+", this.medium.Glucamine.getConcentration());
+		
+		
+		new_result.setItem("TransitHct", this.finalPiezoHct);
+		
+		
+		new_result.setItem("FzKTransit", this.finalPiezoFK);
+		new_result.setItem("FzNaTransit", this.finalPiezoFNa);
+		new_result.setItem("FzATransit", this.finalPiezoFA);
+		new_result.setItem("FzCaTransit", this.finalPiezoFCa);
 		
 		double enFluxTest = this.total_flux_Na
 				+ this.total_flux_K

@@ -30,6 +30,17 @@ import guicomponents.OptionsFrame;
 
 
 public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
+	
+	
+	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
+            "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CH/nM","CCa2+","CMg2+",
+            "CX","CHb","fHb","COs","MOs","rA","rH","nHb","MNa","MK","MA","MH/nM","MB","MCat","MCaf",
+            "MMgt","MMgf","FNaP","FACo","FKCo","FNaCo","FCaP","FKP","FNa","FKGgardos","FKG","FK",
+            "FA","FH","FCa","FW","FNaG","FAG","FHG","FCaG","FAJS","FHJS","FA23Ca","FA23Mg",
+            "EA","EH","EK","ENa","FzKG","FzNaG","FzAG","FzCaG","fHb*CHb","nX","Msucr","Mgluc-",
+            "Mgluc+","EN test","TransitHct","FzKTransit","FzNaTransit","FzATransit","FzCaTransit"};
+	
+	
 	private JButton runButton,stopButton,saveButton,changePiezoButton,rsButton;
 	private JTextArea modelOutput;
 	private ModelWorker worker;
@@ -92,21 +103,21 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		JPanel entryPanel = new JPanel(new GridLayout(0,2));
 		topPanel.add(entryPanel);
 		
-		entryPanel.add(new JLabel("Max model time (hours): ",SwingConstants.RIGHT));
-		timeField = new JTextField("1.0");
+		entryPanel.add(new JLabel("Lifespan duration (h): ",SwingConstants.RIGHT));
+		timeField = new JTextField("2880");
 		entryPanel.add(timeField);
-		entryPanel.add(new JLabel("Number of PIEZO cycles per output: ",SwingConstants.RIGHT));
+		entryPanel.add(new JLabel("Data output periodicity (min): ",SwingConstants.RIGHT));
 		cycleField = new JTextField("1440");
 		entryPanel.add(cycleField);
 		
-		entryPanel.add(new JLabel("k(Na/K pump) (1/min): ",SwingConstants.RIGHT));
-		caKField = new JTextField("7e-6");
+		entryPanel.add(new JLabel("kNaP (1/min): ",SwingConstants.RIGHT));
+		caKField = new JTextField("3e-5");
 		entryPanel.add(caKField);
-		pmcaKField = new JTextField("7e-6");
-		entryPanel.add(new JLabel("k(PMCA) (1/min): ",SwingConstants.RIGHT));
+		pmcaKField = new JTextField("8e-6");
+		entryPanel.add(new JLabel("kCaP (1/min): ",SwingConstants.RIGHT));
 		entryPanel.add(pmcaKField);
-		tnapField = new JTextField("0");
-		entryPanel.add(new JLabel("TNaP (minutes): ",SwingConstants.RIGHT));
+		tnapField = new JTextField("115200");
+		entryPanel.add(new JLabel("TNaP (min): ",SwingConstants.RIGHT));
 		entryPanel.add(tnapField);
 		
 		
@@ -129,15 +140,17 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 
 		DSOptions.put("Time", "1.0");
 		DSOptions.put("Incorporate PIEZO stage","yes");
-		DSOptions.put("piezo_start","0.0");
+//		DSOptions.put("piezo_start","0.0"); // is this used
 		DSOptions.put("Output Accuracy","6");
+		DSOptions.put("PzCaG", "70");
+		
 //		Double stage_time = 1.0; // minutes
 //		Double open_time = 4.0*(1.0/60.0); // 4.0 seconds
 //		Double recovery_time = stage_time - open_time - 1e-6;
 //		DSOptions.put("piezo_recovery",""+recovery_time);
 //		DSOptions.put("Open state",""+0.4);
 		
-//		DSOptions.put("Piezo Frequency factor", "0.001");
+		DSOptions.put("Piezo Frequency factor", "0.001");
 //		DSOptions.put("Piezo Cycles per print","111");
 //		DSOptions.put("PzKG","0.0");
 //		DSOptions.put("PzNaG", "0.0");
@@ -171,7 +184,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		public Void doInBackground() {
 			rbc = new RBC_model();
 			
-			
+			rbc.setPublishOrder(publish_order);
 			
 			
 			rbc.setVerbose(false);
@@ -235,7 +248,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 					rbc.publish();
 					rbc.setPublish(false);
 					ResultHash r = rbc.getLastResult();
-					r.setItem("TransitHct", rbc.getFinalPiezoHct());
+//					r.setItem("TransitHct", rbc.getFinalPiezoHct());
 					publish(r);
 					cycle_counter = 0;
 				}
@@ -253,13 +266,14 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		public void process(List<ResultHash> res) {
 			ResultHash lastItem = res.get(res.size()-1);
 			Double time = lastItem.getTime();
-			String newLine = String.format("%8.2f%8.4f%8.2f%8.2f%8.2f%8.2f\n",
+			String newLine = String.format("%8.2f %8.4f %8.2f %8.2f %8.2f %8.2f %10d\n",
 					lastItem.getTime(),
 					lastItem.getItem("V/V"),
 					lastItem.getItem("Em"),
 					lastItem.getItem("FNaP"),
-					lastItem.getItem("FCaP"),
-					lastItem.getItem("TransitHct"));
+					rbc.getFinalPiezoCCa(),
+					lastItem.getItem("TransitHct"),
+					rbc.getTotalCycleCount());
 			modelOutput.append(newLine);
 			make_plots();
 		}
@@ -267,7 +281,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 	}
 	private void make_plots() { 
 		int n_results = rbc.getResults().size();
-		String[][] series = {{"V/V",},{"CNa","CK","CA"},{"Em"},{"rA","rH"}};
+		String[][] series = {{"V/V",},{"CNa","CK","CA"},{"EK"},{"pHi"}};
 		int plot_pos = 0;
 		for(String[] s: series) {
 			plot[plot_pos].removeAllPlots();
@@ -297,7 +311,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 	}
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == runButton) {
-			this.modelOutput.setText(String.format("%8s%8s%8s%8s%8s%8s\n", "Time","V/V","Em","FNaP","FCaP","TransHct"));
+			this.modelOutput.setText(String.format("%8s %8s %8s %8s %8s %8s %10s\n", "Time","V/V","Em","FNaP","TransCCa","TransHct","Iterations"));
 			stopButton.setEnabled(true);
 			runButton.setEnabled(false);
 			saveButton.setEnabled(false);

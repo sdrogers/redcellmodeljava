@@ -196,6 +196,7 @@ public class RBC_model implements Serializable {
 	private Double finalPiezoFNa = 0.0;
 	private Double finalPiezoFA = 0.0;
 	private Double finalPiezoFCa = 0.0;
+	private ResultHash finalPiezoResult;
 	public RBC_model() {
 		cell = new Region();
 		medium = new Region();
@@ -444,6 +445,13 @@ public class RBC_model implements Serializable {
 		this.piezoGoldman.setPermeability_Na(0.0);
 		this.piezoGoldman.setPermeability_A(0.0);
 
+		this.finalPiezoHct = this.fraction * 100.0;
+		this.finalPiezoCCa = this.cell.Cat.getConcentration();
+		System.err.println(this.finalPiezoHct);
+
+		
+		this.finalPiezoResult = makeResultHash();
+		
 		//???
 		this.piezoPassiveca.setFcalm(0.0);
 		this.capump.setFcapm(this.piezo.getOldPMCA());
@@ -452,10 +460,8 @@ public class RBC_model implements Serializable {
 		this.JS.setPermeability(this.JS.getDefaultPermeability());
 		
 		
-		this.finalPiezoHct = this.fraction * 100.0;
-		System.err.println(this.finalPiezoHct);
 		
-		this.finalPiezoCCa = this.cell.Cat.getConcentration(); 
+		 
 		
 		
 		
@@ -472,6 +478,9 @@ public class RBC_model implements Serializable {
 		}
 		
 		
+	}
+	public ResultHash getFinalPiezoResult() {
+		return finalPiezoResult;
 	}
 	public Double getFinalPiezoHct() {
 		return this.finalPiezoHct;
@@ -2272,14 +2281,8 @@ public class RBC_model implements Serializable {
 		return X_3;
 	}
 	
-	public void publish() {
-		if(!this.doPublish) {
-			return;
-		}
-		
-		System.out.println("Publishing at time: " + this.sampling_time);
+	public ResultHash makeResultHash() {
 		ResultHash new_result = new ResultHash(this.sampling_time*60.0); // convert to minutes for publishing
-		
 		new_result.setItem("Vw",this.Vw);
 		new_result.setItem("V/V",this.VV);
 		new_result.setItem("MCHC",this.mchc);
@@ -2377,6 +2380,18 @@ public class RBC_model implements Serializable {
 				+ 2.0*(this.total_flux_Ca+this.a23.getFlux_Mg());
 		new_result.setItem("EN test", enFluxTest);
 		
+		return new_result;
+	}
+	
+	public void publish() {
+		if(!this.doPublish) {
+			return;
+		}
+		
+		System.out.println("Publishing at time: " + this.sampling_time);
+		ResultHash new_result = makeResultHash();
+		
+
 		this.resultList.add(new_result);
 	}
 	public void clearResults() {
@@ -2398,7 +2413,8 @@ public class RBC_model implements Serializable {
 	public String[] getPublishOrder() {
 		return this.publish_order;
 	}
-	public void writeCsv(String name) {
+	
+	public void writeCsv(String name, ArrayList<ResultHash> resultList) {
 		FileWriter filewriter = null;
 		try {
 			filewriter = new FileWriter(name);
@@ -2410,7 +2426,7 @@ public class RBC_model implements Serializable {
 			filewriter.append(headString);
 			String resultString;
 			String numFormat = "%7." + this.dp + "f";
-			for(ResultHash r: this.resultList) {
+			for(ResultHash r: resultList) {
 				resultString = String.format(numFormat,r.getTime());
 				for(int i=0;i<this.publish_order.length;i++) {
 					resultString += ',' + String.format(numFormat, r.getItem(this.publish_order[i]));
@@ -2429,6 +2445,9 @@ public class RBC_model implements Serializable {
 				
 			}
 		}
+	}
+	public void writeCsv(String name) {
+		writeCsv(name,this.resultList);
 	}
 
 	public NaPump getNapump() {

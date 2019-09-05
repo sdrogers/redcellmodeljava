@@ -38,7 +38,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
             "MMgt","MMgf","FNaP","FACo","FKCo","FNaCo","FCaP","FKP","FNa","FKGgardos","FKG","FK",
             "FA","FH","FCa","FW","FNaG","FAG","FHG","FCaG","FAJS","FHJS","FA23Ca","FA23Mg",
             "EA","EH","EK","ENa","FzKG","FzNaG","FzAG","FzCaG","fHb*CHb","nX","Msucr","Mgluc-",
-            "Mgluc+","EN test","TransitHct","FzKGTransit","FzNaGTransit","FzAGTransit","FzCaGTransit"};
+            "Mgluc+","EN test"};//,"TransitHct","FzKGTransit","FzNaGTransit","FzAGTransit","FzCaGTransit"};
 	
 	
 	private JButton runButton,stopButton,saveButton,changePiezoButton,rsButton;
@@ -50,6 +50,8 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 	private OptionsFrame piezoOptionsFrame,rsOptionsFrame,mediumOptionsFrame;
 	HashMap<String,String> DSOptions,RSOptions,mediumOptions;
 	private JFileChooser jfc = new JFileChooser();
+	
+	private ArrayList<ResultHash> piezoResults;
 
 	
 	public PiezoLifespan() {
@@ -182,6 +184,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 	}
 	private class ModelWorker extends SwingWorker<Void,ResultHash> {
 		public Void doInBackground() {
+			piezoResults = new ArrayList<ResultHash>();
 			rbc = new RBC_model();
 			
 			rbc.setPublishOrder(publish_order);
@@ -247,6 +250,8 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 					rbc.setPublish(true);
 					rbc.publish();
 					rbc.setPublish(false);
+					ResultHash finalPiezoResult = rbc.getFinalPiezoResult();
+					piezoResults.add(finalPiezoResult);
 					ResultHash r = rbc.getLastResult();
 //					r.setItem("TransitHct", rbc.getFinalPiezoHct());
 					publish(r);
@@ -280,26 +285,28 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		
 	}
 	private void make_plots() { 
-		int n_results = rbc.getResults().size();
-		String[][] series = {{"V/V",},{"CNa","CK","CA"},{"EK"},{"pHi"}};
-		int plot_pos = 0;
-		for(String[] s: series) {
-			plot[plot_pos].removeAllPlots();
-			double[] x = new double[n_results];
-			double[][] y = new double[s.length][n_results];
-			int pos = 0;
-			for(ResultHash r: rbc.getResults()) {
-				x[pos] = r.getTime();
-				for(int i=0;i<s.length;i++) {
-					y[i][pos] = r.getItem(s[i]);
+		synchronized(rbc) {
+			int n_results = rbc.getResults().size();
+			String[][] series = {{"V/V",},{"CNa","CK","CA"},{"EK"},{"pHi"}};
+			int plot_pos = 0;
+			for(String[] s: series) {
+				plot[plot_pos].removeAllPlots();
+				double[] x = new double[n_results];
+				double[][] y = new double[s.length][n_results];
+				int pos = 0;
+				for(ResultHash r: rbc.getResults()) {
+					x[pos] = r.getTime();
+					for(int i=0;i<s.length;i++) {
+						y[i][pos] = r.getItem(s[i]);
+					}
+					pos++;
+					
 				}
-				pos++;
-				
+				for(int i=0;i<y.length;i++) {
+					plot[plot_pos].addLinePlot(s[i], x,y[i]);
+				}
+				plot_pos ++;
 			}
-			for(int i=0;i<y.length;i++) {
-				plot[plot_pos].addLinePlot(s[i], x,y[i]);
-			}
-			plot_pos ++;
 		}
 
 	}
@@ -333,7 +340,10 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 				if(!fName.endsWith(".csv")) {
 					fName += ".csv";
 				}
+				String[] tokens = fName.split("[.]");
+				String transitFName = tokens[0] + "_transit." + tokens[1];
 				rbc.writeCsv(fName);
+				rbc.writeCsv(transitFName,piezoResults);
 			}
 		}else if(e.getSource() == changePiezoButton) {
 			piezoOptionsFrame = new OptionsFrame("PIEZO options","SettingFiles/piezoDSOptions.csv",DSOptions,this,"");

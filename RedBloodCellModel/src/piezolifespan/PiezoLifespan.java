@@ -55,7 +55,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 
 	
 	public PiezoLifespan() {
-		this.setSize(1000, 1000);
+		this.setSize(1500, 1000);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		layoutFrame();
 		this.setVisible(true);
@@ -271,12 +271,12 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		public void process(List<ResultHash> res) {
 			ResultHash lastItem = res.get(res.size()-1);
 			Double time = lastItem.getTime();
-			String newLine = String.format("%8.2f %8.4f %8.2f %8.2f %8.2f %8.2f %10d\n",
+			String newLine = String.format("%8.2f %8.4f %8.2f %8.2f %16.2f %8.2f %10d\n",
 					lastItem.getTime(),
 					lastItem.getItem("V/V"),
 					lastItem.getItem("Em"),
 					lastItem.getItem("FNaP"),
-					rbc.getFinalPiezoCCa(),
+					1000.0*rbc.getFinalPiezoCCa(),
 					lastItem.getItem("TransitHct"),
 					rbc.getTotalCycleCount());
 			modelOutput.append(newLine);
@@ -318,7 +318,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 	}
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == runButton) {
-			this.modelOutput.setText(String.format("%8s %8s %8s %8s %8s %8s %10s\n", "Time","V/V","Em","FNaP","TransCCa","TransHct","Iterations"));
+			this.modelOutput.setText(String.format("%8s %8s %8s %8s %16s %8s %10s\n", "Time","V/V","Em","FNaP","TransCCa(x1000)","TransHct","Iterations"));
 			stopButton.setEnabled(true);
 			runButton.setEnabled(false);
 			saveButton.setEnabled(false);

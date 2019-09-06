@@ -12,3 +12,5 @@ PMCA inhibition,PMCA inhibition,0,,,
 Transit cell volume fraction,Transit cell volume fraction,0.9,,Cell volume fraction during Piezo transition,
 Piezo JS Inhibition/Stimulation,Piezo JS Inhibition/Stimulation,0,%,Piezo specific Jacobs-Stewart cycle stimulation-inhibition factor,
 Restore Medium,Restore Medium,no,,Restore medium at start of inter-transit period,"yes,no"
+Restored Medium Na,Restored Medium Na,-1.0,,Restored medium Na concentration. Set to -ve value to not restore,
+Restored Medium K,Restored Medium K,-1.0,,Restored medium K concentration. Set to -ve value to not restore,

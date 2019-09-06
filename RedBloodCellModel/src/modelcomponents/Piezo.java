@@ -25,8 +25,8 @@ public class Piezo implements Serializable {
 	// Defaults for restoring medium
 	private Double restoreHepesNa = 10.0;
 	private Double restorepH = 7.4;
-	private Double restoreNa = 145.0;
-	private Double restoreK = 5.0;
+	private Double restoreNa = -1.0; // 145.0
+	private Double restoreK = -1.0; // 5.0
 	private Double restoreMg = 0.2;
 	private Double restoreCa = 1.0;
 	

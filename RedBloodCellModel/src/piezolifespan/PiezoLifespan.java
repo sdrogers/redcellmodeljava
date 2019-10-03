@@ -60,7 +60,6 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		layoutFrame();
 		this.setVisible(true);
 		makeOptionsDefault();
-		DSOptions.put("Incorporate PIEZO stage", "yes");
 	}
 	
 	private void layoutFrame() {
@@ -152,7 +151,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 //		DSOptions.put("piezo_recovery",""+recovery_time);
 //		DSOptions.put("Open state",""+0.4);
 		
-		DSOptions.put("PiezoFrequencyFactor", "0.001");
+		DSOptions.put("PzFrequencyFactor", "0.001");
 //		DSOptions.put("Piezo Cycles per print","111");
 //		DSOptions.put("PzKG","0.0");
 //		DSOptions.put("PzNaG", "0.0");
@@ -161,9 +160,9 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 //		DSOptions.put("PMCA inhibition","0.0");
 //		DSOptions.put("Transit cell volume fraction","0.9");
 //		DSOptions.put("Piezo JS Inhibition/Stimulation","0.0");
-		DSOptions.put("Restore Medium","yes");		
+		DSOptions.put("Restore Medium","yes");
 		
-
+		
 //		DSOptions.put("Restored Medium HEPES-Na concentration","10.0");
 //		DSOptions.put("Restored Medium pH","7.4");
 //		DSOptions.put("Restored Medium Na","145.0");
@@ -187,6 +186,8 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 			piezoResults = new ArrayList<ResultHash>();
 			rbc = new RBC_model();
 			
+			rbc.setLifespan(true);
+			
 			rbc.setPublishOrder(publish_order);
 			
 			
@@ -201,7 +202,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 			 */
 			HashMap<String,String> tempDSOptions = new HashMap<String,String>();
 			tempDSOptions.put("Time","2.0");
-			tempDSOptions.put("Cell Volume Fraction","0.00001");
+			tempDSOptions.put("CVF","0.00001");
 			rbc.setupDS(tempDSOptions, new ArrayList<String>());
 			rbc.runall(null);
 			

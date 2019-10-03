@@ -28,6 +28,7 @@ public class RBC_model implements Serializable {
 	
 	private final double MIN_BUFFER_CONC = 1e-10;
 	
+	// Model components
 	private Region cell;
 	private Region medium;
 	private JacobsStewart JS;
@@ -42,6 +43,7 @@ public class RBC_model implements Serializable {
 	private PiezoPassiveCa piezoPassiveca;
 	private CaPumpMg2 capump;
 	
+	// Messy variables. One day these will be fixed.
 	private Double A_1;
 	private Double A_2;
 	private Double A_3;
@@ -198,6 +200,7 @@ public class RBC_model implements Serializable {
 	private Double finalPiezoFCa = 0.0;
 	private ResultHash finalPiezoResult;
 	private Double oldJSPermeability;
+	
 	public RBC_model() {
 		cell = new Region();
 		medium = new Region();
@@ -246,26 +249,7 @@ public class RBC_model implements Serializable {
 		// Q10L (Q10Passive) the factor for leaks. Q10P is the factor for pumps 
 		
 		
-		
-		//# self.C_1 = 10.0
-		this.cell.Na.setConcentration(10.0);
-		//# self.C_2 = 140.0
-		this.cell.K.setConcentration(140.0);
-		//# self.C_3 = 95.0
-		this.cell.A.setConcentration(95.0);
-		//# self.C_4 = 0.0
-		this.cell.H.setConcentration(0.0);
-		//# self.C_5 = 0.0
-		this.cell.Hb.setConcentration(0.0);
-		//# self.C_6 = 0.0
-		this.cell.X.setConcentration(0.0);
-		//# self.C_7 = 0.0
-		this.cell.Mgt.setConcentration(0.0);
-		this.cell.XHbm.setConcentration(0.0);
-		//# self.C_9 = 0.0
-		//# self.cell.COs.concentration
-		//# self.C_10 = 0.0
-		//# self.cell.Hbpm.concentration
+		setInitialCellConcentrations();
 		
 		this.delta_H = 0.0;
 		
@@ -281,12 +265,8 @@ public class RBC_model implements Serializable {
 		this.I_73 = 0.0; // Exchange chloride for gluconate (in the medium)
 		this.I_79 = 0.75; // Water volume (as proportion of total)
 		
-		this.medium.Na.setConcentration(145.0);
-		this.medium.K.setConcentration(5.0);
-		this.medium.A.setConcentration(145.0);
-		this.medium.H.setConcentration(0.0);
-		this.buffer_conc = 10.0;
-		this.medium.Hb.setConcentration(0.0);
+		
+		setInitialMediumConcentrations();
 
 		this.cell.Na.setAmount(0.0);
 		this.cell.K.setAmount(0.0);
@@ -364,6 +344,36 @@ public class RBC_model implements Serializable {
 
 		this.stage = 0;
 		
+	}
+	private void setInitialMediumConcentrations() {
+		this.medium.Na.setConcentration(145.0);
+		this.medium.K.setConcentration(5.0);
+		this.medium.A.setConcentration(145.0);
+		this.medium.H.setConcentration(0.0);
+		this.buffer_conc = 10.0;
+		this.medium.Hb.setConcentration(0.0);
+	}
+	private void setInitialCellConcentrations() {		
+		//# self.C_1 = 10.0
+		this.cell.Na.setConcentration(10.0);
+		//# self.C_2 = 140.0
+		this.cell.K.setConcentration(140.0);
+		//# self.C_3 = 95.0
+		this.cell.A.setConcentration(95.0);
+		//# self.C_4 = 0.0
+		this.cell.H.setConcentration(0.0);
+		//# self.C_5 = 0.0
+		this.cell.Hb.setConcentration(0.0);
+		//# self.C_6 = 0.0
+		this.cell.X.setConcentration(0.0);
+		//# self.C_7 = 0.0
+		this.cell.Mgt.setConcentration(0.0);
+		this.cell.XHbm.setConcentration(0.0);
+		//# self.C_9 = 0.0
+		//# self.cell.COs.concentration
+		//# self.C_10 = 0.0
+		//# self.cell.Hbpm.concentration
+
 	}
 	/*
 	 * Used in Piezo to produce slightly different output
@@ -822,8 +832,6 @@ public class RBC_model implements Serializable {
 	
 	public void totalCaFlux() {
 		this.total_flux_Ca = this.a23.getFlux_Ca() + this.passiveca.getFlux() + this.piezoPassiveca.getFlux() + this.capump.getFlux_Ca();
-//		System.out.println("Ca flux: " + this.total_flux_Ca);
-//		System.out.println("A23: " + this.a23.getFlux_Ca() + " passive: "+ this.passiveca.getFlux() + " pump: " + this.capump.getFlux_Ca());
 	}
 	public void totalFlux() {
 		Double goldFlux = this.goldman.getFlux_H() + this.goldman.getFlux_Na() + this.goldman.getFlux_K() - this.goldman.getFlux_A();
@@ -834,7 +842,6 @@ public class RBC_model implements Serializable {
 	public void setup(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
 		if(this.stage == 0) {
 			
-//			// Some Piezo things - move them
 			String temp = rsoptions.get("NaCl");
 			if(temp != null) {
 				this.cell.Na.setConcentration(Double.parseDouble(temp));

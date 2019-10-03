@@ -1,7 +1,7 @@
 Alternative Name,Parameter name,default value,Units,Description,"Allowed values (if blank, a number is assumed)"
-Time,time,0,minutes,Duration of experiment or of experimental stage in multistage simulation,
-Frequency Factor,integrationfactor,0.01,,Lower values increase frequency of outputs i.e. time-resolution; useful for range <=0.01,
+Time,Time,0,minutes,Sets the duration of selected DS,
+FrequencyFactor,FrequencyFactor,0.01,,Sets the duration of each iteration interval,
 Regular dt,compute_delta_time,no,,Whether or not to use a fixed time step,"yes,no"
 dt,delta_time,0.1,minutes,Sets duration of time interval when regulartimeintervals is set to yes,
-Cycles per print,cyclesperprint,777,epochs,Number of computation cycles between data outputs,
-Output Accuracy,dp,4,decimals,The number of decimal places in the output csv file,
+Cyclesperprint(epochs),Cyclesperprint(epochs),777,Cycles/output,Sets number of cycles between data outputs ,
+Accuracy,Accuracy,4,decimals,The number of decimal places in the output csv file,

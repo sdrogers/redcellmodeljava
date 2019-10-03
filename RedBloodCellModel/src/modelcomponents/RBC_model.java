@@ -1654,17 +1654,17 @@ public class RBC_model implements Serializable {
 			usedoptions.add("Time");
 		}
 		
-		temp = options.get("Output Accuracy");
+		temp = options.get("Accuracy");
 		if(temp != null) {
 			this.dp = Integer.parseInt(temp);
-			usedoptions.add("Output Accuracy");
+			usedoptions.add("Accuracy");
 		}
 		
 		this.I_43 = this.integration_interval_factor;
-		temp = options.get("Frequency Factor");
+		temp = options.get("FrequencyFactor");
 		if(temp != null) {
 			this.integration_interval_factor = Double.parseDouble(temp);
-			usedoptions.add("Frequency Factor");
+			usedoptions.add("FrequencyFactor");
 		}
 		
 		temp = options.get("Regular dt");
@@ -1684,10 +1684,10 @@ public class RBC_model implements Serializable {
 			this.delta_time = Double.parseDouble(temp);
 			usedoptions.add("Delta Time");
 		}
-		temp = options.get("Cycles per print");
+		temp = options.get("Cyclesperprint(epochs)");
 		if(temp != null) {
 			this.cycles_per_print = Integer.parseInt(temp);
-			usedoptions.add("Cycles per print");
+			usedoptions.add("Cyclesperprint(epochs)");
 		}
 		
 	}

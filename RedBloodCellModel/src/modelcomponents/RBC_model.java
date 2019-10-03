@@ -1890,15 +1890,15 @@ public class RBC_model implements Serializable {
 		
 		// Other code to be added here...
 		// New ones added for reduced RS in March 18
-		String temp = rsoptions.get("[Na]i");
+		String temp = rsoptions.get("CNa");
 		if(temp != null) {
 			this.cell.Na.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("[Na]i");
+			usedoptions.add("CNa");
 		}
-		temp = rsoptions.get("[K]i");
+		temp = rsoptions.get("CK");
 		if(temp != null) {
 			this.cell.K.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("[K]i");
+			usedoptions.add("CK");
 		}
 		
 		temp = rsoptions.get("Q10 passive");
@@ -1937,10 +1937,10 @@ public class RBC_model implements Serializable {
 		this.I_79 = 1.0 - this.hb_content/136.0;
 		this.vlysis = 1.45;
 		if(this.hb_content == 34.0) {
-			String temp = rsoptions.get("Cell water content");
+			String temp = rsoptions.get("Vw");
 			if(temp != null) {
 				this.I_79 = Double.parseDouble(temp);
-				usedoptions.add("Cell water content");
+				usedoptions.add("Vw");
 			}
 			temp = rsoptions.get("lytic-cell-water");
 			if(temp != null) {
@@ -1952,10 +1952,10 @@ public class RBC_model implements Serializable {
 	}
 	
 	public void cellanionprotonscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
-		String temp = rsoptions.get("[A]i");
+		String temp = rsoptions.get("CA");
 		if(temp != null) {
 			this.cell.A.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("[A]i");
+			usedoptions.add("CA");
 		}
 		
 		
@@ -1975,7 +1975,7 @@ public class RBC_model implements Serializable {
 		
 		// New option added for reduced RS, March 18
 //		temp = rsoptions.get("hb-choice");
-		temp = rsoptions.get("Haemoglobin (A or S)");
+		temp = rsoptions.get("Hb A or S");
 		if(temp != null) {
 			if(temp == "A") {
 				this.A_1 = -1.0;
@@ -1984,7 +1984,7 @@ public class RBC_model implements Serializable {
 				this.A_1 = -8.0;
 				this.pit0 = 7.4;
 			}
-			usedoptions.add("Haemoglobin (A or S)");
+			usedoptions.add("Hb A or S");
 		}
 	}
 	
@@ -2184,10 +2184,10 @@ public class RBC_model implements Serializable {
 //		}
 		
 		
-		temp = rsoptions.get("KCa(Gardos channel)");
+		temp = rsoptions.get("KCa Gardos channel");
 		if(temp != null) {
 			this.goldman.setPkcak(Double.parseDouble(temp));
-			usedoptions.add("KCa(Gardos channel)");
+			usedoptions.add("KCa Gardos channel");
 		}
 //		else {
 //			this.goldman.setPkcak(1e-2);

@@ -1,10 +1,10 @@
 Alternative name,Parameter name,default value,Units,Description,"Allowed values (if blank, a number is assumed)"
-Temperature,temperature,37,oC,Temperature during experimental stage,
-Water permeability,water-perm,2,1/h,Water permeability of the RBC membrane,
-PKG,pgk,0.00165,1/h,Electrodiffusional K+ permeability (Goldmanian),
-PNaG,pgna,0.00152,1/h,Electrodiffusional Na+ permeability (Goldmanian),
-PAG,pga,1.2,1/h,"Electrodiffusional anion permeabilities (Cl-, HCO3-, gluconate-, SCN-) (Goldmanian)",
+Temperature,Temperature,37,oC,Temperature during DS stage,
+Pw,Pw,2,1/h,Water permeability,
+PKG,pgk,0.00165,1/h,Electrodiffusional K permeability,
+PNaG,pgna,0.00152,1/h,Electrodiffusional Na permeability,
+PAG,pga,1.2,1/h,Electrodiffusional A permeability,
 PHG,pgh,2E-10,1/h,Electrodiffusional H+ permeability (Goldmanian) to simulate protonophore additions,
-PCaG,pgca,0.05,1/h,Elecrtodiffusional Ca2+ permeability (Goldmanian) ,
-PA23187CaMg,pmg,0.01,arbitrary units,ionophore-induced Ca and Mg fluxes to simulate effect of divalent cation ionophore additions  ,
-Hb pI(0oC) 7.2(Oxy) or 7.5(Deoxy),pit0,Oxy,,"pI, Isoelectric point of Hb A at 0 oC, to allow simulation of oxy-deoxy transitions","Oxy,Deoxy"
+PCaG,pgca,0.05,1/h,Elecrtodiffusional Ca permeability,
+PA23CaMg,PA23CaMg,0.01,arbitrary units,"If added, enter values in the 2e17 to 2e18 range",
+Hb oxy or deoxy,Hb oxy or deoxy,Oxy,,"For changes in the oxygenation condition of Hb","Oxy,Deoxy"

@@ -79,12 +79,12 @@ public class OptionsParsers {
 			model.getCotransport().setPermeability(0.0002 * co_f / 100.0);
 			usedoptions.add("cotransport-activation");
 		}
-		temp = options.get("J-S cycle");
+		temp = options.get("JS cycle");
 		if(temp != null) {
 			Double jsfactor = Double.parseDouble(temp);
 			jsfactor = (100.0 - jsfactor)/100.0;
 			model.getJS().setPermeability(model.getJS().getDefaultPermeability() * jsfactor);
-			usedoptions.add("J-S cycle");
+			usedoptions.add("JS cycle");
 		}
 		temp = options.get("PMCA");
 		if(temp != null) {

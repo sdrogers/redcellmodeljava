@@ -539,8 +539,8 @@ public class RBC_model implements Serializable {
 		 */
 		
 		HashMap<String,String> tempOptions = new HashMap<String,String>();
-		tempOptions.put("Mg concentration", ""+this.piezo.getRestoreMg());
-		tempOptions.put("Ca concentration", ""+this.piezo.getRestoreCa());
+		tempOptions.put("MMg", ""+this.piezo.getRestoreMg());
+		tempOptions.put("MCa", ""+this.piezo.getRestoreCa());
 		tempOptions.put("Medium pH", ""+this.piezo.getRestorepH());
 		tempOptions.put("HEPES-Na concentration",""+this.piezo.getRestoreHepesNa());
 		
@@ -549,11 +549,11 @@ public class RBC_model implements Serializable {
 		// Uncomment this code if you want to attempt to restore medium K and Na
 		if(this.piezo.getRestoreNa() > 0) {
 			Double deltaNa = this.piezo.getRestoreNa() - this.getMediumNaConcentration();
-			tempOptions.put("Add or remove NaCl",""+deltaNa);
+			tempOptions.put("NaCl add/remove",""+deltaNa);
 		}
 		if(this.piezo.getRestoreK() > 0) {
 			Double deltaK = this.piezo.getRestoreK() - this.getMediumKConcentration();
-			tempOptions.put("Add or remove KCl",""+ deltaK);
+			tempOptions.put("KCl add/remove",""+ deltaK);
 			
 		}
 		
@@ -1269,12 +1269,12 @@ public class RBC_model implements Serializable {
 	}
 	
 	private void set_cell_fraction_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
-		String temp = options.get("Cell volume fraction");
+		String temp = options.get("CVF");
 		if(temp != null) {
 			this.fraction = Double.parseDouble(temp);
 			this.defaultFraction = this.fraction;
 			
-			usedoptions.add("Cell volume fraction");
+			usedoptions.add("CVF");
 //		}
 			/*
 			 * Note: this change to overcome the problems that build up over multiple consecutive dynamic states
@@ -1301,32 +1301,32 @@ public class RBC_model implements Serializable {
 			}	
 		}
 		
-		temp = options.get("HEPES-Na concentration");
+		temp = options.get("MB");
 		if(temp != null) {
 			this.buffer_conc = Double.parseDouble(temp);
-			usedoptions.add("HEPES-Na concentration");
+			usedoptions.add("MB");
 		}
 		
 		this.A_12 = this.medium.getpH();
-		temp = options.get("Medium pH");
+		temp = options.get("pHo");
 		if(temp != null) {
 			this.medium.setpH(Double.parseDouble(temp));
-			usedoptions.add("Medium pH");
+			usedoptions.add("pHo");
 		}
 		this.phadjust();
 		
-		temp = options.get("Exchange Na for Glucamine");
+		temp = options.get("Na x Glucamine");
 		if(temp != null) {
 			this.I_72 = Double.parseDouble(temp);
-			usedoptions.add("Exchange Na for Glucamine");
+			usedoptions.add("Na x Glucamine");
 			this.medium.Glucamine.setConcentration(this.medium.Glucamine.getConcentration() + this.I_72);
 			this.medium.Na.setConcentration(this.medium.Na.getConcentration() - this.I_72);
 		}
 		// Should this one be removed once done?
-		temp = options.get("Exchange Cl(A) for gluconate");
+		temp = options.get("A x Gluconate");
 		if(temp != null) {
 			this.I_73 = Double.parseDouble(temp);
-			usedoptions.add("Exchange Cl(A) for gluconate");
+			usedoptions.add("A x Gluconate");
 			this.medium.Gluconate.setConcentration(this.medium.Gluconate.getConcentration() + this.I_73);
 			this.medium.A.setConcentration(this.medium.A.getConcentration() - this.I_73);
 			if(this.I_73 != 0) {
@@ -1360,58 +1360,58 @@ public class RBC_model implements Serializable {
 		
 		
 		
-		temp = options.get("Add or remove NaCl");
+		temp = options.get("NaCl add/remove");
 		if(temp != null) {
 			this.I_45 = Double.parseDouble(temp);
 			this.medium.Na.setConcentration(this.medium.Na.getConcentration() + this.I_45);
 			this.medium.A.setConcentration(this.medium.A.getConcentration() + this.I_45);
-			usedoptions.add("Add or remove NaCl");
+			usedoptions.add("NaCl add/remove");
 		}
 		
-		temp = options.get("Add or remove KCl");
+		temp = options.get("KCl add/remove");
 		if(temp != null) {
 			this.I_34 = Double.parseDouble(temp);
 			this.medium.K.setConcentration(this.medium.K.getConcentration() + this.I_34);
 			this.medium.A.setConcentration(this.medium.A.getConcentration() + this.I_34);
-			usedoptions.add("Add or remove KCl");
+			usedoptions.add("KCl add/remove");
 		}
 		
-		temp = options.get("Add or remove sucrose");
+		temp = options.get("Sucrose add/remove");
 		if(temp != null) {
 			this.I_46 = Double.parseDouble(temp);
 			this.medium.Sucrose.setConcentration(this.medium.Sucrose.getConcentration() + this.I_46);
-			usedoptions.add("Add or remove sucrose");
+			usedoptions.add("Sucrose add/remove");
 		}
 		
-		temp = options.get("Mg concentration");
+		temp = options.get("MMg");
 		if(temp != null) {
 			Double mgtold = this.medium.Mgt.getConcentration();
 			this.medium.Mgt.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("Mg concentration");
+			usedoptions.add("MMg");
 			if(this.medium.Mgt.getConcentration() != 0) {
 				this.medium.A.setConcentration(this.medium.A.getConcentration() + 2.0*(this.medium.Mgt.getConcentration() - mgtold));
 			}
 		}
 		
-		temp = options.get("Ca concentration");
+		temp = options.get("MCa");
 		if(temp != null) {
 			Double catold = this.medium.Cat.getConcentration();
 			this.medium.Cat.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("Ca concentration");
+			usedoptions.add("MCa");
 			if(this.medium.Cat.getConcentration() != 0) {
 				this.medium.A.setConcentration(this.medium.A.getConcentration() + 2.0*(this.medium.Cat.getConcentration() - catold));
 			}
 		}
 		
-		temp = options.get("Add EGTA(1) or EDTA(2) (0 for no chelator)");
+		temp = options.get("EDGTA 0; G(1); D(2)");
 		if(temp!=null) {
-			usedoptions.add("Add EGTA(1) or EDTA(2) (0 for no chelator)");
+			usedoptions.add("EDGTA 0; G(1); D(2)");
 			this.ligchoice = Double.parseDouble(temp);
 		}
 		
-		temp = options.get("Chelator concentration"); // chelator concentration
+		temp = options.get("MEDGTA"); // chelator concentration
 		if(temp != null) {
-			usedoptions.add("Chelator concentration");
+			usedoptions.add("MEDGTA");
 			this.edgto = Double.parseDouble(temp);
 		}
 		

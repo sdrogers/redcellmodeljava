@@ -197,6 +197,7 @@ public class RBC_model implements Serializable {
 	private Double finalPiezoFA = 0.0;
 	private Double finalPiezoFCa = 0.0;
 	private ResultHash finalPiezoResult;
+	private Double oldJSPermeability;
 	public RBC_model() {
 		cell = new Region();
 		medium = new Region();
@@ -421,9 +422,9 @@ public class RBC_model implements Serializable {
 		
 		
 		Double jsfactor = this.piezo.getPiezoJS();
+		oldJSPermeability = this.JS.getPermeability();
 		this.JS.setPermeability(this.JS.getDefaultPermeability() * jsfactor);
 			
-		this.fraction = this.piezo.getPiezoFraction();
 		
 		if(this.A_7 != this.fraction) {
 			this.A_7 = this.fraction;
@@ -457,8 +458,8 @@ public class RBC_model implements Serializable {
 		this.capump.setFcapm(this.piezo.getOldPMCA());
 		
 		
-		this.JS.setPermeability(this.JS.getDefaultPermeability());
-		
+//		this.JS.setPermeability(this.JS.getDefaultPermeability());
+		this.JS.setPermeability(oldJSPermeability);
 		
 		
 		 

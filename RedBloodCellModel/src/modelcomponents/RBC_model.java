@@ -499,54 +499,54 @@ public class RBC_model implements Serializable {
 		/*
 		 * The code below (commented out) is the version that makes lifespan behave properly
 		 */
-		this.buffer_conc = this.piezo.getRestoreHepesNa();
-		this.medium.setpH(this.piezo.getRestorepH());
-		
-		
-		this.medium.H.setConcentration(Math.pow(10, -this.medium.getpH()));
-		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
-		
-		if(this.piezo.getRestoreNa() > 0) {
-			this.medium.Na.setConcentration(this.piezo.getRestoreNa());
-		}
-		
-		if(this.piezo.getRestoreK() > 0) {
-			this.medium.K.setConcentration(this.piezo.getRestoreK());
-		}
-		
-		
-		this.medium.Caf.setConcentration(this.piezo.getRestoreCa());
-		this.medium.Cat.setConcentration(this.piezo.getRestoreCa());
-		
-		this.medium.Mgf.setConcentration(this.piezo.getRestoreMg());
-		this.medium.Mgt.setConcentration(this.piezo.getRestoreMg());
-		
+//		this.buffer_conc = this.piezo.getRestoreHepesNa();
+//		this.medium.setpH(this.piezo.getRestorepH());
+//		
+//		
+//		this.medium.H.setConcentration(Math.pow(10, -this.medium.getpH()));
+//		this.medium.Hb.setConcentration(this.buffer_conc*(this.medium.H.getConcentration()/(this.A_5 + this.medium.H.getConcentration())));
+//		
+//		if(this.piezo.getRestoreNa() > 0) {
+//			this.medium.Na.setConcentration(this.piezo.getRestoreNa());
+//		}
+//		
+//		if(this.piezo.getRestoreK() > 0) {
+//			this.medium.K.setConcentration(this.piezo.getRestoreK());
+//		}
+//		
+//		
+//		this.medium.Caf.setConcentration(this.piezo.getRestoreCa());
+//		this.medium.Cat.setConcentration(this.piezo.getRestoreCa());
+//		
+//		this.medium.Mgf.setConcentration(this.piezo.getRestoreMg());
+//		this.medium.Mgt.setConcentration(this.piezo.getRestoreMg());
+//		
 		
 		/*
 		 * The following is an alternative, that makes use of the code to setup the cell
 		 * fraction options in the DS...
 		 */
 		
-//		HashMap<String,String> tempOptions = new HashMap<String,String>();
-//		tempOptions.put("Mg concentration", ""+this.piezo.getRestoreMg());
-//		tempOptions.put("Ca concentration", ""+this.piezo.getRestoreCa());
-//		tempOptions.put("Medium pH", ""+this.piezo.getRestorepH());
-//		tempOptions.put("HEPES-Na concentration",""+this.piezo.getRestoreHepesNa());
-//		
-//		
-//		
-//		// Uncomment this code if you want to attempt to restore medium K and Na
-//		if(this.piezo.getRestoreNa() > 0) {
-//			Double deltaNa = this.piezo.getRestoreNa() - this.getMediumNaConcentration();
-//			tempOptions.put("Add or remove NaCl",""+deltaNa);
-//		}
-//		if(this.piezo.getRestoreK() > 0) {
-//			Double deltaK = this.piezo.getRestoreK() - this.getMediumKConcentration();
-//			tempOptions.put("Add or remove KCl",""+ deltaK);
-//			
-//		}
-//		
-//		this.set_cell_fraction_options(tempOptions, new ArrayList<String>());
+		HashMap<String,String> tempOptions = new HashMap<String,String>();
+		tempOptions.put("Mg concentration", ""+this.piezo.getRestoreMg());
+		tempOptions.put("Ca concentration", ""+this.piezo.getRestoreCa());
+		tempOptions.put("Medium pH", ""+this.piezo.getRestorepH());
+		tempOptions.put("HEPES-Na concentration",""+this.piezo.getRestoreHepesNa());
+		
+		
+		
+		// Uncomment this code if you want to attempt to restore medium K and Na
+		if(this.piezo.getRestoreNa() > 0) {
+			Double deltaNa = this.piezo.getRestoreNa() - this.getMediumNaConcentration();
+			tempOptions.put("Add or remove NaCl",""+deltaNa);
+		}
+		if(this.piezo.getRestoreK() > 0) {
+			Double deltaK = this.piezo.getRestoreK() - this.getMediumKConcentration();
+			tempOptions.put("Add or remove KCl",""+ deltaK);
+			
+		}
+		
+		this.set_cell_fraction_options(tempOptions, new ArrayList<String>());
 		
 	}
 	public void runall(JTextArea ta) {

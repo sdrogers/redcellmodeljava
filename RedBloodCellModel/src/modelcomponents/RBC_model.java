@@ -936,13 +936,13 @@ public class RBC_model implements Serializable {
 		//this.publish();
 	}
 	private void set_piezo_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
-		String temp = options.get("Incorporate PIEZO stage");
+		String temp = options.get("Pz stage no or yes");
 		if(temp == null) {
 			this.piezo = null;
 			return;
 		}
 		if(temp != null) {
-			usedoptions.add("Incorporate PIEZO stage");
+			usedoptions.add("Pz stage no or yes");
 			if(!temp.equals("yes")) {
 				// piezo is off by default
 				this.piezo = null;
@@ -954,9 +954,9 @@ public class RBC_model implements Serializable {
 					// Convert to hours and add to sampling time
 					piezo.setStartTime(Double.parseDouble(temp)/60.0);
 				}
-				temp = options.get("Open state");
+				temp = options.get("PzOpen state");
 				if(temp != null) {
-					usedoptions.add("Open state");
+					usedoptions.add("PzOpen state");
 //					Double duration_ms = Double.parseDouble(temp);
 					Double duration_s = Double.parseDouble(temp);
 //					Double duration_s = duration_ms / 1000.0;
@@ -971,9 +971,9 @@ public class RBC_model implements Serializable {
 					piezo.setRecovery(Double.parseDouble(temp)/60.0);
 				}
 				
-				temp = options.get("Piezo Cycles per print");
+				temp = options.get("Pzcyclesperprint");
 				if(temp != null) {
-					usedoptions.add("Piezo Cycles per print");
+					usedoptions.add("Pzcyclesperprint");
 					piezo.setCycles(Integer.parseInt(temp));
 				}
 				
@@ -1007,9 +1007,9 @@ public class RBC_model implements Serializable {
 					piezo.setPmca(Double.parseDouble(temp));
 				}
 
-				temp = options.get("Piezo Frequency factor");
+				temp = options.get("PzFrequencyFactor");
 				if(temp != null) {
-					usedoptions.add("Piezo Frequency factor");
+					usedoptions.add("PzFrequencyFactor");
 					piezo.setiF(Double.parseDouble(temp));
 				}
 				
@@ -1104,10 +1104,10 @@ public class RBC_model implements Serializable {
 			}
 		}
 		
-		temp = options.get("Water permeability");
+		temp = options.get("Pw");
 		if(temp != null) {
 			this.water.setPermeability(Double.parseDouble(temp));
-			usedoptions.add("Water permeability");
+			usedoptions.add("Pw");
 		}
 		
 		temp = options.get("PKG");
@@ -1148,10 +1148,10 @@ public class RBC_model implements Serializable {
 		}
 		
 		
-		temp = options.get("PA23187CaMg");
+		temp = options.get("PA23CaMg");
 		if(temp != null) {
 			this.a23.setPermeability_Mg(Double.parseDouble(temp));
-			usedoptions.add("PA23187CaMg");
+			usedoptions.add("PA23CaMg");
 			temp = options.get("a23cam");
 			if(temp != null) {
 				this.a23.setCamk(Double.parseDouble(temp));
@@ -1184,10 +1184,10 @@ public class RBC_model implements Serializable {
 		
 		this.a23.setPermeability_Ca(this.a23.getPermeability_Mg());
 		
-		temp = options.get("Hb pI(0oC) 7.2(Oxy) or 7.5(Deoxy)");
+		temp = options.get("Hb oxy or deoxy");
 		if(temp != null) {
 			this.I_67 = this.pit0; // Store old value
-			usedoptions.add("Hb pI(0oC) 7.2(Oxy) or 7.5(Deoxy)");
+			usedoptions.add("Hb oxy or deoxy");
 			if(temp.equals("Oxy")) {
 				this.pit0 = 7.2;
 			}else if(temp.equals("Deoxy")) {

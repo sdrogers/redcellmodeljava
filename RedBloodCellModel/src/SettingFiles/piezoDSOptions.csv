@@ -1,13 +1,13 @@
 Alternative Name,Parameter/Variable Name,Default Value,Units,Description,Allowed Values
-Incorporate PIEZO stage,piezo,no,,Incorpoate a PIEZO stage,"yes,no"
-Open state,piezo_duration,0.4,seconds,Duration of the PIEZO open state,
-Output Accuracy,dp,6,,Output accuracy. Note: change here *or* in time and data output factors. Changes the accuracy for the entire experiment,
-Piezo Frequency factor,piezo_integration,0.00001,,Integration factor,
-Piezo Cycles per print,piezo_cycles,111,,How often to present output during the PIEZO period,
-PzKG,piezo_pkg,0.0,1/h,Goldman K permeability (1-10),
-PzNaG,piezo_pnag,0.0,1/h,Goldman Na permeability (0.8-8),
-PzAG,piezo_pag,50.0,1/h,Goldmanian Anion permeability (50),
-PzCaG,piezo_pcag,10.0,1/h,Goldmanian Ca permeability (100),
+Pz stage no or yes,Pz stage no or yes,no,,Activate PIEZO routine by entering yes,"yes,no"
+PzOpen state,PzOpen state,0.4,seconds,Duration of the PIEZO open state,
+Accuracy,Accuracy,6,,Output accuracy. Note: change here *or* in time and data output factors. Changes the accuracy for the entire experiment,
+PzFrequencyFactor,PzFrequencyFactor,0.00001,,Sets the duration of each iteration interval in Pz,
+Pzcyclesperprint,Pzcyclesperprint,111,Cycles/output,Sets number of cycles between data output points,
+PzKG,piezo_pkg,0.0,1/h,K permeability through Pz channels,
+PzNaG,piezo_pnag,0.0,1/h,Na permeability through Pz channels,
+PzAG,piezo_pag,50.0,1/h,A permeability through Pz channels,
+PzCaG,piezo_pcag,10.0,1/h,Ca permeability through Pz channels,
 PMCA inhibition,PMCA inhibition,0,,,
 Transit cell volume fraction,Transit cell volume fraction,0.9,,Cell volume fraction during Piezo transition,
 Piezo JS Inhibition/Stimulation,Piezo JS Inhibition/Stimulation,0,%,Piezo specific Jacobs-Stewart cycle stimulation-inhibition factor,

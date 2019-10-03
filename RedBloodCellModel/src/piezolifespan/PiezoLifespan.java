@@ -141,9 +141,9 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 //		mediumOptions = new HashMap<String,String>();
 
 		DSOptions.put("Time", "1.0");
-		DSOptions.put("Incorporate PIEZO stage","yes");
+		DSOptions.put("Pz stage no or yes","yes");
 //		DSOptions.put("piezo_start","0.0"); // is this used
-		DSOptions.put("Output Accuracy","6");
+		DSOptions.put("Accuracy","6");
 		DSOptions.put("PzCaG", "70");
 		
 //		Double stage_time = 1.0; // minutes
@@ -152,7 +152,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 //		DSOptions.put("piezo_recovery",""+recovery_time);
 //		DSOptions.put("Open state",""+0.4);
 		
-		DSOptions.put("Piezo Frequency factor", "0.001");
+		DSOptions.put("PiezoFrequencyFactor", "0.001");
 //		DSOptions.put("Piezo Cycles per print","111");
 //		DSOptions.put("PzKG","0.0");
 //		DSOptions.put("PzNaG", "0.0");
@@ -172,13 +172,13 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 //		DSOptions.put("Restored Medium Ca","1.0");
 		
 		RSOptions.put("Na/K pump Na efflux","-3.2");
-		RSOptions.put("[K]i","145.0");
-		RSOptions.put("[Na]i","5.0");
-		RSOptions.put("[A]i","95.0");
-		RSOptions.put("Cell water content","0.85");
+		RSOptions.put("CK","145.0");
+		RSOptions.put("CNa","5.0");
+		RSOptions.put("CA","95.0");
+		RSOptions.put("Vw","0.85");
 		RSOptions.put("PMCA Fmax","12.0");
 		RSOptions.put("PKGardosMax","30.0");
-		RSOptions.put("KCa(Gardos channel)","0.01");
+		RSOptions.put("KCa Gardos channel","0.01");
 										
 
 	}

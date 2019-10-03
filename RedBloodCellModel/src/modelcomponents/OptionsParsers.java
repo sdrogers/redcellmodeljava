@@ -12,17 +12,17 @@ public class OptionsParsers {
 			usedoptions.add("Time");
 		}
 		
-		temp = options.get("Output Accuracy");
+		temp = options.get("Accuracy");
 		if(temp != null) {
 			model.setDp(Integer.parseInt(temp));
-			usedoptions.add("Output Accuracy");
+			usedoptions.add("Accuracy");
 		}
 		
 		model.setI_43(model.getIntegration_interval_factor());
-		temp = options.get("Frequency Factor");
+		temp = options.get("FrequencyFactor");
 		if(temp != null) {
 			model.setIntegration_interval_factor(Double.parseDouble(temp));
-			usedoptions.add("Frequency Factor");
+			usedoptions.add("FrequencyFactor");
 		}
 		
 		temp = options.get("Regular dt");
@@ -42,10 +42,10 @@ public class OptionsParsers {
 			model.setDelta_time(Double.parseDouble(temp));
 			usedoptions.add("dt");
 		}
-		temp = options.get("Cycles per print");
+		temp = options.get("Cyclesperprint(epochs)");
 		if(temp != null) {
 			model.setCycles_per_print(Integer.parseInt(temp));
-			usedoptions.add("Cycles per print");
+			usedoptions.add("Cyclesperprint(epochs)");
 		}
 	}
 	public static void set_transport_changes_options(HashMap<String,String> options, ArrayList<String> usedoptions,RBC_model model) {

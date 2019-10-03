@@ -19,11 +19,12 @@ import utilities.ExperimentalSettings;
 
 public class ExperimentScreen extends JFrame implements ActionListener {
 	private ExperimentalSettings experimentalSettings; 
-	private JButton addButton,writeSettingsButton,runButton,closeButton;
+	private JButton addButton,writeSettingsButton,runButton,closeButton,helpButton;
 	private JPanel dSPanel;
 	private HashMap<DSSettings,StagePanel> panelSettings;
 	private CommentsPanel cp;
 	private RSPanel r;
+	private HelpScreen helpScreen;
 	public ExperimentScreen(ExperimentalSettings es) {
 		this.panelSettings = new HashMap<DSSettings,StagePanel>();
 		this.experimentalSettings = es;
@@ -73,9 +74,16 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 		runButton = new JButton("Run Model");
 		runButton.addActionListener(this);
 		buttonPanel.add(runButton);
+		
+		helpButton = new JButton("Help");
+		helpButton.addActionListener(this);
+		buttonPanel.add(helpButton);
+		
 		mainPanel.add(buttonPanel,BorderLayout.SOUTH);
 		
 		this.setVisible(true);
+		
+		helpScreen = new HelpScreen();
 	}
 	public void deleteStage(DSSettings ds) {
 		this.experimentalSettings.remove(ds);
@@ -130,6 +138,8 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 			// reset the experiment
 			this.setVisible(false);
 			this.dispose();
+		}else if(e.getSource() == helpButton) {
+			helpScreen.setVisible(true);
 		}
 	}
 	private boolean checkOptions() {

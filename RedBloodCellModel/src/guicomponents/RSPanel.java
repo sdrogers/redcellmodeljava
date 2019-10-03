@@ -10,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import utilities.ExperimentalSettings;
+import utilities.HelpText;
 import utilities.Updateable;
 
 import java.util.HashMap;
@@ -21,6 +22,7 @@ public class RSPanel extends JPanel implements ActionListener,Updateable{
 	private JTextArea oArea;
 	private ParameterSelector ps;
 	private JTextArea rSArea;
+	private HelpScreen helpScreen;
 	public RSPanel(ExperimentalSettings es) {
 		this.experimentalSettings = es;
 		JPanel contentPanel = new JPanel(new BorderLayout());
@@ -33,6 +35,12 @@ public class RSPanel extends JPanel implements ActionListener,Updateable{
 		ps = new ParameterSelector(fileName,es.getRSOptions(),this);
 		
 		contentPanel.add(ps,BorderLayout.CENTER);
+		
+//	JPanel infoPanel = new JPanel();
+//		JTextArea infoText = new JTextArea(50,5);
+//		infoPanel.add(infoText);
+//		contentPanel.add(infoPanel,BorderLayout.SOUTH);
+		
 //		JPanel leftPanel = new JPanel(new GridLayout(0,1));
 //		leftPanel.add(new JScrollPane(rSArea));
 		

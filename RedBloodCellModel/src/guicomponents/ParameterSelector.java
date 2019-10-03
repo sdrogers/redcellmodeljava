@@ -99,6 +99,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		removeButton.addActionListener(this);
 		bottomPanel.add(removeButton);
 		
+		
 		descriptionField = new JTextArea();
 		descriptionField.setText("Click on an entry to see a description");
 		descriptionField.setEditable(false);

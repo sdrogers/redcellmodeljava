@@ -424,7 +424,14 @@ public class RBC_model implements Serializable {
 		
 
 		// This stays the same?
-		this.piezo.setOldPMCA(this.capump.getDefaultFcapm());
+
+		/* 
+		 * Change in following line to save the old PMCA as whatever
+		 * the current value is, for replacing after transit period
+		 */
+		//this.piezo.setOldPMCA(this.capump.getDefaultFcapm());
+		this.piezo.setOldPMCA(this.capump.getFcapm());
+		
 		Double fac = (100.0 - this.piezo.getPmca())/100.0;
 		this.capump.setFcapm(this.capump.getDefaultFcapm() * fac);
 		

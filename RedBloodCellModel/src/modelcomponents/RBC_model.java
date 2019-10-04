@@ -554,8 +554,8 @@ public class RBC_model implements Serializable {
 			HashMap<String,String> tempOptions = new HashMap<String,String>();
 			tempOptions.put("MMg", ""+this.piezo.getRestoreMg());
 			tempOptions.put("MCa", ""+this.piezo.getRestoreCa());
-			tempOptions.put("Medium pH", ""+this.piezo.getRestorepH());
-			tempOptions.put("HEPES-Na concentration",""+this.piezo.getRestoreHepesNa());
+			tempOptions.put("pHo", ""+this.piezo.getRestorepH());
+			tempOptions.put("MB",""+this.piezo.getRestoreHepesNa());
 			
 			
 			
@@ -566,7 +566,7 @@ public class RBC_model implements Serializable {
 			}
 			if(this.piezo.getRestoreK() > 0) {
 				Double deltaK = this.piezo.getRestoreK() - this.getMediumKConcentration();
-				tempOptions.put("KCl add/remove",""+ deltaK);
+				tempOptions.put("KCl add/remove",""+deltaK);
 				
 			}
 			

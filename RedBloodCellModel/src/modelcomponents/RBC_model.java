@@ -1037,12 +1037,12 @@ public class RBC_model implements Serializable {
 					piezo.setPiezoFraction(Double.parseDouble(temp));
 				}
 				
-				temp = options.get("Piezo JS Inhibition/Stimulation");
+				temp = options.get("JS inhib/stim");
 				if(temp != null) {
 					Double jsfactor = Double.parseDouble(temp);
 					jsfactor = (100.0 - jsfactor)/100.0;
 					piezo.setPiezoJS(jsfactor);
-					usedoptions.add("Piezo JS Inhibition/Stimulation");
+					usedoptions.add("JS inhib/stim");
 				}
  				temp = options.get("Restore Medium");
  				if(temp != null) {

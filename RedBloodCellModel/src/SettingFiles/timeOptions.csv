@@ -1,7 +1,5 @@
 Alternative Name,Parameter name,default value,Units,Description,"Allowed values (if blank, a number is assumed)"
 Time,Time,0,minutes,Sets the duration of selected DS,
 FrequencyFactor,FrequencyFactor,0.01,,Sets the duration of each iteration interval,
-Regular dt,compute_delta_time,no,,Whether or not to use a fixed time step,"yes,no"
-dt,delta_time,0.1,minutes,Sets duration of time interval when regulartimeintervals is set to yes,
 Cyclesperprint(epochs),Cyclesperprint(epochs),777,Cycles/output,Sets number of cycles between data outputs ,
 Accuracy,Accuracy,4,decimals,The number of decimal places in the output csv file,

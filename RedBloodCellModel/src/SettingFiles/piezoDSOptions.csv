@@ -8,7 +8,7 @@ PzKG,piezo_pkg,0.3,1/h,K permeability through Pz channels,
 PzNaG,piezo_pnag,0.15,1/h,Na permeability through Pz channels,
 PzAG,piezo_pag,10.0,1/h,A permeability through Pz channels,
 PzCaG,piezo_pcag,1.0,1/h,Ca permeability through Pz channels,
-PMCA inhibition,PMCA inhibition,0,,,
+PMCA inhibition,PMCA inhibition,0,%,Sets % PMCA inhibition during transit,
 Transit cell volume fraction,Transit cell volume fraction,0.9,,Cell volume fraction during Piezo transition,
-Piezo JS Inhibition/Stimulation,Piezo JS Inhibition/Stimulation,0,%,Piezo specific Jacobs-Stewart cycle stimulation-inhibition factor,
-Restore Medium,Restore Medium,no,,Restore medium at start of inter-transit period,"yes,no"
+JS inhib/stim,JS inhib/stim,0,%,Sets % inhibition during transit; -x/100 for stimulation factor,
+Restore Medium,Restore Medium,no,,Restores RS medium composition for intertransit periods,"yes,no"

@@ -1,7 +1,7 @@
 Alternative Name,Parameter/Variable Name,Default Value,Units,Description,Allowed Values
 Pz stage no or yes,Pz stage no or yes,no,,Activate PIEZO routine by entering yes,"yes,no"
 PzOpen state,PzOpen state,0.4,seconds,Open state duration during capillary transit,
-Accuracy,Accuracy,6,,Output accuracy. Note: change here *or* in time and data output factors. Changes the accuracy for the entire experiment,
+Accuracy,Accuracy,",,Output accuracy. Note: change here *or* in time and data output factors. Changes the accuracy for the entire experiment,
 PzFrequencyFactor,PzFrequencyFactor,0.00001,,Duration of each iteration interval in Pz,
 Pzcyclesperprint,Pzcyclesperprint,111,Cycles/output,Number of cycles between data output points,
 PzK,piezo_pkg,0.0,1/h,K permeability through Pz channels,

@@ -144,46 +144,23 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 	private void makeOptionsDefault() {
 		DSOptions = new HashMap<String,String>();
 		RSOptions = new HashMap<String,String>();
-//		mediumOptions = new HashMap<String,String>();
 
 		DSOptions.put("Time", "1.0");
 		DSOptions.put("Pz stage no or yes","yes");
-//		DSOptions.put("piezo_start","0.0"); // is this used
 		DSOptions.put("Accuracy","6");
 		DSOptions.put("PzCaG", "70");
 		
-//		Double stage_time = 1.0; // minutes
-//		Double open_time = 4.0*(1.0/60.0); // 4.0 seconds
-//		Double recovery_time = stage_time - open_time - 1e-6;
-//		DSOptions.put("piezo_recovery",""+recovery_time);
-//		DSOptions.put("Open state",""+0.4);
 		
 		DSOptions.put("PzFrequencyFactor", "0.001");
-//		DSOptions.put("Piezo Cycles per print","111");
-//		DSOptions.put("PzKG","0.0");
-//		DSOptions.put("PzNaG", "0.0");
-//		DSOptions.put("PzAG","50.0");
-//		DSOptions.put("PzCaG","10.0");
-//		DSOptions.put("PMCA inhibition","0.0");
-//		DSOptions.put("Transit cell volume fraction","0.9");
-//		DSOptions.put("Piezo JS Inhibition/Stimulation","0.0");
 		DSOptions.put("Restore Medium","yes");
 		
 		
-//		DSOptions.put("Restored Medium HEPES-Na concentration","10.0");
-//		DSOptions.put("Restored Medium pH","7.4");
-//		DSOptions.put("Restored Medium Na","145.0");
-//		DSOptions.put("Restored Medium K","5.0");
-//		DSOptions.put("Restored Medium Mg","0.2");
-//		DSOptions.put("Restored Medium Ca","1.0");
 		
 		RSOptions.put("Na/K pump Na efflux","-3.2");
 		RSOptions.put("CK","145.0");
 		RSOptions.put("CNa","5.0");
 		RSOptions.put("CA","95.0");
 		RSOptions.put("Vw","0.85");
-//		RSOptions.put("PMCA Fmax","12.0");
-//		RSOptions.put("PKGardosMax","30.0");
 		RSOptions.put("KCa Gardos channel","0.01");
 										
 
@@ -261,7 +238,6 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 					ResultHash finalPiezoResult = rbc.getFinalPiezoResult();
 					piezoResults.add(finalPiezoResult);
 					ResultHash r = rbc.getLastResult();
-//					r.setItem("TransitHct", rbc.getFinalPiezoHct());
 					publish(r);
 					cycle_counter = 0;
 				}
@@ -350,6 +326,9 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 				}
 				String[] tokens = fName.split("[.]");
 				String transitFName = tokens[0] + "_transit." + tokens[1];
+				if(!transitFName.endsWith(".csv")) {
+					transitFName += ".csv";
+				}
 				rbc.writeCsv(fName);
 				rbc.writeCsv(transitFName,piezoResults);
 			}

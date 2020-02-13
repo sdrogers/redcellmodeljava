@@ -219,11 +219,11 @@ public class RBC_model implements Serializable {
 		piezoPassiveca = new PiezoPassiveCa(cell,medium,piezoGoldman);
 		capump = new CaPumpMg2(cell,medium,getNapump());
 		
-		A_1 = -10.0; // Net charge on haemoglobin
+		setA_1(-10.0); // Net charge on haemoglobin
 		A_2 = 0.0645; // verial coefficients of osmotic coefficient of haemo (fhb)
 		A_3 = 0.0258; // verial coefficients of osmotic coefficient of haemo (fhb)
 		// private Double A_4 = 7.2;
-		pit0 = 7.2; // iso-electric point of haemoglobin - constant
+		setPit0(7.2); // iso-electric point of haemoglobin - constant
 		A_5 = 2.813822508658947e-08; // dissociation constant of protein buffer in medium (KB)
 		integration_interval_factor = 0.01; // Integration factor
 		A_7 = 0.0; // Initial haematocrit
@@ -736,9 +736,9 @@ public class RBC_model implements Serializable {
 		this.cell.Cat.setAmount(this.cell.Cat.getAmount() + this.delta_Ca);
 
 		// Cell pH and cell proton concentration
-		this.cell.setpH(this.I_74 + this.nHb/this.A_1);
+		this.cell.setpH(this.I_74 + this.nHb/this.getA_1());
 		this.cell.H.setConcentration(Math.pow(10,(-this.cell.getpH())));
-		this.nHb = this.A_1*(this.cell.getpH()-this.I_74);
+		this.nHb = this.getA_1()*(this.cell.getpH()-this.I_74);
 		this.VV = (1-this.A_11) + this.Vw;
 		this.mchc = this.getHb_content()/this.VV;
 		this.density = (this.getHb_content()/100 + this.Vw)/this.VV;
@@ -872,8 +872,8 @@ public class RBC_model implements Serializable {
 			System.out.println("Setting up the RS");
 			OptionsParsers.naPumpScreenRS(rsoptions,usedoptions,this);
 			OptionsParsers.cellwaterscreenRS(rsoptions, usedoptions, this);
-			this.cellanionprotonscreenRS(rsoptions, usedoptions);
-			this.chargeandpiscreenRS(rsoptions, usedoptions);
+			OptionsParsers.cellanionprotonscreenRS(rsoptions, usedoptions, this);
+			OptionsParsers.chargeandpiscreenRS(rsoptions, usedoptions, this);
 			
 			this.cycles_per_print = 777;
 			this.Vw = this.getI_79();
@@ -908,7 +908,7 @@ public class RBC_model implements Serializable {
 			for(String option: rsoptions.keySet()) {
 				if(!usedoptions.contains(option)) {
 					System.out.println(option);
-					JOptionPane.showMessageDialog(null,"Didn't recognise " + option + " for RS - tell Simon!");
+					JOptionPane.showMessageDialog(null,"Didn't recognise " + option + " for RS.");
 				}
 			}
 			
@@ -1094,8 +1094,8 @@ public class RBC_model implements Serializable {
 		if(temp != null) {
 			this.temp_celsius = Double.parseDouble(temp);
 			usedoptions.add("Temperature");
-			Double piold = this.pit0 - (0.016*defaultTemp);
-			Double pinew = this.pit0 - (0.016*this.temp_celsius);
+			Double piold = this.getPit0() - (0.016*defaultTemp);
+			Double pinew = this.getPit0() - (0.016*this.temp_celsius);
 			this.I_74 = pinew;
 			Double newphc = pinew - piold + this.cell.getpH();
 			this.cell.setpH(newphc);
@@ -1204,18 +1204,18 @@ public class RBC_model implements Serializable {
 		
 		temp = options.get("Hb oxy or deoxy");
 		if(temp != null) {
-			this.I_67 = this.pit0; // Store old value
+			this.I_67 = this.getPit0(); // Store old value
 			usedoptions.add("Hb oxy or deoxy");
 			if(temp.equals("Oxy")) {
-				this.pit0 = 7.2;
+				this.setPit0(7.2);
 			}else if(temp.equals("Deoxy")) {
-				this.pit0 = 7.5;
+				this.setPit0(7.5);
 			}else {
-				this.pit0 = 7.2;
+				this.setPit0(7.2);
 			}
-			this.cell.setpH(this.pit0 - this.I_67 + this.cell.getpH());
+			this.cell.setpH(this.getPit0() - this.I_67 + this.cell.getpH());
 			this.cell.H.setConcentration(Math.pow(10.0, -this.cell.getpH()));
-			this.I_74 = this.pit0 - (0.016*this.temp_celsius);
+			this.I_74 = this.getPit0() - (0.016*this.temp_celsius);
 			temp = options.get("deoxy");
 			if(temp == "Y") {
 				this.atp = this.atp / 2.0;
@@ -1865,9 +1865,9 @@ public class RBC_model implements Serializable {
 		// Osmotic coeficient of Hb
 		this.fHb = 1 + this.A_2*this.cell.Hb.getAmount()/this.Vw + this.A_3*Math.pow(this.cell.Hb.getAmount()/this.Vw,2.0);
 		// physiological pI at 37oC;
-		this.I_74 = this.pit0 - (0.016*37);
+		this.I_74 = this.getPit0() - (0.016*37);
 		// net charge on Hb (Eq/mole)
-		this.nHb = this.A_1*(this.cell.getpH() - this.I_74);
+		this.nHb = this.getA_1()*(this.cell.getpH() - this.I_74);
 	}
 	
 	
@@ -1892,43 +1892,6 @@ public class RBC_model implements Serializable {
 	}
 	
 	
-	
-	public void cellanionprotonscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
-		String temp = rsoptions.get("CA");
-		if(temp != null) {
-			this.cell.A.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("CA");
-		}
-		
-		
-	}
-	
-	public void chargeandpiscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
-		String temp = rsoptions.get("a");
-		if(temp != null) {
-			this.A_1 = Double.parseDouble(temp);
-			usedoptions.add("a");
-		}
-		temp = rsoptions.get("pi");
-		if(temp != null) {
-			this.pit0 = Double.parseDouble(temp);
-			usedoptions.add("pi");
-		}
-		
-		// New option added for reduced RS, March 18
-//		temp = rsoptions.get("hb-choice");
-		temp = rsoptions.get("Hb A or S");
-		if(temp != null) {
-			if(temp == "A") {
-				this.A_1 = -1.0;
-				this.pit0 = 7.2;
-			}else if(temp == "S") {
-				this.A_1 = -8.0;
-				this.pit0 = 7.4;
-			}
-			usedoptions.add("Hb A or S");
-		}
-	}
 	
 	public void setmgdefaults() {
 		this.cell.Mgt.setAmount(2.5);
@@ -2504,5 +2467,17 @@ public class RBC_model implements Serializable {
 	}
 	public void setVlysis(Double vlysis) {
 		this.vlysis = vlysis;
+	}
+	public Double getA_1() {
+		return A_1;
+	}
+	public void setA_1(Double a_1) {
+		A_1 = a_1;
+	}
+	public Double getPit0() {
+		return pit0;
+	}
+	public void setPit0(Double pit0) {
+		this.pit0 = pit0;
 	}
 }

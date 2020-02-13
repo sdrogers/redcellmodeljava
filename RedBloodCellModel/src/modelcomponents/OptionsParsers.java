@@ -163,7 +163,38 @@ public class OptionsParsers {
 				model.setVlysis(Double.parseDouble(temp));
 				usedoptions.add("lytic-cell-water");
 			}
-			
+		}
+	}
+	public static void cellanionprotonscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions, RBC_model model) {
+		String temp = rsoptions.get("CA");
+		if(temp != null) {
+			model.cell.A.setConcentration(Double.parseDouble(temp));
+			usedoptions.add("CA");
+		}
+	}
+	public static void chargeandpiscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions, RBC_model model) {
+		String temp = rsoptions.get("a");
+		if(temp != null) {
+			model.setA_1(Double.parseDouble(temp));
+			usedoptions.add("a");
+		}
+		temp = rsoptions.get("pi");
+		if(temp != null) {
+			model.setPit0(Double.parseDouble(temp));
+			usedoptions.add("pi");
+		}
+		
+		// New option added for reduced RS, March 18
+		temp = rsoptions.get("Hb A or S");
+		if(temp != null) {
+			if(temp == "A") {
+				model.setA_1(-1.0);
+				model.setPit0(7.2);
+			}else if(temp == "S") {
+				model.setA_1(-8.0);
+				model.setPit0(7.4);
+			}
+			usedoptions.add("Hb A or S");
 		}
 	}
 }

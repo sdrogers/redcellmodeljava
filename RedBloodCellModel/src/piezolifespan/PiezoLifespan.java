@@ -38,7 +38,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
             "MMgt","MMgf","FNaP","FACo","FKCo","FNaCo","FCaP","FKP","FNa","FKGgardos","FKG","FK",
             "FA","FH","FCa","FW","FNaG","FAG","FHG","FCaG","FAJS","FHJS","FA23Ca","FA23Mg",
             "EA","EH","EK","ENa","FzKG","FzNaG","FzAG","FzCaG","fHb*CHb","nX","Msucr","Mgluc-",
-            "Mgluc+","EN test"};//,"TransitHct","FzKGTransit","FzNaGTransit","FzAGTransit","FzCaGTransit"};
+            "Mgluc+","EN test"};
 	
 	
 	private JButton runButton,stopButton,saveButton,changePiezoButton,rsButton;
@@ -127,8 +127,15 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		JPanel justPlots = new JPanel(new GridLayout(2,2));
 		for(int i=0;i<4;i++) {
 			plot[i] = new Plot2DPanel("SOUTH");
+			plot[i].getAxis(0).setLabelText("Time");
 			justPlots.add(plot[i]);
 		}
+		
+		plot[0].getAxis(1).setLabelText("RCV");
+		plot[1].getAxis(1).setLabelText("CK-CA-CNa");
+		plot[2].getAxis(1).setLabelText("EK");
+		plot[3].getAxis(1).setLabelText("pHi");
+		
 		outputPanel.add(justPlots);
 		mainPanel.add(outputPanel,BorderLayout.CENTER);
 		

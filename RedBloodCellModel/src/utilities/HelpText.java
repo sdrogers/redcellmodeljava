@@ -48,9 +48,7 @@ public class HelpText {
 			"<li>Double click on the “Incorporate PIEZO stage: no” and enter “yes”</li>" + 
 			"<li>This brings up a predesigned DS stage with the following defaults</li>" + 
 			"<ol><li>Incorporate PIEZO stage: yes</li>" + 
-			"<li>Time: 5 (min)</li>" + 
 			"<li>Open state: 0.4 (s)</li>" + 
-			"<li>Pz accuracy: 6</li>" + 
 			"<li>Pz frequency factor: 1e-5</li>" + 
 			"<li>Pz cycles per print: 111</li>" + 
 			"<li>PzK: 0 (1/h)</li>" + 

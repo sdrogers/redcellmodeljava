@@ -35,13 +35,13 @@ public class RBC_model implements Serializable {
 	private Cotransport cotransport;
 	NaPump napump;
 	private CarrierMediated carriermediated;
-	private Goldman goldman;
+	Goldman goldman;
 	private PiezoGoldman piezoGoldman;
 	private A23187 a23;
 	private WaterFlux water;
-	private PassiveCa passiveca;
+	PassiveCa passiveca;
 	private PiezoPassiveCa piezoPassiveca;
-	private CaPumpMg2 capump;
+	CaPumpMg2 capump;
 	
 	// Messy variables. One day these will be fixed.
 	private Double A_1;
@@ -288,7 +288,7 @@ public class RBC_model implements Serializable {
 		this.n_its = 0;
 		this.T_6 = 0.0;
 		
-		this.Vw = 0.0;
+		this.setVw(0.0);
 		this.VV = 0.0;
 		this.fraction = 0.0;
 		this.mchc = 0.0;
@@ -329,12 +329,12 @@ public class RBC_model implements Serializable {
 		
 		this.pka = 0.0;
 		this.pkhepes = 0.0;
-		this.benz2 = 0.0;
+		this.setBenz2(0.0);
 		this.benz2k = 0.0;
-		this.cbenz2 = 0.0;
-		this.b1ca = 0.0;
-		this.b1cak = 0.0;
-		this.alpha = 0.0;
+		this.setCbenz2(0.0);
+		this.setB1ca(0.0);
+		this.setB1cak(0.0);
+		this.setAlpha(0.0);
 		this.setAtp(1.2);
 		this.setDpgp(0.0);
 		this.BufferType = "HEPES";
@@ -665,7 +665,7 @@ public class RBC_model implements Serializable {
 
 
 			this.totalionfluxes();
-			this.water.compute_flux(this.fHb, this.cbenz2, this.buffer_conc, this.edgto, this.I_18);
+			this.water.compute_flux(this.fHb, this.getCbenz2(), this.buffer_conc, this.edgto, this.I_18);
 			
 			MileStone nextMileStone = mileStones.get(mileStonePos);
 			if(this.integrationInterval(nextMileStone)) { // cycle_count is increased here
@@ -679,14 +679,14 @@ public class RBC_model implements Serializable {
 			
 			this.updateContents();
 			
-			this.cell.Cat.setConcentration(this.cell.Cat.getAmount()/this.Vw);
-			this.cbenz2 = this.benz2/this.Vw;
+			this.cell.Cat.setConcentration(this.cell.Cat.getAmount()/this.getVw());
+			this.setCbenz2(this.getBenz2()/this.getVw());
 			
 			this.chbetc();
 			
 			this.rA = this.medium.A.getConcentration() / this.cell.A.getConcentration();
 			this.rH = this.cell.H.getConcentration() / this.medium.H.getConcentration();
-			if(this.Vw > this.getVlysis()) {
+			if(this.getVw() > this.getVlysis()) {
 				// Cells have been lysed
 				break;
 			}
@@ -722,9 +722,9 @@ public class RBC_model implements Serializable {
 		return total_cycle_count;
 	}
 	private void updateContents() {
-		Double Vw_old = this.Vw;
-		this.Vw = this.Vw + this.delta_Water;
-		this.cell.Hb.setConcentration(this.cell.Hb.getAmount()/this.Vw);
+		Double Vw_old = this.getVw();
+		this.setVw(this.getVw() + this.delta_Water);
+		this.cell.Hb.setConcentration(this.cell.Hb.getAmount()/this.getVw());
 		this.fHb = 1.0 + this.A_2*this.cell.Hb.getConcentration()+this.A_3*Math.pow(this.cell.Hb.getConcentration(),2);
 		this.cell.Na.setAmount(this.cell.Na.getAmount() + this.delta_Na);
 		this.cell.K.setAmount(this.cell.K.getAmount() + this.delta_K);
@@ -739,13 +739,13 @@ public class RBC_model implements Serializable {
 		this.cell.setpH(this.I_74 + this.nHb/this.getA_1());
 		this.cell.H.setConcentration(Math.pow(10,(-this.cell.getpH())));
 		this.nHb = this.getA_1()*(this.cell.getpH()-this.I_74);
-		this.VV = (1-this.A_11) + this.Vw;
+		this.VV = (1-this.A_11) + this.getVw();
 		this.mchc = this.getHb_content()/this.VV;
-		this.density = (this.getHb_content()/100 + this.Vw)/this.VV;
+		this.density = (this.getHb_content()/100 + this.getVw())/this.VV;
 		this.fraction = this.A_7*this.VV;
 
 		// External concentrations
-		Double I_30 = 1 + (this.Vw-Vw_old)*this.A_8;
+		Double I_30 = 1 + (this.getVw()-Vw_old)*this.A_8;
 		this.medium.Na.setConcentration(this.medium.Na.getConcentration()*I_30 - this.delta_Na*this.A_8);
 		this.medium.K.setConcentration(this.medium.K.getConcentration()*I_30 - this.delta_K*this.A_8);
 		this.medium.A.setConcentration(this.medium.A.getConcentration()*I_30 - this.delta_A*this.A_8);
@@ -778,9 +778,9 @@ public class RBC_model implements Serializable {
 		}
 
 		// Cell concentrations and external concentrations
-		this.cell.Na.setConcentration(this.cell.Na.getAmount()/this.Vw);
-		this.cell.K.setConcentration(this.cell.K.getAmount()/this.Vw);
-		this.cell.A.setConcentration(this.cell.A.getAmount()/this.Vw);
+		this.cell.Na.setConcentration(this.cell.Na.getAmount()/this.getVw());
+		this.cell.K.setConcentration(this.cell.K.getAmount()/this.getVw());
+		this.cell.A.setConcentration(this.cell.A.getAmount()/this.getVw());
 
 		// compute mgf
 		this.cell.Mgf.setConcentration(this.newton_raphson(new Eqmg(),0.02,0.0001,0.00001,100,0, false));
@@ -858,14 +858,14 @@ public class RBC_model implements Serializable {
 			String temp = rsoptions.get("NaCl");
 			if(temp != null) {
 				this.cell.Na.setConcentration(Double.parseDouble(temp));
-				this.cell.Na.setAmount(Double.parseDouble(temp)*this.Vw);
+				this.cell.Na.setAmount(Double.parseDouble(temp)*this.getVw());
 				usedoptions.add("NaCl");
 			}
 
 			temp = rsoptions.get("KCl");
 			if(temp != null) {
 				this.cell.K.setConcentration(Double.parseDouble(temp));
-				this.cell.K.setAmount(Double.parseDouble(temp)*this.Vw);
+				this.cell.K.setAmount(Double.parseDouble(temp)*this.getVw());
 				usedoptions.add("KCl");
 			}
 			
@@ -876,7 +876,7 @@ public class RBC_model implements Serializable {
 			OptionsParsers.chargeandpiscreenRS(rsoptions, usedoptions, this);
 			
 			this.cycles_per_print = 777;
-			this.Vw = this.getI_79();
+			this.setVw(this.getI_79());
 			this.fraction = 1e-4; 
 			this.defaultFraction = 1e-4;
 			this.medium.setpH(7.4);
@@ -892,8 +892,7 @@ public class RBC_model implements Serializable {
 			this.setcadefaults();
 			
 			OptionsParsers.mgbufferscreenRS(rsoptions, usedoptions,this);
-
-			this.cabufferscreenRS(rsoptions, usedoptions);
+			OptionsParsers.cabufferscreenRS(rsoptions, usedoptions,this);
 			
 			this.computeRS();
 			
@@ -1730,7 +1729,7 @@ public class RBC_model implements Serializable {
 		
 		// Computes n_X
 		// Non-protonizable charge on X (nX)
-		this.A_10 = (this.cell.A.getAmount() + 2*this.benz2 - (this.cell.Na.getAmount() + this.cell.K.getAmount() + 2*this.cell.Mgt.getAmount() + 2*this.cell.Cat.getAmount()+this.nHb*this.cell.Hb.getAmount()))/this.cell.X.getAmount();
+		this.A_10 = (this.cell.A.getAmount() + 2*this.getBenz2() - (this.cell.Na.getAmount() + this.cell.K.getAmount() + 2*this.cell.Mgt.getAmount() + 2*this.cell.Cat.getAmount()+this.nHb*this.cell.Hb.getAmount()))/this.cell.X.getAmount();
 
 		// Net charge on Hb
 		this.Q_4 = this.nHb*this.cell.Hb.getAmount();
@@ -1792,14 +1791,14 @@ public class RBC_model implements Serializable {
 	}
 	
 	private void chbetc() {
-		this.cell.Hb.setConcentration(this.cell.Hb.getAmount()/this.Vw);
-		this.cell.Mgt.setConcentration(this.cell.Mgt.getAmount()/this.Vw);
-		this.cell.X.setConcentration(this.cell.X.getAmount()/this.Vw);
-		this.cell.XHbm.setAmount(this.Q_4 + this.A_10*this.cell.X.getAmount() - 2*this.benz2);
-		this.cell.XHbm.setConcentration(this.cell.XHbm.getAmount()/this.Vw);
-		this.cell.COs.setConcentration(this.fHb*this.cell.Hb.getAmount()/this.Vw);
+		this.cell.Hb.setConcentration(this.cell.Hb.getAmount()/this.getVw());
+		this.cell.Mgt.setConcentration(this.cell.Mgt.getAmount()/this.getVw());
+		this.cell.X.setConcentration(this.cell.X.getAmount()/this.getVw());
+		this.cell.XHbm.setAmount(this.Q_4 + this.A_10*this.cell.X.getAmount() - 2*this.getBenz2());
+		this.cell.XHbm.setConcentration(this.cell.XHbm.getAmount()/this.getVw());
+		this.cell.COs.setConcentration(this.fHb*this.cell.Hb.getAmount()/this.getVw());
 		// Concentration of charge on Hb
-		this.cell.Hbpm.setConcentration(this.nHb*this.cell.Hb.getAmount()/this.Vw);
+		this.cell.Hbpm.setConcentration(this.nHb*this.cell.Hb.getAmount()/this.getVw());
 
 		// This line doesn't seem to ever be used?
 		// this.I_12 = this.cell.Na.getConcentration() + this.cell.K.getConcentration() + this.cell.A.getConcentration() + this.fHb*this.cell.Hb.getConcentration() + this.cell.X.getConcentration() + this.mgf + this.caf + this.cbenz2
@@ -1817,8 +1816,8 @@ public class RBC_model implements Serializable {
 				this.fHb*this.cell.Hb.getAmount() + 
 				this.cell.X.getAmount() + 
 				this.cell.Mgt.getAmount() + 
-				(this.cell.Mgf.getConcentration()+this.cell.Caf.getConcentration())*this.Vw
-				+ this.benz2);
+				(this.cell.Mgf.getConcentration()+this.cell.Caf.getConcentration())*this.getVw()
+				+ this.getBenz2());
 		
 		/*
 		 * Added this code here to stop it having zero as the initial value
@@ -1832,7 +1831,7 @@ public class RBC_model implements Serializable {
 				this.cell.X.getConcentration() + 
 				this.cell.Mgf.getConcentration() + 
 				this.cell.Caf.getConcentration() + 
-				this.cbenz2);
+				this.getCbenz2());
 	}
 	
 	private void secureisonoticityRS() {
@@ -1841,19 +1840,19 @@ public class RBC_model implements Serializable {
 		// Ca buffers are within X, only the unbound forms of Mg and Ca participate in
 		// osmotic equilibria within the cell.
 		Double summ = this.medium.Na.getConcentration() + this.medium.K.getConcentration() + this.medium.A.getConcentration() + this.buffer_conc + this.medium.Gluconate.getConcentration() + this.medium.Glucamine.getConcentration() + this.medium.Sucrose.getConcentration() + this.medium.Mgt.getConcentration() + this.medium.Cat.getConcentration();
-		Double sumq = this.cell.Na.getAmount() + this.cell.K.getAmount() + this.cell.A.getAmount() + (this.cell.Mgf.getConcentration()+this.cell.Caf.getConcentration())*this.Vw + this.fHb*this.cell.Hb.getAmount() + this.benz2;
-		this.cell.X.setAmount(this.Vw*summ - sumq);
+		Double sumq = this.cell.Na.getAmount() + this.cell.K.getAmount() + this.cell.A.getAmount() + (this.cell.Mgf.getConcentration()+this.cell.Caf.getConcentration())*this.getVw() + this.fHb*this.cell.Hb.getAmount() + this.getBenz2();
+		this.cell.X.setAmount(this.getVw()*summ - sumq);
 		
 		
 	}
 	
 	private void nakamountsmgcaconcRS() {
 		// Cell amounts of Na,K,and A, and concentrations of Mg and Ca
-		this.cell.Na.setAmount(this.cell.Na.getConcentration()*this.Vw);
-		this.cell.K.setAmount(this.cell.K.getConcentration()*this.Vw);
-		this.cell.A.setAmount(this.cell.A.getConcentration()*this.Vw);
-		this.cell.Mgt.setConcentration(this.cell.Mgt.getAmount()/this.Vw);
-		this.cell.Cat.setConcentration(this.cell.Cat.getAmount()/this.Vw);
+		this.cell.Na.setAmount(this.cell.Na.getConcentration()*this.getVw());
+		this.cell.K.setAmount(this.cell.K.getConcentration()*this.getVw());
+		this.cell.A.setAmount(this.cell.A.getConcentration()*this.getVw());
+		this.cell.Mgt.setConcentration(this.cell.Mgt.getAmount()/this.getVw());
+		this.cell.Cat.setConcentration(this.cell.Cat.getAmount()/this.getVw());
 	}
 	
 	private void cellphetc() {
@@ -1864,7 +1863,7 @@ public class RBC_model implements Serializable {
 		this.Em = -(8.615600000000004e-02)*(273 + this.temp_celsius)*Math.log(this.rA);
 		
 		// Osmotic coeficient of Hb
-		this.fHb = 1 + this.A_2*this.cell.Hb.getAmount()/this.Vw + this.A_3*Math.pow(this.cell.Hb.getAmount()/this.Vw,2.0);
+		this.fHb = 1 + this.A_2*this.cell.Hb.getAmount()/this.getVw() + this.A_3*Math.pow(this.cell.Hb.getAmount()/this.getVw(),2.0);
 		// physiological pI at 37oC;
 		this.I_74 = this.getPit0() - (0.016*37);
 		// net charge on Hb (Eq/mole)
@@ -1887,9 +1886,9 @@ public class RBC_model implements Serializable {
 	}
 	
 	public void computehtRS() {
-		this.VV = (1-this.A_11) + this.Vw;
+		this.VV = (1-this.A_11) + this.getVw();
 		this.mchc = this.getHb_content()/this.VV;
-		this.density = (this.getHb_content()/100.0 + this.Vw)/this.VV;
+		this.density = (this.getHb_content()/100.0 + this.getVw())/this.VV;
 	}
 	
 	
@@ -1899,7 +1898,7 @@ public class RBC_model implements Serializable {
 		this.medium.Mgt.setConcentration(0.2);
 		this.setAtp(1.2);
 		this.setDpgp(15.0);
-		this.VV = (1.0 - this.A_11) + this.Vw;
+		this.VV = (1.0 - this.A_11) + this.getVw();
 		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001,100,0, false);
 		this.cell.Mgf.setConcentration(conc);
 		
@@ -1908,12 +1907,12 @@ public class RBC_model implements Serializable {
 	
 	public void setcadefaults() {
 		this.cell.Cat.setAmount(0.000580);
-		this.cell.Cat.setConcentration(this.cell.Cat.getAmount()/this.Vw);
+		this.cell.Cat.setConcentration(this.cell.Cat.getAmount()/this.getVw());
 		this.medium.Cat.setConcentration(1.0);
-		this.alpha = 0.30;
-		this.b1ca = 0.026;
-		this.b1cak = 0.014;
-		this.benz2 = 0.0;
+		this.setAlpha(0.30);
+		this.setB1ca(0.026);
+		this.setB1cak(0.014);
+		this.setBenz2(0.0);
 		this.benz2k = 5e-5;
 		this.cell.Caf.setConcentration(1.12e-4);
 		
@@ -1925,143 +1924,13 @@ public class RBC_model implements Serializable {
 	}
 	
 	
-	private void cabufferscreenRS(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
-		String temp = rsoptions.get("cato-medium");
-		if(temp != null) {
-			this.medium.Cat.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("cato-medium");
-		} else {
-			this.medium.Cat.setConcentration(1.0);
-		}
-		
-		temp = rsoptions.get("add-ca-buffer");
-		if(temp != null) {
-			this.b1ca = Double.parseDouble(temp);
-			usedoptions.add("add-ca-buffer");
-		} else {
-			this.b1ca = 0.026;
-		}
-		
-		temp = rsoptions.get("kd-of-ca-buffer");
-		if(temp != null) {
-			this.b1cak = Double.parseDouble(temp);
-			usedoptions.add("kd-of-ca-buffer");
-		} else {
-			this.b1cak = 0.014;
-		}
-
-		temp = rsoptions.get("alpha");
-		if(temp != null) {
-			this.alpha = Double.parseDouble(temp);
-			usedoptions.add("alpha");
-		} else {
-			this.alpha = 0.3;
-		}
-
-		temp = rsoptions.get("benz2loaded");
-		if(temp != null) {
-			this.benz2 = Double.parseDouble(temp);
-			usedoptions.add("benz2loaded");
-		} else {
-			this.benz2 = 0.0;
-		}
-		this.cbenz2 = this.benz2/this.Vw;
-
-		temp = rsoptions.get("PMCA Fmax");
-		if(temp != null) {
-			this.capump.setDefaultFcapm(Double.parseDouble(temp));
-			usedoptions.add("PMCA Fmax");
-		} 
-//		else {
-//			this.capump.setFcapm(12.0);
-//		}
-
-		temp = rsoptions.get("k1/2");
-		if(temp != null) {
-			this.capump.setCapk(Double.parseDouble(temp));
-			usedoptions.add("k1/2");
-		} else {
-			this.capump.setCapk(2e-4);
-		}
-		
-		temp = rsoptions.get("hills");
-		if(temp != null) {
-			this.capump.setH1(Double.parseDouble(temp));
-			usedoptions.add("hills");
-		} else {
-			this.capump.setH1(4.0);
-		}
-		
-		temp = rsoptions.get("pump-electro");
-		Integer capstoich;
-		if(temp != null) {
-			capstoich = Integer.parseInt(temp);
-			this.capump.setCah(2-capstoich);
-			usedoptions.add("pump-electro");
-		} else {
-//			capstoich = 2; // Default sets cah to 0 which is 2 protons per Ca
-			// This is now set in the constructor of the Calcium pump
-		}
-		
-		
-		temp = rsoptions.get("h+ki");
-		if(temp != null) {
-			this.capump.setHik(Double.parseDouble(temp));
-			usedoptions.add("h+ki");
-		} else {
-			this.capump.setHik(4e-7);
-		}
-		
-		temp = rsoptions.get("Mg2+K1/2");
-		if(temp != null) {
-			this.capump.setCapmgk(Double.parseDouble(temp));
-			usedoptions.add("Mg2+K1/2");
-		} else {
-			this.capump.setCapmgk(0.1);
-		}
-		
-		temp = rsoptions.get("PCaG");
-		if(temp != null) {
-			this.passiveca.setFcalm(Double.parseDouble(temp));
-			usedoptions.add("PCaG");
-		} 
-//		else {
-//			this.passiveca.setFcalm(0.05);
-//		}
-		
-		
-		temp = rsoptions.get("PK at Ca2+ saturation");
-		if(temp != null) {
-			this.goldman.setDefaultPkm(Double.parseDouble(temp));
-			usedoptions.add("PK at Ca2+ saturation");
-		} 
-//		else {
-//			this.goldman.setPkm(30.0);
-//		}
-		
-		
-		temp = rsoptions.get("K1/2 for Ca2+ activation");
-		if(temp != null) {
-			this.goldman.setPkcak(Double.parseDouble(temp));
-			usedoptions.add("K1/2 for Ca2+ activation");
-		}
-//		else {
-//			this.goldman.setPkcak(1e-2);
-//		}
-		if(this.benz2 != 0) {
-			this.cell.Caf.setConcentration(1e-8);
-			this.canr();
-		}
-		
-		
-	}
 	
-	private void canr() {
+	void canr() {
 		this.cell.Caf.setConcentration(1000.0*this.cell.Caf.getConcentration());
 		this.cell.Cat.setAmount(1000.0*this.cell.Cat.getAmount());
-		this.b1ca = this.b1ca * 1000.0;
-		this.b1cak = this.b1cak * 1000.0;
-		this.benz2 = this.benz2 * 1000.0;
+		this.setB1ca(this.getB1ca() * 1000.0);
+		this.setB1cak(this.getB1cak() * 1000.0);
+		this.setBenz2(this.getBenz2() * 1000.0);
 		this.benz2k = this.benz2k * 1000.0;
 //		System.out.println();
 //		System.out.println();
@@ -2076,9 +1945,9 @@ public class RBC_model implements Serializable {
 		
 		this.cell.Caf.setConcentration(this.cell.Caf.getConcentration()/1000.0);
 		this.cell.Cat.setAmount(this.cell.Cat.getAmount()/1000.0);
-		this.b1ca=this.b1ca/1000.0;
-		this.b1cak=this.b1cak/1000.0;
-		this.benz2=this.benz2/1000.0;
+		this.setB1ca(this.getB1ca()/1000.0);
+		this.setB1cak(this.getB1cak()/1000.0);
+		this.setBenz2(this.getBenz2()/1000.0);
 		this.benz2k=this.benz2k/1000.0;
 	}
 	
@@ -2089,7 +1958,7 @@ public class RBC_model implements Serializable {
 //			Double term3 = ((benz2/VV)*local_x6/(benz2k+local_x6));
 //			System.out.println("1: " + term1 + " 2: " + term2 + " 3: " + term3 + " VV: " + VV);
 //			System.out.println("" + alpha + " " + b1ca + " " + b1cak + " " + benz2 + " " + benz2k);
-			cabb = local_x6*(Math.pow(alpha,-1.0))+((b1ca/VV)*local_x6/(b1cak+local_x6))+((benz2/VV)*local_x6/(benz2k+local_x6));
+			cabb = local_x6*(Math.pow(getAlpha(),-1.0))+((getB1ca()/VV)*local_x6/(getB1cak()+local_x6))+((getBenz2()/VV)*local_x6/(benz2k+local_x6));
 //			System.out.println("CABB: " + cabb + " Cat: " + cell.Cat.getAmount());
 			Double y = cell.Cat.getAmount() - cabb;
 			return y;
@@ -2099,7 +1968,7 @@ public class RBC_model implements Serializable {
 	public class Eqmg implements NWRunner {
 		public Double run(Double local_mgf) {
 			mgb = getMgb0() + ((getAtp()/VV)*local_mgf/(0.08+local_mgf)) + ((getDpgp()/VV)*local_mgf/(3.6+local_mgf));
-			Double y = cell.Mgt.getAmount() - local_mgf*(Vw/(Vw+getHb_content()/136.0)) - mgb;
+			Double y = cell.Mgt.getAmount() - local_mgf*(getVw()/(getVw()+getHb_content()/136.0)) - mgb;
 			return y;
 		}
 	}
@@ -2151,7 +2020,7 @@ public class RBC_model implements Serializable {
 	
 	public ResultHash makeResultHash() {
 		ResultHash new_result = new ResultHash(this.sampling_time*60.0); // convert to minutes for publishing
-		new_result.setItem("Vw",this.Vw);
+		new_result.setItem("Vw",this.getVw());
 		new_result.setItem("V/V",this.VV);
 		new_result.setItem("MCHC",this.mchc);
 		new_result.setItem("Density",this.density);
@@ -2448,5 +2317,41 @@ public class RBC_model implements Serializable {
 	}
 	public void setDpgp(Double dpgp) {
 		this.dpgp = dpgp;
+	}
+	public Double getB1ca() {
+		return b1ca;
+	}
+	public void setB1ca(Double b1ca) {
+		this.b1ca = b1ca;
+	}
+	public Double getB1cak() {
+		return b1cak;
+	}
+	public void setB1cak(Double b1cak) {
+		this.b1cak = b1cak;
+	}
+	public Double getAlpha() {
+		return alpha;
+	}
+	public void setAlpha(Double alpha) {
+		this.alpha = alpha;
+	}
+	public Double getBenz2() {
+		return benz2;
+	}
+	public void setBenz2(Double benz2) {
+		this.benz2 = benz2;
+	}
+	public Double getCbenz2() {
+		return cbenz2;
+	}
+	public void setCbenz2(Double cbenz2) {
+		this.cbenz2 = cbenz2;
+	}
+	public Double getVw() {
+		return Vw;
+	}
+	public void setVw(Double vw) {
+		Vw = vw;
 	}
 }

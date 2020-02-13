@@ -247,4 +247,133 @@ public class OptionsParsers {
 		
 	}
 	
+	public static void cabufferscreenRS(HashMap<String,String> rsoptions, ArrayList<String> usedoptions, RBC_model model) {
+		String temp = rsoptions.get("cato-medium");
+		if(temp != null) {
+			model.medium.Cat.setConcentration(Double.parseDouble(temp));
+			usedoptions.add("cato-medium");
+		} else {
+			model.medium.Cat.setConcentration(1.0);
+		}
+		
+		temp = rsoptions.get("add-ca-buffer");
+		if(temp != null) {
+			model.setB1ca(Double.parseDouble(temp));
+			usedoptions.add("add-ca-buffer");
+		} else {
+			model.setB1ca(0.026);
+		}
+		
+		temp = rsoptions.get("kd-of-ca-buffer");
+		if(temp != null) {
+			model.setB1cak(Double.parseDouble(temp));
+			usedoptions.add("kd-of-ca-buffer");
+		} else {
+			model.setB1cak(0.014);
+		}
+
+		temp = rsoptions.get("alpha");
+		if(temp != null) {
+			model.setAlpha(Double.parseDouble(temp));
+			usedoptions.add("alpha");
+		} else {
+			model.setAlpha(0.3);
+		}
+
+		temp = rsoptions.get("benz2loaded");
+		if(temp != null) {
+			model.setBenz2(Double.parseDouble(temp));
+			usedoptions.add("benz2loaded");
+		} else {
+			model.setBenz2(0.0);
+		}
+		model.setCbenz2(model.getBenz2()/model.getVw());
+
+		temp = rsoptions.get("PMCA Fmax");
+		if(temp != null) {
+			model.capump.setDefaultFcapm(Double.parseDouble(temp));
+			usedoptions.add("PMCA Fmax");
+		} 
+
+		temp = rsoptions.get("k1/2");
+		if(temp != null) {
+			model.capump.setCapk(Double.parseDouble(temp));
+			usedoptions.add("k1/2");
+		} else {
+			model.capump.setCapk(2e-4);
+		}
+		
+		temp = rsoptions.get("hills");
+		if(temp != null) {
+			model.capump.setH1(Double.parseDouble(temp));
+			usedoptions.add("hills");
+		} else {
+			model.capump.setH1(4.0);
+		}
+		
+		temp = rsoptions.get("pump-electro");
+		Integer capstoich;
+		if(temp != null) {
+			capstoich = Integer.parseInt(temp);
+			model.capump.setCah(2-capstoich);
+			usedoptions.add("pump-electro");
+		} else {
+//			capstoich = 2; // Default sets cah to 0 which is 2 protons per Ca
+			// This is now set in the constructor of the Calcium pump
+		}
+		
+		
+		temp = rsoptions.get("h+ki");
+		if(temp != null) {
+			model.capump.setHik(Double.parseDouble(temp));
+			usedoptions.add("h+ki");
+		} else {
+			model.capump.setHik(4e-7);
+		}
+		
+		temp = rsoptions.get("Mg2+K1/2");
+		if(temp != null) {
+			model.capump.setCapmgk(Double.parseDouble(temp));
+			usedoptions.add("Mg2+K1/2");
+		} else {
+			model.capump.setCapmgk(0.1);
+		}
+		
+		temp = rsoptions.get("PCaG");
+		if(temp != null) {
+			model.passiveca.setFcalm(Double.parseDouble(temp));
+			usedoptions.add("PCaG");
+		} 
+//		else {
+//			this.passiveca.setFcalm(0.05);
+//		}
+		
+		
+		temp = rsoptions.get("PK at Ca2+ saturation");
+		if(temp != null) {
+			model.goldman.setDefaultPkm(Double.parseDouble(temp));
+			usedoptions.add("PK at Ca2+ saturation");
+		} 
+//		else {
+//			this.goldman.setPkm(30.0);
+//		}
+		
+		
+		temp = rsoptions.get("K1/2 for Ca2+ activation");
+		if(temp != null) {
+			model.goldman.setPkcak(Double.parseDouble(temp));
+			usedoptions.add("K1/2 for Ca2+ activation");
+		}
+//		else {
+//			this.goldman.setPkcak(1e-2);
+//		}
+		if(model.getBenz2() != 0) {
+			model.cell.Caf.setConcentration(1e-8);
+			model.canr();
+		}
+		
+		
+	}
+	
+	
 }

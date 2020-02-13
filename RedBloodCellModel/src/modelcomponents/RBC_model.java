@@ -892,8 +892,6 @@ public class RBC_model implements Serializable {
 			this.setcadefaults();
 			
 			OptionsParsers.mgbufferscreenRS(rsoptions, usedoptions,this);
-			Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001,100,0, false);
-			this.cell.Mgf.setConcentration(conc);
 
 			this.cabufferscreenRS(rsoptions, usedoptions);
 			
@@ -2098,14 +2096,14 @@ public class RBC_model implements Serializable {
 		}
 	}
 	
-	private class Eqmg implements NWRunner {
+	public class Eqmg implements NWRunner {
 		public Double run(Double local_mgf) {
 			mgb = getMgb0() + ((getAtp()/VV)*local_mgf/(0.08+local_mgf)) + ((getDpgp()/VV)*local_mgf/(3.6+local_mgf));
 			Double y = cell.Mgt.getAmount() - local_mgf*(Vw/(Vw+getHb_content()/136.0)) - mgb;
 			return y;
 		}
 	}
-	private Double newton_raphson(NWRunner r, Double initial, Double step, Double stop,Integer max_its, Integer initial_its, boolean verbose) {
+	Double newton_raphson(NWRunner r, Double initial, Double step, Double stop,Integer max_its, Integer initial_its, boolean verbose) {
 //		int max_its = 100;
 //		Double step = 0.001;
 //		Double stop = 0.0001;

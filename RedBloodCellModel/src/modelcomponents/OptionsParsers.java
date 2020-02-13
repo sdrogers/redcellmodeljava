@@ -242,7 +242,8 @@ public class OptionsParsers {
 		} else {
 			model.setDpgp(15.0);
 		}
-		
+		Double conc = model.newton_raphson(model.new Eqmg(), 0.02, 0.0001, 0.00001,100,0, false);
+		model.cell.Mgf.setConcentration(conc);
 		
 	}
 	

@@ -87,7 +87,7 @@ public class RBC_model implements Serializable {
 	private Double I_79; 
 	
 	private Double buffer_conc;
-	private Double Q_4;
+	private Double netChargeHb;
 	
 
 	private Double sampling_time;
@@ -272,7 +272,7 @@ public class RBC_model implements Serializable {
 		this.cell.Na.setAmount(0.0);
 		this.cell.K.setAmount(0.0);
 		this.cell.A.setAmount(0.0);
-		this.Q_4 = 0.0; // Q(Hb-): Qs are 'per litre of cells' - how much -ve charge does Hb provide per litre cells
+		this.netChargeHb = 0.0; // Q(Hb-): Qs are 'per litre of cells' - how much -ve charge does Hb provide per litre cells
 		this.cell.Hb.setAmount(0.0);
 		this.cell.X.setAmount(0.0);
 		this.cell.Mgt.setAmount(0.0);
@@ -729,9 +729,9 @@ public class RBC_model implements Serializable {
 		this.cell.Na.setAmount(this.cell.Na.getAmount() + this.delta_Na);
 		this.cell.K.setAmount(this.cell.K.getAmount() + this.delta_K);
 		this.cell.A.setAmount(this.cell.A.getAmount() + this.delta_A);
-		this.Q_4 = this.Q_4 + this.delta_H;
+		this.netChargeHb = this.netChargeHb + this.delta_H;
 
-		this.nHb = this.Q_4/this.cell.Hb.getAmount();
+		this.nHb = this.netChargeHb/this.cell.Hb.getAmount();
 		this.cell.Mgt.setAmount(this.cell.Mgt.getAmount()+this.delta_Mg);
 		this.cell.Cat.setAmount(this.cell.Cat.getAmount() + this.delta_Ca);
 
@@ -914,17 +914,14 @@ public class RBC_model implements Serializable {
 			
 			
 		}		
-		// this.publish();
 	}
 	
 	public void setupDS(HashMap<String,String> options,ArrayList<String> usedoptions) {
 		/*
 		 * todo: finish moving options parsers to their own class
 		 */
-//		this.set_screen_time_factor_options(options, usedoptions);
 		OptionsParsers.set_screen_time_factor_options(options,usedoptions,this);
 		this.set_cell_fraction_options(options, usedoptions);
-//		this.set_transport_changes_options(options, usedoptions);
 		OptionsParsers.set_transport_changes_options(options, usedoptions, this);
 		this.set_temp_permeability_options(options, usedoptions);
 		this.set_piezo_options(options,usedoptions);
@@ -1226,66 +1223,6 @@ public class RBC_model implements Serializable {
 		}
 		
 	}
-	// Obsolete method - remove me
-	private void set_transport_changes_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
-		String temp = options.get("na-pump-flux-change");
-		if(temp != null) {
-			Double inhibFac = (100.0-Double.parseDouble(temp))/100.0;
-			this.getNapump().setP_1(this.getNapump().getDefaultP_1()*inhibFac);
-			usedoptions.add("na-pump-flux-change");
-		}
-		
-		temp = options.get("na-pump-reverse-flux-change");
-		if(temp != null) {
-			this.getNapump().setP_2(Double.parseDouble(temp));
-			usedoptions.add("na-pump-reverse-flux-change");
-		}
-		temp = options.get("naa-change");
-		if(temp != null) {
-			this.carriermediated.setPermeability_Na(this.carriermediated.getDefaultPermability_Na()*Double.parseDouble(temp)/100.0);
-			usedoptions.add("naa-change");
-		}
-		temp = options.get("ka-change");
-		if(temp != null) {
-			this.carriermediated.setPermeability_K(this.carriermediated.getDefaultPermeability_K() * Double.parseDouble(temp)/100.0);
-			usedoptions.add("ka-change");
-		}
-		// Check this one with Arieh
-		// Removed from GUI at the moment....
-		temp = options.get("cotransport-activation");
-		if(temp != null) {
-			Double co_f = Double.parseDouble(temp);
-			this.cotransport.setPermeability(0.0002 * co_f / 100.0);
-			usedoptions.add("cotransport-activation");
-		}
-		temp = options.get("js-stimulation-inhibition");
-		if(temp != null) {
-			Double jsfactor = Double.parseDouble(temp);
-			jsfactor = (100.0 - jsfactor)/100.0;
-			this.JS.setPermeability(this.JS.getDefaultPermeability() * jsfactor);
-			usedoptions.add("js-stimulation-inhibition");
-		}
-		temp = options.get("ca-pump-vmax-change");
-		if(temp != null) {
-			Double fc = (100.0 - Double.parseDouble(temp))/100.0;
-			this.capump.setFcapm(this.capump.getDefaultFcapm() * fc);
-			usedoptions.add("ca-pump-vmax-change");
-		}
-		
-//		temp = options.get("vmax-leak-change");
-//		if(temp != null) {
-//			this.passiveca.setFcalm(this.passiveca.getFcalm()*Double.parseDouble(temp));
-//			usedoptions.add("vmax-leak-change");
-//		}
-		
-		temp = options.get("percentage-inhibition");
-		if(temp != null) {
-			Double gc = (100.0 - Double.parseDouble(temp))/100.0;
-			this.goldman.setPkm(this.goldman.getDefaultPkm() * gc);
-			usedoptions.add("percentage-inhibition");
-		}
-	}
-	
 	private void set_cell_fraction_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
 		String temp = options.get("CVF");
 		if(temp != null) {
@@ -1637,8 +1574,6 @@ public class RBC_model implements Serializable {
 	}
 	
 	private void phadjust() {
-		// 	phadjust:
-		// called from screen 2 entries after 4350
 		this.medium.H.setConcentration(Math.pow(10.0,(-this.medium.getpH())));
 		// Protonized buffer concentration;
 		if (this.BufferType == "HEPES") {
@@ -1664,52 +1599,6 @@ public class RBC_model implements Serializable {
 			}
 		}
 	}
-	// THIS METHOD IS OBSOLETE...
-	private void set_screen_time_factor_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
-		String temp = options.get("Time");
-		if(temp != null) {
-			this.duration_experiment += Double.parseDouble(temp);
-			usedoptions.add("Time");
-		}
-		
-		temp = options.get("Accuracy");
-		if(temp != null) {
-			this.dp = Integer.parseInt(temp);
-			usedoptions.add("Accuracy");
-		}
-		
-		this.I_43 = this.integration_interval_factor;
-		temp = options.get("FrequencyFactor");
-		if(temp != null) {
-			this.integration_interval_factor = Double.parseDouble(temp);
-			usedoptions.add("FrequencyFactor");
-		}
-		
-		temp = options.get("Regular dt");
-		if(temp != null) {
-			if(temp.equals("no")) {
-				this.compute_delta_time = false;
-				usedoptions.add("Regular dt");
-			}else if(temp.equals("yes")) {
-				this.compute_delta_time = true;
-				usedoptions.add("Regular dt");
-			}else {
-				System.out.println("Invalud value for field compute_delta_time");
-			}
-		}
-		temp = options.get("Delta Time");
-		if(temp != null) {
-			this.delta_time = Double.parseDouble(temp);
-			usedoptions.add("Delta Time");
-		}
-		temp = options.get("Cyclesperprint(epochs)");
-		if(temp != null) {
-			this.cycles_per_print = Integer.parseInt(temp);
-			usedoptions.add("Cyclesperprint(epochs)");
-		}
-		
-	}
-	
 	
 	public void computeRS() {
 		this.medium.A.setConcentration(this.medium.A.getConcentration() + 2*(this.medium.Mgt.getConcentration() + this.medium.Cat.getConcentration()));
@@ -1727,12 +1616,11 @@ public class RBC_model implements Serializable {
 		// Computes Q_X
 		this.secureisonoticityRS();
 		
-		// Computes n_X
-		// Non-protonizable charge on X (nX)
+		// Computes n_X (Non-protonizable charge on X (nX))
 		this.A_10 = (this.cell.A.getAmount() + 2*this.getBenz2() - (this.cell.Na.getAmount() + this.cell.K.getAmount() + 2*this.cell.Mgt.getAmount() + 2*this.cell.Cat.getAmount()+this.nHb*this.cell.Hb.getAmount()))/this.cell.X.getAmount();
 
 		// Net charge on Hb
-		this.Q_4 = this.nHb*this.cell.Hb.getAmount();
+		this.netChargeHb = this.nHb*this.cell.Hb.getAmount();
 
 		this.fluxesRS();
 		
@@ -1794,7 +1682,7 @@ public class RBC_model implements Serializable {
 		this.cell.Hb.setConcentration(this.cell.Hb.getAmount()/this.getVw());
 		this.cell.Mgt.setConcentration(this.cell.Mgt.getAmount()/this.getVw());
 		this.cell.X.setConcentration(this.cell.X.getAmount()/this.getVw());
-		this.cell.XHbm.setAmount(this.Q_4 + this.A_10*this.cell.X.getAmount() - 2*this.getBenz2());
+		this.cell.XHbm.setAmount(this.netChargeHb + this.A_10*this.cell.X.getAmount() - 2*this.getBenz2());
 		this.cell.XHbm.setConcentration(this.cell.XHbm.getAmount()/this.getVw());
 		this.cell.COs.setConcentration(this.fHb*this.cell.Hb.getAmount()/this.getVw());
 		// Concentration of charge on Hb
@@ -1835,7 +1723,7 @@ public class RBC_model implements Serializable {
 	}
 	
 	private void secureisonoticityRS() {
-		// ecures initial isotonicity and electroneutrality; it computes the
+		// Secures initial isotonicity and electroneutrality; it computes the
 		// QX and nX required for initial osmotic and charge balance.  Since the Mg and
 		// Ca buffers are within X, only the unbound forms of Mg and Ca participate in
 		// osmotic equilibria within the cell.
@@ -1932,15 +1820,7 @@ public class RBC_model implements Serializable {
 		this.setB1cak(this.getB1cak() * 1000.0);
 		this.setBenz2(this.getBenz2() * 1000.0);
 		this.benz2k = this.benz2k * 1000.0;
-//		System.out.println();
-//		System.out.println();
-//		System.out.println("Initial: " + this.cell.Caf.getConcentration());
 		Double conc = this.newton_raphson(new Eqca(),this.cell.Caf.getConcentration(),0.000001, 0.000001,100,0, false);
-//		Double conc = this.newton_raphson(new Eqca(),0.12735271872550802,0.000001, 0.000001,100,0, true);
-//		Double conc2 = this.newton_raphson(new Eqca(),0.06236444130115539,0.000001, 0.000001,100,0, true);
-
-		
-//		System.out.println("DONE:" + conc + " " + conc2);
 		this.cell.Caf.setConcentration(conc);
 		
 		this.cell.Caf.setConcentration(this.cell.Caf.getConcentration()/1000.0);
@@ -1953,13 +1833,7 @@ public class RBC_model implements Serializable {
 	
 	private class Eqca implements NWRunner {
 		public Double run(Double local_x6) {
-//			Double term1 = local_x6*(Math.pow(alpha,-1.0));
-//			Double term2 = ((b1ca/VV)*local_x6/(b1cak+local_x6));
-//			Double term3 = ((benz2/VV)*local_x6/(benz2k+local_x6));
-//			System.out.println("1: " + term1 + " 2: " + term2 + " 3: " + term3 + " VV: " + VV);
-//			System.out.println("" + alpha + " " + b1ca + " " + b1cak + " " + benz2 + " " + benz2k);
 			cabb = local_x6*(Math.pow(getAlpha(),-1.0))+((getB1ca()/VV)*local_x6/(getB1cak()+local_x6))+((getBenz2()/VV)*local_x6/(benz2k+local_x6));
-//			System.out.println("CABB: " + cabb + " Cat: " + cell.Cat.getAmount());
 			Double y = cell.Cat.getAmount() - cabb;
 			return y;
 		}
@@ -1973,10 +1847,6 @@ public class RBC_model implements Serializable {
 		}
 	}
 	Double newton_raphson(NWRunner r, Double initial, Double step, Double stop,Integer max_its, Integer initial_its, boolean verbose) {
-//		int max_its = 100;
-//		Double step = 0.001;
-//		Double stop = 0.0001;
-//		int initial_its = 0;
 		Double X_3 = initial;
 		int no_its = initial_its;
 		Boolean finished = false;
@@ -1993,8 +1863,6 @@ public class RBC_model implements Serializable {
 			if(verbose) {
 				System.out.println("It: " + no_its + ", X_3: " + X_3 + ", S: " + S + ", Y/S: " + Y_1/S);
 			}
-//			System.out.println(Math.abs(Y_2));
-			// Note the bit here that isn't copied...
 			Double Y_3;
 			if(r instanceof ligeq3 || r instanceof ligeq1) {
 				Y_3 = Y_2;
@@ -2014,7 +1882,6 @@ public class RBC_model implements Serializable {
 			}
 			it_counter += 1;
 		}
-//		System.out.println(no_its);
 		return X_3;
 	}
 	
@@ -2083,7 +1950,6 @@ public class RBC_model implements Serializable {
 		new_result.setItem("EK", V_15);
 		Double V_16 = this.goldman.getRtoverf()*Math.log(this.medium.Na.getConcentration()/this.cell.Na.getConcentration());
 		new_result.setItem("ENa", V_16);
-//		new_result.setItem("FKGpiezo", this.goldman.computePKGPiezo(I_18));
 		new_result.setItem("FKGgardos", this.goldman.computeFKGardos(I_18));
 		new_result.setItem("FzKG", this.piezoGoldman.getFlux_K());
 		new_result.setItem("FzNaG", this.piezoGoldman.getFlux_Na());
@@ -2168,7 +2034,6 @@ public class RBC_model implements Serializable {
 				for(int i=0;i<this.publish_order.length;i++) {
 					resultString += ',' + String.format(numFormat, r.getItem(this.publish_order[i]));
 				}
-//				System.out.println(resultString);
 				resultString += '\n';
 				filewriter.append(resultString);
 			}
@@ -2187,6 +2052,10 @@ public class RBC_model implements Serializable {
 		writeCsv(name,this.resultList);
 	}
 
+	
+	/*
+	 * Getters and setters from here
+	 */
 	public NaPump getNapump() {
 		return napump;
 	}

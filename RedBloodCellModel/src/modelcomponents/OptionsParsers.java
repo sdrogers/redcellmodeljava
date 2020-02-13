@@ -3,6 +3,8 @@ package modelcomponents;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import modelcomponents.RBC_model.Eqmg;
+
 public class OptionsParsers {
 	@SuppressWarnings("unused")
 	public static void set_screen_time_factor_options(HashMap<String,String> options, ArrayList<String> usedoptions, RBC_model model) {
@@ -197,4 +199,51 @@ public class OptionsParsers {
 			usedoptions.add("Hb A or S");
 		}
 	}
+	public static void mgbufferscreenRS(HashMap<String,String> rsoptions, ArrayList<String> usedoptions,RBC_model model) {
+		String temp = rsoptions.get("mgot-medium");
+		if(temp != null) {
+			model.medium.Mgt.setConcentration(Double.parseDouble(temp));
+			usedoptions.add("mgot-medium");
+		} else {
+			model.medium.Mgt.setConcentration(0.2);
+		}
+		
+		
+		temp = rsoptions.get("mgit");
+		if(temp != null) {
+			model.cell.Mgt.setAmount(Double.parseDouble(temp));
+			usedoptions.add("mgit");
+		} else {
+			model.cell.Mgt.setAmount(2.5);
+		}
+		
+		
+		temp = rsoptions.get("hab");
+		if(temp != null) {
+			model.setMgb0(Double.parseDouble(temp));
+			usedoptions.add("hab");
+		} else {
+			model.setMgb0(0.05);
+		}
+		
+		
+		temp = rsoptions.get("atpp");
+		if(temp != null) {
+			model.setAtp(Double.parseDouble(temp));
+			usedoptions.add("atpp");
+		} else {
+			model.setAtp(1.2);
+		}
+		
+		temp = rsoptions.get("23dpg");
+		if(temp != null) {
+			model.setDpgp(Double.parseDouble(temp));
+			usedoptions.add("23dpg");
+		} else {
+			model.setDpgp(15.0);
+		}
+		
+		
+	}
+	
 }

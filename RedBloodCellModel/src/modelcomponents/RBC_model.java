@@ -30,7 +30,7 @@ public class RBC_model implements Serializable {
 	
 	// Model components
 	Region cell;
-	private Region medium;
+	Region medium;
 	private JacobsStewart JS;
 	private Cotransport cotransport;
 	NaPump napump;
@@ -320,7 +320,7 @@ public class RBC_model implements Serializable {
 		
 		
 		this.mgb = 0.0; // mg buffering
-		this.mgb0 = 0.0;
+		this.setMgb0(0.0);
 		this.cell.Mgt.setAmount(2.5);
 		this.cabb = 0.0;
 		this.cell.Cat.setConcentration(0.0);
@@ -335,8 +335,8 @@ public class RBC_model implements Serializable {
 		this.b1ca = 0.0;
 		this.b1cak = 0.0;
 		this.alpha = 0.0;
-		this.atp = 1.2;
-		this.dpgp = 0.0;
+		this.setAtp(1.2);
+		this.setDpgp(0.0);
 		this.BufferType = "HEPES";
 		this.setVlysis(1.45);
 		this.ff = 0.0;
@@ -891,7 +891,10 @@ public class RBC_model implements Serializable {
 			this.setmgdefaults();
 			this.setcadefaults();
 			
-			this.mgbufferscreenRS(rsoptions, usedoptions);
+			OptionsParsers.mgbufferscreenRS(rsoptions, usedoptions,this);
+			Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001,100,0, false);
+			this.cell.Mgf.setConcentration(conc);
+
 			this.cabufferscreenRS(rsoptions, usedoptions);
 			
 			this.computeRS();
@@ -1218,8 +1221,8 @@ public class RBC_model implements Serializable {
 			this.I_74 = this.getPit0() - (0.016*this.temp_celsius);
 			temp = options.get("deoxy");
 			if(temp == "Y") {
-				this.atp = this.atp / 2.0;
-				this.dpgp = this.dpgp / 1.7;
+				this.setAtp(this.getAtp() / 2.0);
+				this.setDpgp(this.getDpgp() / 1.7);
 			}
 			
 					
@@ -1896,8 +1899,8 @@ public class RBC_model implements Serializable {
 	public void setmgdefaults() {
 		this.cell.Mgt.setAmount(2.5);
 		this.medium.Mgt.setConcentration(0.2);
-		this.atp = 1.2;
-		this.dpgp = 15.0;
+		this.setAtp(1.2);
+		this.setDpgp(15.0);
 		this.VV = (1.0 - this.A_11) + this.Vw;
 		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001,100,0, false);
 		this.cell.Mgf.setConcentration(conc);
@@ -1923,56 +1926,6 @@ public class RBC_model implements Serializable {
 		
 	}
 	
-	
-	private void mgbufferscreenRS(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
-		String temp = rsoptions.get("mgot-medium");
-		if(temp != null) {
-			this.medium.Mgt.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("mgot-medium");
-		} else {
-			this.medium.Mgt.setConcentration(0.2);
-		}
-		
-		
-		temp = rsoptions.get("mgit");
-		if(temp != null) {
-			this.cell.Mgt.setAmount(Double.parseDouble(temp));
-			usedoptions.add("mgit");
-		} else {
-			this.cell.Mgt.setAmount(2.5);
-		}
-		
-		
-		temp = rsoptions.get("hab");
-		if(temp != null) {
-			this.mgb0 = Double.parseDouble(temp);
-			usedoptions.add("hab");
-		} else {
-			this.mgb0 = 0.05;
-		}
-		
-		
-		temp = rsoptions.get("atpp");
-		if(temp != null) {
-			this.atp = Double.parseDouble(temp);
-			usedoptions.add("atpp");
-		} else {
-			this.atp = 1.2;
-		}
-		
-		temp = rsoptions.get("23dpg");
-		if(temp != null) {
-			this.dpgp = Double.parseDouble(temp);
-			usedoptions.add("23dpg");
-		} else {
-			this.dpgp = 15.0;
-		}
-		
-		Double conc = this.newton_raphson(new Eqmg(), 0.02, 0.0001, 0.00001,100,0, false);
-//		System.out.println(conc);
-		this.cell.Mgf.setConcentration(conc);
-		
-	}
 	
 	private void cabufferscreenRS(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
 		String temp = rsoptions.get("cato-medium");
@@ -2147,7 +2100,7 @@ public class RBC_model implements Serializable {
 	
 	private class Eqmg implements NWRunner {
 		public Double run(Double local_mgf) {
-			mgb = mgb0 + ((atp/VV)*local_mgf/(0.08+local_mgf)) + ((dpgp/VV)*local_mgf/(3.6+local_mgf));
+			mgb = getMgb0() + ((getAtp()/VV)*local_mgf/(0.08+local_mgf)) + ((getDpgp()/VV)*local_mgf/(3.6+local_mgf));
 			Double y = cell.Mgt.getAmount() - local_mgf*(Vw/(Vw+getHb_content()/136.0)) - mgb;
 			return y;
 		}
@@ -2479,5 +2432,23 @@ public class RBC_model implements Serializable {
 	}
 	public void setPit0(Double pit0) {
 		this.pit0 = pit0;
+	}
+	public Double getMgb0() {
+		return mgb0;
+	}
+	public void setMgb0(Double mgb0) {
+		this.mgb0 = mgb0;
+	}
+	public Double getAtp() {
+		return atp;
+	}
+	public void setAtp(Double atp) {
+		this.atp = atp;
+	}
+	public Double getDpgp() {
+		return dpgp;
+	}
+	public void setDpgp(Double dpgp) {
+		this.dpgp = dpgp;
 	}
 }

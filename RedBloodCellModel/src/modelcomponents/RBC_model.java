@@ -2079,20 +2079,20 @@ public class RBC_model implements Serializable {
 //		}
 		
 		
-		temp = rsoptions.get("PKGardosMax");
+		temp = rsoptions.get("PK at Ca2+ saturation");
 		if(temp != null) {
 			this.goldman.setDefaultPkm(Double.parseDouble(temp));
-			usedoptions.add("PKGardosMax");
+			usedoptions.add("PK at Ca2+ saturation");
 		} 
 //		else {
 //			this.goldman.setPkm(30.0);
 //		}
 		
 		
-		temp = rsoptions.get("KCa Gardos channel");
+		temp = rsoptions.get("K1/2 for Ca2+ activation");
 		if(temp != null) {
 			this.goldman.setPkcak(Double.parseDouble(temp));
-			usedoptions.add("KCa Gardos channel");
+			usedoptions.add("K1/2 for Ca2+ activation");
 		}
 //		else {
 //			this.goldman.setPkcak(1e-2);

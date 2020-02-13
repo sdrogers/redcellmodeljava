@@ -3,16 +3,16 @@ package utilities;
 public class HelpText {
 	public static final String rsHelp = "<html><body style='width: 500px'>"
 			+ "<h1>The Reference State (RS):</h1>"
-			+ "<p>The RS is a steady-state representing the initial physiological condition of a RBC at the start of experiments. Changing default values automatically recalculates a new initial steady-state condition for the redefined cell. For instance, to approximate a young RBC one could replace the corresponding defaults by CNa 5, CK 145 and Vw 0.82; for an old RBC, CNa 100-120, CK50-30 and Vw 0.67-0.65.</p><hr />" + 
+			+ "<p>The RS is a steady-state representing the initial physiological condition of a RBC at the start of experiments. Changing default values automatically recalculates a new initial steady-state condition for the redefined cell. For instance, to approximate a young RBC one could replace the corresponding defaults by CNa 5, CK 145, Vw 0.82 and FNaP of -3.2.</p><hr />" + 
 			"<p><b>HbA or HbS:</b> HbA and HbS differ in the values of their isoelectric point and net charge per mol, a.  For HbA (default) pI(oC) = 7.2 and a = -10 Eq/(mol*∆(pH – pI) unit); for HbS, the corresponding values are 7.4 and -8.  The net charge on Hb at each pHi, nHb, is computed from nHb = a(pHi – pI), where a is the slope of the proton titration curve of Hb in Eq/mol, and pI is the isoelectric pH of Hb.</p><hr />" + 
-			"<p><b>Na/K pump Na efflux:</b>	Changing the Na flux immediately resets the associated pump-mediated K influx and reverse Na/K fluxes following the stoichiometries and relative forward-reverse flux ratio encoded in the model.</p><hr />" + 
-			"<p><b>CA:	Initial cell Cl- + HCO3- concentration (mmol/Lcw);</b> see SR1 Box 5, on The invisible HCO3- and CO2. In the running of the model CA and CCl are used indistinctly.</p><hr />" + 
-			"<p><b>MCHC:</b> Mean Corpuscular Haemoglobin Concentration, a common haematological parameter in blood test assays, traditionally reported in g Hb/(dLpc).</p><hr />" + 
+			"<p><b>Na/K pump Na efflux:</b>	Changing the Na flux automatically resets the associated pump-mediated K influx and reverse Na/K fluxes following the stoichiometries and relative forward-reverse flux ratio encoded in the model.</p><hr />" + 
+			"<p><b>CA:</b>	Initial cell Cl- + HCO3- concentration (mmol/Lcw). Ca and CCl are used indistinctly throughout.</p><hr />" + 
+			"<p><b>MCHC:</b> Mean Cell Haemoglobin Concentration, a common haematological parameter in blood test assays, traditionally reported in gHb/dLoc; MCHC of <i>mean</i> model cell = 34 gHb/dL</p><hr />" + 
 			"<p><b>PMCA Fmax:</b>	Maximal Ca2+ extrusion flux through an ATP and Ca2+-saturated plasma membrane calcium pump</p><hr />" + 
 			"<p><b>PKGardosMax:</b>	electrodiffusional K+ permeability through Ca2+-saturated Gardos channels</p><hr />" + 
 			"<p><b>KCaGardos channel:</b>	Half-maximal Ca2+ dissociation constant (K1/2) for Gardos channel activation</p><hr />" + 
-			"<p><b>Vw:</b>	Water content associated with 340 g Hb; the volume occupied by 340 g Hb at a molar weight of 1.36 g/ml for the Hb tetramer is 0.25 L. The default 0.75 Lcw/Loc for Vw sets a value of 1 L/Loc for the initial volume of the default RBC.</p><hr />" + 
-			"<p><b>Q10 active or passive:</b>	The Q10 factors determine the extent by which active and passive fluxes are set to increase or decrease for each 10oC increase or decrease in temperature.</p><hr />" + 
+			"<p><b>Vw:</b>	Water content associated with 340 g Hb; the volume occupied by 340 g Hb at a molar weight of 1.36 g/ml for the Hb tetramer is 0.25 L. The default 0.75 Lcw/Loc for Vw sets a value of 1 L/Loc for the initial volume of the default <i>mean</i> RBC.</p><hr />" + 
+			"<p><b>Q10 active or passive:</b>	The Q10 factors determine the extent by which active and passive fluxes (F) are set to increase or decrease for each 10oC increase or decrease in temperature, T.</p><hr />" + 
 			"</body></html>";
 	public static final String dsHelp = "<html><body style='width: 500px'>" + 
 			"<h1>The Dynamic State (DS)</h1>" + 

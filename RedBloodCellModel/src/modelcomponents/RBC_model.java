@@ -29,11 +29,11 @@ public class RBC_model implements Serializable {
 	private final double MIN_BUFFER_CONC = 1e-10;
 	
 	// Model components
-	private Region cell;
+	Region cell;
 	private Region medium;
 	private JacobsStewart JS;
 	private Cotransport cotransport;
-	private NaPump napump;
+	NaPump napump;
 	private CarrierMediated carriermediated;
 	private Goldman goldman;
 	private PiezoGoldman piezoGoldman;
@@ -70,7 +70,7 @@ public class RBC_model implements Serializable {
 	//# self.B_8 = 37.0
 	private Double temp_celsius;
 	//# self.B_9 = 4.0
-	private Double Q10Passive; // was B10, B_10, B[10] // ADD TO TAB FOR PERMEABILITIES
+	Double Q10Passive; // was B10, B_10, B[10] // ADD TO TAB FOR PERMEABILITIES
 	
 	private Double delta_H;
 	
@@ -229,7 +229,7 @@ public class RBC_model implements Serializable {
 		A_7 = 0.0; // Initial haematocrit
 		A_8 = 0.0; // Haematocrit over 1-haematocrit
 		// private Double A_9 = 0.0;
-		hb_content = 34.0;
+		setHb_content(34.0);
 		A_10 = 0.0; // nX net charge on non-diffusible anion
 		A_11 = 0.0; // Vwo initial water content of cell
 		A_12 = 0.0; // pH in the medium at time 0
@@ -264,7 +264,7 @@ public class RBC_model implements Serializable {
 		
 		this.I_18 = 0.0;
 		this.I_73 = 0.0; // Exchange chloride for gluconate (in the medium)
-		this.I_79 = 0.75; // Water volume (as proportion of total)
+		this.setI_79(0.75); // Water volume (as proportion of total)
 		
 		
 		setInitialMediumConcentrations();
@@ -338,7 +338,7 @@ public class RBC_model implements Serializable {
 		this.atp = 1.2;
 		this.dpgp = 0.0;
 		this.BufferType = "HEPES";
-		this.vlysis = 1.45;
+		this.setVlysis(1.45);
 		this.ff = 0.0;
 		this.delta_Mg = 0.0;
 		this.delta_Ca = 0.0;
@@ -686,7 +686,7 @@ public class RBC_model implements Serializable {
 			
 			this.rA = this.medium.A.getConcentration() / this.cell.A.getConcentration();
 			this.rH = this.cell.H.getConcentration() / this.medium.H.getConcentration();
-			if(this.Vw > this.vlysis) {
+			if(this.Vw > this.getVlysis()) {
 				// Cells have been lysed
 				break;
 			}
@@ -740,8 +740,8 @@ public class RBC_model implements Serializable {
 		this.cell.H.setConcentration(Math.pow(10,(-this.cell.getpH())));
 		this.nHb = this.A_1*(this.cell.getpH()-this.I_74);
 		this.VV = (1-this.A_11) + this.Vw;
-		this.mchc = this.hb_content/this.VV;
-		this.density = (this.hb_content/100 + this.Vw)/this.VV;
+		this.mchc = this.getHb_content()/this.VV;
+		this.density = (this.getHb_content()/100 + this.Vw)/this.VV;
 		this.fraction = this.A_7*this.VV;
 
 		// External concentrations
@@ -870,18 +870,18 @@ public class RBC_model implements Serializable {
 			}
 			
 			System.out.println("Setting up the RS");
-			this.naPumpScreenRS(rsoptions,usedoptions);
-			this.cellwaterscreenRS(rsoptions, usedoptions);
+			OptionsParsers.naPumpScreenRS(rsoptions,usedoptions,this);
+			OptionsParsers.cellwaterscreenRS(rsoptions, usedoptions, this);
 			this.cellanionprotonscreenRS(rsoptions, usedoptions);
 			this.chargeandpiscreenRS(rsoptions, usedoptions);
 			
 			this.cycles_per_print = 777;
-			this.Vw = this.I_79;
+			this.Vw = this.getI_79();
 			this.fraction = 1e-4; 
 			this.defaultFraction = 1e-4;
 			this.medium.setpH(7.4);
 			this.A_12 = this.medium.getpH();
-			this.A_11 = 1.0-this.hb_content/136.0;
+			this.A_11 = 1.0-this.getHb_content()/136.0;
 			this.sampling_time = 0.0;
 			
 			
@@ -1887,87 +1887,11 @@ public class RBC_model implements Serializable {
 	
 	public void computehtRS() {
 		this.VV = (1-this.A_11) + this.Vw;
-		this.mchc = this.hb_content/this.VV;
-		this.density = (this.hb_content/100.0 + this.Vw)/this.VV;
+		this.mchc = this.getHb_content()/this.VV;
+		this.density = (this.getHb_content()/100.0 + this.Vw)/this.VV;
 	}
 	
-	public void naPumpScreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
-		String na_efflux_fwd = rsoptions.get("Na/K pump Na efflux");
-		if(na_efflux_fwd != null) {
-			this.getNapump().setFluxFwd(Double.parseDouble(na_efflux_fwd));
-			usedoptions.add("Na/K pump Na efflux");
-		}
-		
-		
-		String na_efflux_rev = rsoptions.get("na-efflux-rev");
-		if(na_efflux_rev != null) {
-			this.getNapump().setFluxRev(Double.parseDouble(na_efflux_rev));
-			usedoptions.add("na-efflux-rev");
-		}
-		
-		
-		// Other code to be added here...
-		// New ones added for reduced RS in March 18
-		String temp = rsoptions.get("CNa");
-		if(temp != null) {
-			this.cell.Na.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("CNa");
-		}
-		temp = rsoptions.get("CK");
-		if(temp != null) {
-			this.cell.K.setConcentration(Double.parseDouble(temp));
-			usedoptions.add("CK");
-		}
-		
-		temp = rsoptions.get("Q10 passive");
-		if(temp != null) {
-			this.Q10Passive = Double.parseDouble(temp);
-			usedoptions.add("Q10 passive");
-		}
-		/*
-		 *  The following sets the active Q10 in the sodium pump
-		 *  which is also used by the Ca-Mg transporter 
-		 */
-		temp = rsoptions.get("Q10 active");
-		if(temp != null) {
-			this.napump.setQ10Active(Double.parseDouble(temp));
-			usedoptions.add("Q10 active");
-		}
-//		temp = rsoptions.get("mchc");
-//		if(temp != null) {
-//			this.mchc = Double.parseDouble(temp);
-//			usedoptions.add("mchc");
-//		}
-//		temp = rsoptions.get("vw");
-//		if(temp != null) {
-//			this.Vw = Double.parseDouble(temp);
-//			usedoptions.add("vw");
-//		}
-
-	}
-	public void cellwaterscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
-		String hb_content_str = rsoptions.get("MCHC");
-		if(hb_content_str != null) {
-			usedoptions.add("MCHC");
-			this.hb_content = Double.parseDouble(hb_content_str);
-		}
-		this.cell.Hb.setAmount(this.hb_content * 10.0/64.5);
-		this.I_79 = 1.0 - this.hb_content/136.0;
-		this.vlysis = 1.45;
-		if(this.hb_content == 34.0) {
-			String temp = rsoptions.get("Vw");
-			if(temp != null) {
-				this.I_79 = Double.parseDouble(temp);
-				usedoptions.add("Vw");
-			}
-			temp = rsoptions.get("lytic-cell-water");
-			if(temp != null) {
-				this.vlysis = Double.parseDouble(temp);
-				usedoptions.add("lytic-cell-water");
-			}
-			
-		}
-	}
+	
 	
 	public void cellanionprotonscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions) {
 		String temp = rsoptions.get("CA");
@@ -2261,7 +2185,7 @@ public class RBC_model implements Serializable {
 	private class Eqmg implements NWRunner {
 		public Double run(Double local_mgf) {
 			mgb = mgb0 + ((atp/VV)*local_mgf/(0.08+local_mgf)) + ((dpgp/VV)*local_mgf/(3.6+local_mgf));
-			Double y = cell.Mgt.getAmount() - local_mgf*(Vw/(Vw+hb_content/136.0)) - mgb;
+			Double y = cell.Mgt.getAmount() - local_mgf*(Vw/(Vw+getHb_content()/136.0)) - mgb;
 			return y;
 		}
 	}
@@ -2562,5 +2486,23 @@ public class RBC_model implements Serializable {
 	}
 	public void setGoldman(Goldman goldman) {
 		this.goldman = goldman;
+	}
+	public Double getHb_content() {
+		return hb_content;
+	}
+	public void setHb_content(Double hb_content) {
+		this.hb_content = hb_content;
+	}
+	public Double getI_79() {
+		return I_79;
+	}
+	public void setI_79(Double i_79) {
+		I_79 = i_79;
+	}
+	public Double getVlysis() {
+		return vlysis;
+	}
+	public void setVlysis(Double vlysis) {
+		this.vlysis = vlysis;
 	}
 }

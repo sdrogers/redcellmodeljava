@@ -71,8 +71,7 @@ public class OptionsParsers {
 			model.getCarriermediated().setPermeability_K(model.getCarriermediated().getDefaultPermeability_K() * Double.parseDouble(temp)/100.0);
 			usedoptions.add("ka-change");
 		}
-		// Check this one with Arieh
-		// Removed from GUI at the moment....
+		// Not visible in the GUI at the moment....
 		temp = options.get("cotransport-activation");
 		if(temp != null) {
 			Double co_f = Double.parseDouble(temp);
@@ -93,17 +92,78 @@ public class OptionsParsers {
 			usedoptions.add("PMCA");
 		}
 		
-//		temp = options.get("vmax-leak-change");
-//		if(temp != null) {
-//			model.passiveca.setFcalm(model.passiveca.getFcalm()*Double.parseDouble(temp));
-//			usedoptions.add("vmax-leak-change");
-//		}
-		
 		temp = options.get("Gardos channel");
 		if(temp != null) {
 			Double gc = (100.0 - Double.parseDouble(temp))/100.0;
 			model.getGoldman().setPkm(model.getGoldman().getDefaultPkm() * gc);
 			usedoptions.add("Gardos channel");
+		}
+	}
+	public static void naPumpScreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions, RBC_model model) {
+		String na_efflux_fwd = rsoptions.get("Na/K pump Na efflux");
+		if(na_efflux_fwd != null) {
+			model.getNapump().setFluxFwd(Double.parseDouble(na_efflux_fwd));
+			usedoptions.add("Na/K pump Na efflux");
+		}
+		
+		
+		String na_efflux_rev = rsoptions.get("na-efflux-rev");
+		if(na_efflux_rev != null) {
+			model.getNapump().setFluxRev(Double.parseDouble(na_efflux_rev));
+			usedoptions.add("na-efflux-rev");
+		}
+		
+		
+		// Other code to be added here...
+		// New ones added for reduced RS in March 18
+		String temp = rsoptions.get("CNa");
+		if(temp != null) {
+			model.cell.Na.setConcentration(Double.parseDouble(temp));
+			usedoptions.add("CNa");
+		}
+		temp = rsoptions.get("CK");
+		if(temp != null) {
+			model.cell.K.setConcentration(Double.parseDouble(temp));
+			usedoptions.add("CK");
+		}
+		
+		temp = rsoptions.get("Q10 passive");
+		if(temp != null) {
+			model.Q10Passive = Double.parseDouble(temp);
+			usedoptions.add("Q10 passive");
+		}
+		/*
+		 *  The following sets the active Q10 in the sodium pump
+		 *  which is also used by the Ca-Mg transporter 
+		 */
+		temp = rsoptions.get("Q10 active");
+		if(temp != null) {
+			model.napump.setQ10Active(Double.parseDouble(temp));
+			usedoptions.add("Q10 active");
+		}
+	}
+	
+	public static void cellwaterscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions, RBC_model model) {
+		String hb_content_str = rsoptions.get("MCHC");
+		if(hb_content_str != null) {
+			usedoptions.add("MCHC");
+			model.setHb_content(Double.parseDouble(hb_content_str));
+		}
+		model.cell.Hb.setAmount(model.getHb_content() * 10.0/64.5);
+		model.setI_79(1.0 - model.getHb_content()/136.0);
+		model.setVlysis(1.45);
+		if(model.getHb_content() == 34.0) {
+			String temp = rsoptions.get("Vw");
+			if(temp != null) {
+				model.setI_79(Double.parseDouble(temp));
+				usedoptions.add("Vw");
+			}
+			temp = rsoptions.get("lytic-cell-water");
+			if(temp != null) {
+				model.setVlysis(Double.parseDouble(temp));
+				usedoptions.add("lytic-cell-water");
+			}
+			
 		}
 	}
 }

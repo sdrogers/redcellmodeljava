@@ -23,6 +23,7 @@ public class RBCWelcomeScreen extends JFrame implements ActionListener {
 	private JButton newButton,loadButton;
 	private JFileChooser jfc;
 	private JButton pkgButton,protocolAButton,protocolBButton,protocolCButton,protocolDButton,protocolEButton,protocolFButton,protocolGButton;
+	private JPanel buttonPanel;
 	public RBCWelcomeScreen() {
 		this.setSize(500,450);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,23 +37,33 @@ public class RBCWelcomeScreen extends JFrame implements ActionListener {
 		
 		JPanel centerPanel = new JPanel(new BorderLayout());
 
-//		JPanel buffPanel = new JPanel(new BorderLayout());
-//		JTextArea infoArea = new JTextArea(10,20);
-//		infoArea.setEditable(false);
-//		infoArea.append("Welcome to the RBC model\n");
-//		infoArea.append("========================\n\n");
-//		infoArea.append("Some helpful words will appear here in due course");
-//		buffPanel.add(infoArea,BorderLayout.NORTH);
-//		buffPanel.add(new ImagePanel(),BorderLayout.CENTER);
-//		buffPanel.setBackground(Color.WHITE);
 		centerPanel.add(new ImagePanel(),BorderLayout.CENTER);
 		
 
 		this.add(centerPanel);
 		
 		
-		JPanel buttonPanel = new JPanel(new GridLayout(0,1));
+		buttonPanel = new JPanel(new GridLayout(0,1));
 		
+		
+		
+		JPanel bottomButtons = new JPanel(new FlowLayout());
+		bottomButtons.add(newButton);
+		bottomButtons.add(loadButton);
+		bottomButtons.setBorder(BorderFactory.createTitledBorder("Options"));
+		buttonPanel.add(bottomButtons);
+		//addDemoProtocols();
+
+		
+		centerPanel.add(buttonPanel,BorderLayout.SOUTH);
+
+		this.setVisible(true);
+		
+		jfc = new JFileChooser();
+	}
+	
+	
+	private void addDemoProtocols() {
 		JPanel demoProtocols = new JPanel(new GridLayout(0,1));
 		pkgButton = new JButton("PKG 30, PAG 50");
 		pkgButton.addActionListener(this);
@@ -93,19 +104,9 @@ public class RBCWelcomeScreen extends JFrame implements ActionListener {
 		
 		
 		demoProtocols.setBorder(BorderFactory.createTitledBorder("Demo protocols"));
-		JPanel bottomButtons = new JPanel(new FlowLayout());
-		bottomButtons.add(newButton);
-		bottomButtons.add(loadButton);
-		bottomButtons.setBorder(BorderFactory.createTitledBorder("Options"));
-		buttonPanel.add(bottomButtons);
+		
 		
 		buttonPanel.add(demoProtocols);
-		
-		centerPanel.add(buttonPanel,BorderLayout.SOUTH);
-//		this.add(buttonPanel,BorderLayout.SOUTH);
-		this.setVisible(true);
-		
-		jfc = new JFileChooser();
 	}
 	
 	public void actionPerformed(ActionEvent e) {

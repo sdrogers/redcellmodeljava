@@ -182,8 +182,8 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		RSOptions.put("CNa","5.0");
 		RSOptions.put("CA","95.0");
 		RSOptions.put("Vw","0.85");
-		RSOptions.put("PMCA Fmax","12.0");
-		RSOptions.put("PKGardosMax","30.0");
+//		RSOptions.put("PMCA Fmax","12.0");
+//		RSOptions.put("PKGardosMax","30.0");
 		RSOptions.put("KCa Gardos channel","0.01");
 										
 
@@ -326,7 +326,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 	}
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == runButton) {
-			this.modelOutput.setText(String.format("%8s %8s %8s %8s %16s %8s %10s\n", "Time","V/V","Em","FNaP","TransCCa(x1000)","TransHct","Iterations"));
+			this.modelOutput.setText(String.format("%8s %8s %8s %8s %16s %8s %10s\n", "Time","RCV","Em","FNaP","TransCCa(x1000)","TransHct","Iterations"));
 			stopButton.setEnabled(true);
 			runButton.setEnabled(false);
 			saveButton.setEnabled(false);

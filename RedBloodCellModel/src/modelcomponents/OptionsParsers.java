@@ -49,11 +49,11 @@ public class OptionsParsers {
 		}
 	}
 	public static void set_transport_changes_options(HashMap<String,String> options, ArrayList<String> usedoptions,RBC_model model) {
-		String temp = options.get("Na/K pump");
+		String temp = options.get("% inhibition of Na/K pump FNamax");
 		if(temp != null) {
 			Double inhibFac = (100.0-Double.parseDouble(temp))/100.0;
 			model.getNapump().setP_1(model.getNapump().getDefaultP_1()*inhibFac);
-			usedoptions.add("Na/K pump");
+			usedoptions.add("% inhibition of Na/K pump FNamax");
 		}
 		
 		temp = options.get("na-pump-reverse-flux-change");
@@ -78,25 +78,25 @@ public class OptionsParsers {
 			model.getCotransport().setPermeability(0.0002 * co_f / 100.0);
 			usedoptions.add("cotransport-activation");
 		}
-		temp = options.get("JS cycle");
+		temp = options.get("% inhibition/stimulation(-) of JS mediated fluxes");
 		if(temp != null) {
 			Double jsfactor = Double.parseDouble(temp);
 			jsfactor = (100.0 - jsfactor)/100.0;
 			model.getJS().setPermeability(model.getJS().getDefaultPermeability() * jsfactor);
-			usedoptions.add("JS cycle");
+			usedoptions.add("% inhibition/stimulation(-) of JS mediated fluxes");
 		}
-		temp = options.get("PMCA");
+		temp = options.get("% inhibition/stimulation(-) of PMCA FCamax");
 		if(temp != null) {
 			Double fc = (100.0 - Double.parseDouble(temp))/100.0;
 			model.getCaPump().setFcapm(model.getCaPump().getDefaultFcapm() * fc);
-			usedoptions.add("PMCA");
+			usedoptions.add("% inhibition/stimulation(-) of PMCA FCamax");
 		}
 		
-		temp = options.get("Gardos channel");
+		temp = options.get("% inhibition of Gardos channel FKmax");
 		if(temp != null) {
 			Double gc = (100.0 - Double.parseDouble(temp))/100.0;
 			model.getGoldman().setPkm(model.getGoldman().getDefaultPkm() * gc);
-			usedoptions.add("Gardos channel");
+			usedoptions.add("% inhibition of Gardos channel FKmax");
 		}
 	}
 	public static void naPumpScreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions, RBC_model model) {

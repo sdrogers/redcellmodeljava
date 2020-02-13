@@ -1,5 +1,5 @@
 Alternative name,Parameter/Variable name,default value,Units,Description,"Allowed values (if blank, a number is assumed)"
-Na/K pump,Na/K pump,0,%,"Extent of inhibition of Na/K pump mediated fluxes",
-JS cycle,JS cycle,0,%,Extent of inhibition of JS mediated fluxes,
-PMCA,PMCA,0,%,Extent of inhibition of PMCA mediated fluxes,
-Gardos channel,Gardos channel,0,%,"Extent of inhibition of Gardos channel mediated K flux",
+Na/K pump,Na/K pump,0,%,"% inhibition of Na/K pump FNamax",
+JS cycle,JS cycle,0,%,"% inhibition/stimulation(-) of JS mediated fluxes",
+PMCA,PMCA,0,%,% inhibition/stimulation(-) of PMCA FCamax,
+Gardos channel,Gardos channel,0,%,"% inhibition of Gardos channel FKmax",

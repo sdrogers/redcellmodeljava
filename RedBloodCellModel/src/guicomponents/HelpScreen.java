@@ -40,6 +40,14 @@ public class HelpScreen extends JFrame implements ActionListener {
 		tabbedPane.addTab("Dynamic State", null, ds,
                 "Dynamic State");
 		
+		
+		JPanel pr = new JPanel(new BorderLayout());
+		JLabel prContent = new JLabel(HelpText.piezoHelp);
+		prContent.setBorder(new EmptyBorder(10,10,10,10));
+		pr.add(new JScrollPane(prContent,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),BorderLayout.CENTER);
+		tabbedPane.addTab("Piezo routine", null, pr,
+                "Piezo routine");
+		
 		closeButton = new JButton("Close");
 		closeButton.addActionListener(this);
 		

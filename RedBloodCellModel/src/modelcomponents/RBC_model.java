@@ -1128,10 +1128,10 @@ public class RBC_model implements Serializable {
 			usedoptions.add("Pw");
 		}
 		
-		temp = options.get("PKG");
+		temp = options.get("PK");
 		if(temp != null) {
 			this.goldman.setPermeability_K(Double.parseDouble(temp));
-			usedoptions.add("PKG");
+			usedoptions.add("PK");
 		}
 		
 		temp = options.get("pgkh");
@@ -1140,29 +1140,29 @@ public class RBC_model implements Serializable {
 			usedoptions.add("pgkh");
 		}
 		
-		temp = options.get("PNaG");
+		temp = options.get("PNa");
 		if(temp != null) {
 			this.goldman.setPermeability_Na(Double.parseDouble(temp));
-			usedoptions.add("PNaG");
+			usedoptions.add("PNa");
 		}
 		
-		temp = options.get("PAG");
+		temp = options.get("PA");
 		if(temp != null) {
 			this.goldman.setPermeability_A(Double.parseDouble(temp));
-			usedoptions.add("PAG");
+			usedoptions.add("PA");
 		}
 		
-		temp = options.get("PHG");
+		temp = options.get("PH");
 		if(temp != null) {
 			this.goldman.setPermeability_H(Double.parseDouble(temp));
-			usedoptions.add("PHG");
+			usedoptions.add("PH");
 		}
 		
 		// New option Jan 2018
-		temp = options.get("PCaG");
+		temp = options.get("PCa");
 		if(temp != null) {
 			this.passiveca.setFcalm(Double.parseDouble(temp));
-			usedoptions.add("PCaG");
+			usedoptions.add("PCa");
 		}
 		
 		

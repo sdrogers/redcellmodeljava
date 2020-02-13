@@ -995,27 +995,27 @@ public class RBC_model implements Serializable {
 					piezo.setCycles(Integer.parseInt(temp));
 				}
 				
-				temp = options.get("PzKG");
+				temp = options.get("PzK");
 				if(temp != null) {
-					usedoptions.add("PzKG");
+					usedoptions.add("PzK");
 					piezo.setPkg(Double.parseDouble(temp));
 				}
 				
-				temp = options.get("PzNaG");
+				temp = options.get("PzNa");
 				if(temp != null) {
-					usedoptions.add("PzNaG");
+					usedoptions.add("PzNa");
 					piezo.setPnag(Double.parseDouble(temp));
 				}
 				
-				temp = options.get("PzCaG");
+				temp = options.get("PzCa");
 				if(temp != null) {
-					usedoptions.add("PzCaG");
+					usedoptions.add("PzCa");
 					piezo.setPcag(Double.parseDouble(temp));
 				}
 
-				temp = options.get("PzAG");
+				temp = options.get("PzA");
 				if(temp != null) {
-					usedoptions.add("PzAG");
+					usedoptions.add("PzA");
 					piezo.setPag(Double.parseDouble(temp));
 				}
 				

@@ -355,25 +355,14 @@ public class RBC_model implements Serializable {
 		this.medium.Hb.setConcentration(0.0);
 	}
 	private void setInitialCellConcentrations() {		
-		//# self.C_1 = 10.0
 		this.cell.Na.setConcentration(10.0);
-		//# self.C_2 = 140.0
 		this.cell.K.setConcentration(140.0);
-		//# self.C_3 = 95.0
 		this.cell.A.setConcentration(95.0);
-		//# self.C_4 = 0.0
 		this.cell.H.setConcentration(0.0);
-		//# self.C_5 = 0.0
 		this.cell.Hb.setConcentration(0.0);
-		//# self.C_6 = 0.0
 		this.cell.X.setConcentration(0.0);
-		//# self.C_7 = 0.0
 		this.cell.Mgt.setConcentration(0.0);
 		this.cell.XHbm.setConcentration(0.0);
-		//# self.C_9 = 0.0
-		//# self.cell.COs.concentration
-		//# self.C_10 = 0.0
-		//# self.cell.Hbpm.concentration
 
 	}
 	/*
@@ -409,27 +398,18 @@ public class RBC_model implements Serializable {
 		this.cycle_count = this.cycles_per_print - 1; // forces an output now
 		
 		
-//		this.piezo.setOldPKG(this.goldman.getPermeability_K());
 		this.piezoGoldman.setPermeability_K(this.piezo.getPkg());
-//		this.piezo.setOldPNaG(this.goldman.getPermeability_Na());
 		this.piezoGoldman.setPermeability_Na(this.piezo.getPnag());
-//		this.piezo.setOldPAG(this.goldman.getPermeability_A());
 		this.piezoGoldman.setPermeability_A(this.piezo.getPag());
 
 		
-		// Do we need another of these???
-		// Yes - swap for piezoPassiveCa...
-//		this.piezo.setOldPCaG(this.passiveca.getFcalm());
 		this.piezoPassiveca.setFcalm(this.piezo.getPcag());
 		
-
-		// This stays the same?
 
 		/* 
 		 * Change in following line to save the old PMCA as whatever
 		 * the current value is, for replacing after transit period
 		 */
-		//this.piezo.setOldPMCA(this.capump.getDefaultFcapm());
 		this.piezo.setOldPMCA(this.capump.getFcapm());
 		
 		Double fac = (100.0 - this.piezo.getPmca())/100.0;
@@ -476,8 +456,7 @@ public class RBC_model implements Serializable {
 		this.piezoPassiveca.setFcalm(0.0);
 		this.capump.setFcapm(this.piezo.getOldPMCA());
 		
-		
-//		this.JS.setPermeability(this.JS.getDefaultPermeability());
+
 		this.JS.setPermeability(oldJSPermeability);
 		
 		
@@ -610,7 +589,6 @@ public class RBC_model implements Serializable {
 
 		}
 		// Add the END milestone always
-		
 		mileStones.add(new MileStone(this.duration_experiment/60.0,"END"));
 		
 
@@ -699,12 +677,7 @@ public class RBC_model implements Serializable {
 				}
 			}
 			
-//			if(this.n_its == 2) {
-//				this.Z += 1;
-//				System.out.println("Publishing at t=" + 60.0*this.sampling_time);
-//				this.publish();
-//			}
-			
+
 			if(this.cycle_count == this.cycles_per_print) {
 				this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
 				this.publish();

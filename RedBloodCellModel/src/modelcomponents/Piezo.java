@@ -15,7 +15,7 @@ public class Piezo implements Serializable {
 	private Integer cycles = 7;
 	private Double pkg = 0.0;
 	private Double pnag = 0.0;
-	private Double pcag = 10.0;
+	private Double pcag = 70.0;
 	private Double pag = 50.0;
 	private Double pmca = 0.0; // check this
 	private Double piezoFraction = 0.9;

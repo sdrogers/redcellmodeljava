@@ -3,7 +3,7 @@
 This repository holds Java code for the Red Blood Cell model.
 
 
-## Introduction
+## Introduction
 
 _to be completed_
 

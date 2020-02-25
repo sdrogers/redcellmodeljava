@@ -1,8 +1,8 @@
 display name,code name,default value,units,description,allowed values
 Na/K pump Na efflux,na-efflux-fwd,-2.61,mmol/Loch,Sodium efflux through the Na/K pump at 37C,
-[Na]i,cna-conc,10,mmol/Locw,Intracellular sodium concentration,
-[K]i,ck-conc,140,mmol/Locw,Intracellular potassium concentration,
-[A]i,cla-conc,95,mmol/Locw,Intracellular concentration of diffusible anion (Cl-+HCO3-),
+CNa,CNa,10,mmol/Locw,Intracellular sodium concentration,
+CK,CK,140,mmol/Locw,Intracellular potassium concentration,
+CA,CA,95,mmol/Locw,Intracellular concentration of diffusible anion (Cl-+HCO3-),
 Cell water content,cell-water,0.75,L/Loc,Water content of the RS cell,
 PMCA Fmax,vmax-cap,12,mmol/Loch,Ca2+ saturated efflux through the calcium pump,
 PKGardosMax,ca2+-pkmax,30,1/h,Maximal Goldmanian K permeability through the KCNN channel,

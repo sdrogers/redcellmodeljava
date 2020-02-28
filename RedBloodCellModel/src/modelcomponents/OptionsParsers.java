@@ -349,20 +349,20 @@ public class OptionsParsers {
 //		}
 		
 		
-		temp = rsoptions.get("PK at Ca2+ saturation");
+		temp = rsoptions.get("PKGardos Max");
 		if(temp != null) {
 			model.goldman.setDefaultPkm(Double.parseDouble(temp));
-			usedoptions.add("PK at Ca2+ saturation");
+			usedoptions.add("PKGardos Max");
 		} 
 //		else {
 //			this.goldman.setPkm(30.0);
 //		}
 		
 		
-		temp = rsoptions.get("K1/2 for Ca2+ activation");
+		temp = rsoptions.get("KCa Gardos channel");
 		if(temp != null) {
 			model.goldman.setPkcak(Double.parseDouble(temp));
-			usedoptions.add("K1/2 for Ca2+ activation");
+			usedoptions.add("KCa Gardos channel");
 		}
 //		else {
 //			this.goldman.setPkcak(1e-2);

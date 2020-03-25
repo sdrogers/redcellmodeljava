@@ -125,9 +125,12 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		outputPanel.add(topPanel);
 	
 		JPanel justPlots = new JPanel(new GridLayout(2,2));
+		Font labelFont = new Font("SansSerif",Font.BOLD,18);
 		for(int i=0;i<4;i++) {
 			plot[i] = new Plot2DPanel("SOUTH");
 			plot[i].getAxis(0).setLabelText("Time");
+			plot[i].getAxis(0).setLabelFont(labelFont);
+	        plot[i].getAxis(1).setLabelFont(labelFont);
 			justPlots.add(plot[i]);
 		}
 		

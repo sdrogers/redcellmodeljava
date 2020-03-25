@@ -15,6 +15,7 @@ import java.io.Serializable;
 public class RBC_model implements Serializable {
 	
 	private String[] publish_order = {"V/V","Vw",
+									  "CVF",
 									  "Hct","MCHC",
 	                                  "Density","Em",
 									  "pHi","pHo",
@@ -28,20 +29,44 @@ public class RBC_model implements Serializable {
 	                                  "CHb",
 	                                  "fHb",
 	                                  "nHb",
-	                                  "CH/nM","CX",
+	                                  "fHb*CHb",
+	                                  "nHb*CHb",
+	                                  "CX-",
+	                                  "nX",
+	                                  "nX*CX-",
 	                                  "COs","MOs",
-	                                  "MNa","MK","MA","MH/nM","MB",
-	                                  "MCat","MCaf","MMgt","MMgf",
-	                                  "Mgluc-",
-	                                  "Mgluc+",
-	                                  "FNaP","FACo","FKCo","FNaCo",
-	                                  "FCaP","FKP","FNa","FKGgardos",
-	                                  "FKG","FK","FA","FH","FCa",
-	                                  "FW","FNaG","FAG","FHG","FCaG",
-	                                  "FAJS","FHJS","FA23Ca","FA23Mg",
-	                                  "EA","EH","EK","ENa","FzKG",
-	                                  "FzNaG","FzAG","FzCaG","fHb*CHb",
-	                                  "nX","Msucr","EN test"};
+	                                  "MNa","MK","MA","MH","MB",
+	                                  "MCat","MCa2+","MMgt","MMg2+",
+	                                  // "MEDGTA", don't know what this is
+	                                  "Msucrose",
+	                                  "Mgluconate",
+	                                  "Mglucamine",
+	                                  "CH/nM",
+	                                  "Mgluconate",
+	                                  "Mglucamine",
+	                                  "FNaP",
+	                                  "FKP",
+	                                  "FCaP",
+	                                  "FHCaP",
+	                                  "FCaL",//what is this?
+	                                  "FNaG",
+	                                  "FKG",
+	                                  "FKGgardos",
+	                                  "FAG",
+	                                  "FHG",
+	                                  "FClCo", // Was this previously called FACo?
+	                                  "FKCo",
+	                                  "FNaCo",
+	                                  "FA23Ca","FA23Mg",
+	                                  "FNa",
+	                                  "FK","FA","FH","FCa",
+	                                  "FW",
+	                                  //"FCaG", gone?
+	                                  //"FAJS","FHJS", gone?
+	                                  "EA","EH","EK","ENa",
+	                                  "FzK",
+	                                  "FzNa","FzA","FzCa",
+	                                  "EN test"};
 	private ArrayList<ResultHash> resultList = new ArrayList<ResultHash>();
 	
 	private boolean verbose = true;
@@ -1883,6 +1908,7 @@ public class RBC_model implements Serializable {
 		ResultHash new_result = new ResultHash(this.sampling_time*60.0); // convert to minutes for publishing
 		new_result.setItem("Vw",this.getVw());
 		new_result.setItem("V/V",this.VV);
+		new_result.setItem("CVF",this.fraction);
 		new_result.setItem("MCHC",this.mchc);
 		new_result.setItem("Density",this.density);
 		new_result.setItem("pHi",this.cell.getpH());
@@ -1901,8 +1927,9 @@ public class RBC_model implements Serializable {
 		new_result.setItem("CCa2+",this.cell.Caf.getConcentration());
 		new_result.setItem("CMg2+",this.cell.Mgf.getConcentration());
 		new_result.setItem("CHb",this.cell.Hb.getConcentration());
-		new_result.setItem("CX",this.cell.X.getConcentration());
+		new_result.setItem("CX-",this.cell.X.getConcentration());
 		new_result.setItem("nX", this.A_10);
+		new_result.setItem("nX*CX-", this.A_10 * this.cell.X.getConcentration());
 		new_result.setItem("COs",this.cell.Os.getConcentration());
 		new_result.setItem("MOs",this.medium.Os.getConcentration());
 		new_result.setItem("rA",this.rA);
@@ -1912,14 +1939,15 @@ public class RBC_model implements Serializable {
 		new_result.setItem("MNa",this.medium.Na.getConcentration());
 		new_result.setItem("MK",this.medium.K.getConcentration());
 		new_result.setItem("MA",this.medium.A.getConcentration());
-		new_result.setItem("MH/nM", 1e9*Math.pow(10.0, -this.medium.getpH()));
+		new_result.setItem("MH", 1e9*Math.pow(10.0, -this.medium.getpH()));
 		new_result.setItem("MB", this.buffer_conc);
 		new_result.setItem("MCat", this.medium.Cat.getConcentration());
-		new_result.setItem("MCaf", this.medium.Caf.getConcentration());
+		new_result.setItem("MCa2+", this.medium.Caf.getConcentration());
 		new_result.setItem("MMgt", this.medium.Mgt.getConcentration());
-		new_result.setItem("MMgf", this.medium.Mgf.getConcentration());
+		new_result.setItem("MMg2+", this.medium.Mgf.getConcentration());
 		new_result.setItem("FNaP",this.getNapump().getFlux_net());
 		new_result.setItem("FCaP",this.capump.getFlux_Ca());
+		new_result.setItem("FHCaP", -2.0*this.capump.getFlux_Ca());
 		new_result.setItem("FKP",this.getNapump().getFlux_K());
 		new_result.setItem("FNa",this.total_flux_Na);
 		new_result.setItem("FK",this.total_flux_K);
@@ -1945,10 +1973,10 @@ public class RBC_model implements Serializable {
 		Double V_16 = this.goldman.getRtoverf()*Math.log(this.medium.Na.getConcentration()/this.cell.Na.getConcentration());
 		new_result.setItem("ENa", V_16);
 		new_result.setItem("FKGgardos", this.goldman.computeFKGardos(I_18));
-		new_result.setItem("FzKG", this.piezoGoldman.getFlux_K());
-		new_result.setItem("FzNaG", this.piezoGoldman.getFlux_Na());
-		new_result.setItem("FzAG", this.piezoGoldman.getFlux_A());
-		new_result.setItem("FzCaG", this.piezoPassiveca.getFlux());
+		new_result.setItem("FzK", this.piezoGoldman.getFlux_K());
+		new_result.setItem("FzNa", this.piezoGoldman.getFlux_Na());
+		new_result.setItem("FzA", this.piezoGoldman.getFlux_A());
+		new_result.setItem("FzCa", this.piezoPassiveca.getFlux());
 		
 		
 		new_result.setItem("FACo", this.cotransport.getFlux_A());
@@ -1957,9 +1985,10 @@ public class RBC_model implements Serializable {
 		
 		
 		new_result.setItem("fHb*CHb", this.fHb*this.cell.Hb.getConcentration());
-		new_result.setItem("Msucr", this.medium.Sucrose.getConcentration());
-		new_result.setItem("Mgluc-", this.medium.Gluconate.getConcentration());
-		new_result.setItem("Mgluc+", this.medium.Glucamine.getConcentration());
+		new_result.setItem("nHb*CHb", this.nHb*this.cell.Hb.getConcentration());
+		new_result.setItem("Msucrose", this.medium.Sucrose.getConcentration());
+		new_result.setItem("Mgluconate", this.medium.Gluconate.getConcentration());
+		new_result.setItem("Mglucamine", this.medium.Glucamine.getConcentration());
 		
 		
 		new_result.setItem("TransitHct", this.finalPiezoHct);

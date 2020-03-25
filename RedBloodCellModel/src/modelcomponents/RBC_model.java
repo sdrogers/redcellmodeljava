@@ -14,13 +14,34 @@ import java.io.IOException;
 import java.io.Serializable;
 public class RBC_model implements Serializable {
 	
-	private String[] publish_order = {"V/V","Vw","Hct","Em","pHi","pHo","MCHC",
-	                                  "Density","QNa","QK","QA","QCa","QMg","CNa","CK","CA","CH/nM","CCa2+","CMg2+",
-	                                  "CX","CHb","fHb","COs","MOs","rA","rH","nHb","MNa","MK","MA","MH/nM","MB","MCat","MCaf",
-	                                  "MMgt","MMgf","FNaP","FACo","FKCo","FNaCo","FCaP","FKP","FNa","FKGgardos","FKG","FK",
-	                                  "FA","FH","FCa","FW","FNaG","FAG","FHG","FCaG","FAJS","FHJS","FA23Ca","FA23Mg",
-	                                  "EA","EH","EK","ENa","FzKG","FzNaG","FzAG","FzCaG","fHb*CHb","nX","Msucr","Mgluc-",
-	                                  "Mgluc+","EN test"};
+	private String[] publish_order = {"V/V","Vw",
+									  "Hct","MCHC",
+	                                  "Density","Em",
+									  "pHi","pHo",
+									  "rH","rA",
+									  "QNa","QK",
+	                                  "QA","QCa","QMg",
+	                                  "CNa",
+	                                  "CK","CA",
+	                                  "CCa2+",
+	                                  "CMg2+",
+	                                  "CHb",
+	                                  "fHb",
+	                                  "nHb",
+	                                  "CH/nM","CX",
+	                                  "COs","MOs",
+	                                  "MNa","MK","MA","MH/nM","MB",
+	                                  "MCat","MCaf","MMgt","MMgf",
+	                                  "Mgluc-",
+	                                  "Mgluc+",
+	                                  "FNaP","FACo","FKCo","FNaCo",
+	                                  "FCaP","FKP","FNa","FKGgardos",
+	                                  "FKG","FK","FA","FH","FCa",
+	                                  "FW","FNaG","FAG","FHG","FCaG",
+	                                  "FAJS","FHJS","FA23Ca","FA23Mg",
+	                                  "EA","EH","EK","ENa","FzKG",
+	                                  "FzNaG","FzAG","FzCaG","fHb*CHb",
+	                                  "nX","Msucr","EN test"};
 	private ArrayList<ResultHash> resultList = new ArrayList<ResultHash>();
 	
 	private boolean verbose = true;

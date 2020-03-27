@@ -289,10 +289,10 @@ public class OptionsParsers {
 		}
 		model.setCbenz2(model.getBenz2()/model.getVw());
 
-		temp = rsoptions.get("PMCA Fmax");
+		temp = rsoptions.get("PMCA FCaPmax");
 		if(temp != null) {
 			model.capump.setDefaultFcapm(Double.parseDouble(temp));
-			usedoptions.add("PMCA Fmax");
+			usedoptions.add("PMCA FCaPmax");
 		} 
 
 		temp = rsoptions.get("k1/2");
@@ -349,10 +349,10 @@ public class OptionsParsers {
 //		}
 		
 		
-		temp = rsoptions.get("PKGardos Max");
+		temp = rsoptions.get("PKGardosMax");
 		if(temp != null) {
 			model.goldman.setDefaultPkm(Double.parseDouble(temp));
-			usedoptions.add("PKGardos Max");
+			usedoptions.add("PKGardosMax");
 		} 
 //		else {
 //			this.goldman.setPkm(30.0);

@@ -37,7 +37,7 @@ public class RBC_model implements Serializable {
 	                                  "COs","MOs",
 	                                  "MNa","MK","MA","MH","MB",
 	                                  "MCat","MCa2+","MMgt","MMg2+",
-	                                  // "MEDGTA", don't know what this is
+	                                  "MEDGTA",
 	                                  "Msucrose",
 	                                  "Mgluconate",
 	                                  "Mglucamine",
@@ -54,7 +54,7 @@ public class RBC_model implements Serializable {
 	                                  "FKGgardos",
 	                                  "FAG",
 	                                  "FHG",
-	                                  "FClCo", // Was this previously called FACo?
+	                                  "FClCo",
 	                                  "FKCo",
 	                                  "FNaCo",
 	                                  "FA23Ca","FA23Mg",
@@ -1977,8 +1977,8 @@ public class RBC_model implements Serializable {
 		new_result.setItem("FzA", this.piezoGoldman.getFlux_A());
 		new_result.setItem("FzCa", this.piezoPassiveca.getFlux());
 		
-		
-		new_result.setItem("FACo", this.cotransport.getFlux_A());
+		new_result.setItem("MEDGTA",this.edgto);
+		new_result.setItem("FClCo", this.cotransport.getFlux_A());
 		new_result.setItem("FKCo", this.cotransport.getFlux_K());
 		new_result.setItem("FNaCo", this.cotransport.getFlux_Na());
 		

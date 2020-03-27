@@ -1218,10 +1218,10 @@ public class RBC_model implements Serializable {
 		
 		this.a23.setPermeability_Ca(this.a23.getPermeability_Mg());
 		
-		temp = options.get("Hb oxy or deoxy");
+		temp = options.get("Hb Oxy or Deoxy");
 		if(temp != null) {
 			this.I_67 = this.getPit0(); // Store old value
-			usedoptions.add("Hb oxy or deoxy");
+			usedoptions.add("Hb Oxy or Deoxy");
 			if(temp.equals("Oxy")) {
 				this.setPit0(7.2);
 			}else if(temp.equals("Deoxy")) {

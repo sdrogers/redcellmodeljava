@@ -87,11 +87,11 @@ public class OptionsParsers {
 			model.getJS().setPermeability(model.getJS().getDefaultPermeability() * jsfactor);
 			usedoptions.add("% inhibition/stimulation(-) of JS mediated fluxes");
 		}
-		temp = options.get("% inhibition/stimulation(-) of PMCA FCamax");
+		temp = options.get("% inhibition/stimulation(-) of PMCA FCaPmax");
 		if(temp != null) {
 			Double fc = (100.0 - Double.parseDouble(temp))/100.0;
 			model.getCaPump().setFcapm(model.getCaPump().getDefaultFcapm() * fc);
-			usedoptions.add("% inhibition/stimulation(-) of PMCA FCamax");
+			usedoptions.add("% inhibition/stimulation(-) of PMCA FCaPmax");
 		}
 		
 		temp = options.get("% inhibition of Gardos channel FKmax");

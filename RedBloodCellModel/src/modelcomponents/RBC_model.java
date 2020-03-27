@@ -48,7 +48,7 @@ public class RBC_model implements Serializable {
 	                                  "FKP",
 	                                  "FCaP",
 	                                  "FHCaP",
-	                                  "FCaL",//what is this?
+	                                  "FCaG",
 	                                  "FNaG",
 	                                  "FKG",
 	                                  "FKGgardos",
@@ -61,7 +61,6 @@ public class RBC_model implements Serializable {
 	                                  "FNa",
 	                                  "FK","FA","FH","FCa",
 	                                  "FW",
-	                                  //"FCaG", gone?
 	                                  //"FAJS","FHJS", gone?
 	                                  "EA","EH","EK","ENa",
 	                                  "FzK",

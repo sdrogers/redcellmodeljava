@@ -1053,21 +1053,21 @@ public class RBC_model implements Serializable {
 					piezo.setPiezoFraction(Double.parseDouble(temp));
 				}
 				
-				temp = options.get("JS inhib/stim");
+				temp = options.get("Pz JS I/S");
 				if(temp != null) {
 					Double jsfactor = Double.parseDouble(temp);
 					jsfactor = (100.0 - jsfactor)/100.0;
 					piezo.setPiezoJS(jsfactor);
-					usedoptions.add("JS inhib/stim");
+					usedoptions.add("Pz JS I/S");
 				}
- 				temp = options.get("Restore Medium");
+ 				temp = options.get("Restore Medium (no/yes)");
  				if(temp != null) {
  					if(temp.equals("yes")) {
  						piezo.setRestoreMedium(true);
  					}else {
  						piezo.setRestoreMedium(false);
  					}
- 					usedoptions.add("Restore Medium");
+ 					usedoptions.add("Restore Medium (no/yes)");
  				}
  				temp = options.get("Restored Medium HEPES-Na concentration");
  				if(temp != null) {

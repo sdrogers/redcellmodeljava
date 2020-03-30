@@ -80,25 +80,25 @@ public class OptionsParsers {
 			model.getCotransport().setPermeability(0.0002 * co_f / 100.0);
 			usedoptions.add("cotransport-activation");
 		}
-		temp = options.get("% inhibition/stimulation(-) of JS mediated fluxes");
+		temp = options.get("% inhibition/stimulation(-) of JS kAE1");
 		if(temp != null) {
 			Double jsfactor = Double.parseDouble(temp);
 			jsfactor = (100.0 - jsfactor)/100.0;
 			model.getJS().setPermeability(model.getJS().getDefaultPermeability() * jsfactor);
-			usedoptions.add("% inhibition/stimulation(-) of JS mediated fluxes");
+			usedoptions.add("% inhibition/stimulation(-) of JS kAE1");
 		}
-		temp = options.get("% inhibition/stimulation(-) of PMCA FCaPmax");
+		temp = options.get("% inhibition/stimulation(-) of FCaPmax");
 		if(temp != null) {
 			Double fc = (100.0 - Double.parseDouble(temp))/100.0;
 			model.getCaPump().setFcapm(model.getCaPump().getDefaultFcapm() * fc);
-			usedoptions.add("% inhibition/stimulation(-) of PMCA FCaPmax");
+			usedoptions.add("% inhibition/stimulation(-) of FCaPmax");
 		}
 		
-		temp = options.get("% inhibition of Gardos channel FKmax");
+		temp = options.get("% inhibition of PKGardosMax");
 		if(temp != null) {
 			Double gc = (100.0 - Double.parseDouble(temp))/100.0;
 			model.getGoldman().setPkm(model.getGoldman().getDefaultPkm() * gc);
-			usedoptions.add("% inhibition of Gardos channel FKmax");
+			usedoptions.add("% inhibition of PKGardosMax");
 		}
 	}
 	public static void naPumpScreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions, RBC_model model) {

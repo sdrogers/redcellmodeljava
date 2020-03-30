@@ -1,5 +1,5 @@
 Alternative name,Parameter/Variable name,default value,Units,Description,"Allowed values (if blank, a number is assumed)"
 % inhibition of Na/K pump FNamax,% inhibition of Na/K pump FNamax,0,%,"% inhibition of Na/K pump FNamax",
-% inhibition/stimulation(-) of JS mediated fluxes,% inhibition/stimulation(-) of JS mediated fluxes,0,%,"% inhibition/stimulation(-) of JS mediated fluxes",
-% inhibition/stimulation(-) of PMCA FCaPmax,% inhibition/stimulation(-) of PMCA FCaPmax,0,%,% inhibition/stimulation(-) of PMCA FCaPmax,
-% inhibition of Gardos channel FKGardosMax,% inhibition of Gardos channel FKGardosMax,0,%,"% inhibition of FKGardoosMax",
+% inhibition/stimulation(-) of JS kAE1,% inhibition/stimulation(-) of JS kAE1,0,%,"% inhibition/stimulation(-) of JS mediated fluxes",
+% inhibition/stimulation(-) of FCaPmax,% inhibition/stimulation(-) of FCaPmax,0,%,% inhibition/stimulation(-) of PMCA FCaPmax,
+% inhibition of PKGardosMax,% inhibition of PKGardosMax,0,%,"% inhibition of FKGardoosMax",

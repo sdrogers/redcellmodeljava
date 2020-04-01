@@ -3,7 +3,7 @@ package utilities;
 public class HelpText {
 	public static final String rsHelp = "<html><body style='width: 500px'>"
 			+ "<h1>The Reference State (RS):</h1>"
-			+ "<p>The RS is a steady-state representing the initial physiological condition of a RBC at the start of experiments. Changing default values automatically recalculates a new initial steady-state condition for the redefined cell. For instance, to approximate a young RBC one could replace the corresponding defaults by CNa 5, CK 145, Vw 0.82 and FNaP of -3.2.</p><hr />" + 
+			+ "<p>The RS is a steady-state representing the initial physiological condition of a RBC at the start of experiments. Changing default values automatically recalculates a new initial steady-state condition for the redefined cell. For instance, to approximate a young RBC one could replace the corresponding defaults by CNa 5, CK 145, Vw 0.82 and FNaP -3.2.</p><hr />" + 
 			"<p><b>HbA or HbS:</b> HbA and HbS differ in the values of their isoelectric point and net charge per mol, a.  For HbA (default) pI(oC) = 7.2 and a = -10 Eq/(mol*∆(pH – pI) unit); for HbS, the corresponding values are 7.4 and -8.  The net charge on Hb at each pHi, n<sub>Hb</sub>, is computed from n<sub>Hb</sub> = a(pHi – pI), where a is the slope of the proton titration curve of Hb in Eq/mol, and pI is the isoelectric pH of Hb.</p><hr />" + 
 			"<p><b>Na/K pump Na efflux:</b>	Changing the Na flux automatically resets the associated pump-mediated K influx and reverse Na/K fluxes following the stoichiometries and relative forward-reverse flux ratio encoded in the model.</p><hr />" + 
 			"<p><b>CA:</b>	Initial cell Cl<sub>-</sub> + HCO<sub>3-</sub> concentration (mmol/Lcw). Ca and CCl are used indistinctly throughout.</p><hr />" + 
@@ -11,7 +11,7 @@ public class HelpText {
 			"<p><b>PMCA Fmax:</b>	Maximal Ca<sup>2+</sup> extrusion flux through an ATP and Ca<sup>2+</sup>-saturated plasma membrane calcium pump</p><hr />" + 
 			"<p><b>PKGardosMax:</b>	electrodiffusional K<sup>+</sup> permeability through Ca<sup>2+</sup>-saturated Gardos channels</p><hr />" + 
 			"<p><b>KCaGardos channel:</b>	Half-maximal Ca<sup>2+</sup> dissociation constant (K1/2) for Gardos channel activation</p><hr />" + 
-			"<p><b>Vw:</b>	Water content associated with 340 g Hb; the volume occupied by 340 g Hb at a molar weight of 1.36 g/ml for the Hb tetramer is 0.25 L. The default 0.75 Lcw/Loc for Vw sets a value of 1 L/Loc for the initial volume of the default <i>mean</i> RBC.</p><hr />" + 
+			"<p><b>Vw:</b>	Water content associated with 340 g Hb; the volume occupied by 340 g Hb tetramer with a molar weight of 1.36 g/ml is 0.25 L. The default 0.75 Lcw/Loc for Vw sets a value of 1 L/Loc for the initial volume of the default <i>mean</i> RBC.</p><hr />" + 
 			"<p><b>Q10 active or passive:</b>	The Q10 factors determine the extent by which active and passive fluxes (F) are set to increase or decrease for each 10oC increase or decrease in temperature, T.</p><hr />" + 
 			"</body></html>";
 	public static final String dsHelp = "<html><body style='width: 500px'>"
@@ -25,7 +25,7 @@ public class HelpText {
 			"<p><b>Accuracy:</b> sets the decimal precision on the output data  </p>" + 
 			"<hr />" + 
 			"<h2>Cell fraction and Medium Composition: </h2>" + 
-			"<p>Medium concentrations of X are indicated by MX in mM units.  Isosmotic exchanges of X for Y are shown as X x Y.  Addition/removals allow changes in medium osmolarity. HEPES, Glucamine, gluconate, sucrose, Mg, EGTA and EDTA are treated as impermeant medium solutes.     </p>" + 
+			"<p>Medium concentrations of X are indicated by MX in mM units.  Isosmotic exchanges of X for Y are shown as X x Y.  Addition/removals allow changes in medium osmolarity. HEPES, Glucamine, gluconate, sucrose, Mg, EGTA and EDTA are treated as impermeant medium solutes. Sucrose represents any electroneutral impermeant small solute used to alter medium osmolarity. Gluconate and glucamine represent any impermeant monovalent ion used to replace A or Na in the medium.    </p>" + 
 			"<p><b>MB:</b> Medium buffer concentration, HEPES by default</p>" + 
 			"<p><b>EDGTA 0; 1; 2:</b>  Prompts for the addition of EGTA (G(1)) or EDTA (D(2)) to the cell suspension. </p>" + 
 			"<p><b>MEDGTA:</b>  Prompts for the concentration of EGTA or EDTA, if added.  The default is 0, no addition.</p>    " + 
@@ -35,7 +35,7 @@ public class HelpText {
 			"<p><b>PHG:</b> PHG was modelled to enable simulations of the effects of protonophore additions.  The default value represents no protonophore present.  To simulate observed effects change PHG from 2e-1 to 2e10.   </p>  " + 
 			"<p><b>PA23CaMg:</b> Ionophore A23187 mediates electroneutral X<sup>2+</sup>:2H<sup>+</sup> exchanges with well defined highly non-linear kinetics in human RBCs. The default value represents absence of ionophore.  To simulate the effects of ionophore concentrations capable of generating a Ca<sup>2+</sup> flux exceeding that of the PMCA Fmax at medium Ca<sup>2+</sup> concentrations around 0.2 mM use values around 2e18. </p>       " + 
 			"<p><b>Hb pI(0oC) oxy(7.2), deoxy(7.5):</b> Hb is assumed to be in a oxygen-saturated condition by default (oxy).</p>"
-			+ "<p><b>Deoxygenation of Hb</b> (deoxy) changes its pI(0oC) from 7.2 to 7.5.  The model automatically adjusts the actual pI change for the temperature of the experiment.  The pI shifts during oxy-deoxy transitions cause changes in the protonization condition of Hb with secondary pHi changes which the model accurately predicts.  </p>" + 
+			+ "<p><b>Deoxygenation of Hb</b> (deoxy) changes its pI(0oC) from 7.2 to 7.5.  The model automatically adjusts the actual pI change for the temperature of the experiment.  The pI shifts during oxy-deoxy transitions cause changes in the protonization condition of Hb with secondary changes in pHi and [Mg<sup>2+</sup>]<su	b>i</sub>, changes which the model accurately predicts.  </p>" + 
 			"<hr />" + 
 			"<h2>Transport inhibition (%; defaults = 0):</h2>" + 
 			"<p>The default Fmax value for each transporter, Fm, is modified according to Fm*(100-X)/100 where X is the % inhibition entered at the prompt.  Fm stays modified in successive DS stages unless modified again. Entries in successive DSs always apply to the original default (0%).  To return to the original uninhibited Fm enter “0”. The same equation delivers stimulation if you enter negative numbers. It applies to JS and PMCA entries only. For an n-fold stimulation, enter “–n*100”, for instance “-200” for a two-fold stimulation.</p>" + 
@@ -47,7 +47,8 @@ public class HelpText {
 			"<ol><li>In a DS selected for PIEZO1 implementation click on the PIEZO1 tab</li>" + 
 			"<li>Double click on the “Incorporate PIEZO stage: no” and enter “yes”</li>" + 
 			"<li>This brings up a predesigned DS stage with the following defaults</li>" + 
-			"<ol><li>Incorporate PIEZO stage: yes</li>" + 
+			"<ol><li>Incorporate PIEZO stage: yes</li>" +
+			"<li>Pz Restore Medium: yes</li>" + 
 			"<li>Open state: 0.4 (s)</li>" + 
 			"<li>Pz frequency factor: 1e-5</li>" + 
 			"<li>Pz cycles per print: 111</li>" + 

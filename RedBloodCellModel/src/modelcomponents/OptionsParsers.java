@@ -80,25 +80,25 @@ public class OptionsParsers {
 			model.getCotransport().setPermeability(0.0002 * co_f / 100.0);
 			usedoptions.add("cotransport-activation");
 		}
-		temp = options.get("% inhibition/stimulation(-) of JS mediated fluxes");
+		temp = options.get("% inhibition/stimulation(-) of JS kAE1");
 		if(temp != null) {
 			Double jsfactor = Double.parseDouble(temp);
 			jsfactor = (100.0 - jsfactor)/100.0;
 			model.getJS().setPermeability(model.getJS().getDefaultPermeability() * jsfactor);
-			usedoptions.add("% inhibition/stimulation(-) of JS mediated fluxes");
+			usedoptions.add("% inhibition/stimulation(-) of JS kAE1");
 		}
-		temp = options.get("% inhibition/stimulation(-) of PMCA FCamax");
+		temp = options.get("% inhibition/stimulation(-) of FCaPmax");
 		if(temp != null) {
 			Double fc = (100.0 - Double.parseDouble(temp))/100.0;
 			model.getCaPump().setFcapm(model.getCaPump().getDefaultFcapm() * fc);
-			usedoptions.add("% inhibition/stimulation(-) of PMCA FCamax");
+			usedoptions.add("% inhibition/stimulation(-) of FCaPmax");
 		}
 		
-		temp = options.get("% inhibition of Gardos channel FKmax");
+		temp = options.get("% inhibition of PKGardosMax");
 		if(temp != null) {
 			Double gc = (100.0 - Double.parseDouble(temp))/100.0;
 			model.getGoldman().setPkm(model.getGoldman().getDefaultPkm() * gc);
-			usedoptions.add("% inhibition of Gardos channel FKmax");
+			usedoptions.add("% inhibition of PKGardosMax");
 		}
 	}
 	public static void naPumpScreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions, RBC_model model) {
@@ -289,10 +289,10 @@ public class OptionsParsers {
 		}
 		model.setCbenz2(model.getBenz2()/model.getVw());
 
-		temp = rsoptions.get("PMCA Fmax");
+		temp = rsoptions.get("PMCA FCaPmax");
 		if(temp != null) {
 			model.capump.setDefaultFcapm(Double.parseDouble(temp));
-			usedoptions.add("PMCA Fmax");
+			usedoptions.add("PMCA FCaPmax");
 		} 
 
 		temp = rsoptions.get("k1/2");
@@ -349,10 +349,10 @@ public class OptionsParsers {
 //		}
 		
 		
-		temp = rsoptions.get("PKGardos Max");
+		temp = rsoptions.get("PKGardosMax");
 		if(temp != null) {
 			model.goldman.setDefaultPkm(Double.parseDouble(temp));
-			usedoptions.add("PKGardos Max");
+			usedoptions.add("PKGardosMax");
 		} 
 //		else {
 //			this.goldman.setPkm(30.0);

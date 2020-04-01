@@ -7,4 +7,4 @@ PA,pga,1.2,1/h,Electrodiffusional A permeability,
 PH,pgh,2E-10,1/h,Protonophore addition? Change default to 2e10,
 PCa,pgca,0.05,1/h,Elecrtodiffusional Ca permeability,
 PA23CaMg,PA23CaMg,0.01,arbitrary units,"If added, enter values in the 2e17 to 2e18 range",
-Hb oxy or deoxy,Hb oxy or deoxy,Oxy,,"For changes in the oxygenation condition of Hb","Oxy,Deoxy"
+Hb Oxy or Deoxy,Hb Oxy or Deoxy,Oxy,,"Changes the oxygenation condition of Hb","Oxy,Deoxy"

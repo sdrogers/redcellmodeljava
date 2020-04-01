@@ -1053,21 +1053,21 @@ public class RBC_model implements Serializable {
 					piezo.setPiezoFraction(Double.parseDouble(temp));
 				}
 				
-				temp = options.get("JS inhib/stim");
+				temp = options.get("Pz JS I/S");
 				if(temp != null) {
 					Double jsfactor = Double.parseDouble(temp);
 					jsfactor = (100.0 - jsfactor)/100.0;
 					piezo.setPiezoJS(jsfactor);
-					usedoptions.add("JS inhib/stim");
+					usedoptions.add("Pz JS I/S");
 				}
- 				temp = options.get("Restore Medium");
+ 				temp = options.get("Restore Medium (no/yes)");
  				if(temp != null) {
  					if(temp.equals("yes")) {
  						piezo.setRestoreMedium(true);
  					}else {
  						piezo.setRestoreMedium(false);
  					}
- 					usedoptions.add("Restore Medium");
+ 					usedoptions.add("Restore Medium (no/yes)");
  				}
  				temp = options.get("Restored Medium HEPES-Na concentration");
  				if(temp != null) {
@@ -1218,10 +1218,10 @@ public class RBC_model implements Serializable {
 		
 		this.a23.setPermeability_Ca(this.a23.getPermeability_Mg());
 		
-		temp = options.get("Hb oxy or deoxy");
+		temp = options.get("Hb Oxy or Deoxy");
 		if(temp != null) {
 			this.I_67 = this.getPit0(); // Store old value
-			usedoptions.add("Hb oxy or deoxy");
+			usedoptions.add("Hb Oxy or Deoxy");
 			if(temp.equals("Oxy")) {
 				this.setPit0(7.2);
 			}else if(temp.equals("Deoxy")) {

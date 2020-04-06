@@ -156,7 +156,7 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		
 		
 		DSOptions.put("PzFrequencyFactor", "0.001");
-		DSOptions.put("Restore Medium","yes");
+		DSOptions.put("Restore Medium (no/yes)","yes");
 		
 		
 		

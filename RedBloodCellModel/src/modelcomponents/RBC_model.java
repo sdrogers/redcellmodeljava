@@ -1033,9 +1033,9 @@ public class RBC_model implements Serializable {
 					piezo.setPag(Double.parseDouble(temp));
 				}
 				
-				temp = options.get("PMCA inhibition");
+				temp = options.get("Pz PMCA I/S");
 				if(temp != null) {
-					usedoptions.add("PMCA inhibition");
+					usedoptions.add("Pz PMCA I/S");
 					piezo.setPmca(Double.parseDouble(temp));
 				}
 

@@ -1045,9 +1045,9 @@ public class RBC_model implements Serializable {
 					piezo.setiF(Double.parseDouble(temp));
 				}
 				
-				temp = options.get("Transit CVF");
+				temp = options.get("Pz transit CVF");
 				if(temp != null) {
-					usedoptions.add("Transit CVF");
+					usedoptions.add("Pz transit CVF");
 					piezo.setPiezoFraction(Double.parseDouble(temp));
 				}
 				

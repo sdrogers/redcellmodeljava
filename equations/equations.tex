@@ -1,9 +1,11 @@
 \documentclass[a4paper]{article}
 \usepackage{url}
 \usepackage[margin=2cm]{geometry}
+\usepackage{amsmath}
 \title{governing-equations-of-the-rcm}
 
-\newcommand{\med}[1]{[#1]^m}
+% \newcommand{\med}[1]{[#1]^m}
+\newcommand{\med}[1]{M#1}
 % \newcommand{\cell}[1]{[#1]^c}
 \newcommand{\cell}[1]{C#1}
 
@@ -67,11 +69,8 @@ processes involved, delivering true and tested predictions on the
 homeostatic behaviour of human RBCs in physiological, pathological and
 experimental conditions.
 
-We retain in the equations the names of parameters and variables used in
-the presentation of results throughout these two papers {[}1, 2{]}, for
-consistency with the nomenclature of the names in the model output data
-files, as explained in detail in the User Guide
-(\url{https://github.com/sdrogers/redcellmodeljava}).
+We retain in the equations the names of parameters and variables as used for model inputs and outputs where the use of conventional nomenclatures for concentrations (i.e. [Ca2+]c, [Mg2+]o) or of Greek symbols for fluxes was not feasible.  Coherence with model operation in the choice of equation nomenclature was considered more important than compliance with established nomenclature, clarity of meaning being preserved in the unconventional style and fully explained in the Appendix glossaries of the User Guide (\url{https://github.com/sdrogers/redcellmodeljava}).
+
 
 \subsection{The initial Reference State(RS)}
 
@@ -91,7 +90,7 @@ the new cell.
 \subsubsection{Mediumelectroneutrality}\label{medium-electroneutrality}
 
 \begin{equation}
-\MA + (\MB - \MBH) + \MGluco-(\MNa + \MK + 2(\MCatp + \MMgtp + \MGluca)) = 0
+\MA + (\MB - \MBH) + \MGluco-(\MNa + \MK + 2(\MCatp + \MMgtp + \MGluca)) = 0 \tag{1}
 \end{equation}
 
 Medium concentration of proton-bound buffer, $\MBH$ (HEPES, by default):
@@ -138,30 +137,32 @@ Heamoglobin is the major cytoplasmic buffer for protons (eq 4) and for calcium (
 
 Cytoplamic $Ca^{2+}$ and $Mg^{2+}$ buffering have been measured with precision in intact RBCs [5-8] enabling accurate representations in the model.  The total Ca and Mg content of the cells, QCa and QMg, is reported in units of mmol/(340g Hb) (or mmol/Loc) whereas concentrations of the free forms, $\CCatp$ and $\CMgtp$, are expressed in units of mmol/Lcw, a conversion requiring translation for operational reasons in the model   Equation 9a translates QCa in units of mmol/Loc to CCa in units of mmol/Lcw using:
 
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{9.\alph{equation}}
+
 \begin{equation}
 \CCa = \QCa\frac{RCV}{Vw}  
 \end{equation}
-NOTE: 9a 
+ 
 
 The total calcium concentration is the sum of free and bound forms:
 
 \begin{equation}
 \CCa = \CCatp + \CCaB
 \end{equation}
-NOTE: 9b
 
 There are two buffer systems for binding calcium in the RBC cytoplasm, $\alpha$ (mostly haemoglobin), and the BCa/KBCa buffer [6]. The concentration of bound calcium, CCaB, at each total calcium concentration, CCa, is represented by:
 
 \begin{equation}
 \CCaB = \alpha\CCa + \CBCa\frac{\CCatp}{\CCatp + \KBCa}
 \end{equation}
-NOTE: 9c
+
 CCa2+ is solved from the implicit equation: 
 
 \begin{equation}
 \CCa – \CCatp – \CCaB = 0  
 \end{equation}
-NOTE: 9d
 
 by the Newton-Raphson routine in the RS and at the end of the computations in each iteration cycle.  The measured values of the calcium binding parameters are $\alpha = 0.30$, $\CBCa = 0.026$ mmol/Loc, and $\KBCa = 0.014$ mM [6].
 
@@ -172,7 +173,6 @@ The corresponding equations for cytoplasmic magnesium buffering and $CMg^{2+}$ a
 \CMg &=& \CMgtp + \CMgB\\
 \CMgB &=& CBMg1\frac{\CMgtp}{\CMgtp+KBMg1}+CBMg2\frac{\CMgtp}{\CMgtp+KBMg2}+CBMg3
 \end{eqnarray}
-NOTE: 9e,9f,9g
 
 \emph{is $KBMG2$ actually $K \times BMg1$}
 
@@ -181,11 +181,14 @@ $\CMgtp$ is solved from the implicit equation:
 \begin{equation}
 \CMg - \CMgtp - \CMgB = 0
 \end{equation}
-NOTE: 9h
 
 
 The measured values of the Mg bufferes [8] are: CBMg1 = 1.2 mmol/Loc, KBMg1 = 0.08 mM; CBMg2 = 7.5 mmol/Loc (15 mEq/Loc), KBMg2 = 3.6 mM; CBMg3 = 0.05 mmol/Loc. BMg1 represents ATP, BMg2 represents 2,3-DPG and miscellaneous phosphate groups, and BMg3 is an unidentified high affinity magnesium buffer.  
 
-
+\setcounter{equation}{9}
+\renewcommand{\theequation}{\arabic{equation}}
+\begin{equation}
+test
+\end{equation}
 
 \end{document}

@@ -29,6 +29,9 @@
 \newcommand{\KBCa}{K_{{BC}_a}}
 \newcommand{\KCa}{K_{Ca}}
 
+\newcommand{\Km}[1]{Km_{#1}}
+\newcommand{\KI}[1]{KI_{#1}}
+
 \newcommand{\CNa}{\cell{Na}}
 \newcommand{\CK}{\cell{K}}
 \newcommand{\CH}{\cell{H}}
@@ -45,6 +48,7 @@
 \newcommand{\CBCa}{\cell{B_{Ca}}}
 \newcommand{\CMgB}{\cell{MgB}}
 \newcommand{\CMg}{\cell{Mg}}
+\newcommand{\CX}{\cell{X}}
 
 \newcommand{\QX}{QX}
 \newcommand{\QCa}{QCa}
@@ -246,8 +250,8 @@ Certain transporter kinetics are reported in the equations with the default nume
 \subsubsection{Na/K pump mediated fluxes of Na and K (f = forward; r = reverse) [15, 16]}
 
 \begin{eqnarray}
-\F{NaP}{Na}^f  &=& -\F{NaP}{max}^f\times\left(\frac{\CNa}{\CNa + 0.2\times(1 + \CK/8.3)}\right)^3 \times\left(\frac{\MK}{\MK + 0.1\times(1 + \MNa/18))}\right)^2 \\
-\F{NaP}{Na}^r  &=& \F{NaP}{max}^r\times\left(\frac{\CK}{(\CK + 8.3\times(1 + \CNa/0.2))}\right)^2\times\left(\frac{\CNa}{\CNa + 18\times(1 + \CK/0.1))}\right)^3 \\
+\F{NaP}{Na}^f  &=& -\F{NaP}{max}^f\times\left(\frac{\CNa}{\CNa + 0.2(1 + \CK/8.3)}\right)^3 \times\left(\frac{\MK}{\MK + 0.1(1 + \MNa/18))}\right)^2 \\
+\F{NaP}{Na}^r  &=& \F{NaP}{max}^r\times\left(\frac{\CK}{(\CK + 8.3(1 + \CNa/0.2))}\right)^2\times\left(\frac{\CNa}{\CNa + 18(1 + \CK/0.1))}\right)^3 \\
 \F{NaP}{Na} &=& \F{NaP}{Naf} + \F{NaP}{Nar} \\
 \F{NaP}{K} &=& -\F{NaP}{Na}/1.5
 \end{eqnarray}
@@ -267,18 +271,18 @@ Certain transporter kinetics are reported in the equations with the default nume
 \setcounter{equation}{12}
 \renewcommand{\theequation}{\arabic{equation}}
 \begin{equation}
-\F{G}{i} = -PGi\times\frac{ziFEm}{RT}\times\frac{(Ci – Mi\exp^{-ziFEm/RT})}{(1 – exp^{-ziFEm/RT})}
+\F{G}{i} = -P_{G}i\times\frac{ziFEm}{RT}\times\frac{(Ci – Mi\exp^{-ziFEm/RT})}{(1 – exp^{-ziFEm/RT})}
 \end{equation}
 with PGi representing the Goldmanian i-permeability in h-1 units
 
 \subsubsection{PGKGardos is a function of CCa2+ [20, 21] as follows:}
 \begin{equation}
-PGKGardos = PKGardosMax\times\frac{\CCatp}{\KCa + \CCatp}
+P_{G}K_{Gardos} = PK_{GardosMax}\times\frac{(\CCatp)^4}{(\KCa)^4 + (\CCatp)^4}
 \end{equation}
 
 \subsubsection{PGCa is a function of CCa2+ and MCa2+ [21, 22] as follows:}
 \begin{equation}
-PGCa = \frac{\CCatp}{0.0002 + \CCatp}\frac{\MCatp}{0.8 + \MCatp}
+P_{G}Ca = \left(\frac{\CCatp}{0.0002 + \CCatp}\right)\left(\frac{\MCatp}{0.8 + \MCatp}\right)
 \end{equation}
 
 \subsubsection{Low-saturation, carrier mediated flux phenomenology for electroneutral cotransporters FNaA, FKA and FHA.}
@@ -286,13 +290,185 @@ PGCa = \frac{\CCatp}{0.0002 + \CCatp}\frac{\MCatp}{0.8 + \MCatp}
 \setcounter{equation}{0}
 \renewcommand{\theequation}{16.\alph{equation}}
 \begin{eqnarray}
-\F{Na}{A} &=& - \kk{Na}{A}(\CNa\times\CA – \MNa\times\MA) \\
-\F{K}{A} &=& - \kk{K}{A}(\CK\times\CA – \MK\times\MA) \\
-\F{H}{A} &=& - \kk{H}{A}(\CH\times\CA – \MH\times\MA) 
+\F{Na}{A} &=& - \kk{NaA}{}(\CNa\times\CA – \MNa\times\MA) \\
+\F{K}{A} &=& - \kk{KA}{}(\CK\times\CA – \MK\times\MA) \\
+\F{H}{A} &=& - \kk{HA}{}(\CH\times\CA – \MH\times\MA) 
 \end{eqnarray}
 
+Note that $\kk{HA}{}$, the rate constant of the H:A cotransport phenomenology representing the operation of the Jacob-Stewart mechanism (JS) is between five and six orders of magnitude faster than that of any of the other ion transporters in the membrane (see User Guide for details and references).  
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{17.\alph{equation}}
+
+\subsubsection{Electroneutral Na:K:2A cotransport}
+
+\begin{eqnarray}
+\F{Co}{} &=& -\kk{Co}{}((CNa\times\CK\times\CA^2) – d(MNa\times\MK\times\MA^2)) \\
+d &=& \frac{\CNa\times\CK\times\CA^2}{\MNa\times\MK\times\MA^2}
+\end{eqnarray}
+The CX and MX values in eq 17b are those set for the RS 
+\begin{eqnarray}
+\F{Co}{Na} &=& \F{Co}{K} = \F{Co}{}\\
+\F{Co}{A} &=& 2\F{Co}{}
+\end{eqnarray}
+$d$ is a wildcard factor introduced to set $\F{Co}{} = 0$ only in the RS. Its value is set by the initial Na, K and A concentrations in the RS. $d$ remains as a fixed-value parameter during dynamic state computations.    
+
+\subsubsection{Electroneutral M2+:2H+ exchange fluxes of $Ca^{2+}$ and $Mg^{2+}$ mediated by the divalent cation ionophore A23187}
+
+The divalent cation ionophore A23187 mediates an electroneutral $M^{2+}:2H^+$ exchange when incorporated into cell membranes [23]. Divalent cation ionophores became essential and extensively used tools in research on calcium and magnesium function and dysfunction in RBCs [5, 7, 24, 25] and in many other cell types. To emulate experimental protocols with the use of divalent cation ionophores it became necessary to represent their transport properties in the model as an optional exogenous transporter of the RBC membrane.  
+
+In albumin-free RBC suspensions, the RBC/medium partition ratio of the lipophilic ionophore A23187 is 60/1, 20 to 50\% of it confined to the cell membrane [26].  The transport kinetics of the ionophore was modeled with symmetric binding (Km) and inhibitory (KI) dissociation constants for Ca2+ and Mg2+ on each membrane side, as follows:
+
+
+\begin{eqnarray}
+\nonumber A1 &=& \frac{\MCatp}{\Km{Ca}(1 + \MMgtp/\KI{Mg} + \MCatp)} \\
+\nonumber A2 &=& \frac{\CCatp}{\Km{Ca}(1 + \CMgtp/\KI{Mg} + \CCatp)}  \\
+\nonumber A3 &=& \frac{\MMgtp}{\Km{Mg}(1 + \MCatp/\KI{Ca} + \MMgtp)}  \\
+\nonumber A4 &=& \frac{\CMgtp}{\Km{Mg}(1 + \CCatp/\KI{Ca} + \CMgtp)} 
+\end{eqnarray}
+
+Following extensive preliminary tests [27], default values of 10 mM for the four Km and KI parameter set were found to deliver excellent agreement between predicted and measured ionophore-mediated fluxes, and to ensure adequate compliance with the measured equilibrium distribution of the transported ions when ionophore-mediated net fluxes approach zero [23]: 
+\[\CCatp/\MCatp \approx \CMgtp/\MMgtp \approx (\CH^+/\MH^+)^2.\]
+
+Combining the Ca2+, Mg2+ and H+ driving gradients we obtain:
+\begin{eqnarray}
+\nonumber B1&=& A1(\CH)^2 - A2(\MH)^2 \\
+\nonumber B2&=& A3(\CH)^2 - A4(\MH)^2
+\end{eqnarray}
+
+The ionophore-mediated fluxes of $Ca^{2+}$, $Mg^{2+}$ and $H^+$, $\F{A23}{Ca}$, $\F{A23}{Mg}$ and $\F{A23}{H}$, respectively, can now be computed from: 
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{A23-\arabic{equation}}
+
+\begin{eqnarray}
+\F{A23}{Ca} &=& P_{A23}B1 \\
+\F{A23}{Mg} &=& P_{A23}B2 \\
+\F{A23}{H} &=& -2(\F{A23}{Ca} + \F{A23}{Mg})
+\end{eqnarray}
+
+Where $P_{A23}$ is the ionophore-mediated permeability. $P_{A23}$ is a power function of the RBC ionophore concentration, $P_{A23} = 0.22*[I]1.45$, when $P_{A23}$ is expressed in units of 10-6 cm/s, and [I] in $\mu$mol/Loc [26, 28, 29]. Within the units-set in the model, numerical values of $P_{A23}$ in the range 1017 to 2*1018 offered a perfectly adequate minimalist emulation of the effects of different ionophore concentrations on the fluxes and distributions of $Ca^{2+}$, $Mg^{2+}$ and $H^{+}$ ions in RBCs in a large variety of experimental conditions [5, 27, 30-33].    
+
+\subsubsection{Equation sequence for the computations of dynamic states.}
+Following perturbations, sustained charge conservation and electroneutrality is implemented by:
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{18\alph{equation}}
+
 \begin{equation}
-test
+\sum Ii = 0 
 \end{equation}
+where $Ii$ represents the current carried by each of the electrogenic transporters in the system. $\sum Ii$ is therefore the fist equation that has to be solved at the start of each iteration in the numerical computations of the model. Capacitative currents ($Ic = C(dV/dt))$ are ignored because their magnitude and time-course are orders of magnitude smaller than those of the homeostatic relevant currents.  The relation between currents and individual ion fluxes, $Fi$, is given by 
+
+\begin{equation}
+\sum Ii = F\sum zi*Fi 
+\end{equation}
+where $zi$ is the valence of ion $i$ and $F$ is the Faraday constant. 
+
+With the electrogenic flux components in the model, $\sum ziFi = 0$ renders:
+
+\begin{equation}
+\sum ziFi = \F{NaP}{Na} + \F{NaP}{K} + \F{G}{Na} + \F{G}{K} + \F{G}{K_Gardos} + \F{G}{A} + \F{G}{Ca} + \F{G}{H} + \F{z}{Na} + \F{z}{K} + \F{z}{A} + \F{z}{Ca} = 0
+\end{equation}
+$\sum ziFi$ is a complex function of temperature, membrane potential, $Em$, and of the concentration of all transported and modulating substrates.  With all parameters, kinetics and substrate concentrations known $\sum Ii = 0$ becomes an implicit equation in $Em$, the single unknown left, solved in each iteration with the Newton-Raphson cord approximation routine.      
+
+With $Em$, the new $Fi$ values for each of the electrodiffusional terms in eq 18c can be computed.  With the sum of the absolute values of all the $Fi$ we can now assign a new $\delta t$ duration to each iteration interval, as follows:  
+
+\setcounter{equation}{18}
+\renewcommand{\theequation}{\arabic{equation}}
+\begin{equation}
+\Delta t = \frac{a}{b + \sum|Fi|}
+\end{equation}
+
+The value of $a$, under user control, optimises $\Delta t$ scales for different simulations (“frequencyfactor” in the RCM); $b$ is a small zero-avoidance parameter in the denominator. The advantage of this strategy over using regular iteration intervals is that by setting a constant value for the cycles per outcome (“cyclesperprint(epochs)” in the RCM) the density of data output points automatically adjusts to the overall rate of change in the system, emulating the way good experimental practice seeks to sample for data at the bench, thus optimizing comparisons between predicted and experimental results.    
+
+With the new $Fi(t)$ and $\Delta t$ the new $Qi(t)$ may be computed using the values of $FNa(t)$, $FK(t)$, $FA(t)$, $FH(t)$, $FCa(t)$ and $\F{A23}{Mg}(t)$ from equations (10a-f) as follows:
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{20\alph{equation}}
+
+\begin{eqnarray}
+\Delta QNa &=& FNa*\Delta t\\
+\Delta QK &=& FK*\Delta t \\
+\Delta QA &=& FA*\Delta t \\
+\Delta H &=& FH*\Delta t \\
+\Delta QCa &=& FCa*\Delta t \\
+\Delta QMg &=& \F{A23}{Mg}*\Delta t \\
+QNa(t) &=& QNa(t-\Delta t) + \Delta QNa \\
+QK(t) &=& QK(t-\Delta t) + \Delta QK  \\
+QA(t) &=& QA(t-\Delta t) + \Delta QA  \\
+QCa(t) &=& QCa(t-\Delta t) + \Delta QCa  \\
+QMg(t) &=& QMg(t-\Delta t) + \Delta QMg
+\end{eqnarray}
+
+$\Delta H$ is a special case because $\Delta H$ adds to the only titratable proton buffer nHb*QHb, so that:
+\setcounter{equation}{0}
+\renewcommand{\theequation}{21\alph{equation}}
+\begin{eqnarray}
+nHb(t)*QHb &=& nHb(t-\Delta t)*QHb + \Delta H \\
+nHb(t) &=& nHb(t-\Delta t)  + \Delta H/QHb \\
+\end{eqnarray}
+
+From which we can now compute the new cell pHi from eq 4 by solving for pH(t):
+
+\begin{equation}
+pH(t) = nHb(t)/a + pI
+\end{equation}
+The new intracellular $H^+$ concentration in molar units is:
+\begin{equation}
+CH(t) = 10^{-pH(t)}
+\end{equation}
+
+With the new $Qi(t)$, we need the new cell water volume, $Vw(t)$ in order to compute the new cell concentrations, $Ci(t) = Qi(t)/Vw(t)$.  The water flux across the RBC membrane, $Fw$, is driven by the osmotic gradient across the RBC membrane (eqs 5 and 6): 
+\setcounter{equation}{0}
+\renewcommand{\theequation}{22\alph{equation}}
+
+\begin{equation}
+Fw(t) = Pw*(\COs(t) – \MOs(t-\Delta t)) 
+\end{equation}
+$\COs(t)$ can be computed from the altered osmotic load resulting from the $\Delta Qi$ changes during $\Delta t$ operating on the cell volume at the start of the each iteration interval: 
+
+\begin{equation}
+COs(t) = \frac{QNa(t) + QK(t) + Q(A)t + QCa(t) + QMg(t)}{Vw(t-\Delta t)}  + (f_{Hb}*\CHb + \CX )(t-\Delta t)
+\end{equation}
+
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{23\alph{equation}}
+
+The new cell water volume, $Vw(t)$, and volume-associated variables, $RCV(t)$, $MCHC(t)$, $Density(t)$ and $Hct(t)$, can now be computed from: 
+\begin{eqnarray}
+\Delta Vw(t) &=& Fw(t)*\Delta t \\
+Vw(t) &=& Vw(t-\Delta t) + \Delta Vw \\
+RCV(t) &=& 1-Vw(t=0) + Vw(t)  \\
+MCHC(t) &=& MCHC(t=0)/RCV  \\
+Density(t) &=& ((MCHC(t=0)/100) + Vw(t))/RCV  \\
+Hct(t) &=& Htc(t=0)*RCV  
+\end{eqnarray}
+
+With $Vw(t)$ we proceed to compute next the new (t) intracellular concentrations of Na, K, A, H, Ca, Hb, and X:
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{24\alph{equation}}
+
+\begin{eqnarray}
+\CNa(t) &=& QNa(t)/Vw(t) \\
+\CK(t) &=& QK(t)/Vw(t) \\
+\CA(t) &=& QA(t)/Vw(t)  \\
+\CCa(t) &=& QCa(t)/Vw(t)  \\
+\CMg(t) &=& QMg(t)/Vw(t)  \\
+\CHb(t) &=& QHb/Vw(t) \\
+\CX^{-}(t) &=& QX^{-} /Vw(t)  
+\end{eqnarray}
+
+The new osmotic coefficient of Hb, $f_{Hb}(t)$, can now be calculated from eq 7 and the new $\CHb(t)$:
+
+\setcounter{equation}{24}
+\renewcommand{\theequation}{\arabic{equation}}
+
+\begin{equation}
+f_{Hb}(t) = 1 + b\times\CHb(t) + c\times CHb(t)^2
+\end{equation}
+
 
 \end{document}

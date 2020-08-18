@@ -27,6 +27,7 @@
 
 \newcommand{\KB}{K_B}
 \newcommand{\KBCa}{K_{{BC}_a}}
+\newcommand{\KCa}{K_{Ca}}
 
 \newcommand{\CNa}{\cell{Na}}
 \newcommand{\CK}{\cell{K}}
@@ -52,6 +53,11 @@
 \newcommand{\pI}{pI}
 
 \newcommand{\fHb}{f_{Hb}}
+
+
+\newcommand{\F}[2]{F_{#1}#2}
+
+\newcommand{\kk}[2]{k_{#1}#2}
 
 \begin{document}
 \maketitle
@@ -123,7 +129,7 @@ where $a$ corresponds to the linear segment of the proton titration curve of Hb 
 $\fHb$ is the osmotic coefficient of haemoglobin, represented with only two virial coefficients, $b$ and $c$:
 
 \begin{equation}
-\fHb = 1 + b\CHb + c\CHb^2 
+\fHb = 1 + b\times\CHb + c\times\CHb^2 
 \end{equation}
 
 \subsubsection{Osmotic equilibrium in the reference steady state:}
@@ -185,8 +191,106 @@ $\CMgtp$ is solved from the implicit equation:
 
 The measured values of the Mg bufferes [8] are: CBMg1 = 1.2 mmol/Loc, KBMg1 = 0.08 mM; CBMg2 = 7.5 mmol/Loc (15 mEq/Loc), KBMg2 = 3.6 mM; CBMg3 = 0.05 mmol/Loc. BMg1 represents ATP, BMg2 represents 2,3-DPG and miscellaneous phosphate groups, and BMg3 is an unidentified high affinity magnesium buffer.  
 
+
+
+\subsubsection{Effects of deoxygenation on cytoplasmic Mg2+ buffering and pHi.}
+Deoxygenation increases haemoglobin binding of ATP and 2,3-DPG thus reducing their availability for buffering intracellular magnesium.  CBMg1 is reduced by half and CBMg2 by 1.7 [8].  This is particularly relevant for simulating accurately the effects of changing the oxygenation condition of RBCs, a process in which changes in CMg2+ become enmeshed with effects arising from changes in the isoelectric point of haemoglobin, pI (eq 4).  In vivo, RBC are continuously changing between oxy and deoxy states as they flow between the arterial and venous vasculature causing well documented alternating changes in pHi, CMg2+, CA and cell volume which the model accurately reproduces.  Although these changes are fully reversible in physiological conditions, deoxygenation of sickle RBCs can lead to hyperdense collapse, as shown in the next paper [2]. 
+
+Hb is assumed to be in a oxy-state by default, the most frequent experimental condition. Deoxygenation of Hb (Deoxy) changes its pI(0oC) from 7.2 to 7.5.  The model automatically adjusts the actual pI change for the temperature of the experiment.  The pI shifts during oxy-deoxy transitions cause sudden changes in the protonization condition of Hb with secondary changes in pHi and CMg2+, changes which the model predicts with verified accuracy [9-11].  Electroneutrality preservation during oxy-deoxy transitions requires constancy of nHb values (eq 4) when pI changes, from which the compensatory changes in pHi can be derived according to [10]: 
+
+On deoxygenation:
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{4.\alph{equation}}
+\begin{equation}
+pHideoxy = pHioxy + pIdeoxy - pIoxy 
+\end{equation}
+On reoxygenation:
+\begin{equation}
+pHioxy = pHideoxy + pIoxy - pIdeoxy 
+\end{equation}
+
+\subsection{The dynamic state}
+
 \setcounter{equation}{9}
 \renewcommand{\theequation}{\arabic{equation}}
+
+A first requirement at the start of simulations is to define the relative volume occupied by cells in the cell suspension system, the cell volume fraction, CVF.  Perturbations alter the flux of transported solutes and water across the plasma membrane of the cell thus initiating a cascade of downstream changes in the compositions of cell and suspending medium.  It is therefore important to start by listing the membrane transport component of the cell and of the equations describing their basic kinetic properties.  
+
+\subsubsection{Flux equations of the model, Fi}
+The substrates of the RBC membrane transporters are Na, K, A, H, Ca, Mg and water, the "i" in Fi.  The sign-convention applied in the equations is for positive net fluxes into the cell (influx) and for negative net fluxes into the medium (efflux). The name convention adopted here for the transport of substrate X by the different membrane transporters is as follows: FPX = pump-mediated flux of X, with P = NaP for the Na/K pump or CaP for the calcium pump (PMCA); FGX = X-flux through electrodiffusional channel defined with constant field kinetics; FXA = electroneutral carrier-mediated cotransport of cation X and anion A defined with low-saturation kinetics; FzX = electrodiffusional flux of X through PIEZO1 channel; FCoX = electroneutral cotransport of X mediated by the Na:K:2Cl symport, of minimal expression and activity in human RBCs; FA23X = electroneutral M2+:2H+ exchange flux through the divalent cation ionophore A23187, the only exogenous membrane transporter included in the model; Fw = water flux mediated mainly by aquaporins and partly by partition diffusion through the plasma membrane.  
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{10.\alph{equation}}
+
+\subsubsection{Flux pathways for each transported substrate:}
+\begin{eqnarray}
+\F{}{Na} &=& \F{NaP}{Na} + \F{G}{Na} + \F{Na}{A} + \F{Co}{Na} + \F{z}{Na}\\
+\F{K} &=& \F{NaP}{K} + \F{G}{K} + \F{K}{A} + \F{KGardos} + \F{Co}{K} + \F{z}{K}\\
+\F{}{A} &=& \F{G}{A} + \F{H}{A} + \F{Na}{A} + \F{K}{A} + \F{z}{A} + 2\times\F{Co}{A}\\
+\F{}{H} &=& \F{G}{H} + \F{H}{A} + \F{Ca}{PH} + \F{A23}{H} \\
+\F{}{Ca} &=& \F{CaP}{Ca} + \F{G}{Ca} + \F{z}{Ca} + \F{A23}{Ca} \\
+\F{}{Mg} &=& \F{A23}{Mg} \\
+\F{}{w}  &=& Pw*(\COs – \MOs)
+\end{eqnarray}
+
+There are no data on PIEZO1-mediated Mg2+ fluxes in RBCs.  Although PzMg most certainly has a small finite value, $\F{z}{Mg}$ is likely to be very small under the usually low electrochemical $Mg^{2+}$ gradients across the RBC membrane.  With this level of ignorance and uncertainty, $\F{z}{Mg}$ was not included in the current model version.  
+
+\subsubsection{Kinetic descriptions of individual transporters}
+Certain transporter kinetics are reported in the equations with the default numerical values used for dissociation and rate constants in the model, based on well established values in the literature and on the good semi-quantitative fits to experimental data provided in the past [12-14].  
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{11.\alph{equation}}
+
+
+\subsubsection{Na/K pump mediated fluxes of Na and K (f = forward; r = reverse) [15, 16]}
+
+\begin{eqnarray}
+\F{NaP}{Na}^f  &=& -\F{NaP}{max}^f\times\left(\frac{\CNa}{\CNa + 0.2\times(1 + \CK/8.3)}\right)^3 \times\left(\frac{\MK}{\MK + 0.1\times(1 + \MNa/18))}\right)^2 \\
+\F{NaP}{Na}^r  &=& \F{NaP}{max}^r\times\left(\frac{\CK}{(\CK + 8.3\times(1 + \CNa/0.2))}\right)^2\times\left(\frac{\CNa}{\CNa + 18\times(1 + \CK/0.1))}\right)^3 \\
+\F{NaP}{Na} &=& \F{NaP}{Naf} + \F{NaP}{Nar} \\
+\F{NaP}{K} &=& -\F{NaP}{Na}/1.5
+\end{eqnarray}
+
+\subsubsection{PMCA. Calcium and proton fluxes through the calcium pump operating as an electroneutral Ca:2H exchanger  [17, 18]}
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{12.\alph{equation}}
+
+\begin{eqnarray}
+\F{CaP}{Ca} &=& -\kk{CaP}{}\times\frac{(\CCatp)^4}{(0.0002)^4 + (\CCa2+)^4}\\
+\F{CaP}{H} &=& -2*\F{CaP}{Ca}
+\end{eqnarray}
+
+\subsubsection{Electrodiffusional fluxes of i (Na, K, Ca, H and A) through endogenous channels, FGi , Gardos channels, FGGardos, and PIEZO1 channels, Fzi, are represented with constant field kinetics [19]: }
+
+\setcounter{equation}{12}
+\renewcommand{\theequation}{\arabic{equation}}
+\begin{equation}
+\F{G}{i} = -PGi\times\frac{ziFEm}{RT}\times\frac{(Ci – Mi\exp^{-ziFEm/RT})}{(1 – exp^{-ziFEm/RT})}
+\end{equation}
+with PGi representing the Goldmanian i-permeability in h-1 units
+
+\subsubsection{PGKGardos is a function of CCa2+ [20, 21] as follows:}
+\begin{equation}
+PGKGardos = PKGardosMax\times\frac{\CCatp}{\KCa + \CCatp}
+\end{equation}
+
+\subsubsection{PGCa is a function of CCa2+ and MCa2+ [21, 22] as follows:}
+\begin{equation}
+PGCa = \frac{\CCatp}{0.0002 + \CCatp}\frac{\MCatp}{0.8 + \MCatp}
+\end{equation}
+
+\subsubsection{Low-saturation, carrier mediated flux phenomenology for electroneutral cotransporters FNaA, FKA and FHA.}
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{16.\alph{equation}}
+\begin{eqnarray}
+\F{Na}{A} &=& - \kk{Na}{A}(\CNa\times\CA – \MNa\times\MA) \\
+\F{K}{A} &=& - \kk{K}{A}(\CK\times\CA – \MK\times\MA) \\
+\F{H}{A} &=& - \kk{H}{A}(\CH\times\CA – \MH\times\MA) 
+\end{eqnarray}
+
 \begin{equation}
 test
 \end{equation}

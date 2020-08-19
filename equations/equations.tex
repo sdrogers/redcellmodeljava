@@ -23,6 +23,9 @@
 \newcommand{\MOs}{\med{Os}}
 \newcommand{\MCat}{\med{Cat}}
 \newcommand{\MMgt}{\med{Mgt}}
+\newcommand{\MCa}{\med{Ca}}
+\newcommand{\MMg}{\med{Mg}}
+\newcommand{\MSuc}{M_{sucrose}}
 
 
 \newcommand{\KB}{K_B}
@@ -250,8 +253,8 @@ Certain transporter kinetics are reported in the equations with the default nume
 \subsubsection{Na/K pump mediated fluxes of Na and K (f = forward; r = reverse) [15, 16]}
 
 \begin{eqnarray}
-\F{NaP}{Na}^f  &=& -\F{NaP}{max}^f\times\left(\frac{\CNa}{\CNa + 0.2(1 + \CK/8.3)}\right)^3 \times\left(\frac{\MK}{\MK + 0.1(1 + \MNa/18))}\right)^2 \\
-\F{NaP}{Na}^r  &=& \F{NaP}{max}^r\times\left(\frac{\CK}{(\CK + 8.3(1 + \CNa/0.2))}\right)^2\times\left(\frac{\CNa}{\CNa + 18(1 + \CK/0.1))}\right)^3 \\
+\F{NaP}{Na}^f  &=& -\F{NaP}{max}^f\times\left(\frac{\CNa}{\CNa + 0.2(1 + \CK/8.3)}\right)^3 \times\left(\frac{\MK}{\MK + 0.1(1 + \MNa/18)}\right)^2 \\
+\F{NaP}{Na}^r  &=& \F{NaP}{max}^r\times\left(\frac{\CK}{(\CK + 8.3(1 + \CNa/0.2)}\right)^2\times\left(\frac{\CNa}{\CNa + 18(1 + \CK/0.1)}\right)^3 \\
 \F{NaP}{Na} &=& \F{NaP}{Naf} + \F{NaP}{Nar} \\
 \F{NaP}{K} &=& -\F{NaP}{Na}/1.5
 \end{eqnarray}
@@ -469,6 +472,70 @@ The new osmotic coefficient of Hb, $f_{Hb}(t)$, can now be calculated from eq 7 
 \begin{equation}
 f_{Hb}(t) = 1 + b\times\CHb(t) + c\times CHb(t)^2
 \end{equation}
+
+\subsubsection{Computation of the medium concentrations at time = t.}
+Medium concentration changes arise from independent solute and water transfers between cells and medium under mass conservation.  At constant suspension volume, water transfers between cells and medium generate self-compensating changes in cell and medium volume fractions, CVF and (1-CVF), respectively, according to:
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{26\alph{equation}}
+
+\begin{equation}
+\Delta CVF + \Delta (1-CVF) = 0
+\end{equation}
+By mass conservation, the $Qi$ changes during $\Delta t$, $\Delta Qi$, are transferred to the medium, $\Delta Qim$, so that:
+\begin{equation}
+\Delta Qim + \Delta Qi = 0  
+\end{equation}
+
+$\Delta Qim$ can be expressed in terms of $Mi$ changes during $\Delta t$ as follows:
+
+\begin{equation}
+\Delta Qim = Mi(t)(1-CVF(t)) – Mi(t-\Delta t)(1-CVF(t-\Delta t)) 
+\end{equation}
+
+Replacing $\Delta Qim$ by $-\Delta Qi$ (eq 26b) in equation 26c and solving for $Mi(t)$, we obtain:
+
+\begin{equation}
+Mi(t) = \frac{Mi(t-\Delta t)(1 - CVF(t-\Delta t)) - \Delta Qi}{1 - CVF(t)}
+\end{equation}
+With eq 26d we can now compute the new medium concentrations at time = t for transported solutes, eqs 27a-f, and for impermeant solutes ($\Delta Qi = 0$) whose concentration changes only because of water shifts, eqs 27g-k:
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{27\alph{equation}}
+
+\begin{eqnarray}
+\MNa(t) = \frac{\MNa(t-\Delta t)(1-CVF(t-\Delta t)) - \Delta QNa}{1 – CVF(t) }\\
+\MK(t) = \frac{\MK(t-\Delta t)(1-CVF(t-\Delta t)) - \Delta QK}{1 – CVF(t) }\\
+\MA(t) = \frac{\MA(t-\Delta t)(1-CVF(t-\Delta t)) - \Delta QA}{1 – CVF(t) }\\
+\MCa(t) = \frac{\MCa(t-\Delta t)(1-CVF(t-\Delta t)) - \Delta QCa}{1 – CVF(t) }\\
+\MMg(t) = \frac{\MMg(t-\Delta t)(1-CVF(t-\Delta t)) - \Delta QMg}{1 – CVF(t) }\\
+\MBH(t) = \frac{\MBH(t-\Delta t)(1-CVF(t-\Delta t)) - \Delta QH}{1 – CVF(t) }\\
+\MB(t) = \frac{\MB(t-\Delta t)(1-CVF(t-\Delta t))}{1 – CVF(t)) }\\
+\MGluco(t) = \frac{\MGluco(t-\Delta t)(1-CVF(t-\Delta t))}{1 – CVF(t) }\\
+\MGluca(t) = \frac{\MGluca(t-\Delta t)(1-CVF(t-\Delta t))}{1 – CVF(t) }\\
+\MSuc(t) = \frac{\MSuc(t-\Delta t)(1-CVF(t-\Delta t))}{1 – CVF(t)} 
+\end{eqnarray}
+
+With $MBH(t)$ and $MB(t)$ from eqs 27e-f we can now compute the new medium proton concentration $MH(t)$ by solving eq 2 for $MH$, so that:
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{28\alph{equation}}
+
+\begin{equation}
+\MH(t) = KB\frac{\MBH(t)}{\MB(t) – \MBH(t)}
+\end{equation}
+
+With $MH(t)$, we can now compute $pHm(t)$, and also the proton and anion concentration ratios across the membrane, $rH(t)$ and $rA(t)$, respectively, critical parameters for driving the proton transport dynamics in the model ([34]; User Guide).
+
+\begin{eqnarray}
+pHm(t)&=& -\log\MH(t)\\
+rH(t) &=&\frac{\MH(t)}{\CH(t)} \\
+rA(t) &=& \frac{\CA(t)}{\MA(t)} 
+\end{eqnarray}
+
+This completes the list of sequential computations within each iteration cycle of the core red cell model.    
+
+There is a substantial body of additional information represented in the model of no direct relevance to the material in these papers.  This includes data on the effects of temperature and of different ions on the activities of membrane transporters, information revised, filtered, and, when solidly established, incorporated and updated in the model as part of the continuous process of improving the quantitative accuracy of model predictions.  The effects of temperature on transport, in addition to those incorporated within the kinetic description (constant field equation, ziFEm/RT, for instance) are represented by factors using the traditional Q10 phenomenology, with the option to alter the default values of 4 and 2 for active and passive transport, respectively.  Most ion effects render themselves to be represented by factors modifying rate constants or dissociation constants in flux equations (e.g Na/K pump, eq 11), without altering the actual overall kinetics of the transport pathways. Because of their particular relevance to the circulatory behaviour of RBCs we only listed here explicitly the modulating effects of Ca2+ on PGGardos and on PGCa, equations 14 and 15, respectively. The complete model code is available with open access in the repository (https://github.com/sdrogers/redcellmodeljava).   
 
 
 \end{document}

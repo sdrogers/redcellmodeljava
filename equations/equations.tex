@@ -238,7 +238,7 @@ The substrates of the RBC membrane transporters are Na, K, A, H, Ca, Mg and wate
 \F{}{H} &=& \F{G}{H} + \F{H}{A} + \F{Ca}{PH} + \F{A23}{H} \\
 \F{}{Ca} &=& \F{CaP}{Ca} + \F{G}{Ca} + \F{z}{Ca} + \F{A23}{Ca} \\
 \F{}{Mg} &=& \F{A23}{Mg} \\
-\F{}{w}  &=& Pw*(\COs – \MOs)
+\F{}{w}  &=& Pw\times (\COs – \MOs)
 \end{eqnarray}
 
 There are no data on PIEZO1-mediated Mg2+ fluxes in RBCs.  Although PzMg most certainly has a small finite value, $\F{z}{Mg}$ is likely to be very small under the usually low electrochemical $Mg^{2+}$ gradients across the RBC membrane.  With this level of ignorance and uncertainty, $\F{z}{Mg}$ was not included in the current model version.  
@@ -254,7 +254,7 @@ Certain transporter kinetics are reported in the equations with the default nume
 
 \begin{eqnarray}
 \F{NaP}{Na}^f  &=& -\F{NaP}{max}^f\times\left(\frac{\CNa}{\CNa + 0.2(1 + \CK/8.3)}\right)^3 \times\left(\frac{\MK}{\MK + 0.1(1 + \MNa/18)}\right)^2 \\
-\F{NaP}{Na}^r  &=& \F{NaP}{max}^r\times\left(\frac{\CK}{(\CK + 8.3(1 + \CNa/0.2)}\right)^2\times\left(\frac{\CNa}{\CNa + 18(1 + \CK/0.1)}\right)^3 \\
+\F{NaP}{Na}^r  &=& \F{NaP}{max}^r\times\left(\frac{\CK}{\CK + 8.3(1 + \CNa/0.2)}\right)^2\times\left(\frac{\CNa}{\CNa + 18(1 + \CK/0.1)}\right)^3 \\
 \F{NaP}{Na} &=& \F{NaP}{Naf} + \F{NaP}{Nar} \\
 \F{NaP}{K} &=& -\F{NaP}{Na}/1.5
 \end{eqnarray}
@@ -266,7 +266,7 @@ Certain transporter kinetics are reported in the equations with the default nume
 
 \begin{eqnarray}
 \F{CaP}{Ca} &=& -\kk{CaP}{}\times\frac{(\CCatp)^4}{(0.0002)^4 + (\CCa2+)^4}\\
-\F{CaP}{H} &=& -2*\F{CaP}{Ca}
+\F{CaP}{H} &=& -2\times\F{CaP}{Ca}
 \end{eqnarray}
 
 \subsubsection{Electrodiffusional fluxes of i (Na, K, Ca, H and A) through endogenous channels, FGi , Gardos channels, FGGardos, and PIEZO1 channels, Fzi, are represented with constant field kinetics [19]: }
@@ -316,7 +316,7 @@ The CX and MX values in eq 17b are those set for the RS
 \end{eqnarray}
 $d$ is a wildcard factor introduced to set $\F{Co}{} = 0$ only in the RS. Its value is set by the initial Na, K and A concentrations in the RS. $d$ remains as a fixed-value parameter during dynamic state computations.    
 
-\subsubsection{Electroneutral M2+:2H+ exchange fluxes of $Ca^{2+}$ and $Mg^{2+}$ mediated by the divalent cation ionophore A23187}
+\subsubsection{Electroneutral $M^{2+}:2H^+$ exchange fluxes of $Ca^{2+}$ and $Mg^{2+}$ mediated by the divalent cation ionophore A23187}
 
 The divalent cation ionophore A23187 mediates an electroneutral $M^{2+}:2H^+$ exchange when incorporated into cell membranes [23]. Divalent cation ionophores became essential and extensively used tools in research on calcium and magnesium function and dysfunction in RBCs [5, 7, 24, 25] and in many other cell types. To emulate experimental protocols with the use of divalent cation ionophores it became necessary to represent their transport properties in the model as an optional exogenous transporter of the RBC membrane.  
 
@@ -324,16 +324,16 @@ In albumin-free RBC suspensions, the RBC/medium partition ratio of the lipophili
 
 
 \begin{eqnarray}
-\nonumber A1 &=& \frac{\MCatp}{\Km{Ca}(1 + \MMgtp/\KI{Mg} + \MCatp)} \\
-\nonumber A2 &=& \frac{\CCatp}{\Km{Ca}(1 + \CMgtp/\KI{Mg} + \CCatp)}  \\
-\nonumber A3 &=& \frac{\MMgtp}{\Km{Mg}(1 + \MCatp/\KI{Ca} + \MMgtp)}  \\
-\nonumber A4 &=& \frac{\CMgtp}{\Km{Mg}(1 + \CCatp/\KI{Ca} + \CMgtp)} 
+\nonumber A1 &=& \frac{\MCatp}{\Km{Ca}(1 + \MMgtp/(\KI{Mg} + \MCatp))} \\
+\nonumber A2 &=& \frac{\CCatp}{\Km{Ca}(1 + \CMgtp/(\KI{Mg} + \CCatp))}  \\
+\nonumber A3 &=& \frac{\MMgtp}{\Km{Mg}(1 + \MCatp/(\KI{Ca} + \MMgtp))}  \\
+\nonumber A4 &=& \frac{\CMgtp}{\Km{Mg}(1 + \CCatp/(\KI{Ca} + \CMgtp))} 
 \end{eqnarray}
 
 Following extensive preliminary tests [27], default values of 10 mM for the four Km and KI parameter set were found to deliver excellent agreement between predicted and measured ionophore-mediated fluxes, and to ensure adequate compliance with the measured equilibrium distribution of the transported ions when ionophore-mediated net fluxes approach zero [23]: 
 \[\CCatp/\MCatp \approx \CMgtp/\MMgtp \approx (\CH^+/\MH^+)^2.\]
 
-Combining the Ca2+, Mg2+ and H+ driving gradients we obtain:
+Combining the $Ca^{2+}$, $Mg^{2+}$ and $H^+$ driving gradients we obtain:
 \begin{eqnarray}
 \nonumber B1&=& A1(\CH)^2 - A2(\MH)^2 \\
 \nonumber B2&=& A3(\CH)^2 - A4(\MH)^2
@@ -350,7 +350,7 @@ The ionophore-mediated fluxes of $Ca^{2+}$, $Mg^{2+}$ and $H^+$, $\F{A23}{Ca}$, 
 \F{A23}{H} &=& -2(\F{A23}{Ca} + \F{A23}{Mg})
 \end{eqnarray}
 
-Where $P_{A23}$ is the ionophore-mediated permeability. $P_{A23}$ is a power function of the RBC ionophore concentration, $P_{A23} = 0.22*[I]1.45$, when $P_{A23}$ is expressed in units of 10-6 cm/s, and [I] in $\mu$mol/Loc [26, 28, 29]. Within the units-set in the model, numerical values of $P_{A23}$ in the range 1017 to 2*1018 offered a perfectly adequate minimalist emulation of the effects of different ionophore concentrations on the fluxes and distributions of $Ca^{2+}$, $Mg^{2+}$ and $H^{+}$ ions in RBCs in a large variety of experimental conditions [5, 27, 30-33].    
+Where $P_{A23}$ is the ionophore-mediated permeability. $P_{A23}$ is a power function of the RBC ionophore concentration, $P_{A23} = 0.22\times [I]1.45$, when $P_{A23}$ is expressed in units of 10-6 cm/s, and [I] in $\mu$mol/Loc [26, 28, 29]. Within the units-set in the model, numerical values of $P_{A23}$ in the range 1017 to 2*1018 offered a perfectly adequate minimalist emulation of the effects of different ionophore concentrations on the fluxes and distributions of $Ca^{2+}$, $Mg^{2+}$ and $H^{+}$ ions in RBCs in a large variety of experimental conditions [5, 27, 30-33].    
 
 \subsubsection{Equation sequence for the computations of dynamic states.}
 Following perturbations, sustained charge conservation and electroneutrality is implemented by:
@@ -364,14 +364,14 @@ Following perturbations, sustained charge conservation and electroneutrality is 
 where $Ii$ represents the current carried by each of the electrogenic transporters in the system. $\sum Ii$ is therefore the fist equation that has to be solved at the start of each iteration in the numerical computations of the model. Capacitative currents ($Ic = C(dV/dt))$ are ignored because their magnitude and time-course are orders of magnitude smaller than those of the homeostatic relevant currents.  The relation between currents and individual ion fluxes, $Fi$, is given by 
 
 \begin{equation}
-\sum Ii = F\sum zi*Fi 
+\sum Ii = F\sum zi\times Fi 
 \end{equation}
 where $zi$ is the valence of ion $i$ and $F$ is the Faraday constant. 
 
 With the electrogenic flux components in the model, $\sum ziFi = 0$ renders:
 
 \begin{equation}
-\sum ziFi = \F{NaP}{Na} + \F{NaP}{K} + \F{G}{Na} + \F{G}{K} + \F{G}{K_Gardos} + \F{G}{A} + \F{G}{Ca} + \F{G}{H} + \F{z}{Na} + \F{z}{K} + \F{z}{A} + \F{z}{Ca} = 0
+\sum ziFi = \F{NaP}{Na} + \F{NaP}{K} + \F{G}{Na} + \F{G}{K} + \F{G}{K_{Gardos}} + \F{G}{A} + \F{G}{Ca} + \F{G}{H} + \F{z}{Na} + \F{z}{K} + \F{z}{A} + \F{z}{Ca} = 0
 \end{equation}
 $\sum ziFi$ is a complex function of temperature, membrane potential, $Em$, and of the concentration of all transported and modulating substrates.  With all parameters, kinetics and substrate concentrations known $\sum Ii = 0$ becomes an implicit equation in $Em$, the single unknown left, solved in each iteration with the Newton-Raphson cord approximation routine.      
 
@@ -385,92 +385,92 @@ With $Em$, the new $Fi$ values for each of the electrodiffusional terms in eq 18
 
 The value of $a$, under user control, optimises $\Delta t$ scales for different simulations (“frequencyfactor” in the RCM); $b$ is a small zero-avoidance parameter in the denominator. The advantage of this strategy over using regular iteration intervals is that by setting a constant value for the cycles per outcome (“cyclesperprint(epochs)” in the RCM) the density of data output points automatically adjusts to the overall rate of change in the system, emulating the way good experimental practice seeks to sample for data at the bench, thus optimizing comparisons between predicted and experimental results.    
 
-With the new $Fi(t)$ and $\Delta t$ the new $Qi(t)$ may be computed using the values of $FNa(t)$, $FK(t)$, $FA(t)$, $FH(t)$, $FCa(t)$ and $\F{A23}{Mg}(t)$ from equations (10a-f) as follows:
+With the new $Fi^t$ and $\Delta t$ the new $Qi^t$ may be computed using the values of $FNa^t$, $FK^t$, $FA^t$, $FH^t$, $FCa^t$ and $\F{A23}{Mg}^t$ from equations (10a-f) as follows:
 
 \setcounter{equation}{0}
 \renewcommand{\theequation}{20\alph{equation}}
 
 \begin{eqnarray}
-\Delta QNa &=& FNa*\Delta t\\
-\Delta QK &=& FK*\Delta t \\
-\Delta QA &=& FA*\Delta t \\
-\Delta H &=& FH*\Delta t \\
-\Delta QCa &=& FCa*\Delta t \\
-\Delta QMg &=& \F{A23}{Mg}*\Delta t \\
-QNa(t) &=& QNa(t-\Delta t) + \Delta QNa \\
-QK(t) &=& QK(t-\Delta t) + \Delta QK  \\
-QA(t) &=& QA(t-\Delta t) + \Delta QA  \\
-QCa(t) &=& QCa(t-\Delta t) + \Delta QCa  \\
-QMg(t) &=& QMg(t-\Delta t) + \Delta QMg
+\Delta QNa &=& FNa\times\Delta t\\
+\Delta QK &=& FK\times\Delta t \\
+\Delta QA &=& FA\times\Delta t \\
+\Delta H &=& FH\times\Delta t \\
+\Delta QCa &=& FCa\times\Delta t \\
+\Delta QMg &=& \F{A23}{Mg}\times\Delta t \\
+QNa^t &=& QNa^{(t-\Delta t)} + \Delta QNa \\
+QK^t &=& QK^{(t-\Delta t)} + \Delta QK  \\
+QA^t &=& QA^{(t-\Delta t)} + \Delta QA  \\
+QCa^t &=& QCa^{(t-\Delta t)} + \Delta QCa  \\
+QMg^t &=& QMg^{(t-\Delta t)} + \Delta QMg
 \end{eqnarray}
 
-$\Delta H$ is a special case because $\Delta H$ adds to the only titratable proton buffer nHb*QHb, so that:
+$\Delta H$ is a special case because $\Delta H$ adds to the only titratable proton buffer $nHb\times QHb$, so that:
 \setcounter{equation}{0}
 \renewcommand{\theequation}{21\alph{equation}}
 \begin{eqnarray}
-nHb(t)*QHb &=& nHb(t-\Delta t)*QHb + \Delta H \\
-nHb(t) &=& nHb(t-\Delta t)  + \Delta H/QHb \\
+nHb^t\times QHb &=& nHb^{(t-\Delta t)}\times QHb + \Delta H \\
+nHb^t &=& nHb^{(t-\Delta t)}  + \frac{\Delta H}{QHb}
 \end{eqnarray}
 
-From which we can now compute the new cell pHi from eq 4 by solving for pH(t):
+From which we can now compute the new cell pHi from eq 4 by solving for $pH^t$:
 
 \begin{equation}
-pH(t) = nHb(t)/a + pI
+pH^t = \frac{nHb^t}{a} + pI
 \end{equation}
 The new intracellular $H^+$ concentration in molar units is:
 \begin{equation}
-CH(t) = 10^{-pH(t)}
+CH^t = 10^{-pH^t}
 \end{equation}
 
-With the new $Qi(t)$, we need the new cell water volume, $Vw(t)$ in order to compute the new cell concentrations, $Ci(t) = Qi(t)/Vw(t)$.  The water flux across the RBC membrane, $Fw$, is driven by the osmotic gradient across the RBC membrane (eqs 5 and 6): 
+With the new $Qi^t$, we need the new cell water volume, $Vw^t$ in order to compute the new cell concentrations, $Ci^t = Qi^t/Vw^t$.  The water flux across the RBC membrane, $Fw$, is driven by the osmotic gradient across the RBC membrane (eqs 5 and 6): 
 \setcounter{equation}{0}
 \renewcommand{\theequation}{22\alph{equation}}
 
 \begin{equation}
-Fw(t) = Pw*(\COs(t) – \MOs(t-\Delta t)) 
+Fw^t = Pw(\COs^t – \MOs^{(t-\Delta t)}) 
 \end{equation}
-$\COs(t)$ can be computed from the altered osmotic load resulting from the $\Delta Qi$ changes during $\Delta t$ operating on the cell volume at the start of the each iteration interval: 
+$\COs^t$ can be computed from the altered osmotic load resulting from the $\Delta Qi$ changes during $\Delta t$ operating on the cell volume at the start of the each iteration interval: 
 
 \begin{equation}
-COs(t) = \frac{QNa(t) + QK(t) + Q(A)t + QCa(t) + QMg(t)}{Vw(t-\Delta t)}  + (f_{Hb}*\CHb + \CX )(t-\Delta t)
+COs^t = \frac{QNa^t + QK^t + Q(A)t + QCa^t + QMg^t}{Vw^{(t-\Delta t)}}  + (f_{Hb}\times\CHb + \CX )^{(t-\Delta t)}
 \end{equation}
 
 
 \setcounter{equation}{0}
 \renewcommand{\theequation}{23\alph{equation}}
 
-The new cell water volume, $Vw(t)$, and volume-associated variables, $RCV(t)$, $MCHC(t)$, $Density(t)$ and $Hct(t)$, can now be computed from: 
+The new cell water volume, $Vw^t$, and volume-associated variables, $RCV^t$, $MCHC^t$, $Density^t$ and $Hct^t$, can now be computed from: 
 \begin{eqnarray}
-\Delta Vw(t) &=& Fw(t)*\Delta t \\
-Vw(t) &=& Vw(t-\Delta t) + \Delta Vw \\
-RCV(t) &=& 1-Vw(t=0) + Vw(t)  \\
-MCHC(t) &=& MCHC(t=0)/RCV  \\
-Density(t) &=& ((MCHC(t=0)/100) + Vw(t))/RCV  \\
-Hct(t) &=& Htc(t=0)*RCV  
+\Delta Vw^t &=& Fw^t\times\Delta t \\
+Vw^t &=& Vw^{(t-\Delta t)} + \Delta Vw \\
+RCV^t &=& 1-Vw^{(t=0)} + Vw^t  \\
+MCHC^t &=& MCHC^{(t=0)}/RCV  \\
+Density^t &=& ((MCHC^{(t=0)}/100) + Vw^t)/RCV  \\
+Hct^t &=& Htc^{(t=0)}\times RCV  
 \end{eqnarray}
 
-With $Vw(t)$ we proceed to compute next the new (t) intracellular concentrations of Na, K, A, H, Ca, Hb, and X:
+With $Vw^t$ we proceed to compute next the new intracellular concentrations of Na, K, A, H, Ca, Hb, and X:
 
 \setcounter{equation}{0}
 \renewcommand{\theequation}{24\alph{equation}}
 
 \begin{eqnarray}
-\CNa(t) &=& QNa(t)/Vw(t) \\
-\CK(t) &=& QK(t)/Vw(t) \\
-\CA(t) &=& QA(t)/Vw(t)  \\
-\CCa(t) &=& QCa(t)/Vw(t)  \\
-\CMg(t) &=& QMg(t)/Vw(t)  \\
-\CHb(t) &=& QHb/Vw(t) \\
-\CX^{-}(t) &=& QX^{-} /Vw(t)  
+\CNa^t &=& QNa^t/Vw^t \\
+\CK^t &=& QK^t/Vw^t \\
+\CA^t &=& QA^t/Vw^t  \\
+\CCa^t &=& QCa^t/Vw^t  \\
+\CMg^t &=& QMg^t/Vw^t  \\
+\CHb^t &=& QHb/Vw^t \\
+(\CX^{-})^t &=& QX^{-} /Vw^t  
 \end{eqnarray}
 
-The new osmotic coefficient of Hb, $f_{Hb}(t)$, can now be calculated from eq 7 and the new $\CHb(t)$:
+The new osmotic coefficient of Hb, $f_{Hb}^t$, can now be calculated from eq 7 and the new $\CHb^t$:
 
 \setcounter{equation}{24}
 \renewcommand{\theequation}{\arabic{equation}}
 
 \begin{equation}
-f_{Hb}(t) = 1 + b\times\CHb(t) + c\times CHb(t)^2
+f_{Hb}^t = 1 + b\times\CHb^t + c\times (CHb^t)^2
 \end{equation}
 
 \subsubsection{Computation of the medium concentrations at time = t.}
@@ -490,13 +490,13 @@ By mass conservation, the $Qi$ changes during $\Delta t$, $\Delta Qi$, are trans
 $\Delta Qim$ can be expressed in terms of $Mi$ changes during $\Delta t$ as follows:
 
 \begin{equation}
-\Delta Qim = Mi(t)(1-CVF(t)) – Mi(t-\Delta t)(1-CVF(t-\Delta t)) 
+\Delta Qim = Mi^t(1-CVF^t) – Mi^{(t-\Delta t)}(1-CVF^{(t-\Delta t)}) 
 \end{equation}
 
-Replacing $\Delta Qim$ by $-\Delta Qi$ (eq 26b) in equation 26c and solving for $Mi(t)$, we obtain:
+Replacing $\Delta Qim$ by $-\Delta Qi$ (eq 26b) in equation 26c and solving for $Mi^t$, we obtain:
 
 \begin{equation}
-Mi(t) = \frac{Mi(t-\Delta t)(1 - CVF(t-\Delta t)) - \Delta Qi}{1 - CVF(t)}
+Mi^t = \frac{Mi^{(t-\Delta t)}(1 - CVF^{(t-\Delta t)}) - \Delta Qi}{1 - CVF^t}
 \end{equation}
 With eq 26d we can now compute the new medium concentrations at time = t for transported solutes, eqs 27a-f, and for impermeant solutes ($\Delta Qi = 0$) whose concentration changes only because of water shifts, eqs 27g-k:
 
@@ -504,33 +504,33 @@ With eq 26d we can now compute the new medium concentrations at time = t for tra
 \renewcommand{\theequation}{27\alph{equation}}
 
 \begin{eqnarray}
-\MNa(t) = \frac{\MNa(t-\Delta t)(1-CVF(t-\Delta t)) - \Delta QNa}{1 – CVF(t) }\\
-\MK(t) = \frac{\MK(t-\Delta t)(1-CVF(t-\Delta t)) - \Delta QK}{1 – CVF(t) }\\
-\MA(t) = \frac{\MA(t-\Delta t)(1-CVF(t-\Delta t)) - \Delta QA}{1 – CVF(t) }\\
-\MCa(t) = \frac{\MCa(t-\Delta t)(1-CVF(t-\Delta t)) - \Delta QCa}{1 – CVF(t) }\\
-\MMg(t) = \frac{\MMg(t-\Delta t)(1-CVF(t-\Delta t)) - \Delta QMg}{1 – CVF(t) }\\
-\MBH(t) = \frac{\MBH(t-\Delta t)(1-CVF(t-\Delta t)) - \Delta QH}{1 – CVF(t) }\\
-\MB(t) = \frac{\MB(t-\Delta t)(1-CVF(t-\Delta t))}{1 – CVF(t)) }\\
-\MGluco(t) = \frac{\MGluco(t-\Delta t)(1-CVF(t-\Delta t))}{1 – CVF(t) }\\
-\MGluca(t) = \frac{\MGluca(t-\Delta t)(1-CVF(t-\Delta t))}{1 – CVF(t) }\\
-\MSuc(t) = \frac{\MSuc(t-\Delta t)(1-CVF(t-\Delta t))}{1 – CVF(t)} 
+\MNa^t = \frac{\MNa^{(t-\Delta t)}(1-CVF^{(t-\Delta t)}) - \Delta QNa}{1 – CVF^t }\\
+\MK^t = \frac{\MK^{(t-\Delta t)}(1-CVF^{(t-\Delta t)}) - \Delta QK}{1 – CVF^t }\\
+\MA^t = \frac{\MA^{(t-\Delta t)}(1-CVF^{(t-\Delta t)}) - \Delta QA}{1 – CVF^t }\\
+\MCa^t = \frac{\MCa^{(t-\Delta t)}(1-CVF^{(t-\Delta t)}) - \Delta QCa}{1 – CVF^t }\\
+\MMg^t = \frac{\MMg^{(t-\Delta t)}(1-CVF^{(t-\Delta t)}) - \Delta QMg}{1 – CVF^t }\\
+\MBH^t = \frac{\MBH^{(t-\Delta t)}(1-CVF^{(t-\Delta t)}) - \Delta QH}{1 – CVF^t }\\
+\MB^t = \frac{\MB^{(t-\Delta t)}(1-CVF^{(t-\Delta t)})}{1 – CVF^t) }\\
+\MGluco^t = \frac{\MGluco^{(t-\Delta t)}(1-CVF^{(t-\Delta t)})}{1 – CVF^t }\\
+\MGluca^t = \frac{\MGluca^{(t-\Delta t)}(1-CVF^{(t-\Delta t)})}{1 – CVF^t }\\
+\MSuc^t = \frac{\MSuc^{(t-\Delta t)}(1-CVF^{(t-\Delta t)})}{1 – CVF^t} 
 \end{eqnarray}
 
-With $MBH(t)$ and $MB(t)$ from eqs 27e-f we can now compute the new medium proton concentration $MH(t)$ by solving eq 2 for $MH$, so that:
+With $MBH^t$ and $MB^t$ from eqs 27e-f we can now compute the new medium proton concentration $MH^t$ by solving eq 2 for $MH$, so that:
 
 \setcounter{equation}{0}
 \renewcommand{\theequation}{28\alph{equation}}
 
 \begin{equation}
-\MH(t) = KB\frac{\MBH(t)}{\MB(t) – \MBH(t)}
+\MH^t = KB\frac{\MBH^t}{\MB^t – \MBH^t}
 \end{equation}
 
-With $MH(t)$, we can now compute $pHm(t)$, and also the proton and anion concentration ratios across the membrane, $rH(t)$ and $rA(t)$, respectively, critical parameters for driving the proton transport dynamics in the model ([34]; User Guide).
+With $MH^t$, we can now compute $pHm^t$, and also the proton and anion concentration ratios across the membrane, $rH^t$ and $rA^t$, respectively, critical parameters for driving the proton transport dynamics in the model ([34]; User Guide).
 
 \begin{eqnarray}
-pHm(t)&=& -\log\MH(t)\\
-rH(t) &=&\frac{\MH(t)}{\CH(t)} \\
-rA(t) &=& \frac{\CA(t)}{\MA(t)} 
+pHm^t&=& -\log\MH^t\\
+rH^t &=&\frac{\MH^t}{\CH^t} \\
+rA^t &=& \frac{\CA^t}{\MA^t} 
 \end{eqnarray}
 
 This completes the list of sequential computations within each iteration cycle of the core red cell model.    

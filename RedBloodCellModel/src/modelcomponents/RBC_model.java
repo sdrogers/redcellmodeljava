@@ -72,6 +72,8 @@ public class RBC_model implements Serializable {
 	
 	private final double MIN_BUFFER_CONC = 1e-10;
 	
+	private boolean isCancelled = false;
+	
 	// Model components
 	Region cell;
 	Region medium;
@@ -596,7 +598,16 @@ public class RBC_model implements Serializable {
 			this.set_cell_fraction_options(tempOptions, new ArrayList<String>());
 		}	
 	}
+	public void setIsCancelled(boolean state) {
+		this.isCancelled = state;
+	}
+	public boolean getIsCancelled() {
+		return this.isCancelled;
+	}
 	public void runall(JTextArea ta) {
+		
+		this.setIsCancelled(false);
+		
 		this.output("RUNNING DS STAGE " + this.stage, ta);
 		this.output("Current Sampling time: " + 60.0*this.sampling_time,ta);
 		this.output("Running until: " + this.duration_experiment,ta);
@@ -729,6 +740,11 @@ public class RBC_model implements Serializable {
 			}
 			
 			this.total_cycle_count += 1;
+			// Check to see if we've been cancelled
+			if(getIsCancelled()) {
+				this.output("CANCELLED", ta);
+				break;
+			}
 		}
 		this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
 		this.publish();

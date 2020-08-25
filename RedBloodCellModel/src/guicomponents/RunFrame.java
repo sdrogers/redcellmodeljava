@@ -28,7 +28,7 @@ public class RunFrame extends JFrame implements ActionListener{
 	private JFrame source;
 	private HashMap<String,String> options;
 	private JTextArea ta;
-	private JButton saveButton,returnButton,quitButton,plotButton;
+	private JButton saveButton,returnButton,quitButton,plotButton, stopButton;
 	private JFileChooser jfc = new JFileChooser();
 	private ExperimentalSettings experimentalSettings;
 	private JPanel plotPanel;
@@ -62,6 +62,11 @@ public class RunFrame extends JFrame implements ActionListener{
 		returnButton.addActionListener(this);
 		bottomPanel.add(returnButton);
 		
+		stopButton = new JButton("Stop");
+		stopButton.addActionListener(this);
+		bottomPanel.add(stopButton);
+		
+		
 		plotButton = new JButton("Launch plotter");
 		plotButton.setEnabled(false);
 		plotButton.addActionListener(this);
@@ -89,9 +94,12 @@ public class RunFrame extends JFrame implements ActionListener{
 		}else if(e.getSource() == plotButton) {
 			//String[] series = {"pHi"};
 			new PlotChooser(rbc.getResults(),rbc.getPublishOrder());
+		}else if(e.getSource() == stopButton) {
+			rbc.setIsCancelled(true);
 		}
 	}
 	public void runModel() {
+		stopButton.setEnabled(true);
 		new Worker().execute();
 	}
 	private class Worker extends SwingWorker<Void,String> {
@@ -104,6 +112,9 @@ public class RunFrame extends JFrame implements ActionListener{
 			for(DSSettings d: experimentalSettings.getDSStages()) {
 				rbc.setupDS(d.getOptions(), usedoptions);
 				rbc.runall(ta);
+				if(rbc.getIsCancelled()) {
+					break;
+				}
 			}
 			
 
@@ -116,6 +127,7 @@ public class RunFrame extends JFrame implements ActionListener{
 			saveButton.setEnabled(true);
 			returnButton.setEnabled(true);
 			plotButton.setEnabled(true);
+			stopButton.setEnabled(false);
 		}
 	}
 

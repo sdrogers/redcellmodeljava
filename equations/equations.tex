@@ -2,7 +2,8 @@
 \usepackage{url}
 \usepackage[margin=2cm]{geometry}
 \usepackage{amsmath}
-\title{governing-equations-of-the-rcm}
+\title{Governing Equations of the Red Cell Model (RCM)}
+\date{}
 
 % \newcommand{\med}[1]{[#1]^m}
 \newcommand{\med}[1]{M#1}
@@ -55,6 +56,7 @@
 
 \newcommand{\QX}{QX}
 \newcommand{\QCa}{QCa}
+\newcommand{\QXm}{QX^{-}}
 
 \newcommand{\pH}[1]{pH_{#1}}
 \newcommand{\pI}{pI}
@@ -74,7 +76,7 @@
 Red blood cell homeostasis addresses the subset of mechanisms that
 control the dynamic changes in cell volume, membrane potential, ionic
 composition, membrane transport and osmotic gradients in response to
-perturbations. The modelled system consists of a suspension of identical
+perturbations. The system modelled under RCM consists of a suspension of identical
 RBCs whose dynamic behaviour is constrained only by charge and mass
 conservation. The equations implement these laws following a strict
 computational sequence representative of the multiple interconnected
@@ -82,31 +84,33 @@ processes involved, delivering true and tested predictions on the
 homeostatic behaviour of human RBCs in physiological, pathological and
 experimental conditions.
 
-We retain in the equations the names of parameters and variables as used for model inputs and outputs where the use of conventional nomenclatures for concentrations (i.e. [Ca2+]c, [Mg2+]o) or of Greek symbols for fluxes was not feasible.  Coherence with model operation in the choice of equation nomenclature was considered more important than compliance with established nomenclature, clarity of meaning being preserved in the unconventional style and fully explained in the Appendix glossaries of the User Guide (\url{https://github.com/sdrogers/redcellmodeljava}).
+We retain in the equations the names of parameters and variables as used for model inputs and outputs where the use of conventional nomenclatures for concentrations (i.e. $[Ca^{2+}]_c$, $[Mg^{2+}]_o$) or of Greek symbols for fluxes was not feasible.  Coherence with model operation in the choice of equation nomenclature was considered more important than compliance with established nomenclature, clarity of meaning being preserved in the unconventional style and fully explained in the Appendix glossaries of the User Guide (\url{https://github.com/sdrogers/redcellmodeljava}).
 
 
-\subsection{The initial Reference State(RS)}
+\subsection{The initial Reference State (RS)}
 
 The RBC reference state describes the initial condition of the system in
 a pump-leak balanced steady state. For compliance with initial
 electroneutrality and osmotic equilibrium we use a phenomenology in
 which the charge, $\nX$, and cell content of the global, non-haemoglobin,
-impermeant cell anion, $\QX$ , are treated as wildcard parameters in
+impermeant cell anion, $\QXm$ , are treated as wildcard parameters in
 equations 3 and 8. The $\nX$ and $\CXm$ values emerging from such treatment
 correspond closely with the known organic and inorganic phosphate pools
 of metabolically normal RBCs {[}3{]}. When modifying the initial default
 values in the RS the wildcard parameters may change. The model
 automatically recalculates their value potentially changing slightly the
-constitutive make up of the impermeant cell anion ($\nX \times \QX$) in
+constitutive make up of the impermeant cell anion ($\nX  \QXm$) in
 the new cell.
 
-\subsubsection{Mediumelectroneutrality}\label{medium-electroneutrality}
+\subsubsection{Mediumel ectroneutrality}\label{medium-electroneutrality}
 
 \begin{equation}
 \MA + (\MB - \MBH) + \MGluco-(\MNa + \MK + 2(\MCatp + \MMgtp + \MGluca)) = 0 \tag{1}
 \end{equation}
 
 Medium concentration of proton-bound buffer, $\MBH$ (HEPES, by default):
+
+\setcounter{equation}{1}
 
 \begin{equation}
 \MBH = \MB\left(\frac{\MH}{\KB + \MH}\right)
@@ -146,16 +150,16 @@ $\fHb$ is the osmotic coefficient of haemoglobin, represented with only two viri
 \end{equation}
 
 \subsubsection{Cytoplasmic buffering of protons, calcium and magnesium.}
-Heamoglobin is the major cytoplasmic buffer for protons (eq 4) and for calcium ($\alpha$-buffer in eq 9c).  The main magnesium buffers are ATP and 2,3-DPG, compounds integrated within the X  phenomenology.  Because the bound forms of Ca and Mg are contained within CX , they are not included as separate osmolarity contributors in eq 6, leaving only the free forms of $Ca^{2+}$ and $Mg^{2+}$ as osmotic contributors.  
+Heamoglobin is the major cytoplasmic buffer for protons (eq 4) and for calcium ($\alpha$-buffer in eq 9c).  The main magnesium buffers are ATP and 2,3-DPG, compounds integrated within the X  phenomenology.  Because the bound forms of Ca and Mg are contained within $CX^-$ , they are not included as separate osmolarity contributors in eq 6, leaving only the free forms of $Ca^{2+}$ and $Mg^{2+}$ as osmotic contributors.  
 
-Cytoplamic $Ca^{2+}$ and $Mg^{2+}$ buffering have been measured with precision in intact RBCs [5-8] enabling accurate representations in the model.  The total Ca and Mg content of the cells, QCa and QMg, is reported in units of mmol/(340g Hb) (or mmol/Loc) whereas concentrations of the free forms, $\CCatp$ and $\CMgtp$, are expressed in units of mmol/Lcw, a conversion requiring translation for operational reasons in the model   Equation 9a translates QCa in units of mmol/Loc to CCa in units of mmol/Lcw using:
+Cytoplamic $Ca^{2+}$ and $Mg^{2+}$ buffering have been measured with precision in intact RBCs [5-8] enabling accurate representations in the model.  The total Ca and Mg content of the cells, QCa and QMg, is reported in units of mmol/(340g Hb) (or mmol/Loc) whereas concentrations of the free forms, $\CCatp$ and $\CMgtp$, are expressed in units of mmol/Lcw, a conversion requiring translation for operational reasons in the model. Equation 9a translates QCa in units of mmol/Loc to CCa in units of mmol/Lcw using:
 
 
 \setcounter{equation}{0}
 \renewcommand{\theequation}{9.\alph{equation}}
 
 \begin{equation}
-\CCa = \QCa\frac{RCV}{Vw}  
+\CCa = \QCa\left(\frac{RCV}{Vw}\right)
 \end{equation}
  
 
@@ -168,10 +172,10 @@ The total calcium concentration is the sum of free and bound forms:
 There are two buffer systems for binding calcium in the RBC cytoplasm, $\alpha$ (mostly haemoglobin), and the BCa/KBCa buffer [6]. The concentration of bound calcium, CCaB, at each total calcium concentration, CCa, is represented by:
 
 \begin{equation}
-\CCaB = \alpha\CCa + \CBCa\frac{\CCatp}{\CCatp + \KBCa}
+\CCaB = \alpha\CCa + \CBCa\left(\frac{\CCatp}{\CCatp + \KBCa}\right)
 \end{equation}
 
-CCa2+ is solved from the implicit equation: 
+$CCa^{2+}$ is solved from the implicit equation: 
 
 \begin{equation}
 \CCa – \CCatp – \CCaB = 0  
@@ -182,12 +186,10 @@ by the Newton-Raphson routine in the RS and at the end of the computations in ea
 The corresponding equations for cytoplasmic magnesium buffering and $CMg^{2+}$ are:
 
 \begin{eqnarray}
-\CMg &=& QMg\frac{RCV}{Vw}\\
+\CMg &=& \left(\frac{RCV}{Vw}\right)\\
 \CMg &=& \CMgtp + \CMgB\\
-\CMgB &=& CBMg1\frac{\CMgtp}{\CMgtp+KBMg1}+CBMg2\frac{\CMgtp}{\CMgtp+KBMg2}+CBMg3
+\CMgB &=& CB_{Mg}1\left(\frac{\CMgtp}{\CMgtp+KB_{Mg}1}\right)+CB_{Mg}2\left(\frac{\CMgtp}{\CMgtp+KB_{Mg}2}\right)+CB_{Mg}3
 \end{eqnarray}
-
-\emph{is $KBMG2$ actually $K \times BMg1$}
 
 $\CMgtp$ is solved from the implicit equation: 
 
@@ -196,14 +198,14 @@ $\CMgtp$ is solved from the implicit equation:
 \end{equation}
 
 
-The measured values of the Mg bufferes [8] are: CBMg1 = 1.2 mmol/Loc, KBMg1 = 0.08 mM; CBMg2 = 7.5 mmol/Loc (15 mEq/Loc), KBMg2 = 3.6 mM; CBMg3 = 0.05 mmol/Loc. BMg1 represents ATP, BMg2 represents 2,3-DPG and miscellaneous phosphate groups, and BMg3 is an unidentified high affinity magnesium buffer.  
+The measured values of the Mg bufferes [8] are: $CB_{Mg}1$ = 1.2 mmol/Loc, $KB_{Mg}1 = 0.08$ mM; $CB_{Mg}2 = 7.5$ mmol/Loc (15 mEq/Loc), $KB_{Mg}2 = 3.6$ mM; $CB_{Mg}3 = 0.05$ mmol/Loc. $B_{Mg}1$ represents ATP, $BMg2$ represents 2,3-DPG and miscellaneous phosphate groups, and $BMg3$ is an unidentified high affinity magnesium buffer.  
 
 
 
-\subsubsection{Effects of deoxygenation on cytoplasmic Mg2+ buffering and pHi.}
-Deoxygenation increases haemoglobin binding of ATP and 2,3-DPG thus reducing their availability for buffering intracellular magnesium.  CBMg1 is reduced by half and CBMg2 by 1.7 [8].  This is particularly relevant for simulating accurately the effects of changing the oxygenation condition of RBCs, a process in which changes in CMg2+ become enmeshed with effects arising from changes in the isoelectric point of haemoglobin, pI (eq 4).  In vivo, RBC are continuously changing between oxy and deoxy states as they flow between the arterial and venous vasculature causing well documented alternating changes in pHi, CMg2+, CA and cell volume which the model accurately reproduces.  Although these changes are fully reversible in physiological conditions, deoxygenation of sickle RBCs can lead to hyperdense collapse, as shown in the next paper [2]. 
+\subsubsection{Effects of deoxygenation on cytoplasmic $Mg^{2+}$ buffering and pHi.}
+Deoxygenation increases haemoglobin binding of ATP and 2,3-DPG thus reducing their availability for buffering intracellular magnesium.  $CB_{Mg}1$ is reduced by half and $CB_{Mg}2$ by 1.7 [8].  This is particularly relevant for simulating accurately the effects of changing the oxygenation condition of RBCs, a process in which changes in $CMg^{2+}$ become enmeshed with effects arising from changes in the isoelectric point of haemoglobin, pI (eq 4).  In vivo, RBCs are continuously changing between oxy and deoxy states as they flow between the arterial and venous vasculature causing well documented alternating changes in pHi, $CMg^{2+}$, CA and cell volume which the model accurately reproduces.  Although these changes are fully reversible in physiological conditions, deoxygenation of sickle RBCs can lead to hyperdense collapse, as shown in the next paper [2]. 
 
-Hb is assumed to be in a oxy-state by default, the most frequent experimental condition. Deoxygenation of Hb (Deoxy) changes its pI(0oC) from 7.2 to 7.5.  The model automatically adjusts the actual pI change for the temperature of the experiment.  The pI shifts during oxy-deoxy transitions cause sudden changes in the protonization condition of Hb with secondary changes in pHi and CMg2+, changes which the model predicts with verified accuracy [9-11].  Electroneutrality preservation during oxy-deoxy transitions requires constancy of nHb values (eq 4) when pI changes, from which the compensatory changes in pHi can be derived according to [10]: 
+Hb is assumed to be in a oxy-state by default, the most frequent experimental condition. Deoxygenation of Hb (Deoxy) changes its pI(0oC) from 7.2 to 7.5.  The model automatically adjusts the actual pI change for the temperature of the experiment.  The pI shifts during oxy-deoxy transitions cause sudden changes in the protonization condition of Hb with secondary changes in pHi and $CMg^{2+}$, changes which the model predicts with verified accuracy [9-11].  Electroneutrality preservation during oxy-deoxy transitions requires constancy of nHb values (eq 4) when pI changes, from which the compensatory changes in pHi can be derived according to [10]: 
 
 On deoxygenation:
 
@@ -217,7 +219,7 @@ On reoxygenation:
 pHioxy = pHideoxy + pIoxy - pIdeoxy 
 \end{equation}
 
-\subsection{The dynamic state}
+\subsection{The dynamic state (DS)}
 
 \setcounter{equation}{9}
 \renewcommand{\theequation}{\arabic{equation}}
@@ -225,7 +227,7 @@ pHioxy = pHideoxy + pIoxy - pIdeoxy
 A first requirement at the start of simulations is to define the relative volume occupied by cells in the cell suspension system, the cell volume fraction, CVF.  Perturbations alter the flux of transported solutes and water across the plasma membrane of the cell thus initiating a cascade of downstream changes in the compositions of cell and suspending medium.  It is therefore important to start by listing the membrane transport component of the cell and of the equations describing their basic kinetic properties.  
 
 \subsubsection{Flux equations of the model, Fi}
-The substrates of the RBC membrane transporters are Na, K, A, H, Ca, Mg and water, the "i" in Fi.  The sign-convention applied in the equations is for positive net fluxes into the cell (influx) and for negative net fluxes into the medium (efflux). The name convention adopted here for the transport of substrate X by the different membrane transporters is as follows: FPX = pump-mediated flux of X, with P = NaP for the Na/K pump or CaP for the calcium pump (PMCA); FGX = X-flux through electrodiffusional channel defined with constant field kinetics; FXA = electroneutral carrier-mediated cotransport of cation X and anion A defined with low-saturation kinetics; FzX = electrodiffusional flux of X through PIEZO1 channel; FCoX = electroneutral cotransport of X mediated by the Na:K:2Cl symport, of minimal expression and activity in human RBCs; FA23X = electroneutral M2+:2H+ exchange flux through the divalent cation ionophore A23187, the only exogenous membrane transporter included in the model; Fw = water flux mediated mainly by aquaporins and partly by partition diffusion through the plasma membrane.  
+The substrates of the RBC membrane transporters are Na, K, A, H, Ca, Mg and water, the "i" in Fi.  The sign-convention applied in the equations is for positive fluxes into the cell (influx) and for negative fluxes into the medium (efflux). The name convention adopted here for the transport of substrate X by the different membrane transporters is as follows: FPX = pump-mediated flux of X, with P = NaP for the Na/K pump or CaP for the calcium pump (PMCA); FGX = X-flux through electrodiffusional channel defined with constant field kinetics; FXA = electroneutral carrier-mediated cotransport of cation X and anion A defined with low-saturation kinetics; FzX = electrodiffusional flux of X through PIEZO1 channel; FCoX = electroneutral cotransport of X mediated by the Na:K:2Cl symport, of minimal expression and activity in human RBCs; FA23X = electroneutral $M^{2+}:2H^+$ exchange flux through the divalent cation ionophore A23187, the only exogenous membrane transporter included in the model; Fw = water flux mediated mainly by aquaporins and partly by partition diffusion through the plasma membrane.  
 
 \setcounter{equation}{0}
 \renewcommand{\theequation}{10.\alph{equation}}
@@ -241,7 +243,7 @@ The substrates of the RBC membrane transporters are Na, K, A, H, Ca, Mg and wate
 \F{}{w}  &=& Pw\times (\COs – \MOs)
 \end{eqnarray}
 
-There are no data on PIEZO1-mediated Mg2+ fluxes in RBCs.  Although PzMg most certainly has a small finite value, $\F{z}{Mg}$ is likely to be very small under the usually low electrochemical $Mg^{2+}$ gradients across the RBC membrane.  With this level of ignorance and uncertainty, $\F{z}{Mg}$ was not included in the current model version.  
+There are no data on PIEZO1-mediated $Mg^{2+}$ fluxes in RBCs.  Although PzMg most certainly has a small finite value, $\F{z}{Mg}$ is likely to be very small under the usually low electrochemical $Mg^{2+}$ gradients across the RBC membrane.  With this level of ignorance and uncertainty, $\F{z}{Mg}$ was not included in the current model version.  
 
 \subsubsection{Kinetic descriptions of individual transporters}
 Certain transporter kinetics are reported in the equations with the default numerical values used for dissociation and rate constants in the model, based on well established values in the literature and on the good semi-quantitative fits to experimental data provided in the past [12-14].  
@@ -253,8 +255,8 @@ Certain transporter kinetics are reported in the equations with the default nume
 \subsubsection{Na/K pump mediated fluxes of Na and K (f = forward; r = reverse) [15, 16]}
 
 \begin{eqnarray}
-\F{NaP}{Na}^f  &=& -\F{NaP}{max}^f\times\left(\frac{\CNa}{\CNa + 0.2(1 + \CK/8.3)}\right)^3 \times\left(\frac{\MK}{\MK + 0.1(1 + \MNa/18)}\right)^2 \\
-\F{NaP}{Na}^r  &=& \F{NaP}{max}^r\times\left(\frac{\CK}{\CK + 8.3(1 + \CNa/0.2)}\right)^2\times\left(\frac{\CNa}{\CNa + 18(1 + \CK/0.1)}\right)^3 \\
+\F{NaP}{Na}^f  &=& -\F{NaP}{max}^f\left(\frac{\CNa}{\CNa + 0.2(1 + \CK/8.3)}\right)^3 \left(\frac{\MK}{\MK + 0.1(1 + \MNa/18)}\right)^2 \\
+\F{NaP}{Na}^r  &=& \F{NaP}{max}^r\left(\frac{\CK}{\CK + 8.3(1 + \CNa/0.2)}\right)^2\left(\frac{\CNa}{\CNa + 18(1 + \CK/0.1)}\right)^3 \\
 \F{NaP}{Na} &=& \F{NaP}{Naf} + \F{NaP}{Nar} \\
 \F{NaP}{K} &=& -\F{NaP}{Na}/1.5
 \end{eqnarray}
@@ -265,7 +267,7 @@ Certain transporter kinetics are reported in the equations with the default nume
 \renewcommand{\theequation}{12.\alph{equation}}
 
 \begin{eqnarray}
-\F{CaP}{Ca} &=& -\kk{CaP}{}\times\frac{(\CCatp)^4}{(0.0002)^4 + (\CCa2+)^4}\\
+\F{CaP}{Ca} &=& -\kk{CaP}{}\left(\frac{(\CCatp)^4}{(0.0002)^4 + (\CCa^{2+})^4}\right)\\
 \F{CaP}{H} &=& -2\times\F{CaP}{Ca}
 \end{eqnarray}
 
@@ -274,16 +276,16 @@ Certain transporter kinetics are reported in the equations with the default nume
 \setcounter{equation}{12}
 \renewcommand{\theequation}{\arabic{equation}}
 \begin{equation}
-\F{G}{i} = -P_{G}i\times\frac{ziFEm}{RT}\times\frac{(Ci – Mi\exp^{-ziFEm/RT})}{(1 – exp^{-ziFEm/RT})}
+\F{G}{i} = -P_{G}i\left(\frac{ziFEm}{RT}\right)\left(\frac{Ci – Mi\exp^{-ziFEm/RT}}{1 – exp^{-ziFEm/RT}}\right)
 \end{equation}
-with PGi representing the Goldmanian i-permeability in h-1 units
+with PGi representing the Goldmanian i-permeability in $h^{-1}$ units
 
-\subsubsection{PGKGardos is a function of CCa2+ [20, 21] as follows:}
+\subsubsection{PGKGardos is a function of $CCa^{2+}$ [20, 21] as follows:}
 \begin{equation}
-P_{G}K_{Gardos} = PK_{GardosMax}\times\frac{(\CCatp)^4}{(\KCa)^4 + (\CCatp)^4}
+P_{G}K_{Gardos} = PK_{GardosMax}\left(\frac{(\CCatp)^4}{(\KCa)^4 + (\CCatp)^4}\right)
 \end{equation}
 
-\subsubsection{PGCa is a function of CCa2+ and MCa2+ [21, 22] as follows:}
+\subsubsection{PGCa is a function of $CCa^{2+}$ and $MCa^{2+}$ [21, 22] as follows:}
 \begin{equation}
 P_{G}Ca = \left(\frac{\CCatp}{0.0002 + \CCatp}\right)\left(\frac{\MCatp}{0.8 + \MCatp}\right)
 \end{equation}
@@ -350,7 +352,7 @@ The ionophore-mediated fluxes of $Ca^{2+}$, $Mg^{2+}$ and $H^+$, $\F{A23}{Ca}$, 
 \F{A23}{H} &=& -2(\F{A23}{Ca} + \F{A23}{Mg})
 \end{eqnarray}
 
-Where $P_{A23}$ is the ionophore-mediated permeability. $P_{A23}$ is a power function of the RBC ionophore concentration, $P_{A23} = 0.22\times [I]1.45$, when $P_{A23}$ is expressed in units of 10-6 cm/s, and [I] in $\mu$mol/Loc [26, 28, 29]. Within the units-set in the model, numerical values of $P_{A23}$ in the range 1017 to 2*1018 offered a perfectly adequate minimalist emulation of the effects of different ionophore concentrations on the fluxes and distributions of $Ca^{2+}$, $Mg^{2+}$ and $H^{+}$ ions in RBCs in a large variety of experimental conditions [5, 27, 30-33].    
+Where $P_{A23}$ is the ionophore-mediated permeability. $P_{A23}$ is a power function of the RBC ionophore concentration, $P_{A23} = 0.22\times [I]^{1.45}$, when $P_{A23}$ is expressed in units of $10^{-6}$ cm/s, and [I] in $\mu$mol/Loc [26, 28, 29]. Within the units-set in the model, numerical values of $P_{A23}$ in the range $10^{17}$ to $2\times10^{18}$ offered a perfectly adequate minimalist emulation of the effects of different ionophore concentrations on the fluxes and distributions of $Ca^{2+}$, $Mg^{2+}$ and $H^{+}$ ions in RBCs in a large variety of experimental conditions [5, 27, 30-33].    
 
 \subsubsection{Equation sequence for the computations of dynamic states.}
 Following perturbations, sustained charge conservation and electroneutrality is implemented by:
@@ -361,7 +363,7 @@ Following perturbations, sustained charge conservation and electroneutrality is 
 \begin{equation}
 \sum Ii = 0 
 \end{equation}
-where $Ii$ represents the current carried by each of the electrogenic transporters in the system. $\sum Ii$ is therefore the fist equation that has to be solved at the start of each iteration in the numerical computations of the model. Capacitative currents ($Ic = C(dV/dt))$ are ignored because their magnitude and time-course are orders of magnitude smaller than those of the homeostatic relevant currents.  The relation between currents and individual ion fluxes, $Fi$, is given by 
+where $Ii$ represents the current carried by each of the electrogenic transporters in the system. $\sum Ii$ is therefore the fist equation that has to be solved at the start of each iteration in the numerical computations of the model. Capacitative currents ($Ic = C(dV/dt))$ are ignored because their magnitude and time-course decay are orders of magnitude smaller than those of the homeostatic relevant currents.  The relation between currents and individual ion fluxes, $Fi$, is given by 
 
 \begin{equation}
 \sum Ii = F\sum zi\times Fi 
@@ -375,7 +377,7 @@ With the electrogenic flux components in the model, $\sum ziFi = 0$ renders:
 \end{equation}
 $\sum ziFi$ is a complex function of temperature, membrane potential, $Em$, and of the concentration of all transported and modulating substrates.  With all parameters, kinetics and substrate concentrations known $\sum Ii = 0$ becomes an implicit equation in $Em$, the single unknown left, solved in each iteration with the Newton-Raphson cord approximation routine.      
 
-With $Em$, the new $Fi$ values for each of the electrodiffusional terms in eq 18c can be computed.  With the sum of the absolute values of all the $Fi$ we can now assign a new $\delta t$ duration to each iteration interval, as follows:  
+With $Em$, the new $Fi$ values for each of the electrodiffusional terms in eq 18c can be computed.  With the sum of the absolute values of all the $Fi$ we can now assign a new $\Delta t$ duration to each iteration interval, as follows:  
 
 \setcounter{equation}{18}
 \renewcommand{\theequation}{\arabic{equation}}
@@ -432,7 +434,7 @@ Fw^t = Pw(\COs^t – \MOs^{(t-\Delta t)})
 $\COs^t$ can be computed from the altered osmotic load resulting from the $\Delta Qi$ changes during $\Delta t$ operating on the cell volume at the start of the each iteration interval: 
 
 \begin{equation}
-COs^t = \frac{QNa^t + QK^t + Q(A)t + QCa^t + QMg^t}{Vw^{(t-\Delta t)}}  + (f_{Hb}\times\CHb + \CX )^{(t-\Delta t)}
+COs^t = \frac{QNa^t + QK^t + QA^t + QCa^t + QMg^t}{Vw^{(t-\Delta t)}}  + (f_{Hb}\times\CHb + \CX )^{(t-\Delta t)}
 \end{equation}
 
 
@@ -498,7 +500,7 @@ Replacing $\Delta Qim$ by $-\Delta Qi$ (eq 26b) in equation 26c and solving for 
 \begin{equation}
 Mi^t = \frac{Mi^{(t-\Delta t)}(1 - CVF^{(t-\Delta t)}) - \Delta Qi}{1 - CVF^t}
 \end{equation}
-With eq 26d we can now compute the new medium concentrations at time = t for transported solutes, eqs 27a-f, and for impermeant solutes ($\Delta Qi = 0$) whose concentration changes only because of water shifts, eqs 27g-k:
+With eq 26d we can now compute the new medium concentrations at time = t for transported solutes, eqs 27a-f, and for impermeant solutes ($\Delta Qi = 0$) whose concentration changes only because of water shifts, eqs 27g-j:
 
 \setcounter{equation}{0}
 \renewcommand{\theequation}{27\alph{equation}}
@@ -535,7 +537,7 @@ rA^t &=& \frac{\CA^t}{\MA^t}
 
 This completes the list of sequential computations within each iteration cycle of the core red cell model.    
 
-There is a substantial body of additional information represented in the model of no direct relevance to the material in these papers.  This includes data on the effects of temperature and of different ions on the activities of membrane transporters, information revised, filtered, and, when solidly established, incorporated and updated in the model as part of the continuous process of improving the quantitative accuracy of model predictions.  The effects of temperature on transport, in addition to those incorporated within the kinetic description (constant field equation, ziFEm/RT, for instance) are represented by factors using the traditional Q10 phenomenology, with the option to alter the default values of 4 and 2 for active and passive transport, respectively.  Most ion effects render themselves to be represented by factors modifying rate constants or dissociation constants in flux equations (e.g Na/K pump, eq 11), without altering the actual overall kinetics of the transport pathways. Because of their particular relevance to the circulatory behaviour of RBCs we only listed here explicitly the modulating effects of Ca2+ on PGGardos and on PGCa, equations 14 and 15, respectively. The complete model code is available with open access in the repository (https://github.com/sdrogers/redcellmodeljava).   
+The complete model code is available with open access in the repository (https://github.com/sdrogers/redcellmodeljava).   
 
 
 \end{document}

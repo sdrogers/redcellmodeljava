@@ -2,7 +2,28 @@
 \usepackage{url}
 \usepackage[margin=2cm]{geometry}
 \usepackage{amsmath}
-\title{Governing Equations of the Red Cell Model (RCM)}
+\usepackage{fancyhdr}
+
+\renewcommand{\headrulewidth}{0pt}
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+
+\makeatletter
+\renewcommand\maketitle
+  {\noindent
+   {\Large\bfseries\@title}%
+   \medskip\par\noindent
+   {\large\bfseries\@author}%
+   \hfill
+   {\large\@date}%
+   \bigskip\par\noindent
+  }
+\makeatother
+
+\title{V. The Governing Equations of the Red Cell Model (RCM)}
 \date{}
 
 % \newcommand{\med}[1]{[#1]^m}
@@ -69,6 +90,9 @@
 \newcommand{\kk}[2]{k_{#1}#2}
 
 \begin{document}
+
+\setcounter{page}{28}
+
 \maketitle
 
 \section{Introduction}\label{introduction}

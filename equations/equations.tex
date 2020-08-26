@@ -227,7 +227,7 @@ pHioxy = pHideoxy + pIoxy - pIdeoxy
 A first requirement at the start of simulations is to define the relative volume occupied by cells in the cell suspension system, the cell volume fraction, CVF.  Perturbations alter the flux of transported solutes and water across the plasma membrane of the cell thus initiating a cascade of downstream changes in the compositions of cell and suspending medium.  It is therefore important to start by listing the membrane transport component of the cell and of the equations describing their basic kinetic properties.  
 
 \subsubsection{Flux equations of the model, Fi}
-The substrates of the RBC membrane transporters are Na, K, A, H, Ca, Mg and water, the "i" in Fi.  The sign-convention applied in the equations is for positive fluxes into the cell (influx) and for negative fluxes into the medium (efflux). The name convention adopted here for the transport of substrate X by the different membrane transporters is as follows: FPX = pump-mediated flux of X, with P = NaP for the Na/K pump or CaP for the calcium pump (PMCA); FGX = X-flux through electrodiffusional channel defined with constant field kinetics; FXA = electroneutral carrier-mediated cotransport of cation X and anion A defined with low-saturation kinetics; FzX = electrodiffusional flux of X through PIEZO1 channel; FCoX = electroneutral cotransport of X mediated by the Na:K:2Cl symport, of minimal expression and activity in human RBCs; FA23X = electroneutral $M^{2+}:2H^+$ exchange flux through the divalent cation ionophore A23187, the only exogenous membrane transporter included in the model; Fw = water flux mediated mainly by aquaporins and partly by partition diffusion through the plasma membrane.  
+All flux equations are defined as products between permeabilities (P) or rate constants (k) and driving forces. The substrates of the RBC membrane transporters are Na, K, A, H, Ca, Mg and water, the "i" in Fi.  The sign-convention applied in the equations is for positive fluxes into the cell (influx) and for negative fluxes into the medium (efflux). The name convention adopted here for the transport of substrate X by the different membrane transporters is as follows: FPX = pump-mediated flux of X, with P = NaP for the Na/K pump or CaP for the calcium pump (PMCA); FGX = X-flux through electrodiffusional channel defined with constant field kinetics; FXA = electroneutral carrier-mediated cotransport of cation X and anion A defined with low-saturation kinetics; FzX = electrodiffusional flux of X through PIEZO1 channel; FCoX = electroneutral cotransport of X mediated by the Na:K:2Cl symport, of minimal expression and activity in human RBCs; FA23X = electroneutral $M^{2+}:2H^+$ exchange flux through the divalent cation ionophore A23187, the only exogenous membrane transporter included in the model; Fw = water flux mediated mainly by aquaporins and partly by partition diffusion through the plasma membrane.  
 
 \setcounter{equation}{0}
 \renewcommand{\theequation}{10.\alph{equation}}
@@ -246,8 +246,13 @@ The substrates of the RBC membrane transporters are Na, K, A, H, Ca, Mg and wate
 There are no data on PIEZO1-mediated $Mg^{2+}$ fluxes in RBCs.  Although PzMg most certainly has a small finite value, $\F{z}{Mg}$ is likely to be very small under the usually low electrochemical $Mg^{2+}$ gradients across the RBC membrane.  With this level of ignorance and uncertainty, $\F{z}{Mg}$ was not included in the current model version.  
 
 \subsubsection{Kinetic descriptions of individual transporters}
-Certain transporter kinetics are reported in the equations with the default numerical values used for dissociation and rate constants in the model, based on well established values in the literature and on the good semi-quantitative fits to experimental data provided in the past [12-14].  
+Certain transporter kinetics are reported in the equations with the default numerical values used for dissociation and rate constants in the model, based on well established values in the literature and on the good semi-quantitative fits to experimental data provided in the past [12-14].  The default values of all permeabilities and rate-constants used in the model (P or k) correspond to experimentally measured values at 37oC, $P = P(37)$ or $k = k(37)$.  Temperature-changed values of P or k, $P = P(T)$ or $k(T)$, are computed relative to $P(37)$ or $k(37)$ using the Q10-derived formalism for temperature coefficients. In eq (11) we use P to represent both P- or k-defined values:
 
+\setcounter{equation}{10}
+\renewcommand{\theequation}{\arabic{equation}}
+\begin{equation}
+P(T)  =  \frac{P(37)}{10^{\left(\frac{37-T}{10}\right)\log(Q10)}}
+\end{equation}
 \setcounter{equation}{0}
 \renewcommand{\theequation}{11.\alph{equation}}
 
@@ -322,7 +327,7 @@ $d$ is a wildcard factor introduced to set $\F{Co}{} = 0$ only in the RS. Its va
 
 The divalent cation ionophore A23187 mediates an electroneutral $M^{2+}:2H^+$ exchange when incorporated into cell membranes [23]. Divalent cation ionophores became essential and extensively used tools in research on calcium and magnesium function and dysfunction in RBCs [5, 7, 24, 25] and in many other cell types. To emulate experimental protocols with the use of divalent cation ionophores it became necessary to represent their transport properties in the model as an optional exogenous transporter of the RBC membrane.  
 
-In albumin-free RBC suspensions, the RBC/medium partition ratio of the lipophilic ionophore A23187 is 60/1, 20 to 50\% of it confined to the cell membrane [26].  The transport kinetics of the ionophore was modeled with symmetric binding (Km) and inhibitory (KI) dissociation constants for Ca2+ and Mg2+ on each membrane side, as follows:
+In albumin-free RBC suspensions, the RBC/medium partition ratio of the lipophilic ionophore A23187 is 60/1, 20 to 50\% of it confined to the cell membrane [26].  The transport kinetics of the ionophore was modeled with symmetric binding (Km) and inhibitory (KI) dissociation constants for $Ca^{2+}$ and $Mg^{2+}$ on each membrane side, as follows:
 
 
 \begin{eqnarray}
@@ -539,5 +544,43 @@ This completes the list of sequential computations within each iteration cycle o
 
 The complete model code is available with open access in the repository (https://github.com/sdrogers/redcellmodeljava).   
 
+
+\section{References}
+\begin{enumerate}
+\item Rogers S, Lew VL. Up-down biphasic volume response of human red blood cells to PIEZO1 activation during capillary transits. 2020.
+\item Rogers S, Lew VL. PIEZO1 and the mechanism of the long circulatory longevity of human red blood cells. 2020.
+\item Whittam R. Transport and diffusion in red blood cells. London: Edward Arnold; 1964 1964.
+\item Cass A, Dalmark M. Equilibrium dialysis of ions in nystatin-treated cells. Nature New Biol. 1973;244:47-9.
+\item Ferreira HG, Lew VL. Use of ionophore A23187 to measure cytoplasmic Ca buffering and activation of the Ca pump by internal Ca. Nature. 1976;259:47-9.
+\item Tiffert T, Lew VL. Cytoplasmic calcium buffers in intact human red cells. J Physiol. 1997;500 ( Pt 1):139-54. PubMed PMID: 9097939; PubMed Central PMCID: PMCPMC1159365.
+\item Flatman P, Lew VL. Use of ionophore A23187 to measure and to control free and bound cytoplasmic Mg in intact red cells. Nature. 1977;267(5609):360-2. PubMed PMID: 325421.
+\item Raftos JE, Lew VL, Flatman PW. Refinement and evaluation of a model of $Mg^{2+}$ buffering in human red cells. Eur J Biochem. 1999;263(3):635-45.
+\item Etzion Z, Tiffert T, Bookchin RM, Lew VL. Effects of deoxygenation on active and passive $Ca^{2+}$ transport and on the cytoplasmic $Ca^{2+}$ levels of sickle cell anemia red cells. Journal of Clinical Investigation. 1993;92:2489-98.
+\item Tiffert T, Etzion Z, Bookchin RM, Lew VL. Effects of deoxygenation on active and passive $Ca^{2+}$ transport and cytoplasmic $Ca^{2+}$ buffering in normal human red cells. J Physiol. 1993;464:529-44.
+\item Ortiz OE, Lew VL, Bookchin RM. Deoxygenation permeabilizes sickle cell anaemia red cells to magnesium and reverses its gradient in the dense cells. J Physiol. 1990;427:211-26.
+\item Freeman CJ, Bookchin RM, Ortiz OE, Lew VL. K-permeabilized human red cells lose an alkaline, hypertonic fluid containing excess K over diffusible anions. J Membrane Biol. 1987;96:235-41.
+\item Swietach P, Tiffert T, Mauritz JM, Seear R, Esposito A, Kaminski CF, et al. Hydrogen ion dynamics in human red blood cells. J Physiol. 2010;588(Pt 24):4995-5014.
+\item Waldecker M, Dasanna AK, Lansche C, Linke M, Srismith S, Cyrklaff M, et al. Differential time-dependent volumetric and surface area changes and delayed induction of new permeation pathways in P. falciparum-infected hemoglobinopathic erythrocytes. Cell Microbiol. 2017;19(2). doi: 10.1111/cmi.12650. PubMed PMID: 27450804; PubMed Central PMCID: PMCPMC5298026.
+\item Garay RP, Garrahan PJ. The interaction of sodium and potassium with the sodium pump in red cells. J Physiol (Lond). 1973;231(2):297-325.
+\item Garrahan PJ, Garay RP. A kinetic study of the Na pump in red cells: its relevance to the mechanism of active transport. Ann N Y Acad Sci. 1974;242(0):445-58.
+\item Niggli V, Sigel E, Carafoli E. The purified $Ca^{2+}$ pump of human erythrocyte membranes catalyzes an electroneutral $Ca^{2+}$-H+ exchange in reconstituted liposomal systems. J Biol Chem. 1982;257(5):2350-6.
+\item Thomas RC. The plasma membrane calcium ATPase (PMCA) of neurones is electroneutral and exchanges 2 H+ for each $Ca^{2+}$ or $Ba^{2+}$ ion extruded. J Physiol. 2009;587(2):315-27. doi: 10.1113/jphysiol.2008.162453. PubMed PMID: 19064619; PubMed Central PMCID: PMCPMC2670047.
+\item Goldman DE. Potential, Impedance, and Rectification in Membranes. J Gen Physiol. 1943;27(1):37-60. doi: 10.1085/jgp.27.1.37. PubMed PMID: 19873371; PubMed Central PMCID: PMCPMC2142582.
+\item Simons TJB. Calcium-dependent potassium exchange in human red cell ghosts. J Physiol. 1976;256:227-44.
+\item Lew VL, Ferreira HG. Calcium transport and the properties of a calcium-activated potassium channel in red cell membranes. In: Kleinzeller A, Bronner F, editors. Current Topics in Membranes and Transport, Vol 10: Academic Press, NY; 1978. p. 217-77.
+\item Tiffert T, Garcia-Sancho J, Lew VL. Irreversible ATP depletion caused by low concentrations of formaldehyde and of calcium-chelator esters in intact human red cells. Biochim Biophys Acta. 1984;773(1):143-56. PubMed PMID: 6428450.
+\item Pressman BC. Biological applications of ionophores. Annual Reviews of Biochemistry. 1976;45:501-30.
+\item Lew VL, Hockaday A, Sepulveda MI, Somlyo AP, Somlyo AV, Ortiz OE, et al. Compartmentalization of sickle-cell calcium in endocytic inside-out vesicles. Nature. 1985;315(6020):586-9. PubMed PMID: 4010773.
+\item Lew VL, Muallem S, Seymour CA. Properties of the $Ca^{2+}$-activated $K^+$ channel in one-step inside-out vesicles from human red cell membranes. Nature. 1982;296:742-4.
+\item Simonsen LO, Lew VL. The correlation between ionophore A23187 content and calcium permeability of ATP-depleted human red blood cells. In: Lassen UV, Ussing HH, Wieth JO, editors. Membrane Transport in Erythrocytes. Copenhagen: Munksgaard; 1980. p. 208-12.
+\item Raftos JE, Lew VL. Effect of intracellular magnesium on calcium extrusion by the plasma membrane calcium pump of intact human red cells. J Physiol. 1995;489:63-72.
+\item Lew VL, Simonsen LO. Ionophore A23187-induced calcium permeability of intact human red blood cells. J Physiol. 1980;308:60P.
+\item Simonsen LO, Gomme J, Lew VL. Uniform ionophore A23187 distribution and cytoplasmic calcium buffering in intact human red cells. Biochim Biophys Acta. 1982;692:431-40.
+\item García-Sancho J, Lew VL. Heterogeneous calcium and adenosine triphosphate distribution in calcium-permeabilized human red cells. J Physiol. 1988;407:523-39.
+\item García-Sancho J, Lew VL. Detection and separation of human red cells with different calcium contents following uniform calcium permeabilization. J Physiol. 1988;407:505-22.
+\item Tiffert T, Spivak JL, Lew VL. Magnitude of calcium influx required to induce dehydration of normal human red cells. Biochim Biophys Acta. 1988;943:157-65.
+\item Flatman PW, Lew VL. The magnesium-dependence of sodium:potassium and sodium:sodium exchange mediated by the sodium pump in intact human red cells [proceedings]. J Physiol. 1979;287:33P-4P. PubMed PMID: 430415.
+\item Lew VL, Bookchin RM. Volume, pH, and ion-content regulation in human red cells: analysis of transient behavior with an integrated model. J Membr Biol. 1986;92(1):57-74. PubMed PMID: 3746891.
+\end{enumerate}
 
 \end{document}

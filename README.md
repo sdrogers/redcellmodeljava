@@ -19,3 +19,4 @@ Follow the link and then click "download"
 
 [Lifespan .jar file](https://github.com/sdrogers/redcellmodeljava/blob/5ee2b9fb755d96155ab4bbf84f9e5411d3cf381a/RedBloodCellModel/jars/Lifespan_ad769ef.jar)
 
+[User guide](https://github.com/sdrogers/redcellmodeljava/blob/579dc40b92b430582c95d88498abe1688c181e42/equations/RCM_User_Guide_and_equations-260820.pdf)

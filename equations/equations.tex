@@ -23,7 +23,7 @@
   }
 \makeatother
 
-\title{V. The Governing Equations of the Red Cell Model (RCM)}
+\title{Appendix. The Governing Equations of the Red Cell Model (RCM)}
 \date{}
 
 % \newcommand{\med}[1]{[#1]^m}
@@ -154,6 +154,8 @@ $\nHb$, the net charge on the haemoglobin molecule, is represented by the Cass-D
 
 where $a$ corresponds to the linear segment of the proton titration curve of Hb in intact RBCs, and $\pI$ is the $\pH{i}$ at the isoelectric point of haemoglobin.
 
+In the Reference steady state the net fluxes of each of the i-transported solutes is zero, and pump-leak balance is represented by $\sum I_j = F\sum z_jF_j = 0$, where $I_j$ is the current carried by transporter $j$, $F$ is the Faraday constant, $z_j$ is the net charge on each of the j-transporters, and $F_j$ is the net flux through the j-transporter; $z \neq 0$ only for electrogenic transporters. 
+
 \subsubsection{Medium and cell osmolarities, MOs and COs:}
 
 \begin{eqnarray}
@@ -250,13 +252,13 @@ pHioxy = pHideoxy + pIoxy - pIdeoxy
 
 A first requirement at the start of simulations is to define the relative volume occupied by cells in the cell suspension system, the cell volume fraction, CVF.  Perturbations alter the flux of transported solutes and water across the plasma membrane of the cell thus initiating a cascade of downstream changes in the compositions of cell and suspending medium.  It is therefore important to start by listing the membrane transport component of the cell and of the equations describing their basic kinetic properties.  
 
-\subsubsection{Flux equations of the model, Fi}
-All flux equations are defined as products between permeabilities (P) or rate constants (k) and driving forces. The substrates of the RBC membrane transporters are Na, K, A, H, Ca, Mg and water, the "i" in Fi.  The sign-convention applied in the equations is for positive fluxes into the cell (influx) and for negative fluxes into the medium (efflux). The name convention adopted here for the transport of substrate X by the different membrane transporters is as follows: FPX = pump-mediated flux of X, with P = NaP for the Na/K pump or CaP for the calcium pump (PMCA); FGX = X-flux through electrodiffusional channel defined with constant field kinetics; FXA = electroneutral carrier-mediated cotransport of cation X and anion A defined with low-saturation kinetics; FzX = electrodiffusional flux of X through PIEZO1 channel; FCoX = electroneutral cotransport of X mediated by the Na:K:2Cl symport, of minimal expression and activity in human RBCs; FA23X = electroneutral $M^{2+}:2H^+$ exchange flux through the divalent cation ionophore A23187, the only exogenous membrane transporter included in the model; Fw = water flux mediated mainly by aquaporins and partly by partition diffusion through the plasma membrane.  
+\subsubsection{Flux equations of the model, $F_i$ and $F_j$}
+All flux equations are defined as products between permeabilities (P) or rate constants (k) and driving forces. The substrates of the RBC membrane transporters are Na, K, A, H, Ca, Mg and water, the "i" in $F_i$.  The sign-convention applied in the equations is for positive fluxes into the cell (influx) and for negative fluxes into the medium (efflux). The name convention adopted here for the transport of substrate X by the different membrane transporters is as follows: FPX = pump-mediated flux of X, with P = NaP for the Na/K pump or CaP for the calcium pump (PMCA); FGX = X-flux through electrodiffusional channel defined with constant field kinetics; FXA = electroneutral carrier-mediated cotransport of cation X and anion A defined with low-saturation kinetics; FzX = electrodiffusional flux of X through PIEZO1 channel; FCoX = electroneutral cotransport of X mediated by the Na:K:2Cl symport, of minimal expression and activity in human RBCs; FA23X = electroneutral $M^{2+}:2H^+$ exchange flux through the divalent cation ionophore A23187, the only exogenous membrane transporter included in the model; Fw = water flux mediated mainly by aquaporins and partly by partition diffusion through the plasma membrane.  
 
 \setcounter{equation}{0}
 \renewcommand{\theequation}{10.\alph{equation}}
 
-\subsubsection{Flux pathways for each transported substrate:}
+\subsubsection{Flux pathways for each transported substrate, $F_i$:}
 \begin{eqnarray}
 \F{}{Na} &=& \F{NaP}{Na} + \F{G}{Na} + \F{Na}{A} + \F{Co}{Na} + \F{z}{Na}\\
 \F{K} &=& \F{NaP}{K} + \F{G}{K} + \F{K}{A} + \F{KGardos} + \F{Co}{K} + \F{z}{K}\\
@@ -267,7 +269,7 @@ All flux equations are defined as products between permeabilities (P) or rate co
 \F{}{w}  &=& Pw\times (\COs – \MOs)
 \end{eqnarray}
 
-There are no data on PIEZO1-mediated $Mg^{2+}$ fluxes in RBCs.  Although PzMg most certainly has a small finite value, $\F{z}{Mg}$ is likely to be very small under the usually low electrochemical $Mg^{2+}$ gradients across the RBC membrane.  With this level of ignorance and uncertainty, $\F{z}{Mg}$ was not included in the current model version.  
+There are no data on PIEZO1-mediated $Mg^{2+}$ fluxes in RBCs.  Although PzMg most certainly has a small finite value, $\F{z}{Mg}$ is likely to be very small under the usually low electrochemical $Mg^{2+}$ gradients across the RBC membrane.  With this level of uncertainty, $\F{z}{Mg}$ was not included in the current model version.  
 
 \subsubsection{Kinetic descriptions of individual transporters}
 Certain transporter kinetics are reported in the equations with the default numerical values used for dissociation and rate constants in the model, based on well established values in the literature and on the good semi-quantitative fits to experimental data provided in the past [12-14].  The default values of all permeabilities and rate-constants used in the model (P or k) correspond to experimentally measured values at 37oC, $P = P(37)$ or $k = k(37)$.  Temperature-changed values of P or k, $P = P(T)$ or $k(T)$, are computed relative to $P(37)$ or $k(37)$ using the Q10-derived formalism for temperature coefficients. In eq (11) we use P to represent both P- or k-defined values:
@@ -285,7 +287,7 @@ P(T)  =  \frac{P(37)}{10^{\left(\frac{37-T}{10}\right)\log(Q10)}}
 
 \begin{eqnarray}
 \F{NaP}{Na}^f  &=& -\F{NaP}{max}^f\left(\frac{\CNa}{\CNa + 0.2(1 + \CK/8.3)}\right)^3 \left(\frac{\MK}{\MK + 0.1(1 + \MNa/18)}\right)^2 \\
-\F{NaP}{Na}^r  &=& \F{NaP}{max}^r\left(\frac{\CK}{\CK + 8.3(1 + \CNa/0.2)}\right)^2\left(\frac{\CNa}{\CNa + 18(1 + \CK/0.1)}\right)^3 \\
+\F{NaP}{Na}^r  &=& \F{NaP}{max}^r\left(\frac{\CK}{\CK + 8.3(1 + \CNa/0.2)}\right)^2\left(\frac{\MNa}{\MNa + 18(1 + \MK/0.1)}\right)^3 \\
 \F{NaP}{Na} &=& \F{NaP}{Naf} + \F{NaP}{Nar} \\
 \F{NaP}{K} &=& -\F{NaP}{Na}/1.5
 \end{eqnarray}
@@ -390,33 +392,32 @@ Following perturbations, sustained charge conservation and electroneutrality is 
 \renewcommand{\theequation}{18\alph{equation}}
 
 \begin{equation}
-\sum Ii = 0 
+\sum I_j = 0 
 \end{equation}
-where $Ii$ represents the current carried by each of the electrogenic transporters in the system. $\sum Ii$ is therefore the fist equation that has to be solved at the start of each iteration in the numerical computations of the model. Capacitative currents ($Ic = C(dV/dt))$ are ignored because their magnitude and time-course decay are orders of magnitude smaller than those of the homeostatic relevant currents.  The relation between currents and individual ion fluxes, $Fi$, is given by 
+where $I_j$ represents the current carried by each of the j-membrane transporters. $\sum I_j$ is therefore the fist equation that has to be solved at the start of each iteration in the computational sequence of dynamic states. Capacitative currents ($Ic = C(dV/dt))$ are ignored because their magnitude and time-course decay are orders of magnitude smaller than those of the homeostatic relevant currents.  The relation between currents and fluxes, $F_j$, is given by 
 
 \begin{equation}
-\sum Ii = F\sum zi\times Fi 
+\sum I_j = F\sum z_j\times F_j
 \end{equation}
-where $zi$ is the valence of ion $i$ and $F$ is the Faraday constant. 
 
-With the electrogenic flux components in the model, $\sum ziFi = 0$ renders:
+With the electrogenic flux components in the model $(z_j\neq 0), \sum I_j = 0$ renders:
 
 \begin{equation}
-\sum ziFi = \F{NaP}{Na} + \F{NaP}{K} + \F{G}{Na} + \F{G}{K} + \F{G}{K_{Gardos}} + \F{G}{A} + \F{G}{Ca} + \F{G}{H} + \F{z}{Na} + \F{z}{K} + \F{z}{A} + \F{z}{Ca} = 0
+\sum I_j = \F{NaP}{Na} + \F{NaP}{K} + \F{G}{Na} + \F{G}{K} + \F{G}{K_{Gardos}} + \F{G}{A} + \F{G}{Ca} + \F{G}{H} + \F{z}{Na} + \F{z}{K} + \F{z}{A} + \F{z}{Ca} = 0
 \end{equation}
-$\sum ziFi$ is a complex function of temperature, membrane potential, $Em$, and of the concentration of all transported and modulating substrates.  With all parameters, kinetics and substrate concentrations known $\sum Ii = 0$ becomes an implicit equation in $Em$, the single unknown left, solved in each iteration with the Newton-Raphson cord approximation routine.      
+$I_j$ is a complex function of temperature, membrane potential, $Em$, and of the concentration of all transported and modulating substrates.  With all parameters, kinetics and substrate concentrations known $\sum I_j = 0$ becomes an implicit equation in $Em$, the single unknown left, solved in each iteration with the Newton-Raphson cord approximation routine.      
 
-With $Em$, the new $Fi$ values for each of the electrodiffusional terms in eq 18c can be computed.  With the sum of the absolute values of all the $Fi$ we can now assign a new $\Delta t$ duration to each iteration interval, as follows:  
+With $Em$, the new $z_jF_j$ values for each of the electrodiffusional terms in eq 18c can be computed.  We can now add up the absolute values of the new computed fluxes to the values of the electroneutral fluxes in the previous iteration $\sum |F_j|$ to assign a new $\Delta t$ duration to each iteration interval, as follows:  
 
 \setcounter{equation}{18}
 \renewcommand{\theequation}{\arabic{equation}}
 \begin{equation}
-\Delta t = \frac{a}{b + \sum|Fi|}
+\Delta t = \frac{a}{b + \sum|F_j|}
 \end{equation}
 
 The value of $a$, under user control, optimises $\Delta t$ scales for different simulations (“frequencyfactor” in the RCM); $b$ is a small zero-avoidance parameter in the denominator. The advantage of this strategy over using regular iteration intervals is that by setting a constant value for the cycles per outcome (“cyclesperprint(epochs)” in the RCM) the density of data output points automatically adjusts to the overall rate of change in the system, emulating the way good experimental practice seeks to sample for data at the bench, thus optimizing comparisons between predicted and experimental results.    
 
-With the new $Fi^t$ and $\Delta t$ the new $Qi^t$ may be computed using the values of $FNa^t$, $FK^t$, $FA^t$, $FH^t$, $FCa^t$ and $\F{A23}{Mg}^t$ from equations (10a-f) as follows:
+With the new $F_i^t$ and $\Delta t$ the new $Qi^t$ may be computed using the values of $FNa^t$, $FK^t$, $FA^t$, $FH^t$, $FCa^t$ and $\F{A23}{Mg}^t$ from equations (10a-f) as follows:
 
 \setcounter{equation}{0}
 \renewcommand{\theequation}{20\alph{equation}}

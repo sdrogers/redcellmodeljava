@@ -7,8 +7,7 @@ This repository holds Java code for the Red Blood Cell model.
 
 ## Introduction
 
-Behind the immense complexity, diversity and dynamic changes of living cells, there is an ancient and universal subset of basic processes that maintain cell integrity. These processes usually referred to as cellular homeostasis, control membrane potentials, osmotic equilibrium, cell volume, the intracellular milieu, and the balance between passive and active transports of water and solutes across the plasma membrane of the cells. The RCM*.jar model is a mathematical-computational representation of the dynamic processes controlling human red blood cell homeostasis in health and disease.  The Lifespan*.Jar is an extension of the RCM model dedicated to investigate the changes in red blood cell homeostasis throughout the long circulatory lifespan of the cells. For detailed information on the use and applications of these models please consult the User Guide.
-
+Behind the immense complexity, diversity and dynamic changes of living cells, there is an ancient and universal subset of basic processes that maintain cell integrity. These processes usually referred to as cellular homeostasis, control cell volume, membrane potentials, osmotic stability, and the intracellular milieu.  This control results from the balance between passive and active transport of solutes and water across the plasma membrane of the cells. The RCM*.jar model is a mathematical-computational representation of the dynamic processes controlling human red blood cell homeostasis in health and disease. The Lifespan*.jar is an extension of the RCM model dedicated to investigate the changes in red blood cell homeostasis throughout the long circulatory lifespan of the cells. For detailed information on the use and applications of these models please consult the User Guide.
 
 
 ## Downloads
@@ -21,4 +20,4 @@ Follow the link and then click "download"
 
 [User guide](https://github.com/sdrogers/redcellmodeljava/blob/949155e8e7033faaffb30884bc112de19bd81faa/equations/RCM_User_Guide_011020.pdf)
 
-[Governing equations](https://github.com/sdrogers/redcellmodeljava/blob/9387f050551f414850fb3e9ef3d53306c93ddfb1/equations/Governing\ equations-Appendix-Corrected\ Feb\ 5\ 2021.pdf)
+[Governing equations](https://github.com/sdrogers/redcellmodeljava/blob/4e8f4bcd5bf01b3d830dc8001e0a753064d79d7c/equations/governing_equations_20210205.pdf)

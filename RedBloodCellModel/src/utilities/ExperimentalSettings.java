@@ -72,7 +72,7 @@ public class ExperimentalSettings implements Serializable {
 				}else if(line.length() > 1) {
 					// It's a parameter
 					String[] tokens = line.trim().split(":");
-					System.out.println(line + " " + line.length() + " " + tokens.length);
+//					System.out.println(line + " " + line.length() + " " + tokens.length);
 					String key = tokens[0];
 					String value = tokens[1];
 					if(this.loadState == 1) {

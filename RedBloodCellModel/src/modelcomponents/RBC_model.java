@@ -1119,6 +1119,7 @@ public class RBC_model implements Serializable {
 		}
 	}
 	private void set_temp_permeability_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
+		System.err.println("OOOOOOOO");
 		Double defaultTemp = this.temp_celsius;
 		String temp = options.get("Temperature");
 		if(temp != null) {
@@ -1247,11 +1248,14 @@ public class RBC_model implements Serializable {
 			this.cell.H.setConcentration(Math.pow(10.0, -this.cell.getpH()));
 			this.I_74 = this.getPit0() - (0.016*this.temp_celsius);
 			temp = options.get("deoxy");
-			if(temp == "Y") {
-				this.setAtp(this.getAtp() / 2.0);
-				this.setDpgp(this.getDpgp() / 1.7);
+			if(temp != null) {
+				usedoptions.add("deoxy");
+				System.err.println(temp);
+				if(temp.equals("Y")) {
+					this.setAtp(this.getAtp() / 2.0);
+					this.setDpgp(this.getDpgp() / 1.7);
+				}
 			}
-			
 					
 		}
 		

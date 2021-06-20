@@ -1119,7 +1119,6 @@ public class RBC_model implements Serializable {
 		}
 	}
 	private void set_temp_permeability_options(HashMap<String,String> options, ArrayList<String> usedoptions) {
-		System.err.println("OOOOOOOO");
 		Double defaultTemp = this.temp_celsius;
 		String temp = options.get("Temperature");
 		if(temp != null) {
@@ -1233,30 +1232,31 @@ public class RBC_model implements Serializable {
 		
 		this.a23.setPermeability_Ca(this.a23.getPermeability_Mg());
 		
-		temp = options.get("Hb Oxy or Deoxy");
+		temp = options.get("Hb Deoxy or Re-Oxy");
 		if(temp != null) {
 			this.I_67 = this.getPit0(); // Store old value
-			usedoptions.add("Hb Oxy or Deoxy");
-			if(temp.equals("Oxy")) {
-				this.setPit0(7.2);
-			}else if(temp.equals("Deoxy")) {
-				this.setPit0(7.5);
-			}else {
-				this.setPit0(7.2);
-			}
-			this.cell.setpH(this.getPit0() - this.I_67 + this.cell.getpH());
-			this.cell.H.setConcentration(Math.pow(10.0, -this.cell.getpH()));
-			this.I_74 = this.getPit0() - (0.016*this.temp_celsius);
-			temp = options.get("deoxy");
-			if(temp != null) {
-				usedoptions.add("deoxy");
-				System.err.println(temp);
-				if(temp.equals("Y")) {
-					this.setAtp(this.getAtp() / 2.0);
-					this.setDpgp(this.getDpgp() / 1.7);
+			usedoptions.add("Hb Deoxy or Re-Oxy");
+			if(temp.equals("Deoxy") || temp.equals("Re-Oxy")) {
+				if(temp.equals("Re-Oxy")) {
+					this.setPit0(7.2);
+				}else if(temp.equals("Deoxy")) {
+					this.setPit0(7.5);
+				}else {
+					this.setPit0(7.2);
 				}
-			}
+				this.cell.setpH(this.getPit0() - this.I_67 + this.cell.getpH());
+				this.cell.H.setConcentration(Math.pow(10.0, -this.cell.getpH()));
+				this.I_74 = this.getPit0() - (0.016*this.temp_celsius);
+				
+				if(temp.equals("Re-Oxy")) {
+					this.setAtp(this.getAtp() * 2.0);
+					this.setDpgp(this.getDpgp() * 1.7);				
 					
+				}else if(temp.equals("Deoxy")) {
+					this.setAtp(this.getAtp() / 2.0);
+					this.setDpgp(this.getDpgp() / 1.7);				
+				}
+			}			
 		}
 		
 	}

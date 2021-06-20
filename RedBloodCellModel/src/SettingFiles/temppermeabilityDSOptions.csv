@@ -4,7 +4,7 @@ Pw,Pw,2,1/h,Water permeability,
 PK,pgk,0.00165,1/h,Electrodiffusional K permeability,
 PNa,pgna,0.00152,1/h,Electrodiffusional Na permeability,
 PA,pga,1.2,1/h,Electrodiffusional A permeability,
-PH,pgh,2E-10,1/h,Protonophore addition? Change default to 2e10,
+PH,pgh,2.00E-10,1/h,Protonophore addition? Change default to 2e10,
 PCa,pgca,0.05,1/h,Elecrtodiffusional Ca permeability,
 PA23CaMg,PA23CaMg,0.01,arbitrary units,"If added, enter values in the 2e17 to 2e18 range",
-Hb Oxy or Deoxy,Hb Oxy or Deoxy,Oxy,,"Changes the oxygenation condition of Hb","Oxy,Deoxy"
+Hb Deoxy or Re-Oxy,Hb Deoxy or Re-Oxy,None,,Changes the oxygenation condition of Hb. Re-Oxy should only be used in a DS after a Deoxy DS.,"Re-Oxy,Deoxy,None"

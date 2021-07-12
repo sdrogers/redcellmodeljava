@@ -1250,11 +1250,13 @@ public class RBC_model implements Serializable {
 				
 				if(temp.equals("Re-Oxy")) {
 					this.setAtp(this.getAtp() * 2.0);
-					this.setDpgp(this.getDpgp() * 1.7);				
+					this.setDpgp(this.getDpgp() * 1.7);	
+					this.A_10 += 2*cell.Mgf.getConcentration()/this.cell.X.getConcentration();
 					
 				}else if(temp.equals("Deoxy")) {
 					this.setAtp(this.getAtp() / 2.0);
 					this.setDpgp(this.getDpgp() / 1.7);				
+					this.A_10 -= 2*cell.Mgf.getConcentration()/this.cell.X.getConcentration();
 				}
 			}			
 		}

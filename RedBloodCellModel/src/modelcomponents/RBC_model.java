@@ -248,6 +248,8 @@ public class RBC_model implements Serializable {
 	private Double oldJSPermeability;
 	private boolean lifespan = false;
 	
+	private double RsXConc;
+	
 	public RBC_model() {
 		cell = new Region();
 		medium = new Region();
@@ -1251,12 +1253,18 @@ public class RBC_model implements Serializable {
 				if(temp.equals("Re-Oxy")) {
 					this.setAtp(this.getAtp() * 2.0);
 					this.setDpgp(this.getDpgp() * 1.7);	
-					this.A_10 += 2*cell.Mgf.getConcentration()/this.cell.X.getConcentration();
+					double oldmg = this.cell.Mgf.getConcentration();
+					this.cell.Mgf.setConcentration(this.newton_raphson(new Eqmg(),0.02,0.0001,0.00001,100,0, false));
+					double delta_mg = this.cell.Mgf.getConcentration() - oldmg;
+					this.A_10 += 2*delta_mg / this.RsXConc;
 					
 				}else if(temp.equals("Deoxy")) {
 					this.setAtp(this.getAtp() / 2.0);
-					this.setDpgp(this.getDpgp() / 1.7);				
-					this.A_10 -= 2*cell.Mgf.getConcentration()/this.cell.X.getConcentration();
+					this.setDpgp(this.getDpgp() / 1.7);	
+					double oldmg = this.cell.Mgf.getConcentration();
+					this.cell.Mgf.setConcentration(this.newton_raphson(new Eqmg(),0.02,0.0001,0.00001,100,0, false));
+					double delta_mg = this.cell.Mgf.getConcentration() - oldmg;
+					this.A_10 += 2*delta_mg / this.RsXConc;
 				}
 			}			
 		}
@@ -1769,6 +1777,7 @@ public class RBC_model implements Serializable {
 		Double summ = this.medium.Na.getConcentration() + this.medium.K.getConcentration() + this.medium.A.getConcentration() + this.buffer_conc + this.medium.Gluconate.getConcentration() + this.medium.Glucamine.getConcentration() + this.medium.Sucrose.getConcentration() + this.medium.Mgt.getConcentration() + this.medium.Cat.getConcentration();
 		Double sumq = this.cell.Na.getAmount() + this.cell.K.getAmount() + this.cell.A.getAmount() + (this.cell.Mgf.getConcentration()+this.cell.Caf.getConcentration())*this.getVw() + this.fHb*this.cell.Hb.getAmount() + this.getBenz2();
 		this.cell.X.setAmount(this.getVw()*summ - sumq);
+		this.RsXConc = this.cell.X.getAmount()/this.getVw();
 		
 		
 	}

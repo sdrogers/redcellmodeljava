@@ -248,7 +248,8 @@ public class RBC_model implements Serializable {
 	private Double oldJSPermeability;
 	private boolean lifespan = false;
 	
-	private double RsXConc;
+	private double nXdefOxy;
+	private double mgbal = 0.0159;
 	
 	public RBC_model() {
 		cell = new Region();
@@ -1253,18 +1254,14 @@ public class RBC_model implements Serializable {
 				if(temp.equals("Re-Oxy")) {
 					this.setAtp(this.getAtp() * 2.0);
 					this.setDpgp(this.getDpgp() * 1.7);	
-					double oldmg = this.cell.Mgf.getConcentration();
 					this.cell.Mgf.setConcentration(this.newton_raphson(new Eqmg(),0.02,0.0001,0.00001,100,0, false));
-					double delta_mg = this.cell.Mgf.getConcentration() - oldmg;
-					this.A_10 += 2*delta_mg / this.RsXConc;
+					this.A_10 = this.nXdefOxy;
 					
 				}else if(temp.equals("Deoxy")) {
 					this.setAtp(this.getAtp() / 2.0);
 					this.setDpgp(this.getDpgp() / 1.7);	
-					double oldmg = this.cell.Mgf.getConcentration();
 					this.cell.Mgf.setConcentration(this.newton_raphson(new Eqmg(),0.02,0.0001,0.00001,100,0, false));
-					double delta_mg = this.cell.Mgf.getConcentration() - oldmg;
-					this.A_10 += 2*delta_mg / this.RsXConc;
+					this.A_10 = this.nXdefOxy - this.mgbal;
 				}
 			}			
 		}
@@ -1665,7 +1662,7 @@ public class RBC_model implements Serializable {
 		
 		// Computes n_X (Non-protonizable charge on X (nX))
 		this.A_10 = (this.cell.A.getAmount() + 2*this.getBenz2() - (this.cell.Na.getAmount() + this.cell.K.getAmount() + 2*this.cell.Mgt.getAmount() + 2*this.cell.Cat.getAmount()+this.nHb*this.cell.Hb.getAmount()))/this.cell.X.getAmount();
-
+		this.nXdefOxy = this.A_10;
 		// Net charge on Hb
 		this.netChargeHb = this.nHb*this.cell.Hb.getAmount();
 

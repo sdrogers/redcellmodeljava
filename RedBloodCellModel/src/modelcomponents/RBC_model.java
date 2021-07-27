@@ -1774,9 +1774,7 @@ public class RBC_model implements Serializable {
 		Double summ = this.medium.Na.getConcentration() + this.medium.K.getConcentration() + this.medium.A.getConcentration() + this.buffer_conc + this.medium.Gluconate.getConcentration() + this.medium.Glucamine.getConcentration() + this.medium.Sucrose.getConcentration() + this.medium.Mgt.getConcentration() + this.medium.Cat.getConcentration();
 		Double sumq = this.cell.Na.getAmount() + this.cell.K.getAmount() + this.cell.A.getAmount() + (this.cell.Mgf.getConcentration()+this.cell.Caf.getConcentration())*this.getVw() + this.fHb*this.cell.Hb.getAmount() + this.getBenz2();
 		this.cell.X.setAmount(this.getVw()*summ - sumq);
-		this.RsXConc = this.cell.X.getAmount()/this.getVw();
-		
-		
+			
 	}
 	
 	private void nakamountsmgcaconcRS() {

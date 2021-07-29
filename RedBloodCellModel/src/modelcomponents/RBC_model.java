@@ -248,6 +248,9 @@ public class RBC_model implements Serializable {
 	private Double oldJSPermeability;
 	private boolean lifespan = false;
 	
+	private double nXdefOxy;
+	private double mgbal = 0.0159;
+	
 	public RBC_model() {
 		cell = new Region();
 		medium = new Region();
@@ -1250,11 +1253,15 @@ public class RBC_model implements Serializable {
 				
 				if(temp.equals("Re-Oxy")) {
 					this.setAtp(this.getAtp() * 2.0);
-					this.setDpgp(this.getDpgp() * 1.7);				
+					this.setDpgp(this.getDpgp() * 1.7);	
+					this.cell.Mgf.setConcentration(this.newton_raphson(new Eqmg(),0.02,0.0001,0.00001,100,0, false));
+					this.A_10 = this.nXdefOxy;
 					
 				}else if(temp.equals("Deoxy")) {
 					this.setAtp(this.getAtp() / 2.0);
-					this.setDpgp(this.getDpgp() / 1.7);				
+					this.setDpgp(this.getDpgp() / 1.7);	
+					this.cell.Mgf.setConcentration(this.newton_raphson(new Eqmg(),0.02,0.0001,0.00001,100,0, false));
+					this.A_10 = this.nXdefOxy - this.mgbal;
 				}
 			}			
 		}
@@ -1655,7 +1662,7 @@ public class RBC_model implements Serializable {
 		
 		// Computes n_X (Non-protonizable charge on X (nX))
 		this.A_10 = (this.cell.A.getAmount() + 2*this.getBenz2() - (this.cell.Na.getAmount() + this.cell.K.getAmount() + 2*this.cell.Mgt.getAmount() + 2*this.cell.Cat.getAmount()+this.nHb*this.cell.Hb.getAmount()))/this.cell.X.getAmount();
-
+		this.nXdefOxy = this.A_10;
 		// Net charge on Hb
 		this.netChargeHb = this.nHb*this.cell.Hb.getAmount();
 
@@ -1767,8 +1774,7 @@ public class RBC_model implements Serializable {
 		Double summ = this.medium.Na.getConcentration() + this.medium.K.getConcentration() + this.medium.A.getConcentration() + this.buffer_conc + this.medium.Gluconate.getConcentration() + this.medium.Glucamine.getConcentration() + this.medium.Sucrose.getConcentration() + this.medium.Mgt.getConcentration() + this.medium.Cat.getConcentration();
 		Double sumq = this.cell.Na.getAmount() + this.cell.K.getAmount() + this.cell.A.getAmount() + (this.cell.Mgf.getConcentration()+this.cell.Caf.getConcentration())*this.getVw() + this.fHb*this.cell.Hb.getAmount() + this.getBenz2();
 		this.cell.X.setAmount(this.getVw()*summ - sumq);
-		
-		
+			
 	}
 	
 	private void nakamountsmgcaconcRS() {

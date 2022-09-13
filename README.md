@@ -20,4 +20,4 @@ Follow the link and then click "download"
 
 [User guide](https://github.com/sdrogers/redcellmodeljava/blob/master/equations/RCM_User_Guide-13-09-22.pdf)
 
-[Governing equations](https://github.com/sdrogers/redcellmodeljava/blob/4e8f4bcd5bf01b3d830dc8001e0a753064d79d7c/equations/governing_equations_20210205.pdf)
+[Governing equations](https://github.com/sdrogers/redcellmodeljava/blob/master/equations/equations-140322.pdf)

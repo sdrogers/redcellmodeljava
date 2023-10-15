@@ -275,7 +275,7 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 		CSVReader reader = null;
 		HashMap<String,Parameter> keys = new HashMap<String,Parameter>();
 		try {
-			InputStream is = ClassLoader.getSystemResourceAsStream(this.fileName);
+			InputStream is = getClass().getResourceAsStream(this.fileName);
 //			System.out.println(ClassLoader.getSystemResourceAsStream(this.fileName));
 //			System.out.println(is);
 			InputStreamReader isr = new InputStreamReader(is);

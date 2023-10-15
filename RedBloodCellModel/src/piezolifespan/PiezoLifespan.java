@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -93,18 +94,19 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 //            "Mgluc+","EN test"};
 	
 	
-	private JButton runButton,stopButton,saveButton,changePiezoButton,rsButton;
+	private JButton loadParamsButton,saveParamsButton,runButton,stopButton,saveButton,changePiezoButton,rsButton;
 	private JTextArea modelOutput;
 	private ModelWorker worker;
 	private RBC_model rbc;
 	private Plot2DPanel[] plot = new Plot2DPanel[4];
 	private JTextField timeField,cycleField,caKField,pmcaKField,tnapField;
-	private OptionsFrame piezoOptionsFrame,rsOptionsFrame,mediumOptionsFrame;
+	private OptionsFrame piezoOptionsFrame,rsOptionsFrame;
 	HashMap<String,String> DSOptions,RSOptions,mediumOptions;
 	private JFileChooser jfc = new JFileChooser();
 	
 	private ArrayList<ResultHash> piezoResults;
-
+	private HashSet<String> possibleRSOptions = new HashSet<String>();
+	private HashSet<String> possibleDSOptions = new HashSet<String>();
 	
 	public PiezoLifespan() {
 		this.setSize(1500, 1000);
@@ -112,6 +114,13 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		layoutFrame();
 		this.setVisible(true);
 		makeOptionsDefault();
+		loadPossibleOptions();
+	}
+	
+	private void loadPossibleOptions() {
+		
+		new PiezoFileHandler().loadPossibleParams("/src/resources/piezoDSOptions.csv", possibleDSOptions);
+		new PiezoFileHandler().loadPossibleParams("/src/resources/piezoLifespanRSOptions.csv", possibleRSOptions);
 	}
 	
 	private void layoutFrame() {
@@ -125,6 +134,8 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		saveButton = new JButton("Save csv");
 		changePiezoButton = new JButton("Change PIEZO parameters");
 		rsButton = new JButton("Change Reference State");
+		saveParamsButton = new JButton("Save Settings");
+		loadParamsButton = new JButton("Load Settings");
 		
 		
 		
@@ -135,14 +146,16 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		buttonPanel.add(saveButton);
 		buttonPanel.add(changePiezoButton);
 		buttonPanel.add(rsButton);
-		
+		buttonPanel.add(saveParamsButton);
+		buttonPanel.add(loadParamsButton);
 		
 		runButton.addActionListener(this);
 		stopButton.addActionListener(this);
 		saveButton.addActionListener(this);
 		changePiezoButton.addActionListener(this);
 		rsButton.addActionListener(this);
-		
+		saveParamsButton.addActionListener(this);
+		loadParamsButton.addActionListener(this);
 		
 		stopButton.setEnabled(false);
 		saveButton.setEnabled(false);
@@ -389,11 +402,33 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 				rbc.writeCsv(transitFName,piezoResults);
 			}
 		}else if(e.getSource() == changePiezoButton) {
-			piezoOptionsFrame = new OptionsFrame("PIEZO options","SettingFiles/piezoDSOptions.csv",DSOptions,this,"");
+			piezoOptionsFrame = new OptionsFrame("PIEZO options","/src/resources/piezoDSOptions.csv",DSOptions,this,"");
 			piezoOptionsFrame.makeVisible();
 		}else if(e.getSource() == rsButton) {
-			rsOptionsFrame = new OptionsFrame("Reference state options","SettingFiles/piezoLifespanRSOptions.csv",RSOptions,this,"");
+			rsOptionsFrame = new OptionsFrame("Reference state options","/src/resources/piezoLifespanRSOptions.csv",RSOptions,this,"");
 			rsOptionsFrame.makeVisible();
+		}else if(e.getSource() == saveParamsButton) {
+			HashMap<String,String> globalOptions = new HashMap<String,String>();
+			globalOptions.put("lifespan-duration",timeField.getText());
+			globalOptions.put("output-periodicity", cycleField.getText());
+			globalOptions.put("knap", caKField.getText()); // check
+			globalOptions.put("kcap", pmcaKField.getText());
+			globalOptions.put("tnap", tnapField.getText());
+			PiezoFileHandler.WriteSettings(this, RSOptions, DSOptions, globalOptions);
+		}else if(e.getSource() == loadParamsButton) {
+			HashMap<String,String> globalOptions = new HashMap<String,String>();
+			globalOptions.put("lifespan-duration",timeField.getText());
+			globalOptions.put("output-periodicity", cycleField.getText());
+			globalOptions.put("knap", caKField.getText()); // check
+			globalOptions.put("kcap", pmcaKField.getText());
+			globalOptions.put("tnap", tnapField.getText());
+			PiezoFileHandler.ReadSettings(this, RSOptions, DSOptions, globalOptions,
+					possibleDSOptions, possibleRSOptions);
+			timeField.setText(globalOptions.get("lifespan-duration"));
+			cycleField.setText(globalOptions.get("output-periodicity"));
+			caKField.setText(globalOptions.get("knap"));
+			pmcaKField.setText(globalOptions.get("kcap"));
+			tnapField.setText(globalOptions.get("tnap"));
 		}
 	}
 	

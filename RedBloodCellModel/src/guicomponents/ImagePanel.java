@@ -15,7 +15,7 @@ public class ImagePanel extends JPanel{
 		this.setBackground(Color.BLUE);
 		try {
 			image = ImageIO.read(
-					ClassLoader.getSystemResourceAsStream("SettingFiles/RBCrgb_resize.jpg"));
+					getClass().getResourceAsStream("/RBCrgb_resize.jpg"));
 		}catch(IOException e) {
 			e.printStackTrace();
 		}

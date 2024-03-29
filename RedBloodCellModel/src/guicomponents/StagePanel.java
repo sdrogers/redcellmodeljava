@@ -74,12 +74,12 @@ public class StagePanel extends JPanel implements ActionListener, Updateable {
 		}else if(e.getSource() == editTimeButton) {
 			// edit the parameters of this DS
 			if(timeScreen == null) {
-				timeScreen = new OptionsFrame("Time Options","SettingFiles/timeOptions.csv",this.dSSettings.getOptions(), this,"");
+				timeScreen = new OptionsFrame("Time Options","/timeOptions.csv",this.dSSettings.getOptions(), this,"");
 			}
 			timeScreen.makeVisible();
 		}else if(e.getSource() == editTempButton) {
 			if(tempPermScreen == null) {
-				tempPermScreen = new OptionsFrame("Temperature & permeability Options","SettingFiles/temppermeabilityDSOptions.csv",this.dSSettings.getOptions(),this,"");
+				tempPermScreen = new OptionsFrame("Temperature & permeability Options","/temppermeabilityDSOptions.csv",this.dSSettings.getOptions(),this,"");
 			}
 			tempPermScreen.makeVisible();
 		}else if(e.getSource() == editTransportButton) {
@@ -91,19 +91,19 @@ public class StagePanel extends JPanel implements ActionListener, Updateable {
 					+ "\n\nThe same equation delivers stimulation if you enter negative numbers. "
 					+ "It applies to JS and PMCA entries only. For an n-fold stimulation, enter “–n*100”. For example, enter “-200” for a two-fold stimulation";
 			if(transportScreen == null) {
-				transportScreen = new OptionsFrame("Transport Options","SettingFiles/transportDSOptions.csv",this.dSSettings.getOptions(),this,helpText);
+				transportScreen = new OptionsFrame("Transport Options","/transportDSOptions.csv",this.dSSettings.getOptions(),this,helpText);
 			}
 			transportScreen.makeVisible();
 		}else if(e.getSource() == editFractionButton) {
 			if(fractionScreen == null) {
 				String helpText = "Default medium composition in the initial Reference steady-state (mM):\n" + 
 						"NaCl, 145; KCl, 5; HEPES-Na, pH 7.4 at 37oC, 10; MgCl2, 0.2; CaCl2, 1.0";
-				fractionScreen = new OptionsFrame("Fraction and Medium Options","SettingFiles/cellfractionDSOptions.csv",this.dSSettings.getOptions(),this,helpText);
+				fractionScreen = new OptionsFrame("Fraction and Medium Options","/cellfractionDSOptions.csv",this.dSSettings.getOptions(),this,helpText);
 			}
 			fractionScreen.makeVisible();
 		}else if(e.getSource() == editPiezoButton) {
 			if(piezoScreen == null) {
-				piezoScreen = new OptionsFrame("Piezo Options","SettingFiles/piezoDSOptions.csv",this.dSSettings.getOptions(),this,"");
+				piezoScreen = new OptionsFrame("Piezo Options","/piezoDSOptions.csv",this.dSSettings.getOptions(),this,"");
 			}
 			piezoScreen.makeVisible();
 		}

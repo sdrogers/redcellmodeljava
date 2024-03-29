@@ -31,7 +31,7 @@ public class RSPanel extends JPanel implements ActionListener,Updateable{
 		
 		contentPanel.add(new JScrollPane(rSArea),BorderLayout.NORTH);
 		
-		String fileName = "SettingFiles/RSOptions.csv";
+		String fileName = "/RSOptions.csv";
 		ps = new ParameterSelector(fileName,es.getRSOptions(),this);
 		
 		contentPanel.add(ps,BorderLayout.CENTER);

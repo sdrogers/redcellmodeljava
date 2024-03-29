@@ -110,6 +110,7 @@ public class RunFrame extends JFrame implements ActionListener{
 			rbc = new RBC_model();
 			rbc.setup(experimentalSettings.getRSOptions(), usedoptionsRS);
 			for(DSSettings d: experimentalSettings.getDSStages()) {
+				usedoptions = new ArrayList<String>();
 				rbc.setupDS(d.getOptions(), usedoptions);
 				rbc.runall(ta);
 				if(rbc.getIsCancelled()) {

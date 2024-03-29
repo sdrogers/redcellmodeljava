@@ -119,8 +119,8 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 	
 	private void loadPossibleOptions() {
 		
-		new PiezoFileHandler().loadPossibleParams("/src/resources/piezoDSOptions.csv", possibleDSOptions);
-		new PiezoFileHandler().loadPossibleParams("/src/resources/piezoLifespanRSOptions.csv", possibleRSOptions);
+		new PiezoFileHandler().loadPossibleParams("/piezoDSOptions.csv", possibleDSOptions);
+		new PiezoFileHandler().loadPossibleParams("/piezoLifespanRSOptions.csv", possibleRSOptions);
 	}
 	
 	private void layoutFrame() {
@@ -402,10 +402,10 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 				rbc.writeCsv(transitFName,piezoResults);
 			}
 		}else if(e.getSource() == changePiezoButton) {
-			piezoOptionsFrame = new OptionsFrame("PIEZO options","/src/resources/piezoDSOptions.csv",DSOptions,this,"");
+			piezoOptionsFrame = new OptionsFrame("PIEZO options","/piezoDSOptions.csv",DSOptions,this,"");
 			piezoOptionsFrame.makeVisible();
 		}else if(e.getSource() == rsButton) {
-			rsOptionsFrame = new OptionsFrame("Reference state options","/src/resources/piezoLifespanRSOptions.csv",RSOptions,this,"");
+			rsOptionsFrame = new OptionsFrame("Reference state options","/piezoLifespanRSOptions.csv",RSOptions,this,"");
 			rsOptionsFrame.makeVisible();
 		}else if(e.getSource() == saveParamsButton) {
 			HashMap<String,String> globalOptions = new HashMap<String,String>();

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.springframework</groupId>
-    <artifactId>gs-maven</artifactId>
+    <artifactId>pizeo</artifactId>
     <packaging>jar</packaging>
     <version>0.1.0</version>
 
@@ -29,7 +29,7 @@
                             <transformers>
                                 <transformer
                                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>guicomponents.RBCWelcomeScreen</mainClass>
+                                    <mainClass>piezolifespan.PiezoLifespan</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -48,6 +48,13 @@
             <directory>src/resources</directory>
             <includes>
               <include>*.jpg</include>
+            </includes>
+          </resource>
+          <resource>
+            <directory>src/resources</directory>
+            <includes>
+              <include>piezoDSOptions.csv</include>
+              <include>piezoLifespanRSOptions.csv</include>
             </includes>
           </resource>
         </resources>

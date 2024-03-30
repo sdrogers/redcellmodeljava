@@ -3,3 +3,5 @@ Time,Time,0,minutes,Sets the duration of selected DS,
 FrequencyFactor,FrequencyFactor,0.01,,Iteration a-factor in ∆t = a/(b + |∑Fi|),
 Cyclesperprint(epochs),Cyclesperprint(epochs),777,Cycles/output,Sets number of cycles between data outputs ,
 Accuracy,Accuracy,4,decimals,The number of decimal places in the output csv file,
+Random time interval min,Random time interval min,0.5,minutes,"If step time is to be randomly sampled, this is the minimum of the sampling range"
+Random time interval max,Random time interval max,2.5,minutes,"If step time is to be randomly sampled, this is the maximum of the sampling range"

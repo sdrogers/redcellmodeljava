@@ -1,25 +1,21 @@
 package modelcomponents;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TimeGenerator {
-    private final Double inVal;
-    private final Double[] vals = {
-        0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6,
-        1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5};
-    public TimeGenerator(Double inVal) {
-        this.inVal = inVal;
-    }
-    public Double getTime() {
+    public static Double getTime(String request) {
+        String regex = "random\\s?\\(\\s?(.*)?\\s?,\\s?(.*)\\s?\\)";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(request);
+        matcher.find();
+        Double minVal = Double.parseDouble(matcher.group(1));
+        Double maxVal = Double.parseDouble(matcher.group(2));
+        System.out.println("Sampling time, min = " + minVal + " max = " + maxVal);
         // Generate a time value
-        Double timeVal = 0.0;
-        if (inVal > 0.0) {
-            timeVal = this.inVal;
-        }else if (inVal == -1.0) {
-            int idx = new Random().nextInt(vals.length);
-            return vals[idx];
-        }
+        Double timeVal = new Random().nextDouble(); // 0 to 1
+        timeVal *= (maxVal - minVal);
+        timeVal += minVal;
         return timeVal;
     }
 }
-
-

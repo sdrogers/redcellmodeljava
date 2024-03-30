@@ -10,9 +10,14 @@ public class OptionsParsers {
 	public static void set_screen_time_factor_options(HashMap<String,String> options, ArrayList<String> usedoptions, RBC_model model) {
 		String temp = options.get("Time");
 		if(temp != null) {
-			TimeGenerator timeGen = new TimeGenerator(Double.parseDouble(temp));
-			Double t = timeGen.getTime();
-			System.out.println(temp + " which gave time as " + t);
+			Double t = 0.0;
+			if (temp.startsWith("random")) {
+				// It's random, extract the values
+				t = TimeGenerator.getTime(temp);
+				System.out.println("DS time randomly sampled as " + t);
+			} else {
+				t = Double.parseDouble(temp);
+			}
 			model.setDuration_experiment(model.getDuration_experiment() + t);
 			usedoptions.add("Time");
 		}

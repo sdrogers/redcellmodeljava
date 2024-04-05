@@ -257,6 +257,9 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 				Double.parseDouble(newValue);
 				return true;
 			}catch(NumberFormatException e) {
+				if (p.getName().equals("Time") && newValue.startsWith("random")) {
+					return true;
+				} 
 				return false;
 			}
 		}else {

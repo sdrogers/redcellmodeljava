@@ -33,6 +33,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import com.opencsv.CSVReader;
 
+import modelcomponents.OptionValueGenerator;
 import utilities.Parameter;
 import utilities.Updateable;
 
@@ -257,10 +258,9 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 				Double.parseDouble(newValue);
 				return true;
 			}catch(NumberFormatException e) {
-				if (p.getName().equals("Time") && newValue.startsWith("random")) {
-					return true;
-				} 
-				return false;
+				// Check that it is of the form 
+				// random(a,b) where a and b are numbers
+				return(OptionValueGenerator.checkString(newValue));
 			}
 		}else {
 			for(String key : p.getAllowedValues()) {

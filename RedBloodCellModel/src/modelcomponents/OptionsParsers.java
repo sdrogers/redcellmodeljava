@@ -13,7 +13,7 @@ public class OptionsParsers {
 			Double t = 0.0;
 			if (temp.startsWith("random")) {
 				// It's random, extract the values
-				t = TimeGenerator.getTime(temp);
+				t = OptionValueGenerator.getRandomValue(temp);
 				System.out.println("DS time randomly sampled as " + t);
 			} else {
 				t = Double.parseDouble(temp);

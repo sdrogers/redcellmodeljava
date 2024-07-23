@@ -1157,44 +1157,44 @@ public class RBC_model implements Serializable {
 		
 		temp = options.get("Pw");
 		if(temp != null) {
-			this.water.setPermeability(Double.parseDouble(temp));
+			this.water.setPermeability(OptionValueGenerator.processRequest(temp));
 			usedoptions.add("Pw");
 		}
 		
 		temp = options.get("PK");
 		if(temp != null) {
-			this.goldman.setPermeability_K(Double.parseDouble(temp));
+			this.goldman.setPermeability_K(OptionValueGenerator.processRequest(temp));
 			usedoptions.add("PK");
 		}
 		
 		temp = options.get("pgkh");
 		if(temp != null) {
-			this.goldman.setPgkh(Double.parseDouble(temp));
+			this.goldman.setPgkh(OptionValueGenerator.processRequest(temp));
 			usedoptions.add("pgkh");
 		}
 		
 		temp = options.get("PNa");
 		if(temp != null) {
-			this.goldman.setPermeability_Na(Double.parseDouble(temp));
+			this.goldman.setPermeability_Na(OptionValueGenerator.processRequest(temp));
 			usedoptions.add("PNa");
 		}
 		
 		temp = options.get("PA");
 		if(temp != null) {
-			this.goldman.setPermeability_A(Double.parseDouble(temp));
+			this.goldman.setPermeability_A(OptionValueGenerator.processRequest(temp));
 			usedoptions.add("PA");
 		}
 		
 		temp = options.get("PH");
 		if(temp != null) {
-			this.goldman.setPermeability_H(Double.parseDouble(temp));
+			this.goldman.setPermeability_H(OptionValueGenerator.processRequest(temp));
 			usedoptions.add("PH");
 		}
 		
 		// New option Jan 2018
 		temp = options.get("PCa");
 		if(temp != null) {
-			this.passiveca.setFcalm(Double.parseDouble(temp));
+			this.passiveca.setFcalm(OptionValueGenerator.processRequest(temp));
 			usedoptions.add("PCa");
 		}
 		

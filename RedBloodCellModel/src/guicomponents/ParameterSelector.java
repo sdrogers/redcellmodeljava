@@ -32,6 +32,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 
 import modelcomponents.OptionValueGenerator;
 import utilities.Parameter;
@@ -310,6 +311,8 @@ public class ParameterSelector extends JPanel implements ListSelectionListener,A
 				potentialParams.addElement(pr);
 				keys.put(pr.getName(),pr);
 			}
+		}catch(CsvValidationException e) {
+			e.printStackTrace();
 		}catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}catch(IOException e) {

@@ -253,6 +253,11 @@ public class OptionsParsers {
 		Double conc = model.newton_raphson(model.new Eqmg(), 0.02, 0.0001, 0.00001,100,0, false);
 		model.cell.Mgf.setConcentration(conc);
 		
+		temp = rsoptions.get("PMgG");
+		if(temp != null) {
+			model.goldman.setPermeability_Mg(Double.parseDouble(temp));
+			usedoptions.add("PMgG");
+		}
 	}
 	
 	public static void cabufferscreenRS(HashMap<String,String> rsoptions, ArrayList<String> usedoptions, RBC_model model) {

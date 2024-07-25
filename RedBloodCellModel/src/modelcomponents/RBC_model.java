@@ -125,6 +125,7 @@ public class RBC_model implements Serializable {
 	private Double total_flux_K;
 	private Double total_flux_A;
 	private Double total_flux_H;
+	private Double total_flux_Mg;
 	
 		
 	
@@ -307,6 +308,7 @@ public class RBC_model implements Serializable {
 		this.total_flux_K = 0.0;
 		this.total_flux_A = 0.0;
 		this.total_flux_H = 0.0;
+		this.total_flux_Mg = 0.0;
 		this.getNapump().setFluxRev(0.0015);
 		
 		
@@ -832,7 +834,7 @@ public class RBC_model implements Serializable {
 		this.delta_A = this.total_flux_A*this.delta_time;
 		this.delta_H = this.total_flux_H*this.delta_time;
 		this.delta_Water = this.water.getFlux()*this.delta_time;
-		this.delta_Mg = this.a23.getFlux_Mg()*this.delta_time;
+		this.delta_Mg = this.total_flux_Mg*this.delta_time;
 		this.delta_Ca = this.total_flux_Ca*this.delta_time;
 	}
 	
@@ -1720,6 +1722,7 @@ public class RBC_model implements Serializable {
 //		System.out.println(this.goldman.getFlux_H() + "," + this.JS.getFlux_H() + "," + this.a23.getFlux_Mg() + "," + this.a23.getFlux_Ca() + "," + this.capump.getFlux_H());
 		this.total_flux_H = this.JS.getFlux_H() + this.goldman.getFlux_H() + this.piezoGoldman.getFlux_H() - 2*this.a23.getFlux_Mg()-2*this.a23.getFlux_Ca()+this.capump.getFlux_H();
 //		System.out.println(this.a23.getPermeability_Ca() + "," + this.a23.getPermeability_Mg());
+		this.total_flux_Mg = this.a23.getFlux_Mg() + this.goldman.getFlux_Mg();
 	}
 	
 	private void chbetc() {

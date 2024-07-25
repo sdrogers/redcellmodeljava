@@ -9,11 +9,13 @@ public class Goldman implements Serializable{
 	private Double permeability_A ;
 	private Double permeability_H ;
 	private Double permeability_K ;
+	private Double permeability_Mg ;
 
 	private Double flux_Na ;
 	private Double flux_A ;
 	private Double flux_H ;
 	private Double flux_K ;
+	private Double flux_Mg ;
 
 	private Double Goldman_factor ;
 	private Double P_11 ;
@@ -33,10 +35,13 @@ public class Goldman implements Serializable{
 		this.setPermeability_A(1.2);
 		this.setPermeability_H(2e-10);
 		this.setPermeability_K(0.0);
+		this.setPermeability_Mg(0.05);
 		this.setFlux_Na(0.0);
 		this.setFlux_A(0.0);
 		this.setFlux_H(0.0);
 		this.setFlux_K(0.0);
+		this.setFlux_Mg(0.0);
+
 		this.Goldman_factor = 0.0;
 		this.P_11 = 0.0;
 		this.setDefaultPkm(30.0);
@@ -87,6 +92,7 @@ public class Goldman implements Serializable{
 		this.setFlux_A(this.fullgflux(this.cell.A,this.medium.A,this.getPermeability_A(),I_18));
 		this.setFlux_H(this.fullgflux(this.cell.H,this.medium.H,this.getPermeability_H(),I_18));
 		this.setFlux_K(this.fullgflux(this.cell.K,this.medium.K,this.total_G_permeability_K(),I_18));
+		this.setFlux_Mg(this.fullgflux(this.cell.Mgf, this.medium.Mgf, this.getPermeability_Mg(), I_18));
 	}
 	private Double gflux(Species cell_species, Species medium_species) {
 		return -cell_species.getZ()*this.Goldman_factor*(medium_species.getConcentration() - cell_species.getConcentration()*Math.exp(cell_species.getZ()*this.Goldman_factor))/(1.0-Math.exp(cell_species.getZ()*this.Goldman_factor));
@@ -135,6 +141,14 @@ public class Goldman implements Serializable{
 
 	public void setFlux_Na(Double flux_Na) {
 		this.flux_Na = flux_Na;
+	}
+
+	public void setFlux_Mg(Double flux_Mg) {
+		this.flux_Mg = flux_Mg;
+	}
+
+	public Double getFlux_Mg() {
+		return this.flux_Mg;
 	}
 
 	public Double getFlux_K() {
@@ -191,5 +205,13 @@ public class Goldman implements Serializable{
 
 	public void setPermeability_H(Double permeability_H) {
 		this.permeability_H = permeability_H;
+	}
+
+	public void setPermeability_Mg(Double permeability_Mg) {
+		this.permeability_Mg = permeability_Mg;
+	}
+
+	public Double getPermeability_Mg() {
+		return this.permeability_Na;
 	}
 }

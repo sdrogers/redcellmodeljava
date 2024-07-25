@@ -52,6 +52,7 @@ public class RBC_model implements Serializable {
 	                                  "FKG",
 	                                  "FAG",
 	                                  "FHG",
+									  "FMgG",
 	                                  "FAJS",
 	                                  "FHJS",
 	                                  "FClCo",
@@ -452,6 +453,7 @@ public class RBC_model implements Serializable {
 		this.piezoGoldman.setPermeability_K(this.piezo.getPkg());
 		this.piezoGoldman.setPermeability_Na(this.piezo.getPnag());
 		this.piezoGoldman.setPermeability_A(this.piezo.getPag());
+		// this.piezoGoldman.setPermeability_Mg(this.piezo.getPMgg());
 
 		
 		this.piezoPassiveca.setFcalm(this.piezo.getPcag());
@@ -842,7 +844,7 @@ public class RBC_model implements Serializable {
 	private boolean integrationInterval(MileStone nextMileStone) {
 		boolean mileStoneFound = false;
 		// 8010 Integration interval
-		Double I_23 = 10.0 + 10.0*Math.abs(this.a23.getFlux_Mg()+this.total_flux_Ca) + Math.abs(this.goldman.getFlux_H() + this.piezoGoldman.getFlux_H()) + Math.abs(this.dedgh) + Math.abs(this.total_flux_Na) + Math.abs(this.total_flux_K) + Math.abs(this.total_flux_A) + Math.abs(this.total_flux_H) + Math.abs(this.water.getFlux()*100.0);
+		Double I_23 = 10.0 + 10.0*Math.abs(this.a23.getFlux_Mg()+this.total_flux_Ca) + Math.abs(this.goldman.getFlux_Mg() + this.goldman.getFlux_H() + this.piezoGoldman.getFlux_H()) + Math.abs(this.dedgh) + Math.abs(this.total_flux_Na) + Math.abs(this.total_flux_K) + Math.abs(this.total_flux_A) + Math.abs(this.total_flux_H) + Math.abs(this.water.getFlux()*100.0);
 		if(this.compute_delta_time) {
 			this.delta_time = this.integration_interval_factor/I_23;
 		}else {
@@ -1986,6 +1988,7 @@ public class RBC_model implements Serializable {
 		new_result.setItem("FKG",this.goldman.getFlux_K());
 		new_result.setItem("FAG",this.goldman.getFlux_A());
 		new_result.setItem("FHG",this.goldman.getFlux_H());	
+		new_result.setItem("FMgG", this.goldman.getFlux_Mg());
 		new_result.setItem("FCaG", this.passiveca.getFlux());
 		new_result.setItem("FAJS", this.JS.getFlux_A());
 		new_result.setItem("FHJS", this.JS.getFlux_H());
@@ -2030,7 +2033,9 @@ public class RBC_model implements Serializable {
 				+ this.total_flux_K
 				+ this.total_flux_H
 				- this.total_flux_A
-				+ 2.0*(this.total_flux_Ca+this.a23.getFlux_Mg());
+				// + 2.0*(this.total_flux_Ca+this.a23.getFlux_Mg()); //TODO: what happens here?
+				// Guess:
+				+ 2.0*(this.total_flux_Ca + this.total_flux_K);
 		new_result.setItem("EN test", enFluxTest);
 		
 		return new_result;

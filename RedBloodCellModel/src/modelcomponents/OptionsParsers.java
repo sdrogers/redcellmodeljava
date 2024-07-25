@@ -151,6 +151,12 @@ public class OptionsParsers {
 			model.napump.setQ10Active(Double.parseDouble(temp));
 			usedoptions.add("Q10 active");
 		}
+
+		temp = rsoptions.get("mgnapk");
+		if (temp != null) {
+			model.napump.setMgnapk(Double.parseDouble(temp));
+			usedoptions.add("mgnapk");
+		}
 	}
 	
 	public static void cellwaterscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions, RBC_model model) {

@@ -65,6 +65,7 @@ public class Goldman implements Serializable{
 		this.gfactors(Em,temperature);
 		this.setPermeability_Na(Math.abs(this.getFlux_Na()/this.gflux(this.cell.Na,this.medium.Na)));
 		this.setPermeability_K(Math.abs(this.getFlux_K()/this.gflux(this.cell.K,this.medium.K)));
+		//this.setPermeability_Mg(Math.abs(this.getFlux_Mg()/this.gflux(this.cell.Mgf, this.medium.Mgf)));
 	}
 	private void computeP_11() {
 		Double I_62 = 1.0/(1.0+ Math.pow(this.cell.H.getConcentration(),4.0)/2.5e-30);
@@ -92,7 +93,7 @@ public class Goldman implements Serializable{
 		this.setFlux_A(this.fullgflux(this.cell.A,this.medium.A,this.getPermeability_A(),I_18));
 		this.setFlux_H(this.fullgflux(this.cell.H,this.medium.H,this.getPermeability_H(),I_18));
 		this.setFlux_K(this.fullgflux(this.cell.K,this.medium.K,this.total_G_permeability_K(),I_18));
-		this.setFlux_Mg(this.fullgflux(this.cell.Mgf, this.medium.Mgf, this.getPermeability_Mg(), I_18));
+		this.setFlux_Mg(this.fullgflux(this.cell.Mgf, this.medium.Mgf,this.getPermeability_Mg(),I_18));
 	}
 	private Double gflux(Species cell_species, Species medium_species) {
 		return -cell_species.getZ()*this.Goldman_factor*(medium_species.getConcentration() - cell_species.getConcentration()*Math.exp(cell_species.getZ()*this.Goldman_factor))/(1.0-Math.exp(cell_species.getZ()*this.Goldman_factor));

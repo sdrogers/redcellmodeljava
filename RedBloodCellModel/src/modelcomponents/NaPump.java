@@ -60,6 +60,11 @@ public class NaPump implements Serializable {
 		this.I_77 = 7.216; //pH dependence of sodium pump, with I78
 		this.I_78 = 0.4;
 	}
+
+	public void setMgnapk(Double mgnapk) {
+		this.mgnapk = mgnapk;
+	}
+
 	public void setQ10Active(Double Q10Active) {
 		this.Q10Active = Q10Active;
 	}
@@ -105,6 +110,8 @@ public class NaPump implements Serializable {
 		this.compute_mgnap();
 		this.compute_phnap();
 		this.flux_fwd = -(this.getP_1()/this.I_17)*this.mgnap*this.phnap*this.I_3*this.I_6;
+		// New flux fwd
+		// TBC
 		this.flux_rev = (this.getP_2()/this.I_17)*this.mgnap*this.phnap*this.I_9*this.I_11;
 		this.setFlux_net();
 		this.setFlux_K();

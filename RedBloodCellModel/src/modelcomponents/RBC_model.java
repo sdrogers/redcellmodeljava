@@ -87,7 +87,7 @@ public class RBC_model implements Serializable {
 	private A23187 a23;
 	private WaterFlux water;
 	PassiveCa passiveca;
-	PassiveMa passivemg;
+	PassiveMg passivemg;
 	private PiezoPassiveCa piezoPassiveca;
 	CaPumpMg2 capump;
 	

@@ -86,6 +86,7 @@ public class RBC_model implements Serializable {
 	private A23187 a23;
 	private WaterFlux water;
 	PassiveCa passiveca;
+	PassiveMa passivemg;
 	private PiezoPassiveCa piezoPassiveca;
 	CaPumpMg2 capump;
 	
@@ -181,6 +182,7 @@ public class RBC_model implements Serializable {
 	private Double mgb0;
 	private Double cabb;
 	private Double total_flux_Ca;
+	private Double total_flux_Mg;
 	
 	
 	private Double pka;
@@ -265,6 +267,7 @@ public class RBC_model implements Serializable {
 		a23 = new A23187(cell,medium);
 		water = new WaterFlux(cell,medium);
 		passiveca = new PassiveCa(cell,medium,goldman);
+		passivemg = new PassiveMg(cell, medium, goldman);
 		piezoPassiveca = new PiezoPassiveCa(cell,medium,piezoGoldman);
 		capump = new CaPumpMg2(cell,medium,getNapump());
 		
@@ -374,6 +377,7 @@ public class RBC_model implements Serializable {
 		this.cabb = 0.0;
 		this.cell.Cat.setConcentration(0.0);
 		this.total_flux_Ca = 0.0;
+		this.total_flux_Mg = 0.0;
 		
 		
 		this.pka = 0.0;
@@ -832,7 +836,7 @@ public class RBC_model implements Serializable {
 		this.delta_A = this.total_flux_A*this.delta_time;
 		this.delta_H = this.total_flux_H*this.delta_time;
 		this.delta_Water = this.water.getFlux()*this.delta_time;
-		this.delta_Mg = this.a23.getFlux_Mg()*this.delta_time;
+		this.delta_Mg = this.total_flux_Mg*this.delta_time;
 		this.delta_Ca = this.total_flux_Ca*this.delta_time;
 	}
 	
@@ -840,7 +844,7 @@ public class RBC_model implements Serializable {
 	private boolean integrationInterval(MileStone nextMileStone) {
 		boolean mileStoneFound = false;
 		// 8010 Integration interval
-		Double I_23 = 10.0 + 10.0*Math.abs(this.a23.getFlux_Mg()+this.total_flux_Ca) + Math.abs(this.goldman.getFlux_H() + this.piezoGoldman.getFlux_H()) + Math.abs(this.dedgh) + Math.abs(this.total_flux_Na) + Math.abs(this.total_flux_K) + Math.abs(this.total_flux_A) + Math.abs(this.total_flux_H) + Math.abs(this.water.getFlux()*100.0);
+		Double I_23 = 10.0 + 10.0*Math.abs(this.total_flux_Mg+this.total_flux_Ca) + Math.abs(this.goldman.getFlux_H() + this.piezoGoldman.getFlux_H()) + Math.abs(this.dedgh) + Math.abs(this.total_flux_Na) + Math.abs(this.total_flux_K) + Math.abs(this.total_flux_A) + Math.abs(this.total_flux_H) + Math.abs(this.water.getFlux()*100.0);
 		if(this.compute_delta_time) {
 			this.delta_time = this.integration_interval_factor/I_23;
 		}else {
@@ -870,9 +874,11 @@ public class RBC_model implements Serializable {
 			piezoGoldman.compute_flux(local_em, temp_celsius, I_18);
 			a23.compute_flux(I_18);
 			passiveca.compute_flux(I_18);
+			passivemg.compute_flux(I_18);
 			piezoPassiveca.compute_flux(I_18);
 			getCaPump().compute_flux();
 			totalCaFlux();
+			totalMgFlux();
 			totalFlux();
 			return total_flux;
 			
@@ -882,10 +888,13 @@ public class RBC_model implements Serializable {
 	public void totalCaFlux() {
 		this.total_flux_Ca = this.a23.getFlux_Ca() + this.passiveca.getFlux() + this.piezoPassiveca.getFlux() + this.capump.getFlux_Ca();
 	}
+	public void totalMgFlux() {
+		this.total_flux_Mg = this.a23.getFlux_Mg() + this.passivemg.getFlux();
+	}
 	public void totalFlux() {
 		Double goldFlux = this.goldman.getFlux_H() + this.goldman.getFlux_Na() + this.goldman.getFlux_K() - this.goldman.getFlux_A();
 		Double pGoldFlux = this.piezoGoldman.getFlux_H() + this.piezoGoldman.getFlux_Na() + this.piezoGoldman.getFlux_K() - this.piezoGoldman.getFlux_A();
-		this.total_flux = this.getNapump().getTotal_flux() + goldFlux + pGoldFlux + this.capump.getCah()*this.capump.getFlux_Ca() + 2.0*this.passiveca.getFlux() + 2.0*this.piezoPassiveca.getFlux();
+		this.total_flux = this.getNapump().getTotal_flux() + goldFlux + pGoldFlux + this.capump.getCah()*this.capump.getFlux_Ca() + 2.0*this.passiveca.getFlux() + 2.0*this.passivemg.getFlux() + 2.0*this.piezoPassiveca.getFlux();
 	}
 	
 	public void setup(HashMap<String,String> rsoptions, ArrayList<String> usedoptions) {
@@ -1196,6 +1205,12 @@ public class RBC_model implements Serializable {
 		if(temp != null) {
 			this.passiveca.setFcalm(OptionValueGenerator.processRequest(temp));
 			usedoptions.add("PCa");
+		}
+
+		temp = options.get("PMg");
+		if(temp != null) {
+			this.passivemg.setFcalm(OptionValueGenerator.processRequest(temp));
+			usedoptions.add("PMg");
 		}
 		
 		
@@ -1984,6 +1999,7 @@ public class RBC_model implements Serializable {
 		new_result.setItem("FAG",this.goldman.getFlux_A());
 		new_result.setItem("FHG",this.goldman.getFlux_H());	
 		new_result.setItem("FCaG", this.passiveca.getFlux());
+		new_result.setItem("FMgG", this.passivemg.getFlux());
 		new_result.setItem("FAJS", this.JS.getFlux_A());
 		new_result.setItem("FHJS", this.JS.getFlux_H());
 		new_result.setItem("FA23Ca", this.a23.getFlux_Ca());
@@ -2027,7 +2043,7 @@ public class RBC_model implements Serializable {
 				+ this.total_flux_K
 				+ this.total_flux_H
 				- this.total_flux_A
-				+ 2.0*(this.total_flux_Ca+this.a23.getFlux_Mg());
+				+ 2.0*(this.total_flux_Ca+this.total_flux_Mg);
 		new_result.setItem("EN test", enFluxTest);
 		
 		return new_result;

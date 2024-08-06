@@ -37,5 +37,4 @@ public class PassiveCa implements Serializable {
 	public void setFlux(Double flux) {
 		this.flux = flux;
 	}
-	
 }

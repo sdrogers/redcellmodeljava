@@ -887,7 +887,7 @@ public class RBC_model implements Serializable {
 		this.total_flux_Ca = this.a23.getFlux_Ca() + this.passiveca.getFlux() + this.piezoPassiveca.getFlux() + this.capump.getFlux_Ca();
 	}
 	public void totalFlux() {
-		Double goldFlux = this.goldman.getFlux_H() + this.goldman.getFlux_Na() + this.goldman.getFlux_K() - this.goldman.getFlux_A();
+		Double goldFlux = this.goldman.getFlux_H() + this.goldman.getFlux_Na() + this.goldman.getFlux_K() - this.goldman.getFlux_A() + this.goldman.getFlux_Mg();
 		Double pGoldFlux = this.piezoGoldman.getFlux_H() + this.piezoGoldman.getFlux_Na() + this.piezoGoldman.getFlux_K() - this.piezoGoldman.getFlux_A();
 		this.total_flux = this.getNapump().getTotal_flux() + goldFlux + pGoldFlux + this.capump.getCah()*this.capump.getFlux_Ca() + 2.0*this.passiveca.getFlux() + 2.0*this.piezoPassiveca.getFlux();
 	}

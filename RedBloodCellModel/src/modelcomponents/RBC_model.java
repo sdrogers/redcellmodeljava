@@ -48,6 +48,7 @@ public class RBC_model implements Serializable {
 	                                  "FHCaP",
 	                                  "FKGgardos",
 	                                  "FCaG",
+									  "FMgG",
 	                                  "FNaG",
 	                                  "FKG",
 	                                  "FAG",

@@ -160,4 +160,9 @@ public class NaPump implements Serializable {
 	public void setTotal_flux(Double total_flux) {
 		this.total_flux = total_flux;
 	}
+	public void setMgnapk(Double mgnapk) {
+		this.mgnapk = mgnapk;
+	}
+
+
 }

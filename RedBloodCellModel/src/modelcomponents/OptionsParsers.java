@@ -151,6 +151,12 @@ public class OptionsParsers {
 			model.napump.setQ10Active(Double.parseDouble(temp));
 			usedoptions.add("Q10 active");
 		}
+
+		temp = rsoptions.get("mgnapk");
+		if (temp != null) {
+			model.napump.setMgnapk(Double.parseDouble(temp));
+			usedoptions.add("mgnapk");
+		}
 	}
 	
 	public static void cellwaterscreenRS(HashMap<String,String> rsoptions,ArrayList<String> usedoptions, RBC_model model) {
@@ -352,6 +358,11 @@ public class OptionsParsers {
 			model.passiveca.setFcalm(Double.parseDouble(temp));
 			usedoptions.add("PCaG");
 		} 
+		temp = rsoptions.get("PMgG");
+		if(temp != null) {
+			model.passivemg.setFcalm(Double.parseDouble(temp));
+			usedoptions.add("PMgG");
+		}
 //		else {
 //			this.passiveca.setFcalm(0.05);
 //		}

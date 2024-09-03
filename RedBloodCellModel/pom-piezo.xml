@@ -6,14 +6,15 @@
     <groupId>org.springframework</groupId>
     <artifactId>piezo</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <!-- <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target> -->
     </properties>
 
     <build>
+            <sourceDirectory>src</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -36,6 +37,11 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-surefire-plugin</artifactId>
+              <version>3.0.0-M7</version>
+            </plugin>
         </plugins>
         <resources>
           <resource>
@@ -50,13 +56,13 @@
               <include>*.jpg</include>
             </includes>
           </resource>
-          <resource>
+          <!-- <resource>
             <directory>src/resources</directory>
             <includes>
               <include>piezoDSOptions.csv</include>
               <include>piezoLifespanRSOptions.csv</include>
             </includes>
-          </resource>
+          </resource> -->
         </resources>
     </build>
     <dependencies>
@@ -79,6 +85,11 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>3.14.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.8.2</version>
       </dependency>
     </dependencies>
 </project>

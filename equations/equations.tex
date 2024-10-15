@@ -23,8 +23,9 @@
   }
 \makeatother
 
-\title{Appendix. The Governing Equations of the Red Cell Model (RCM)}
-\date{}
+\title{The Governing Equations of the Red Cell Model (RCM)}
+\author{Virgilio L. Lew}
+\date{September 2024}
 
 % \newcommand{\med}[1]{[#1]^m}
 \newcommand{\med}[1]{M#1}
@@ -97,20 +98,25 @@
 
 \section{Introduction}\label{introduction}
 
-This document is designed to accompany publications [1] and [2].
+% This document is designed to accompany publications [1] and [2].
 
-Red blood cell homeostasis addresses the subset of mechanisms that
-control the dynamic changes in cell volume, membrane potential, ionic
-composition, membrane transport and osmotic gradients in response to
-perturbations. The system modelled under RCM consists of a suspension of identical
-RBCs whose dynamic behaviour is constrained only by charge and mass
-conservation. The equations implement these laws following a strict
-computational sequence representative of the multiple interconnected
-processes involved, delivering true and tested predictions on the
-homeostatic behaviour of human RBCs in physiological, pathological and
-experimental conditions.
+% Red blood cell homeostasis addresses the subset of mechanisms that
+% control the dynamic changes in cell volume, membrane potential, ionic
+% composition, membrane transport and osmotic gradients in response to
+% perturbations. The system modelled under RCM consists of a suspension of identical
+% RBCs whose dynamic behaviour is constrained only by charge and mass
+% conservation. The equations implement these laws following a strict
+% computational sequence representative of the multiple interconnected
+% processes involved, delivering true and tested predictions on the
+% homeostatic behaviour of human RBCs in physiological, pathological and
+% experimental conditions.
 
-We retain in the equations the names of parameters and variables as used for model inputs and outputs where the use of conventional nomenclatures for concentrations (i.e. $[Ca^{2+}]_c$, $[Mg^{2+}]_o$) or of Greek symbols for fluxes was not feasible.  Coherence with model operation in the choice of equation nomenclature was considered more important than compliance with established nomenclature, clarity of meaning being preserved in the unconventional style and fully explained in the Appendix glossaries of the User Guide (\url{https://github.com/sdrogers/redcellmodeljava}).
+% We retain in the equations the names of parameters and variables as used for model inputs and outputs where the use of conventional nomenclatures for concentrations (i.e. $[Ca^{2+}]_c$, $[Mg^{2+}]_o$) or of Greek symbols for fluxes was not feasible.  Coherence with model operation in the choice of equation nomenclature was considered more important than compliance with established nomenclature, clarity of meaning being preserved in the unconventional style and fully explained in the Appendix glossaries of the User Guide (\url{https://github.com/sdrogers/redcellmodeljava}).
+
+Red blood cell homeostasis addresses the subset of mechanisms that control the dynamic changes in cell volume, membrane potential, ionic composition, membrane transport and osmotic gradients in response to perturbations. The modelled system consists of a suspension of identical RBCs whose dynamic behaviour is constrained only by charge and mass conservation. The equations implement these laws following a strict computational sequence representative of the multiple interconnected processes involved. The default values set for all the model parameters have been experimentally determined, allowing model outputs to predict the homeostatic behaviour of human RBCs in physiological, pathological and experimental conditions within accuracy margins of about 5-10\%.  
+
+The current text of the Governing Equations of the RCM is an updated version of the original published in 2021 [1, 2]. The complete model code, together with a User Guide and a detailed tutorial, are available 
+ with open access in the repository (https://github.com/sdrogers/redcellmodeljava).   
 
 
 \subsection{The initial Reference State (RS)}
@@ -131,7 +137,7 @@ the new cell.
 \subsubsection{Medium electroneutrality}\label{medium-electroneutrality}
 
 \begin{equation}
-\MA + (\MB - \MBH) + \MGluco-(\MNa + \MK + 2(\MCatp + \MMgtp + \MGluca)) = 0 \tag{1}
+\MA + (\MB - \MBH) + \MGluco-(\MNa + \MK + 2(\MCatp + \MMgtp) + \MGluca) = 0 \tag{1}
 \end{equation}
 
 Medium concentration of proton-bound buffer, $\MBH$ (HEPES, by default):
@@ -231,8 +237,23 @@ The measured values of the Mg bufferes [8] are: $CB_{Mg}1$ = 1.2 mmol/Loc, $KB_{
 
 
 \subsubsection{Effects of deoxygenation on cytoplasmic $Mg^{2+}$ buffering and pHi.}
-Deoxygenation increases haemoglobin binding of ATP and 2,3-DPG thus reducing their availability for buffering intracellular magnesium.  $CB_{Mg}1$ is reduced by half and $CB_{Mg}2$ by 1.7 [8].  This is particularly relevant for simulating accurately the effects of changing the oxygenation condition of RBCs, a process in which changes in $CMg^{2+}$ become enmeshed with effects arising from changes in the isoelectric point of haemoglobin, pI (eq 4).  In vivo, RBCs are continuously changing between oxy and deoxy states as they flow between the arterial and venous vasculature causing well documented alternating changes in pHi, $CMg^{2+}$, CA and cell volume which the model accurately reproduces.  Although these changes are fully reversible in physiological conditions, deoxygenation of sickle RBCs can lead to hyperdense collapse, as shown in the next paper [2]. 
+Deoxygenation increases haemoglobin binding of ATP and 2,3-DPG thus reducing their availability for buffering intracellular magnesium.  $CB_{Mg}1$ is reduced by half and $CB_{Mg}2$ by 1.7 [8].  This is particularly relevant for simulating accurately the effects of changing the oxygenation condition of RBCs, a process in which changes in $CMg^{2+}$ become enmeshed with effects arising from changes in the isoelectric point of haemoglobin, pI (eq 4).
+% In vivo, RBCs are continuously changing between oxy and deoxy states as they flow between the arterial and venous vasculature causing well documented alternating changes in pHi, $CMg^{2+}$, CA and cell volume which the model accurately reproduces.  Although these changes are fully reversible in physiological conditions, deoxygenation of sickle RBCs can lead to hyperdense collapse, as shown in the next paper [2]. 
 
+\subsubsection{Charge balance during $Mg^{2+}$ buffering changes.}
+
+By treating the Mg buffers as part of the global impermeant cell ion the osmotic balance on deoxygenation remains
+undisturbed. On the other hand, the change in $Mg^{2+}$ charge, $QMg^{2+}$, needs balancing from within the global charge
+on $X$, $nXQX$ by a corresponding change in $nX$. Because $X$ and $Mg$ are treated as impermeant cytoplasmic solutes
+in the model, their amounts per litre original cells, $QX$ and $QMg$, are set in the Reference State as constants in the
+system, their concentrations varying only with changes in cell volume. Therefore, from $\Delta nX = nX_{deoxy} - nX_{oxy}$
+and from $QX^{-}_{deoxy} - QX^{-1}_{oxy} = 2(QMg^{2+}_{deoxy} - QMg^{2+}_{oxy})$ we derive $nX_{deoxy} = nX_{oxy} - 2(QMg^{2+}_{deoxy} - QMg^{2+}_{oxy})/QX$.
+Thus, both $nX_{oxy}$ and $nX_{deoxy}$ become defined as constants whose values are set by the values of $QMg^{2+}$ and of the
+wildcard parameters $nX$ and $QX^{-}$ as derived from equations 3 and 8 in the Reference State. With the current default
+settings in the Reference State, $nX_{oxy} =-0.4352$, and $nX_{deoxy} =-0.4511$, values instantly changed and reversed during
+deoxygenation-reoxygenation cycles.
+
+\subsubsection{Effects of change in the isoelectric point of haemoglobin on cell pH, pHi}
 Hb is assumed to be in a oxy-state by default, the most frequent experimental condition. Deoxygenation of Hb (Deoxy) changes its pI(0oC) from 7.2 to 7.5.  The model automatically adjusts the actual pI change for the temperature of the experiment.  The pI shifts during oxy-deoxy transitions cause sudden changes in the protonization condition of Hb with secondary changes in pHi and $CMg^{2+}$, changes which the model predicts with verified accuracy [9-11].  Electroneutrality preservation during oxy-deoxy transitions requires constancy of nHb values (eq 4) when pI changes, from which the compensatory changes in pHi can be derived according to [10]: 
 
 On deoxygenation:
@@ -240,11 +261,11 @@ On deoxygenation:
 \setcounter{equation}{0}
 \renewcommand{\theequation}{4.\alph{equation}}
 \begin{equation}
-pHideoxy = pHioxy + pIdeoxy - pIoxy 
+pHi_{deoxy} = pHi_{oxy} + pI_{deoxy} - pI_{oxy} 
 \end{equation}
 On reoxygenation:
 \begin{equation}
-pHioxy = pHideoxy + pIoxy - pIdeoxy 
+pHioxy = pHi_{deoxy} + pI_{oxy} - pI_{deoxy} 
 \end{equation}
 
 \subsection{The dynamic state (DS)}
@@ -267,28 +288,38 @@ All flux equations are defined as products between permeabilities (P) or rate co
 \F{}{A} &=& \F{G}{A} + \F{H}{A} + \F{Na}{A} + \F{K}{A} + \F{z}{A} + 2\times\F{Co}{A}\\
 \F{}{H} &=& \F{G}{H} + \F{H}{A} + \F{Ca}{PH} + \F{A23}{H} \\
 \F{}{Ca} &=& \F{CaP}{Ca} + \F{G}{Ca} + \F{z}{Ca} + \F{A23}{Ca} \\
-\F{}{Mg} &=& \F{A23}{Mg} \\
+\F{}{Mg} &=& \F{G}{Mg} + \F{A23}{Mg} \\
 \F{}{w}  &=& Pw\times (\COs – \MOs)
 \end{eqnarray}
 
 There are no data on PIEZO1-mediated $Mg^{2+}$ fluxes in RBCs.  Although PzMg most certainly has a small finite value, $\F{z}{Mg}$ is likely to be very small under the usually low electrochemical $Mg^{2+}$ gradients across the RBC membrane.  With this level of uncertainty, $\F{z}{Mg}$ was not included in the current model version.  
 
 \subsubsection{Kinetic descriptions of individual transporters}
-Certain transporter kinetics are reported in the equations with the default numerical values used for dissociation and rate constants in the model, based on well established values in the literature and on the good semi-quantitative fits to experimental data provided in the past [12-14].  The default values of all permeabilities and rate-constants used in the model (P or k) correspond to experimentally measured values at 37oC, $P = P(37)$ or $k = k(37)$.  Temperature-changed values of P or k, $P = P(T)$ or $k(T)$, are computed relative to $P(37)$ or $k(37)$ using the Q10-derived formalism for temperature coefficients. In eq (11) we use P to represent both P- or k-defined values:
+Certain transporter kinetics are reported in the equations with the default numerical values used for dissociation and rate constants in the model, based on well established values in the literature and on the good semi-quantitative fits to experimental data provided in the past [12-14].
+% The default values of all permeabilities and rate-constants used in the model (P or k) correspond to experimentally measured values at 37oC, $P = P(37)$ or $k = k(37)$.  Temperature-changed values of P or k, $P = P(T)$ or $k(T)$, are computed relative to $P(37)$ or $k(37)$ using the Q10-derived formalism for temperature coefficients. In eq (11) we use P to represent both P- or k-defined values:
 
-\setcounter{equation}{10}
-\renewcommand{\theequation}{\arabic{equation}}
-\begin{equation}
-P(T)  =  \frac{P(37)}{10^{\left(\frac{37-T}{10}\right)\log(Q10)}}
-\end{equation}
+% \setcounter{equation}{10}
+% \renewcommand{\theequation}{\arabic{equation}}
+% \begin{equation}
+% P(T)  =  \frac{P(37)}{10^{\left(\frac{37-T}{10}\right)\log(Q10)}}
+% \end{equation}
 \setcounter{equation}{0}
 \renewcommand{\theequation}{11.\alph{equation}}
 
 
 \subsubsection{Na/K pump mediated fluxes of Na and K (f = forward; r = reverse) [15, 16]}
 
+We redefine the forward sodium flux through the sodium pump to introduce its $CMg^{2+}$-dependence as found by Flatman[35]:
+
+\begin{equation}
+  \F{NaP}{Na}^f  = -\F{NaP}{max}^f \left(\frac{\CMg^{2+}}{0.04 + CMg^{2+}}\right)\left(\frac{\CNa}{\CNa + 0.2(1 + \CK/8.3)}\right)^3 \left(\frac{\MK}{\MK + 0.1(1 + \MNa/18)}\right)^2 \\
+\end{equation}
+
+$\F{NaP}{max}^f$ should now be derived in the RS from the values set for $\F{NaP}{Naf}$, $CMg^{2+}$, $CNa$ and $MK$ using eq 11a, as part of the steady-state equations (1-8).
+
+
 \begin{eqnarray}
-\F{NaP}{Na}^f  &=& -\F{NaP}{max}^f\left(\frac{\CNa}{\CNa + 0.2(1 + \CK/8.3)}\right)^3 \left(\frac{\MK}{\MK + 0.1(1 + \MNa/18)}\right)^2 \\
+% \F{NaP}{Na}^f  &=& -\F{NaP}{max}^f\left(\frac{\CNa}{\CNa + 0.2(1 + \CK/8.3)}\right)^3 \left(\frac{\MK}{\MK + 0.1(1 + \MNa/18)}\right)^2 \\
 \F{NaP}{Na}^r  &=& \F{NaP}{max}^r\left(\frac{\CK}{\CK + 8.3(1 + \CNa/0.2)}\right)^2\left(\frac{\MNa}{\MNa + 18(1 + \MK/0.1)}\right)^3 \\
 \F{NaP}{Na} &=& \F{NaP}{Naf} + \F{NaP}{Nar} \\
 \F{NaP}{K} &=& -\F{NaP}{Na}/1.5
@@ -304,7 +335,7 @@ P(T)  =  \frac{P(37)}{10^{\left(\frac{37-T}{10}\right)\log(Q10)}}
 \F{CaP}{H} &=& -2\times\F{CaP}{Ca}
 \end{eqnarray}
 
-\subsubsection{Electrodiffusional fluxes of i (Na, K, Ca, H and A) through endogenous channels, FGi , Gardos channels, FGGardos, and PIEZO1 channels, Fzi, are represented with constant field kinetics [19]: }
+\subsubsection{Electrodiffusional fluxes of i (Na, K, Ca, Mg, H and A) through endogenous channels, FGi , Gardos channels, FGGardos, and PIEZO1 channels, Fzi, are represented with constant field kinetics [19]: }
 
 \setcounter{equation}{12}
 \renewcommand{\theequation}{\arabic{equation}}
@@ -312,6 +343,8 @@ P(T)  =  \frac{P(37)}{10^{\left(\frac{37-T}{10}\right)\log(Q10)}}
 \F{G}{i} = -P_{G}i\left(\frac{ziFEm}{RT}\right)\left(\frac{Ci – Mi\exp^{-ziFEm/RT}}{1 – exp^{-ziFEm/RT}}\right)
 \end{equation}
 with PGi representing the Goldmanian i-permeability in $h^{-1}$ units
+
+The default RS value of $P_{G}Mg$ should be set equal to that of $Ca$, $P_{G}Mg = P_{G}Ca = 0.05/h$. For this preliminary investigation using RCM, there is no need to add $FzMg/PzMg$.
 
 \subsubsection{PGKGardos is a function of $CCa^{2+}$ [20, 21] as follows:}
 \begin{equation}
@@ -399,13 +432,13 @@ Following perturbations, sustained charge conservation and electroneutrality is 
 where $I_j$ represents the current carried by each of the j-membrane transporters. $\sum I_j$ is therefore the fist equation that has to be solved at the start of each iteration in the computational sequence of dynamic states. Capacitative currents ($Ic = C(dV/dt))$ are ignored because their magnitude and time-course decay are orders of magnitude smaller than those of the homeostatic relevant currents.  The relation between currents and fluxes, $F_j$, is given by 
 
 \begin{equation}
-\sum I_j = F\sum z_j\times F_j
+I_j = F z_j F_j
 \end{equation}
 
 With the electrogenic flux components in the model $(z_j\neq 0), \sum I_j = 0$ renders:
 
 \begin{equation}
-\sum I_j = \F{NaP}{Na} + \F{NaP}{K} + \F{G}{Na} + \F{G}{K} + \F{G}{K_{Gardos}} + \F{G}{A} + \F{G}{Ca} + \F{G}{H} + \F{z}{Na} + \F{z}{K} + \F{z}{A} + \F{z}{Ca} = 0
+\sum I_j = \F{NaP}{Na} + \F{NaP}{K} + \F{G}{Na} + \F{G}{K} + \F{G}{K_{Gardos}} + \F{G}{A} + \F{G}{Ca} + \F{G}{Mg} + \F{G}{H} + \F{z}{Na} + \F{z}{K} + \F{z}{A} + \F{z}{Ca} = 0
 \end{equation}
 $I_j$ is a complex function of temperature, membrane potential, $Em$, and of the concentration of all transported and modulating substrates.  With all parameters, kinetics and substrate concentrations known $\sum I_j = 0$ becomes an implicit equation in $Em$, the single unknown left, solved in each iteration with the Newton-Raphson cord approximation routine.      
 
@@ -430,7 +463,7 @@ With the new $F_i^t$ and $\Delta t$ the new $Qi^t$ may be computed using the val
 \Delta QA &=& FA\times\Delta t \\
 \Delta H &=& FH\times\Delta t \\
 \Delta QCa &=& FCa\times\Delta t \\
-\Delta QMg &=& \F{A23}{Mg}\times\Delta t \\
+\Delta QMg &=& (\F{G}{Mg} + \F{A23}{Mg})\times\Delta t \\
 QNa^t &=& QNa^{(t-\Delta t)} + \Delta QNa \\
 QK^t &=& QK^{(t-\Delta t)} + \Delta QK  \\
 QA^t &=& QA^{(t-\Delta t)} + \Delta QA  \\
@@ -569,7 +602,18 @@ rA^t &=& \frac{\CA^t}{\MA^t}
 
 This completes the list of sequential computations within each iteration cycle of the core red cell model.    
 
-The complete model code is available with open access in the repository (https://github.com/sdrogers/redcellmodeljava).   
+here is a substantial body of additional information implemented in the model, marginal to the core of the gov-
+erning equations, information revised, filtered, and, when experimentally tested and confirmed, incorporated in the
+model as part of the continuous process of improving the quantitative accuracy of model predictions. The effects of
+temperature on transport, in addition to those incorporated within the kinetic description (constant field equation,
+ziFEm/RT, for instance) are represented by factors using the traditional Q10 phenomenology, with the option to alter
+the default values of 4 and 2 for active and passive transport, respectively. Most ion effects render themselves to
+be represented by factors modifying rate constants or dissociation constants in flux equations (e.g Na/K pump, eq
+11), without altering the actual overall kinetics of the transport pathways. Because of their particular relevance to
+the circulatory behaviour of RBCs we only listed here explicitly the modulating effects of Ca2+ on PGGardos and on
+PGCa, equations 14 and 15, respectively. The complete model code is available with open access in the repository
+(https://github.com/sdrogers/redcellmodeljava)
+% The complete model code is available with open access in the repository (https://github.com/sdrogers/redcellmodeljava).   
 
 
 \section{References}
@@ -608,6 +652,7 @@ The complete model code is available with open access in the repository (https:/
 \item Tiffert T, Spivak JL, Lew VL. Magnitude of calcium influx required to induce dehydration of normal human red cells. Biochim Biophys Acta. 1988;943:157-65.
 \item Flatman PW, Lew VL. The magnesium-dependence of sodium:potassium and sodium:sodium exchange mediated by the sodium pump in intact human red cells [proceedings]. J Physiol. 1979;287:33P-4P. PubMed PMID: 430415.
 \item Lew VL, Bookchin RM. Volume, pH, and ion-content regulation in human red cells: analysis of transient behavior with an integrated model. J Membr Biol. 1986;92(1):57-74. PubMed PMID: 3746891.
+\item Flatman PW, Lew VL. The magnesium dependence of sodium-pump-mediated sodium-potassium and sodium-sodium exchange in intact human red cells. J Physiol. 1981;315:421-46. PubMed PMID: 6796677; PubMed Central PMCID: PMC1249391.
 \end{enumerate}
 
 \end{document}

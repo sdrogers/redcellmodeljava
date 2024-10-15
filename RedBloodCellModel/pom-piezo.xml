@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.springframework</groupId>
-    <artifactId>piezo</artifactId>
+    <artifactId>lifespan</artifactId>
     <packaging>jar</packaging>
     <version>1.0.1</version>
 

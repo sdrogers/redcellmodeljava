@@ -14,10 +14,10 @@ Behind the immense complexity, diversity and dynamic changes of living cells, th
 
 Follow the link and then click "download"
 
-[Standard RCM .jar file](https://github.com/sdrogers/redcellmodeljava/blob/f2815a1a929ade17311aaa8afc801f42b94d9b95/RedBloodCellModel/jars/RCM_8560ca5.jar)
+[Standard RCM .jar file](https://github.com/sdrogers/redcellmodeljava/releases/download/v1.0.2/rcm-1.0.2.jar)
 
-[Lifespan .jar file](https://github.com/sdrogers/redcellmodeljava/blob/1892b8081cbc843d584f53e89ed609c40da61d10/RedBloodCellModel/jars/Lifespan_10a4639.jar)
+[Lifespan .jar file](https://github.com/sdrogers/redcellmodeljava/releases/download/v1.0.2/lifespan-1.0.1.jar)
 
 [User guide](https://github.com/sdrogers/redcellmodeljava/blob/master/equations/RCM_User_Guide-13-09-22.pdf)
 
-[Governing equations](https://github.com/sdrogers/redcellmodeljava/blob/master/equations/equations-140322.pdf)
+[Governing equations](https://github.com/sdrogers/redcellmodeljava/releases/download/v1.0.2/Governing_equations_of_the_RCM-0424-PMg_and_MgNaP_extension.docx)

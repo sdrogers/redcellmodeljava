@@ -12,12 +12,6 @@ Behind the immense complexity, diversity and dynamic changes of living cells, th
 
 ## Downloads
 
-Follow the link and then click "download"
-
-[Standard RCM .jar file](https://github.com/sdrogers/redcellmodeljava/releases/download/v1.0.2/rcm-1.0.2.jar)
-
-[Lifespan .jar file](https://github.com/sdrogers/redcellmodeljava/releases/download/v1.0.2/lifespan-1.0.1.jar)
+To download either the RCM or Lifespan .jar files, or the document describing the governing equations, use the "releases" link to the right. Click on releases, select the version you want and then right click to (directly) download the .jar file
 
 [User guide](https://github.com/sdrogers/redcellmodeljava/blob/master/equations/RCM_User_Guide-13-09-22.pdf)
-
-[Governing equations](https://github.com/sdrogers/redcellmodeljava/releases/download/v1.0.2/Governing_equations_of_the_RCM-0424-PMg_and_MgNaP_extension.docx)

@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Component;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -25,7 +26,10 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 	private CommentsPanel cp;
 	private RSPanel r;
 	private HelpScreen helpScreen;
+	private boolean limitDSDisplay = true;
+	private int maxDSDisplayLimit = 50;
 	public ExperimentScreen(ExperimentalSettings es) {
+
 		this.panelSettings = new HashMap<DSSettings,StagePanel>();
 		this.experimentalSettings = es;
 		this.setSize(1500,1000);
@@ -78,12 +82,28 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 		helpButton = new JButton("Help");
 		helpButton.addActionListener(this);
 		buttonPanel.add(helpButton);
-		
+
 		mainPanel.add(buttonPanel,BorderLayout.SOUTH);
 		
 		this.setVisible(true);
 		
 		helpScreen = new HelpScreen();
+	}
+	public void setLimitDSDisplay(boolean overrideValue) {
+		boolean oldValue = this.limitDSDisplay;
+		this.limitDSDisplay = overrideValue;
+		if(oldValue != overrideValue) {
+			// Do nothing unless they are different
+			if(oldValue) { // it was limiting} {
+				for(Component c: this.dSPanel.getComponents()) {
+					this.dSPanel.remove(c);
+				}
+				this.populateDSPanel();		
+			} else { // it was not limiting
+				this.clearDSPanel();
+				this.populateDSPanel();
+			}
+		}
 	}
 	public void deleteStage(DSSettings ds) {
 		this.experimentalSettings.remove(ds);
@@ -96,20 +116,28 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 		}
 	}
 	public void populateDSPanel() {
-		int dSStage = 1;
-		for(DSSettings d: this.experimentalSettings.getDSStages()) {
-			StagePanel temp = new StagePanel(d,this);
-			String title = "Dynamic Stage: " + dSStage++;
-			temp.setBorder(BorderFactory.createTitledBorder(title));
-			dSPanel.add(temp);
-			panelSettings.put(d, temp);
+		int nDSStages = this.experimentalSettings.getNStages();
+		if (this.limitDSDisplay == true && nDSStages > this.maxDSDisplayLimit){
+			// Doesn't display the stages
+			dSPanel.add(new NoDSRenderMessagePanel(
+				"The number of dynamic stages exceeds the maximum for rendering. Click override to override (warning -- can be slow!).", this)
+			);
+		} else {
+			int dSStage = 1;
+			for(DSSettings d: this.experimentalSettings.getDSStages()) {
+				StagePanel temp = new StagePanel(d,this);
+				String title = "Dynamic Stage: " + dSStage++;
+				temp.setBorder(BorderFactory.createTitledBorder(title));
+				dSPanel.add(temp);
+				panelSettings.put(d, temp);
+			}
+			if(this.experimentalSettings.getNStages() == 1) {
+				DSSettings onlySettings = this.experimentalSettings.getDSStages().get(0);
+				StagePanel onlyPanel = panelSettings.get(onlySettings);
+				onlyPanel.disableDelete();
+			}
+			this.revalidate();
 		}
-		if(this.experimentalSettings.getNStages() == 1) {
-			DSSettings onlySettings = this.experimentalSettings.getDSStages().get(0);
-			StagePanel onlyPanel = panelSettings.get(onlySettings);
-			onlyPanel.disableDelete();
-		}
-		this.revalidate();
 	}
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == addButton) {

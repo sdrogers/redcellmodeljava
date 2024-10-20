@@ -12,6 +12,5 @@ Behind the immense complexity, diversity and dynamic changes of living cells, th
 
 ## Downloads
 
-To download either the RCM or Lifespan .jar files, or the document describing the governing equations, use the "releases" link to the right. Click on releases, select the version you want and then right click to (directly) download the .jar file
+To download either the RCM or Lifespan .jar files, the document describing the governing equations, a typical 5 day ISC protocol file and the model user guide, use the "releases" link to the right. Click on releases, select the version you want and then right click to (directly) download the .jar file
 
-[User guide](https://github.com/sdrogers/redcellmodeljava/blob/master/equations/RCM_User_Guide-13-09-22.pdf)

@@ -231,6 +231,10 @@ public class PiezoLifespan extends JFrame implements ActionListener, Updateable{
 		RSOptions.put("CA","95.0");
 		RSOptions.put("Vw","0.85");
 		RSOptions.put("KCa Gardos channel","0.01");
+
+		// Additions from 26-mg-pump-issues, May 2025
+		RSOptions.put("PMgG", "0.0"); // switch it off
+		DSOptions.put("PMgG", "0.0"); // switch it off
 										
 
 	}

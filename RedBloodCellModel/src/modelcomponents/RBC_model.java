@@ -1208,10 +1208,10 @@ public class RBC_model implements Serializable {
 			usedoptions.add("PCa");
 		}
 
-		temp = options.get("PMg");
+		temp = options.get("PMgG");
 		if(temp != null) {
 			this.passivemg.setFcalm(OptionValueGenerator.processRequest(temp));
-			usedoptions.add("PMg");
+			usedoptions.add("PMgG");
 		}
 		
 		

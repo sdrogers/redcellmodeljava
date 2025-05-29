@@ -26,7 +26,7 @@ public class ExperimentScreen extends JFrame implements ActionListener {
 	private CommentsPanel cp;
 	private RSPanel r;
 	private HelpScreen helpScreen;
-	private boolean limitDSDisplay = true;
+	private boolean limitDSDisplay = false;
 	private int maxDSDisplayLimit = 50;
 	public ExperimentScreen(ExperimentalSettings es) {
 

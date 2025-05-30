@@ -983,7 +983,11 @@ public class RBC_model implements Serializable {
 			for(String option: options.keySet()) {
 				if(!usedoptions.contains(option)) {
 					System.out.println(option);
-					JOptionPane.showMessageDialog(null,"Didn't recognise " + option + " for DS - tell Simon!");
+					if (option.equals("PMg")) {
+						JOptionPane.showMessageDialog(null, "You have set the PMg parameter. This parameter has been renamed PMgG. Please modify your protocol to ensure this parameter is set properly");
+					} else {
+						JOptionPane.showMessageDialog(null,"Didn't recognise " + option + " for DS - tell Simon!");
+					}
 				}
 			}
 		}

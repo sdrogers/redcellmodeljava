@@ -1,0 +1,4260 @@
+# D:\A\TRANSFERS\Figure 3 Discocytes.txt
+
+RS
+Hb A or S:S
+MCHC:30
+CNa:5
+CK:145
+Na/K pump Na efflux:-3
+
+DS 1
+CVF:0.00001
+Accuracy:6
+Cyclesperprint(epochs):111
+MMg:0.05
+Time:1
+FrequencyFactor:0.001
+
+DS 2
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 3
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 4
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 5
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 6
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 7
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 8
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 9
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 10
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 11
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 12
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 13
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 14
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 15
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 16
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 17
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 18
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 19
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 20
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 21
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 22
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 23
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 24
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 25
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 26
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 27
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 28
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 29
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 30
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 31
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 32
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 33
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 34
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 35
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 36
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 37
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 38
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 39
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 40
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 41
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 42
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 43
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 44
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 45
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 46
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 47
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 48
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 49
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 50
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 51
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 52
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 53
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 54
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 55
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 56
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 57
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 58
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 59
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 60
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 61
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 62
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 63
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 64
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 65
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 66
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 67
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 68
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 69
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 70
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 71
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 72
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 73
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 74
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 75
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 76
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 77
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 78
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 79
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 80
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 81
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 82
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 83
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 84
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 85
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 86
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 87
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 88
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 89
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 90
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 91
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 92
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 93
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 94
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 95
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 96
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 97
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 98
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 99
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 100
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 101
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 102
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 103
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 104
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 105
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 106
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 107
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 108
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 109
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 110
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 111
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 112
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 113
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 114
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 115
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 116
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 117
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 118
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 119
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 120
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 121
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 122
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 123
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 124
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 125
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 126
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 127
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 128
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 129
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 130
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 131
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 132
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 133
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 134
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 135
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 136
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 137
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 138
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 139
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 140
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 141
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 142
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 143
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 144
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 145
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 146
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 147
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 148
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 149
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 150
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 151
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 152
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 153
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 154
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 155
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 156
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 157
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 158
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 159
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 160
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 161
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 162
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 163
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 164
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 165
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 166
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 167
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 168
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 169
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 170
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 171
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 172
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 173
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 174
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 175
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 176
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 177
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 178
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 179
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 180
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 181
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 182
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 183
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 184
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 185
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 186
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 187
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 188
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 189
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 190
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 191
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 192
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 193
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 194
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 195
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 196
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 197
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 198
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 199
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 200
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 201
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 202
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 203
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 204
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 205
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 206
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 207
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 208
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 209
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 210
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 211
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 212
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 213
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 214
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 215
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 216
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 217
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 218
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 219
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 220
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 221
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 222
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 223
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 224
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 225
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 226
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 227
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 228
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 229
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 230
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 231
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 232
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 233
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 234
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 235
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 236
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 237
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 238
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 239
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 240
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 241
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 242
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 243
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 244
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 245
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 246
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 247
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 248
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 249
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 250
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 251
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 252
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 253
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 254
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 255
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 256
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 257
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 258
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 259
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 260
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 261
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 262
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 263
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 264
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 265
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 266
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 267
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 268
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 269
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 270
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 271
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 272
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 273
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 274
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 275
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 276
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 277
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 278
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 279
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 280
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 281
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 282
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 283
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 284
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 285
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 286
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 287
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 288
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 289
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 290
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 291
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 292
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 293
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 294
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 295
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 296
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 297
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 298
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 299
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 300
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 301
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 302
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 303
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 304
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 305
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 306
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 307
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 308
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 309
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 310
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 311
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 312
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 313
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 314
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 315
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 316
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 317
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 318
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 319
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 320
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 321
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 322
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 323
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 324
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 325
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 326
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 327
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 328
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 329
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 330
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 331
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 332
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 333
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 334
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 335
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 336
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 337
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 338
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 339
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 340
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 341
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 342
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 343
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 344
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 345
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 346
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 347
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 348
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 349
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 350
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 351
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 352
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 353
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 354
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 355
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 356
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 357
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 358
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 359
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 360
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 361
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 362
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 363
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 364
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 365
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 366
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 367
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 368
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 369
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 370
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 371
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 372
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 373
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 374
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 375
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 376
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 377
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 378
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 379
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 380
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 381
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 382
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 383
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 384
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 385
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 386
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 387
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 388
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 389
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 390
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 391
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 392
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 393
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 394
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 395
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 396
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 397
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 398
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 399
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 400
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 401
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 402
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 403
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 404
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 405
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 406
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 407
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 408
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 409
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 410
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 411
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 412
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 413
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 414
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 415
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 416
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 417
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 418
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 419
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 420
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 421
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 422
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 423
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 424
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 425
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 426
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 427
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 428
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 429
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 430
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 431
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 432
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 433
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 434
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 435
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 436
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 437
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 438
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 439
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 440
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 441
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 442
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 443
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 444
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 445
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 446
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 447
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 448
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 449
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 450
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 451
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 452
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 453
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 454
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 455
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 456
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 457
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 458
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 459
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 460
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 461
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 462
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 463
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 464
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 465
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 466
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 467
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 468
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 469
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 470
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 471
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 472
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 473
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 474
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 475
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 476
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 477
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 478
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 479
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 480
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 481
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 482
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 483
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 484
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 485
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 486
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 487
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 488
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 489
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 490
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+FrequencyFactor:0.01
+
+DS 491
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 492
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 493
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 494
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 495
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 496
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 497
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 498
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+
+DS 499
+PA:1.2
+PNa:0.00152
+Hb Deoxy or Re-Oxy:Re-Oxy
+Time:random(0.4,2.6)
+PK:0.00165
+PCa:0.05
+
+DS 500
+PA:50
+PNa:0.1
+Hb Deoxy or Re-Oxy:Deoxy
+PMgG:0.1
+Time:random(0.4,2.6)
+PK:0.1
+PCa:random(70,100)
+

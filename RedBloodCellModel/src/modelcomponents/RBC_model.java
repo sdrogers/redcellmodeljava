@@ -617,12 +617,12 @@ public class RBC_model implements Serializable {
 		this.setIsCancelled(false);
 		
 		this.output("RUNNING DS STAGE " + this.stage, ta);
-		this.output("Current Sampling time: " + 60.0*this.sampling_time,ta);
-		this.output("Running until: " + this.duration_experiment,ta);
+		// this.output("Current Sampling time: " + 60.0*this.sampling_time,ta);
+		// this.output("Running until: " + this.duration_experiment,ta);
 				
 		this.cycle_count = 0;
 		this.n_its = 0;
-		this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
+		// this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
 		
 		this.publish();
 		
@@ -677,7 +677,7 @@ public class RBC_model implements Serializable {
 		
 		while(this.sampling_time*60 <= this.duration_experiment) {
 			if(mileStoneOperation!= null) {
-				this.output(mileStoneOperation, ta);
+				// this.output(mileStoneOperation, ta);
 				if(mileStoneOperation.equals("END")) {
 					break;
 				}
@@ -742,7 +742,7 @@ public class RBC_model implements Serializable {
 			
 
 			if(this.cycle_count == this.cycles_per_print) {
-				this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
+				// this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
 				this.publish();
 				this.cycle_count = 0;
 			}
@@ -754,9 +754,9 @@ public class RBC_model implements Serializable {
 				break;
 			}
 		}
-		this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
-		this.publish();
-		this.output("Finished!",ta);
+		// this.output("Publishing at t=" + 60.0*this.sampling_time,ta);
+		// this.publish();
+		// this.output("Finished!",ta);
 		
 	}
 	public int getTotalCycleCount() {

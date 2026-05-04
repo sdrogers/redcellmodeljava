@@ -616,7 +616,9 @@ public class RBC_model implements Serializable {
 		
 		this.setIsCancelled(false);
 		
-		this.output("RUNNING DS STAGE " + this.stage, ta);
+		if (this.stage % 500 == 0) {
+			this.output("RUNNING DS STAGE " + this.stage, ta);
+		}
 		// this.output("Current Sampling time: " + 60.0*this.sampling_time,ta);
 		// this.output("Running until: " + this.duration_experiment,ta);
 				
